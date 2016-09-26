@@ -37,3 +37,7 @@ copyright = "© The Network Protocol Company, Inc."
   name = "Archives"
   url = "/post/"
   weight = -180
+
+[[menu.main]]
+  name = "Support gafferongames.com"
+  url = "http://www.patreon.com/gafferongames"

@@ -1,0 +1,17 @@
+TODO
+
+    Tidy up and get "Client Server Connection" article in good enough format for supporters to provide feedback.
+
+    This should be extended to include diagrams and images to explain concepts, as well as source code examples that are final.
+
+    Make it obviously better than the previous drafts, it should show progress.
+
+    Research a good way to get a sitemap and discoverability on gafferongames.com, eg. menus, local search, sidebar with sitemap... something equivalent to what I currently have on gafferongames.com is essential for discoverability and driving people towards the patreon for articles they want to read.
+
+    People fundamentally need to be see the structure of articles planned, and want the next one in the series... this is key. Cannot lose this.
+
+    I dislike the all white (hard to read) wall of text of "Posted by X on Y in Z tags {t}" under the article Heading.
+
+    This is hard to parse and different to scan. I want to color the bits that aren't links differently to the links for easier scanning.
+    
+    Want to get RSS feed working, and an RSS button at the bottom ideally along with the social buttons.
