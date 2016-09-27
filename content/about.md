@@ -11,7 +11,7 @@ Hi, I’m [Glenn Fiedler](https://www.linkedin.com/in/glennfiedler) the author o
 
 These days I run [The Network Protocol Company](http://www.thenetworkprotocolcompany.com) which is dedicated to helping people network their games by sharing information, consulting with teams, and of course, writing articles and open source code for this website.
 
-Before I started my own company I worked as a senior and lead programmer in many different areas of code. I started out as a graphics programmer in my first industry job way back in 1998, but very quickly became more interested in game physics and networking. In 2006 I specialized in game networking and moved to the United States.
+Before I started my own company I worked as a senior and lead programmer on many different areas of code. I started out as a graphics programmer in my first industry job way back in 1998, but very quickly became more interested in game physics and networking. In 2006 I specialized in game networking and moved to the United States.
 
 During my career I've been fortunate enough to work on some great games:
 
