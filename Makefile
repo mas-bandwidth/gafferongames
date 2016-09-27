@@ -24,9 +24,11 @@ upload:
 	zip -9r gafferongames.zip gafferongames
 	scp gafferongames.zip root@linux:~/www
 	rm gafferongames.zip
+	rm gafferongames
 	ssh root@linux "cd ~/www && rm -rf gafferongames && unzip gafferongames.zip"
 
 commit:
+	rm -rf gafferongames
 	git add .
 	git commit -am "commit"
 	git push
