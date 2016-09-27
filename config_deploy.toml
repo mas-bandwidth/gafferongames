@@ -1,5 +1,4 @@
-#baseurl = "http://173.255.195.190/gafferongames/"
-baseurl = "http://127.0.0.1:1313"
+baseurl = "http://173.255.195.190/gafferongames/"
 title = "Gaffer On Games"
 canonifyurls = true
 paginate = 10
@@ -8,7 +7,7 @@ languageCode = "en-us"
 copyright = "© The Network Protocol Company, Inc."
 
 [author]
-    name = "Glenn Fiedler"
+  name = "Glenn Fiedler"
 
 [params]
   DateForm = "Monday, January 2, 2006"

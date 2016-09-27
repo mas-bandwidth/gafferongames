@@ -4,6 +4,16 @@ Tuesday 27th September, 2016
 
     Tweaked the about page a bit more.
 
+    Rewrote the introduction to "Client Server Connection".
+
+    Spent some time working out how to get an upload test for the website. Right now I'm just going to do it manually.
+
+    Even more passing over and extending the intro. It flows really well. The previous "standard" intro for the article series was too stilted.
+
+    Now it flows right in to "why do the best games build their own custom client/server protocol on top of UDP?" and then it spends a whole section answering this question, with a final segway to: OK this is what we are doing. Building the client/server connection concept, because UDP does not provide it.
+
+    I like it.
+
 
 Monday 26th September, 2016
 ===========================

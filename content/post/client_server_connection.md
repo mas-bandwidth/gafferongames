@@ -8,13 +8,30 @@ description = "How to create a client/server connection over UDP"
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](https://www.linkedin.com/in/glennfiedler) and welcome to **Building a Game Network Protocol**. 
+Hi, I'm [Glenn Fiedler](https://www.linkedin.com/in/glennfiedler) and welcome to **Building a Game Network Protocol**.
 
-In this article series I’m building a professional-grade client/server network protocol for action games like first person shooters. The best practice in the game industry is to network these games with a custom protocol built on top of UDP. I’m going to show you why this is, what this protocol looks like, and how you can build one yourself!
+In this article we're going to build a client/server connection on top of UDP.
+
+I can guarantee you already at this point that some people have decided not to read this article because I'm obviously a fool. Who could possibly justify all the effort required to build a completely custom client/server network protocol over UDP when to so many people, TCP is simply good enough?
+
+But why is it in 2016 that discussions of UDP vs. TCP are still so controversial, when virtually all first person shooters are networked with UDP? 
+
+* Counterstrike
+* Call of Duty
+* Titanfall
+* Halo
+* Battlefront
+* Overwatch
+
+This is a solved problem. **The game industry uses UDP.**
+
+So what's going on? Why do so many games build their own custom network protocol over UDP instead of TCP? What is it about the specific use case of multiplayer gaming that makes a custom protocol built on top of UDP such a slam dunk?
 
 ## Justification for using UDP instead of TCP
 
-Action games are different to web servers[*](#quic_footnote). Action games send **time critical data**. 
+Action games are different to web servers[*](#quic_footnote). 
+
+Action games send **time critical data**. 
 
 Time critical data is timestamped and must be received before that time to be useful. If time critical data arrives late, it is useless and is thrown away.
 
@@ -32,11 +49,11 @@ For example, if the server sends updates 10 times per-second, the following pack
         t = 10.3
         t = 10.4
 
-But if the packet containing state for time t = 10.0 is lost, under TCP we have to wait for it to be resent before we can access t = 10.1 and 10.2, even though they've already arrived. By the time the resent packet t = 10.0 arrives, we'd much rather have just skipped over t = 10.0 and be displaying something around 10.3 or 10.4, but TCP does not give us this option. All data must be delivered reliably and in-order. It's not possible to skip over dropped data with TCP.
+But if the packet containing state for time t = 10.0 is lost, under TCP we must wait for it to be resent before we can access packets t = 10.1 and 10.2, even though they've already arrived. By the time the resent packet arrives, we'd much rather have just skipped over t = 10.0 and be displaying something around 10.3 or 10.4, but TCP does not give us this option. All data must be delivered reliably and in-order. It's simply not possible to skip over dropped data with TCP.
 
-This creates terrible problems for time critical data, leading to poor performance in situations where both packet loss and latency exist. 
+This creates terrible problems for time critical data, leading to poor performance in situations where both packet loss and latency exist.
 
-If we want the best performance when sending time critical data over **The Internet**, it is necessary to build our own custom protocol over UDP. This is why virtually all action games and first person shooters are networked using UDP. UDP doesn't provide any ordering or reliability, so we are free to drop old packets and access the most recent state that we want.
+If we want the best performance when sending time critical data over the internet, it is necessary to build our own custom protocol over UDP. UDP doesn't provide any ordering or reliability, so we are free to drop old packets and access the most recent state that we want.
 
 But using UDP comes at a cost.
 

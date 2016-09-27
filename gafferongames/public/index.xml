@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Gaffer On Games</title>
+    <link>http://127.0.0.1:1313/</link>
+    <description>Recent content on Gaffer On Games</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© The Network Protocol Company, Inc.</copyright>
+    <lastBuildDate>Sun, 24 May 2015 18:51:50 +0200</lastBuildDate>
+    <atom:link href="http://127.0.0.1:1313/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>About</title>
+      <link>http://127.0.0.1:1313/about/</link>
+      <pubDate>Sun, 24 May 2015 18:51:50 +0200</pubDate>
+      
+      <guid>http://127.0.0.1:1313/about/</guid>
+      <description>&lt;p&gt;Hi, I’m &lt;a href=&#34;https://www.linkedin.com/in/glennfiedler&#34;&gt;Glenn Fiedler&lt;/a&gt; the author of &lt;strong&gt;gafferongames.com&lt;/strong&gt;. I&amp;rsquo;m a professional network programmer with 15 years experience working in the game industry.&lt;/p&gt;
+
+&lt;p&gt;These days I run &lt;a href=&#34;http://www.thenetworkprotocolcompany.com&#34;&gt;The Network Protocol Company&lt;/a&gt; which is dedicated to helping people network their games by sharing information, consulting with teams, and of course, writing articles and open source code for this website.&lt;/p&gt;
+
+&lt;p&gt;Before I started my own company I worked as a senior and lead programmer on many different areas of code. I started out as a graphics programmer in my first industry job way back in 1998, but very quickly became more interested in game physics and networking. In 2006 I specialized in game networking and moved to the United States.&lt;/p&gt;
+
+&lt;p&gt;During my career I&amp;rsquo;ve been fortunate enough to work on some great games:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/playstation-4/titanfall-2&#34;&gt;Titanfall 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/xbox-360/titanfall&#34;&gt;Titanfall&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/playstation-3/god-of-war-ascension&#34;&gt;God of War: Ascension&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/playstation-3/playstation-all-stars-battle-royale&#34;&gt;Playstation: All-Stars&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/playstation-3/journey&#34;&gt;Journey&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/playstation-3/la-noire&#34;&gt;L.A. Noire&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/playstation-3/god-of-war-iii&#34;&gt;God of War 3&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/xbox-360/mercenaries-2-world-in-flames&#34;&gt;Mercenaries 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/pc/tribes-vengeance&#34;&gt;Tribes: Vengeance&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/pc/swat-4&#34;&gt;SWAT 4&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/pc/freedom-force&#34;&gt;Freedom Force&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And throughout all this I&amp;rsquo;ve always believed strongly in sharing information. Giving back. Writing articles and example source code so people encounting the same problems I did don&amp;rsquo;t have to learn everything through trial and error.&lt;/p&gt;
+
+&lt;p&gt;But writing articles and open source code is just so much work. I rely on donations to pay for hosting costs and to carve out enough time from consulting to write new articles and open source code for this website.&lt;/p&gt;
+
+&lt;p&gt;If you enjoy the articles on this website, please support my work on &lt;a href=&#34;https://www.patreon.com/gafferongames&#34;&gt;Patreon&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Thanks for your support!&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash; Glenn&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Contact</title>
+      <link>http://127.0.0.1:1313/contact/</link>
+      <pubDate>Sun, 24 May 2015 18:52:04 +0200</pubDate>
+      
+      <guid>http://127.0.0.1:1313/contact/</guid>
+      <description>&lt;p&gt;Want to get in touch with me? Fill out the form below to send me a message.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Client Server Connection</title>
+      <link>http://127.0.0.1:1313/post/client_server_connection/</link>
+      <pubDate>Sun, 24 May 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/client_server_connection/</guid>
+      <description>
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://www.linkedin.com/in/glennfiedler&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;Building a Game Network Protocol&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;In this article we&amp;rsquo;re going to build a client/server connection on top of UDP.&lt;/p&gt;
+
+&lt;p&gt;I can guarantee you already at this point that some people have decided not to read this article because I&amp;rsquo;m obviously a fool. Who could possibly justify all the effort required to build a completely custom client/server network protocol over UDP when to so many people, TCP is simply good enough?&lt;/p&gt;
+
+&lt;p&gt;But why is it in 2016 that discussions of UDP vs. TCP are still so controversial, when virtually all first person shooters are networked with UDP?&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Counterstrike&lt;/li&gt;
+&lt;li&gt;Call of Duty&lt;/li&gt;
+&lt;li&gt;Titanfall&lt;/li&gt;
+&lt;li&gt;Halo&lt;/li&gt;
+&lt;li&gt;Battlefront&lt;/li&gt;
+&lt;li&gt;Overwatch&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This is a solved problem. &lt;strong&gt;The game industry uses UDP.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;So what&amp;rsquo;s going on? Why do so many games build their own custom network protocol over UDP instead of TCP? What is it about the specific use case of multiplayer gaming that makes a custom protocol built on top of UDP such a slam dunk?&lt;/p&gt;
+
+&lt;h2 id=&#34;justification-for-using-udp-instead-of-tcp&#34;&gt;Justification for using UDP instead of TCP&lt;/h2&gt;
+
+&lt;p&gt;Action games are different to web servers&lt;a href=&#34;#quic_footnote&#34;&gt;*&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Action games send &lt;strong&gt;time critical data&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Time critical data is timestamped and must be received before that time to be useful. If time critical data arrives late, it is useless and is thrown away.&lt;/p&gt;
+
+&lt;p&gt;So why can&amp;rsquo;t we use TCP for time critical data?&lt;/p&gt;
+
+&lt;p&gt;The core problem with TCP is &lt;strong&gt;head of line blocking&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;This means that TCP delivers all packets reliably and in-order, so it holds more recent packets &lt;em&gt;(that we want)&lt;/em&gt; hostage in a queue while older packets &lt;em&gt;(that we don&amp;rsquo;t)&lt;/em&gt; are resent over the network.&lt;/p&gt;
+
+&lt;p&gt;For example, if the server sends updates 10 times per-second, the following packets are sent to a client:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    t = 10.0
+    t = 10.1
+    t = 10.2
+    t = 10.3
+    t = 10.4
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But if the packet containing state for time t = 10.0 is lost, under TCP we must wait for it to be resent before we can access packets t = 10.1 and 10.2, even though they&amp;rsquo;ve already arrived. By the time the resent packet arrives, we&amp;rsquo;d much rather have just skipped over t = 10.0 and be displaying something around 10.3 or 10.4, but TCP does not give us this option. All data must be delivered reliably and in-order. It&amp;rsquo;s simply not possible to skip over dropped data with TCP.&lt;/p&gt;
+
+&lt;p&gt;This creates terrible problems for time critical data, leading to poor performance in situations where both packet loss and latency exist.&lt;/p&gt;
+
+&lt;p&gt;If we want the best performance when sending time critical data over the internet, it is necessary to build our own custom protocol over UDP. UDP doesn&amp;rsquo;t provide any ordering or reliability, so we are free to drop old packets and access the most recent state that we want.&lt;/p&gt;
+
+&lt;p&gt;But using UDP comes at a cost.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;UDP doesn&amp;rsquo;t provide any concept of connection.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;We have to build that ourselves. And that, my friend, is the subject of this article.&lt;/p&gt;
+
+&lt;p&gt;&lt;a name=&#34;quic_footnote&#34;&gt;&lt;/a&gt; &lt;em&gt;* These days even web servers are transitioning to UDP via &lt;a href=&#34;https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/&#34;&gt;Google&amp;rsquo;s QUIC&lt;/a&gt;. If you still think TCP is good enough for time critical data in 2016, I encourage you to put that in your pipe and smoke it.&lt;/em&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
