@@ -4,7 +4,7 @@ local:
 	rm -rf public
 	rm -f config.toml
 	cp config_local.toml config.toml
-	open http://127.0.0.1:1313
+	bash -c "sleep 0.25 && open http://127.0.0.1:1313" &
 	hugo server --watch --verbose -D -F
 
 upload:
