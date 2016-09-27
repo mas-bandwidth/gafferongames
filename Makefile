@@ -1,4 +1,4 @@
-.PHONY: server public deploy
+.PHONY: server public upload commit
 
 server:
 	rm -rf public
