@@ -1,19 +1,11 @@
-.PHONY: server public upload commit
+.PHONY: local upload commit
 
-server:
+local:
 	rm -rf public
 	rm -f config.toml
 	cp config_local.toml config.toml
+	open http://127.0.0.1:1313
 	hugo server --watch --verbose -D -F
-
-public:
-	rm -rf public
-	cp config.toml
-	mv config_local.toml config.toml
-	hugo
-
-commit:
-	git add *
 
 upload:
 	rm -rf public
@@ -26,6 +18,7 @@ upload:
 	rm gafferongames.zip
 	rm gafferongames
 	ssh root@linux "cd ~/www && rm -rf gafferongames && unzip gafferongames.zip"
+	open http://linux/gafferongames
 
 commit:
 	rm -rf gafferongames

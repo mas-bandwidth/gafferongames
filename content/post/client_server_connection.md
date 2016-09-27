@@ -61,4 +61,4 @@ But using UDP comes at a cost.
 
 We have to build that ourselves. And that, my friend, is the subject of this article.
 
-<a name="quic_footnote"></a> _\* These days even web servers are transitioning to UDP via [Google's QUIC](https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/). If you still think TCP is good enough for time critical data in 2016, I encourage you to put that in your pipe and smoke it._
+<a name="quic_footnote"></a> _\* These days even web servers are transitioning to UDP via [Google's QUIC](https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/). If you **still** think TCP is good enough for time critical data in 2016, I encourage you to put that in your pipe and smoke it._
