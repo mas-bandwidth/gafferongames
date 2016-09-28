@@ -1,9 +1,5 @@
 TODO
 
-    Need to work out how to mark drafts so they don't get generated in "upload", but do get generated in local.
-
-    This is important so I can make small changes to the website, but it doesn't upload stuff that isn't ready for the general public yet.
-
     -----------------
 
     Finish writing "Client Server Connection"
