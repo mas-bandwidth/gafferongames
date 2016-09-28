@@ -4,7 +4,6 @@ menu = "main"
 title = "About"
 type = "about"
 weight = -190
-
 +++
 
 Hi, I’m [Glenn Fiedler](https://www.linkedin.com/in/glennfiedler) the author of **gafferongames.com**. I'm a professional network programmer with 15 years experience working in the game industry.
