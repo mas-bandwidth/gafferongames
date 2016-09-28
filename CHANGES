@@ -1,4 +1,14 @@
 
+Wednesday 28th September, 2016
+==============================
+
+    Tested RSS feed, it's working great, but it doesn't need a link or anything. You just point the RSS reader at my URL and it does the rest.
+
+    Adjusted the email icon at the bottom to link to the contact page. Doesn't seem worthwhile to have the contact page if you just provide a direct email link in the footer =p
+
+    Doing it this way avoids sharing my email address for spambots, which is probably a good thing.
+
+
 Tuesday 27th September, 2016
 ============================
 

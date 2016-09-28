@@ -1,26 +1,20 @@
 TODO
 
-    Tidy up and get "Client Server Connection" article in good enough format for supporters to provide feedback.
+    Need to work out how to mark drafts so they don't get generated in "upload", but do get generated in local.
 
-    First start with an introduction that makes the article stand on its own. 
-
-    It should explain:
-
-        0. This article series is about building action games like FPS.
-
-        1. Why most games action games use UDP
-
-        2. There is no concept of connection on UDP
-
-        3. Most game teams build the client/server connection on top of UDP (or licence middleware that does this for them)
-
-        4. This article is going to show you how to do that.
+    This is important so I can make small changes to the website, but it doesn't upload stuff that isn't ready for the general public yet.
 
     -----------------
 
-    This should be extended to include diagrams and images to explain concepts, as well as source code examples that are final.
+    Finish writing "Client Server Connection"
 
-    Make it obviously better than the previous drafts, it should show progress.
+    -----------------
+
+    Port across the existing "Networked Physics" article series.
+
+    -----------------
+
+    Port across the existing "Game Networking" series.
 
     -----------------
 
@@ -28,12 +22,6 @@ TODO
 
     People fundamentally need to be see the structure of articles planned, and want the next one in the series... this is key. Cannot lose this.
 
-    I dislike the all white (hard to read) wall of text of "Posted by X on Y in Z tags {t}" under the article Heading.
-
-    This is hard to parse and different to scan. I want to color the bits that aren't links differently to the links for easier scanning.
-    
-    Want to get RSS feed working, and an RSS button at the bottom ideally along with the social buttons.
-
-    https://gohugo.io/templates/rss/
-
     https://npf.io/2014/08/making-it-a-series/
+
+    I dislike the all white (hard to read) wall of text of "Posted by X on Y in Z tags {t}" under the article Heading. Clean this up visually.

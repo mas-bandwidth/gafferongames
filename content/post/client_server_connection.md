@@ -1,7 +1,7 @@
 +++
 categories = ["Building a Game Network Protocol"]
-tags = ["networking","game development"]
-date = "2015-05-24"
+tags = ["networking"]
+date = "2016-09-28"
 title = "Client Server Connection"
 description = "How to create a client/server connection over UDP"
 +++
