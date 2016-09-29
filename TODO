@@ -25,3 +25,17 @@ TODO
     https://npf.io/2014/08/making-it-a-series/
 
     I dislike the all white (hard to read) wall of text of "Posted by X on Y in Z tags {t}" under the article Heading. Clean this up visually.
+
+    -----------------
+
+    This could be a convenient option for hosting the static website content, but probably not the videos:
+
+    https://www.aerobatic.com
+
+    Not sure it really beats my nginx option though.
+
+    Auth looks nice though for supporter only articles:
+
+    https://www.aerobatic.com/docs/http-basic-authentication#custom-auth
+
+    -----------------

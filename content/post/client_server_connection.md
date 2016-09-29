@@ -14,7 +14,7 @@ In this article we're going to build a client/server connection on top of UDP.
 
 I can guarantee you already at this point that some people have decided not to read this article because I'm obviously a fool. Who could possibly justify all the effort required to build a completely custom client/server network protocol over UDP when for so many people, TCP is simply good enough?
 
-But why is it in 2016 that discussions of UDP vs. TCP are still so controversial, when virtually all first person shooters are networked with UDP? 
+But why is it in 2016 that discussions of UDP vs. TCP are still so controversial, when virtually all first person shooters are networked with UDP?
 
 * Counterstrike
 * Call of Duty
@@ -23,7 +23,7 @@ But why is it in 2016 that discussions of UDP vs. TCP are still so controversial
 * Battlefront
 * Overwatch
 
-This is a solved problem. **The game industry uses UDP.**
+Clearly this is a solved problem. **The game industry uses UDP.**
 
 So what's going on? Why do so many games build their own custom network protocol over UDP instead of TCP? What is it about the specific use case of multiplayer gaming that makes a custom protocol built on top of UDP such a slam dunk?
 
@@ -41,7 +41,7 @@ The core problem with TCP is **head of line blocking**.
 
 This means that TCP delivers all packets reliably and in-order, so it holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't)* are resent over the network.
 
-For example, if the server sends updates 10 times per-second, the following packets are sent to a client:
+For example, if the server sends 10 updates per-second, the following packets are sent to a client:
 
         t = 10.0
         t = 10.1
