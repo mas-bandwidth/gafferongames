@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to **Building a Game Network Protocol**.
+Hi, I'm [Glenn Fiedler](/about) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**.
 
 In this article we're going to build a client/server connection on top of UDP.
 
@@ -49,6 +49,11 @@ For example, if the server sends 10 updates per-second, the following packets ar
         t = 10.2
         t = 10.3
         t = 10.4
+        t = 10.5
+        t = 10.6
+        t = 10.7
+        t = 10.8
+        t = 10.9
 
 But if the packet containing state for time t = 10.0 is lost, under TCP we must wait for it to be resent before we can access packets t = 10.1 and 10.2, even though they've already arrived. By the time the resent packet arrives, we'd much rather have just skipped over t = 10.0 and be displaying something around 10.3 or 10.4, but TCP simply does not give us this option. All data must be delivered reliably and in-order. It's not possible to skip over dropped data with TCP.
 
