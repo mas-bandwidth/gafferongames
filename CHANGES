@@ -14,7 +14,9 @@ Friday 30th September, 2016
 
     Decided to rework all links to my name to the about section on my website. Why drive traffic to linkedin? I want it to stay on my website really.
 
-    Added all networked physics videos to the data directory. Lets see what this does to iteratino time :D
+    Added all networked physics videos to the data directory. Lets see what this does to iteration time :D
+
+    It seems that hugo is smart enough not to copy across assets that aren't referred to from articles? Or it's not copying across the data directory?
 
 
 Wednesday 28th September, 2016
