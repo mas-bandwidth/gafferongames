@@ -36,7 +36,7 @@ Action games send **time critical data**.
 
 Time critical data is timestamped and must be received before that time to be useful. If time critical data arrives late, it is useless and is thrown away.
 
-So why can't we use TCP for time critical data... ?
+So why can't we use TCP for time critical data?
 
 The core problem with TCP is **head of line blocking**. 
 
