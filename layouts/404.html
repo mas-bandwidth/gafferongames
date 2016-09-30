@@ -1,0 +1,34 @@
+{{ partial "header.html" .}}
+
+    <!-- Page Header -->
+    <header class="intro-header" style="background-image: url('{{ .Site.BaseURL }}/img/home-bg.jpg')">
+     <div class="container">
+       <div class="row">
+         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+           <div class="site-heading">
+             <h1>{{ .Site.Title }}</h1>
+             <hr class="small">
+             <span class="subheading">{{ .Site.Title }}</span>
+           </div>
+         </div>
+       </div>
+     </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+      <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+        <div class="post-preview">
+          <p class="post-meta"><a href="{{ .URL }}">Index</a>
+            <br />
+          </p>
+        </div>
+        <div class="post-preview">
+          <p class="post-meta"><a href="{{ .Site.BaseURL }}/post/">Archives</a>
+            <br />
+          </p>
+        </div>
+      </div>
+    </div>
+
+{{ partial "footer.html" .}}

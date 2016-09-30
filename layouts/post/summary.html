@@ -1,0 +1,13 @@
+               <div class="post-preview">
+                 <a href="{{ .Permalink }}">
+                      <h2 class="post-title">{{ .Title }}</h2>
+                      <h3 class="post-subtitle">{{ .Description }}</h3>
+                    </a>
+                    <p class="post-meta">Posted by <a href="#">{{ .Site.Params.Author }}</a> on {{ dateFormat .Site.Params.DateForm .Date }}
+                    <br />
+                    {{ partial "categories.html" .}}
+                    <br />
+                    {{ partial "tags.html" .}}
+                  </p>
+                </div>
+                <hr>

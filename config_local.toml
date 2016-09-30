@@ -2,7 +2,6 @@ baseurl = "http://127.0.0.1:1313"
 title = "Gaffer On Games"
 canonifyurls = true
 paginate = 10
-theme = "startbootstrap-clean-blog"
 languageCode = "en-us"
 copyright = "© The Network Protocol Company, Inc."
 

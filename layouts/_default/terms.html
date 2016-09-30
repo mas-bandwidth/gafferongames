@@ -1,0 +1,32 @@
+{{ partial "header.html" . }}
+
+    <!-- Page Header -->
+    <header class="intro-header" style="background-image: url('{{ .Site.BaseURL }}/img/home-bg.jpg')">
+     <div class="container">
+       <div class="row">
+         <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+           <div class="site-heading">
+             <h1>{{ .Title }}</h1>
+             <hr class="small">
+             <span class="subheading">{{ .Title }}</span>
+           </div>
+         </div>
+       </div>
+     </div>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+      <div class="row">
+        <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+          <ul>
+            {{ $data := .Data }}
+            {{ range $key, $value := .Data.Terms.ByCount }}
+            <li><a href="/{{ $data.Plural }}/{{ $value.Name | urlize }}">{{ $value.Name | title }}</a> {{ $value.Count }}</li>
+            {{ end }}
+          </ul>
+        </div>
+      </div>
+    </div>
+
+{{ partial "footer.html" . }}
