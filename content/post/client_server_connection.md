@@ -4,11 +4,12 @@ tags = ["networking"]
 date = "2016-09-28"
 title = "Client Server Connection"
 description = "How to create a client/server connection over UDP"
+draft = false
 +++
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](https://www.linkedin.com/in/glennfiedler) and welcome to **Building a Game Network Protocol**.
+Hi, I'm [Glenn Fiedler](/about) and welcome to **Building a Game Network Protocol**.
 
 In this article we're going to build a client/server connection on top of UDP.
 

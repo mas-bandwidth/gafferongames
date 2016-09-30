@@ -11,11 +11,7 @@
              <div class="post-heading">
                <h1>{{ .Title }}</h1>
                <h2 class="subheading">{{ .Description }}</h2>
-               <span class="meta">Posted by <a href="#">{{ .Site.Params.Author }}</a> on {{ dateFormat .Site.Params.DateForm .Date }}
-                 <br />
-                 {{ partial "categories.html" . }}
-                 <br />
-                 {{ partial "tags.html" . }}
+               <span class="meta">Posted by <a href="{{ .Site.BaseURL }}/about">{{ .Site.Params.Author }}</a> on {{ dateFormat .Site.Params.DateForm .Date }}
                </span>
              </div>
            </div>
