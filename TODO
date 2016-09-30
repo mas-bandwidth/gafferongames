@@ -2,15 +2,29 @@ TODO
 
     -----------------
 
+    Port across the existing "Networked Physics" article series.
+
+    Check them in both the browser and in the RSS reader. Do videos show up in RSS readers? Kindof a bummer if they don't!
+
+    -----------------
+
+    Find way to speed up video upload
+
+    Either a) get smart and delta it with git for the upload step, or separate out the upload of the videos from the rest of the content.
+
+    Videos don't change often so no point waiting 30 seconds for them to upload everytime I make a small change.
+
+    -----------------
+
     Finish writing "Client Server Connection"
 
     -----------------
 
-    Port across the existing "Networked Physics" article series.
+    Port across the existing "Game Networking" series.
 
     -----------------
 
-    Port across the existing "Game Networking" series.
+    Port across the existing "Game Physics" series.
 
     -----------------
 
