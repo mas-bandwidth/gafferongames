@@ -41,15 +41,15 @@ This means that if we know the current position and velocity of an object, and t
 
 For those who have not formally studied differential equations at university, take heart for you are in just as good a position as those who have! This is because we are not going to solve the differential equations as you would normally do in first year mathematics, instead we are going to **numerically integrate** to find the solution.
 
-Here's how numerical integration works. First, start at an initial position and velocity, then take a small step forward to find the velocity and position at a future time. Then repeat this, moving forward in small discrete time steps, using the result of the previous calculation as the starting point for the next.
+Here is how numerical integration works. First, start at an initial position and velocity, then take a small step forward to find the velocity and position at a future time. Then repeat this, moving forward in small discrete time steps, using the result of the previous calculation as the starting point for the next.
 
-But how do we find the change in velocity and position each step? 
+But how do we find the change in velocity and position for each step? 
 
 The answer lies in the **equations of motion**. 
 
-Lets call our current time **t**, and the time step **dt** or 'delta time'.
+Let's call our current time **t**, and the time step **dt** or 'delta time'.
 
-Now we can put the equations of motion in a form anyone can understand:
+Now we can put the equations of motion in a form that anyone can understand:
 
         acceleration = force / mass
         
@@ -57,11 +57,11 @@ Now we can put the equations of motion in a form anyone can understand:
 
         change in velocity = acceleration * dt
         
-This makes intuitive sense because if you're in a car traveling 60 kilometers per-hour, in one hour you'll be 60 kilometers further down the road. Similarly, a car accelerating 10 kilometers per-hour per-second from a standing start will be travelling 100 kilometers per-hour in 10 seconds.
+This makes intuitive sense because if you're in a car traveling 60 kilometers per-hour, in one hour you'll be 60 kilometers further down the road. Similarly, a car that is accelerating 10 kilometers per-hour per-second from a standing start will be travelling 100 kilometers per-hour 10 seconds later.
 
 Of course this logic only holds when acceleration and velocity are constant. But even when they're not, it's still a decent approximation to start with.
 
-Lets put this into code. Starting with a stationary object at the origin weighing one kilogram, we apply a constant force of 10 newtons and step forward with a time step of one second:
+Let's put this into code. Starting with a stationary object at the origin weighing one kilogram, we apply a constant force of 10 newtons and step forward with a time step of one second:
 
         double t = 0.0;
         float dt = 1.0f;
@@ -104,7 +104,7 @@ Euler integration is the most basic of numerical integration techniques. It is o
 
 Since acceleration is constant in the example above, the integration of velocity is without error. However, we are also integrating velocity to get the position each step, and velocity is increasing 10 meters per-second per-second due to acceleration, so velocity is definitely _not_ constant. This means there is error in the integrated position.
 
-Just how large is this error? Lets find out!
+Just how large is this error? Let's find out!
 
 There is a closed form solution for how an object moves under constant acceleration. We can use this equation to compare our numerically integrated position with the exact result:
 
@@ -161,7 +161,7 @@ This is not to suggest that this is automatically "the best" integrator for all 
 
 I could present to you RK4 in form of general mathematical equations, but seeing as my target audience for this article are programmers, not mathematicians, I will explain using code instead.
 
-So before we go any further lets define the state of an object as a struct in C++ so that we have both position and velocity values conveniently stored in one place:
+So before we go any further let's define the state of an object as a struct in C++ so that we have both position and velocity values conveniently stored in one place:
 
         struct State
         {
