@@ -181,7 +181,7 @@ We also need a struct to store the derivatives of the state values:
             float dv;      // dv/dt = acceleration
         };
 
-Next we need is a function to advance the physics state ahead from t to t+dt using one set of derivatives, and once there recalculate the derivatives at this new state: 
+Next we need a function to advance the physics state ahead from t to t+dt using one set of derivatives, and once there recalculate the derivatives at this new state: 
 
         Derivative evaluate( const State & initial, 
                              double t, 
@@ -198,7 +198,7 @@ Next we need is a function to advance the physics state ahead from t to t+dt usi
             return output;
         }
 
-The acceleration function is what drives the entire simulation and in the example source code for this article is defined as follows:
+The acceleration function is what drives the entire simulation and in the example source code for this article it calculates a spring and damper force and returns it as the acceleration assuming unit mass:
 
         float acceleration( const State & state, double t )
         {
@@ -207,7 +207,7 @@ The acceleration function is what drives the entire simulation and in the exampl
             return -k * state.x - b * state.v;
         }
 
-This function calculates a spring and damper force and returns it as the acceleration assuming unit mass. What you write here is simulation dependent, but you must structure your simulation so you can calculate the acceleration inside this method given the current state and time, otherwise it will not work with the RK4 integrator.
+What you write here is of course simulation dependent, but you must structure your simulation so you can calculate the acceleration inside this method given the current state and time, otherwise it will not work with the RK4 integrator.
 
 Finally we get to the integration routine itself:
 
@@ -232,11 +232,13 @@ Finally we get to the integration routine itself:
             state.v = state.v + dvdt * dt;
         }
 
-Notice that RK4 samples derivatives four times to detect curvature. Notice also how it uses the previous derivative when calculating the next: derivative a is used when calculating b, b is used when calculating c, and so on. This feedback of the current derivative into the calculation of the next is what gives the RK4 integrator its accuracy.
+Notice how it uses the previous derivative when calculating the next: derivative a is used when calculating b, b is used when calculating c, and so on. This feedback of the current derivative into the calculation of the next is what gives the RK4 integrator its accuracy.
 
-Importantly, each these derivatives will typically be _different_ when the rate of change in these quantities is a function of time or the state itself. For example, a Hooke's law spring force which is a function of the current position, or a drag force which is a function of the current velocity.
+Importantly, each these derivatives will typically be _different_ when the rate of change in these quantities is a function of time or of the state itself. For example, a Hooke's law spring force which is a function of the current position, or a drag force which is a function of the current velocity.
 
 Once the four derivatives have been evaluated, the best overall derivative is calculated as a weighted sum that is derived from the [Taylor Series](https://en.wikipedia.org/wiki/Taylor_series) expansion. Details [here](https://en.wikipedia.org/wiki/Runge–Kutta_methods#Derivation_of_the_Runge.E2.80.93Kutta_fourth-order_method). This combined derivative is then used to advance the position and velocity forward, just like we did with the explicit euler integrator.
+
+(todo: weak sentence below, rework, and show the result of the RK4 integrator on the spring damper system as a graph)
 
 Even when using a relatively complicated integrator such as RK4, it all boils down in the end to something += rate of change * dt. This is because differentiation and integration are fundamentally linear operations. For now we are just integrating scalar values, but rest assured it still ends up like this when integrating vectors or even quaternions for rotational dynamics.
 
