@@ -2,6 +2,18 @@ TODO
 
     -----------------
 
+    Port across the existing "Game Physics" series.
+
+    -----------------
+
+    Get nice syntax highlighting working:
+
+    https://gohugo.io/extras/highlighting/
+
+    Definely want to do this on page generation rather than javascript, so it works well inside an RSS feed.
+
+    -----------------
+
     Port across the existing "Networked Physics" article series.
 
     Check them in both the browser and in the RSS reader. Do videos show up in RSS readers? Kindof a bummer if they don't!
@@ -24,7 +36,7 @@ TODO
 
     -----------------
 
-    Port across the existing "Game Physics" series.
+    Port across the "Virtual Go" article series.
 
     -----------------
 
