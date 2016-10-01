@@ -27,15 +27,15 @@ We can switch this around to see that acceleration is force divided by mass. Thi
 
         a = f/m
 
-Since acceleration is the rate of change in velocity over time, we can also say that force divided by mass is the rate of change in velocity:
+Acceleration is the rate of change in velocity over time:
 
         dv/dt = a = F/m
 
-Similarly, velocity is the rate of change in position over time:
+and velocity is the rate of change in position over time:
 
         dx/dt = v
 
-This means that if we know the current position and velocity of an object, and the forces that will be applied to it, we can integrate to find its position and velocity at some time in the future.
+This means if we know the current position and velocity of an object, and the forces that will be applied to it, we can integrate to find its position and velocity at some time in the future.
 
 ## Numerical Integration
 
@@ -43,7 +43,7 @@ For those who have not formally studied differential equations at university, ta
 
 Here is how numerical integration works. First, start at an initial position and velocity, then take a small step forward to find the velocity and position at a future time. Then repeat this, moving forward in small discrete time steps, using the result of the previous calculation as the starting point for the next.
 
-But how do we find the change in velocity and position for each step? 
+But how do we find the change in velocity and position at each step? 
 
 The answer lies in the **equations of motion**. 
 
@@ -206,7 +206,7 @@ The acceleration function is what drives the entire simulation and in the exampl
         {
             const float k = 10;
             const float b = 1;
-            return -k * state.x - b*state.v;
+            return -k * state.x - b * state.v;
         }
 
 This function calculates a spring and damper force and returns it as the acceleration assuming unit mass. What you write here of course is completely simulation dependent, but you must structure your simulation so it can calculate the acceleration or force inside this method given the current state and time, otherwise your simulation cannot work with the RK4 integrator.
@@ -252,4 +252,4 @@ Switch from integrating velocity directly from acceleration to integrating momen
 Try modifying the integrate method to implement an Euler integrator. Compare the results of the simulation against the RK4 integrator. How much can you increase the spring constant k before the simulation explodes with Euler? How large can you make it with RK4?
 Extend position, velocity and force to 3D quantities using vectors. If you use your intuition you should easily be able to extend the RK4 integrator to do this.
 
-<a name="ballistic_footnote"></a> _\* It's tempting to see this closed form and think "Hey, why don't I just use this function as the integrator!". While it is 100% accurate under constant acceleration due to gravity, it's not actually useful in the general case. Why is this? Consider drag forces which are a function of velocity, or spring forces which are function of distance, or forces that are a function of time. In short, acceleration is not typically constant, so an integrator which is only accurate under constant acceleration is not particularly useful._
+<a name="ballistic_footnote"></a> _\* It's tempting to see this closed form and think "Hey, why don't I just use this function as the integrator!". While it is 100% accurate under constant acceleration due to gravity, it's not actually useful in the general case. Why is this? Consider drag forces which are a function of velocity, or spring forces which are function of distance, or forces that are a function of time. In short, acceleration is not typically constant, so an integrator that is only accurate under constant acceleration is not particularly useful._
