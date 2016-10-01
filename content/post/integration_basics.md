@@ -61,7 +61,7 @@ This makes intuitive sense because if you're in a car traveling 60 kilometers pe
 
 Of course this logic only holds when acceleration and velocity are constant. But even when they're not, it's still a decent approximation to start with.
 
-Let's put this into code. Starting with a stationary object at the origin weighing one kilogram, we apply a constant force of 10 newtons and step forward with a time step of one second:
+Let's put this into code. Starting with a stationary object at the origin weighing one kilogram, we apply a constant force of 10 newtons and step forward with time steps of one second:
 
         double t = 0.0;
         float dt = 1.0f;
@@ -102,11 +102,11 @@ To save you future embarrassment, I must point out now that Euler is pronounced 
 
 Euler integration is the most basic numerical integration technique. It is only 100% accurate when the rate of change is constant over the timestep.
 
-Since acceleration is constant in the example above, the integration of velocity is without error. However, we are also integrating velocity to get the position each step, and velocity is increasing by 10 meters per-second per-second due to acceleration, so velocity is definitely _not_ constant. This means there is error in the integrated position.
+Since acceleration is constant in the example above, the integration of velocity is without error. However, we are also integrating velocity to get the position each step, and velocity is increasing due to acceleration, so velocity is definitely _not_ constant. This means there is error in the integrated position.
 
 Just how large is this error? Let's find out!
 
-There is a closed form solution[*](#ballistic_footnote) for how an object moves under constant acceleration. We can use this equation to compare our numerically integrated position with the exact result:
+There is a closed form solution[*](#ballistic_footnote) for how an object moves under constant acceleration. We can use this to compare our numerically integrated position with the exact result:
 
         s = ut + 0.5at^2
         s = 0.0*t + 0.5at^2
@@ -236,7 +236,7 @@ Finally we get to the integration routine itself:
 
 As you can see there are multiple calls to evaluate in this routine. RK4 samples derivatives four times to detect curvature instead of just once in euler integration. Notice how it uses the previous derivative when calculating the next one: derivative a is When calculating b, b is used when calculating c, and c is feed back into the calculation of d. This feedback of the current best derivative into the calculation of the next one is what gives the RK4 integrator its accuracy.
 
-Once the four derivatives have been evaluated, the best overall derivative is calculated as a weighted sum of the individual derivatives. The weights used are derived from the [Taylor Series](https://en.wikipedia.org/wiki/Taylor_series). This combined derivative is used to advance the position and velocity ahead by dt just like we did with the explicit euler integrator.
+Once the four derivatives have been evaluated, the best overall derivative is calculated as a weighted sum that is derived from the [Taylor Series](https://en.wikipedia.org/wiki/Taylor_series) expansion. This combined derivative is then used to advance the position and velocity just like the explicit euler integrator.
 
 Notice that even when using a relatively complicated integrator such as RK4, it all boils down into something += rate of change * delta time. This is because differentiation and integration are fundamentally linear operations. For now we are just integrating scalar values, but rest assured it still ends up like this when integrating vectors or even quaternions for rotational dynamics.
 
@@ -252,4 +252,4 @@ Switch from integrating velocity directly from acceleration to integrating momen
 Try modifying the integrate method to implement an Euler integrator. Compare the results of the simulation against the RK4 integrator. How much can you increase the spring constant k before the simulation explodes with Euler? How large can you make it with RK4?
 Extend position, velocity and force to 3D quantities using vectors. If you use your intuition you should easily be able to extend the RK4 integrator to do this.
 
-<a name="ballistic_footnote"></a> _\* It's tempting to see this closed form and think "Hey, why don't I just use this function as the integrator!". While it is 100% accurate under constant acceleration due to gravity, it's not actually useful in the general case. Why is this? Consider drag forces which are a function of velocity, or spring forces which are function of distance, or forces that are a function of time. In short, acceleration is not typically constant, so an integrator that is only accurate under constant acceleration is not particularly useful._
+<a name="ballistic_footnote"></a> _\* It's tempting to see this closed form and think "Hey, why don't I just use this as the integrator!". While it is 100% accurate under constant acceleration, this is not useful in the general case because acceleration is not usually constant. Consider: drag forces (function of velocity), spring forces (function of position), and forces that are a function of time. All of these result in non-constant acceleration._
