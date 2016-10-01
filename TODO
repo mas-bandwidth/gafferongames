@@ -2,13 +2,11 @@ TODO
 
     -----------------
 
-    Port across the existing "Game Physics" series.
+    Integration Basics:
 
-    Mostly done with this, but I need to:
+    Fix up the ominous paragraph after euler error result.
 
-        a) calculate the result with dt=0.01f
-        b) fix up the overly ominous paragraph after the euler error
-        c) write a better conclusion basically saying, yeah, most physics engines just use semi-implicit euler. it's good enough for basic rigid body motion.
+    Write a better conclusion basically saying, yeah, most physics engines just use semi-implicit euler. it's good enough for basic rigid body motion.
 
     -----------------
 

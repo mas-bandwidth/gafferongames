@@ -18,6 +18,12 @@ Friday 30th September, 2016
 
     It seems that hugo is smart enough not to copy across assets that aren't referred to from articles? Or it's not copying across the data directory?
 
+    Port across the existing "Game Physics" series.
+
+    Mostly done with this, but I need to:
+
+    Calculate the result with dt=0.01f
+
 
 Wednesday 28th September, 2016
 ==============================
