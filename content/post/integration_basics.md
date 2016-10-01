@@ -71,7 +71,7 @@ Let's put this into code. Starting with a stationary object at the origin weighi
         float force = 10.0f;
         float mass = 1.0f;
 
-        while ( t <= 10.0f )
+        while ( t <= 10.0 )
         {
             position = position + velocity * dt;
             velocity = velocity + ( force / mass ) * dt;
@@ -94,9 +94,9 @@ Here is the result:
 
 As you can see, at at each step we know both the position and velocity of the object. This is numerical integration.
 
-## Why Euler Integration is not (always) so great
+## Explicit Euler
 
-What we just did is called Euler Integration. Specifically, it is a type of euler integration called **explicit euler**.
+What we just did is a type of Euler Integration called **explicit euler**.
 
 To save you future embarrassment, I must point out now that Euler is pronounced "Oiler" not "yew-ler" as it is the last name of the Swiss mathematician [Leonhard Euler](https://en.wikipedia.org/wiki/Leonhard_Euler) who first discovered this technique.
 
@@ -116,7 +116,7 @@ There is a closed form solution[*](#ballistic_footnote) for how an object moves 
 
 After 10 seconds, the object should have moved 500 meters, but euler integration gave a result of 450 meters. That's 50 meters off after just 10 seconds! 
 
-This sounds really, really bad, but it's not common for games to step physics forward with such large time steps. In fact, physics usually steps forward at something closer to the display framerate. Otherwise, how would the physics simulation react to player input?
+This sounds really, really bad, but it's not common for games to step physics forward with such large time steps. In fact, physics usually steps forward at something closer to the display framerate.
 
 Stepping forward with **dt** = 1/100 gives a result much closer to the exact value:
 
@@ -132,30 +132,34 @@ Stepping forward with **dt** = 1/100 gives a result much closer to the exact val
         t=9.99:     position = 498.498077     velocity = 99.899048
         t=10.00:    position = 499.497070     velocity = 99.999046
 
-_(todo: rework this paragraph. it's too ominous. it's just not that bad. clarify where RK4 has benefit, eg. springs, stability, euler is good enough for most things)_
+As you can see, this is a pretty good result. Certainly good enough for a game.
 
-However, no matter how much you reduce your timestep, the simple truth is that the error will always be there and that it will keep increasing over time. Given that this is an extremely simple simulation, imagine something as simple as adding a torque curve to the car, or adding gears. Suddenly the car’s acceleration is not a constant, it changes over time. Now there is error when integrating the velocity, and these errors are magnified even further when integrating the position.
+## Why Euler Integration is not (always) so great
+
+However, there are cases where explicit euler integration breaks down.
+
+(todo: new section, create a spring damper that breaks under explicit euler)
 
 ## Many different integration methods exist
 
-You can see that explicit euler has a large amount of error in the case above, but it’s a gross simplification to say that it's terrible or that it should never be used. Just be aware of its shortcomings. There are also several other Euler method variants with different properties to consider.
+Semi-implicit euler (symplectic euler) is a method that integrates velocity first before using that velocity to integrate position:
 
-For example, semi-implicit euler (symplectic euler) is a method that changes the point of time where velocity is sampled. It adds acceleration to velocity first, and then updates position from that updated velocity vs. the other way around. This small change makes the integrator more stable at the cost of losing energy over time.
-
-        while ( t <= 10.0f )
+        while ( t <= 10.0 )
         {
-            position = position + velocity * dt;
             velocity = velocity + ( force / mass ) * dt;
+            position = position + velocity * dt;
             t = t + dt;
         }
 
-A completely different option is implicit or [backwards euler](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html). This method is better for simulating stiff equations (eg. stiff springs) that break down and become unstable with other methods, but it's much more involved and requires solving a system of equations per-timestep. It's not often used for game physics.
+This small change makes the integrator more stable at the cost of losing energy over time. In a where you typically add damping anyway, this is a good trade-off for better stability. Most commercial game physics engines use this integrator.
 
-Another option for greater accuracy and less memory when simulating a large number of particles is [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration), specifically velocity-less verlet integration. This integrator does not require storing velocity per-particle, as it derives velocity from the two most recent position values. This makes collision detection and position fix-up (eg. pushing particles out of collision with a wall) easy to implement and saves a bunch of memory when you have lots of particles.
+A completely different option is implicit or [backwards euler](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html). This method is better for simulating stiff equations (eg. stiff springs) that break down and become unstable with other methods, but it requires numerically solving a system of equations per-timestep. It's not often used in game physics.
 
-There are of course many other integrators, but in this article I’m going to focus on the Runge Kutta order 4 or "RK4". So named for the two german mathematicians that discovered it: [Carl Runge](https://en.wikipedia.org/wiki/Carl_David_Tolmé_Runge) and [Martin Kutta](https://en.wikipedia.org/wiki/Martin_Wilhelm_Kutta). 
+Another option for greater accuracy and less memory when simulating a large number of particles is _(todo: change this link to velocity-less verlet specifically)_ [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration), specifically velocity-less verlet integration. This integrator does not require storing velocity per-particle, as it derives velocity from the two most recent position values. This makes collision detection and position fix-up easy to implement and saves a bunch of memory when you have lots of particles.
 
-This is not to suggest that this is automatically "the best" integrator for all applications (it’s not), or that you should always use this integrator over other methods listed above (you shouldn’t). But it is one of the most accurate general purpose integration techniques available. 
+There are many other integrators to consider: _(todo: list them with links to wikipedia pages)_. However, for the rest of this article I’m going to focus on the Runge Kutta order 4 or "RK4". So named for the two German physicists who discovered it: [Carl Runge](https://en.wikipedia.org/wiki/Carl_David_Tolmé_Runge) and [Martin Kutta](https://en.wikipedia.org/wiki/Martin_Wilhelm_Kutta). 
+
+This is not to suggest that RK4 is automatically "the best" integrator for all applications _(it’s not)_, or that you should always use this integrator over the others listed above _(you shouldn’t)_. But it is one of the most accurate general purpose integration techniques available. 
 
 ## Implementing RK4 is not as hard as it looks
 
