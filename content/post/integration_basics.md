@@ -31,7 +31,7 @@ Acceleration is the rate of change in velocity over time:
 
         dv/dt = a = F/m
 
-and velocity is the rate of change in position over time:
+Similarly, velocity is the rate of change in position over time:
 
         dx/dt = v
 
@@ -151,9 +151,9 @@ Semi-implicit euler (symplectic euler) is a method that integrates velocity firs
             t = t + dt;
         }
 
-This small change makes the integrator more stable at the cost of losing energy over time. In a where you typically add damping anyway, this is a good trade-off for better stability. Most commercial game physics engines use this integrator.
+This small change makes the integrator more stable at the cost of losing energy over time. In games, you typically add damping anyway, so this is a good trade-off for better stability. Most commercial physics engines use this integrator.
 
-A completely different option is implicit or [backwards euler](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html). This method is better for simulating stiff equations (eg. stiff springs) that break down and become unstable with other methods, but it requires numerically solving a system of equations per-timestep. It's not often used in game physics.
+A completely different option is implicit or [backwards euler](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html). This method is better for simulating stiff equations (eg. stiff springs) that break down and become unstable with other methods, but requires numerically solving a system of equations per-timestep. It's not often used in game physics.
 
 Another option for greater accuracy and less memory when simulating a large number of particles is _(todo: change this link to velocity-less verlet specifically)_ [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration), specifically velocity-less verlet integration. This integrator does not require storing velocity per-particle, as it derives velocity from the two most recent position values. This makes collision detection and position fix-up easy to implement and saves a bunch of memory when you have lots of particles.
 
