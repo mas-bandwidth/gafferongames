@@ -1,4 +1,4 @@
-.PHONY: public clean local upload commit
+.PHONY: public local upload commit clean
 
 public: 
 	rm -rf public
@@ -40,4 +40,4 @@ clean:
 integration_basics:
 	mkdir -p bin
 	g++ source/game_physics/integration_basics.cpp -o bin/integration_basics
-	bin/integration_basics
+	cd bin && ./integration_basics

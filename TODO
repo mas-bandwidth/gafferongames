@@ -4,7 +4,9 @@ TODO
 
     Integration Basics:
 
-    Fix up the ominous paragraph after euler error result.
+    Finish porting RK4 to spring damper system.
+
+    Graph the results and make the article much better looking.
 
     Write a better conclusion basically saying, yeah, most physics engines just use semi-implicit euler. it's good enough for basic rigid body motion.
 
