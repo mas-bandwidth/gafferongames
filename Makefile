@@ -37,3 +37,9 @@ commit:
 clean: 
 	rm -rf public
 	rm -f config.toml
+	rm -rf bin
+
+integration_basics:
+	mkdir -p bin
+	g++ source/game_physics/integration_basics.cpp -o bin/integration_basics
+	bin/integration_basics
