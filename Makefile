@@ -1,8 +1,10 @@
-.PHONY: clean local upload commit
+.PHONY: public clean local upload commit
 
-clean: 
+public: 
 	rm -rf public
 	rm -f config.toml
+	cp config_upload.toml config.toml
+	hugo
 
 local:
 	rm -f config.toml
@@ -31,3 +33,7 @@ commit:
 	git add .
 	git commit -am "commit"
 	git push
+
+clean: 
+	rm -rf public
+	rm -f config.toml

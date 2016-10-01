@@ -47,17 +47,17 @@ But how do we find the change in velocity and position each step?
 
 The answer lies in the **equations of motion**. 
 
-Lets call our current time **t** and the time step **dt** or 'delta time'.
+Lets call our current time **t**, and the time step **dt** or 'delta time'.
 
 Now we can put the equations of motion in a form anyone can understand:
 
         acceleration = force / mass
         
-        change in velocity = acceleration * dt
-        
         change in position = velocity * dt
 
-This makes intuitive sense because if you're in a car traveling 60 kilometers per-hour, in one hour you'll be 60 kilometers further down the road. Similarly, if a car accelerates 10 kilometers per-hour per-second from a standing start, in 10 seconds it will be travelling at 100 kilometers per-hour.
+        change in velocity = acceleration * dt
+        
+This makes intuitive sense because if you're in a car traveling 60 kilometers per-hour, in one hour you'll be 60 kilometers further down the road. Similarly, a car accelerating 10 kilometers per-hour per-second from a standing start will be travelling 100 kilometers per-hour in 10 seconds.
 
 Of course this logic only holds when acceleration and velocity are constant. But even when they're not, it's still a decent approximation to start with.
 
@@ -120,18 +120,19 @@ This sounds really, really bad, but it's not common for games to step physics fo
 
 Stepping forward with **dt** = 1/100 gives a result much closer to the exact value:
 
-        t=10:   position = 450    velocity = 100
-        t=10:   position = 450    velocity = 100
-        t=10:   position = 450    velocity = 100
-        t=10:   position = 450    velocity = 100
-        t=10:   position = 450    velocity = 100
-        t=10:   position = 450    velocity = 100
-        t=10:   position = 450    velocity = 100
-        t=10:   position = 450    velocity = 100
-        t=10:   position = 450    velocity = 100
-        t=10:   position = 450    velocity = 100
+        t=9.90:     position = 489.552155     velocity = 98.999062
+        t=9.91:     position = 490.542145     velocity = 99.099060
+        t=9.92:     position = 491.533142     velocity = 99.199059
+        t=9.93:     position = 492.525146     velocity = 99.299057
+        t=9.94:     position = 493.518127     velocity = 99.399055
+        t=9.95:     position = 494.512115     velocity = 99.499054
+        t=9.96:     position = 495.507111     velocity = 99.599052
+        t=9.97:     position = 496.503113     velocity = 99.699051
+        t=9.98:     position = 497.500092     velocity = 99.799049
+        t=9.99:     position = 498.498077     velocity = 99.899048
+        t=10.00:    position = 499.497070     velocity = 99.999046
 
-(rewrite paragraph below, it's too ominous. error exists, but it's not the end of the world for most game simulations)
+_(todo: rework this paragraph. it's too ominous. it's just not that bad. clarify where RK4 has benefit, eg. springs, stability, euler is good enough for most things)_
 
 However, no matter how much you reduce your timestep, the simple truth is that the error will always be there and that it will keep increasing over time. Given that this is an extremely simple simulation, imagine something as simple as adding a torque curve to the car, or adding gears. Suddenly the car’s acceleration is not a constant, it changes over time. Now there is error when integrating the velocity, and these errors are magnified even further when integrating the position.
 
@@ -150,17 +151,17 @@ For example, semi-implicit euler (symplectic euler) is a method that changes the
 
 A completely different option is implicit or [backwards euler](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html). This method is better for simulating stiff equations (eg. stiff springs) that break down and become unstable with other methods, but it's much more involved and requires solving a system of equations per-timestep. It's not often used for game physics.
 
-Another option for greater accuracy and less memory when simulating a large number of particles is [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration), specifically velocity-less verlet integration. This integrator does not require storing velocity per-particle, as it derives velocity from the two most recent position values. This makes collision detection and position fix-up (eg. pushing particles out of collision with a wall) really quick and easy to implement and saves a bunch of memory when you have lots of particles.
+Another option for greater accuracy and less memory when simulating a large number of particles is [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration), specifically velocity-less verlet integration. This integrator does not require storing velocity per-particle, as it derives velocity from the two most recent position values. This makes collision detection and position fix-up (eg. pushing particles out of collision with a wall) easy to implement and saves a bunch of memory when you have lots of particles.
 
-In this article I’m going to introduce the "RK4" integrator, eg. Runge Kutta order 4, so named for the two german mathematicians that discovered it: Carl Runge and Martin Kutta. This is not to suggest that this is automatically “the best” integrator for all applications (it’s not), or that you should always use this integrator over other methods listed above (you shouldn’t).
+There are of course many other integrators, but in this article I’m going to focus on the Runge Kutta order 4 or "RK4". So named for the two german mathematicians that discovered it: [Carl Runge](https://en.wikipedia.org/wiki/Carl_David_Tolmé_Runge) and [Martin Kutta](https://en.wikipedia.org/wiki/Martin_Wilhelm_Kutta). 
 
-But it is one of the more accurate general purpose integration techniques available. Read on for the details of how to implement it.
+This is not to suggest that this is automatically "the best" integrator for all applications (it’s not), or that you should always use this integrator over other methods listed above (you shouldn’t). But it is one of the most accurate general purpose integration techniques available. 
 
 ## Implementing RK4 is not as hard as it looks
 
-I could present to you RK4 in form of general mathematical equations which you could use to integrate some function using its derivative f(x,t) as is usually done, but seeing as my target audience for this article are programmers, not mathematicians, I will explain using code instead.
+I could present to you RK4 in form of general mathematical equations, but seeing as my target audience for this article are programmers, not mathematicians, I will explain using code instead.
 
-So before we go any further I will define the state of an object as a struct in C++ so that we have both position and velocity values conveniently stored in one place.
+So before we go any further lets define the state of an object as a struct in C++ so that we have both position and velocity values conveniently stored in one place:
 
         struct State
         {
@@ -168,7 +169,7 @@ So before we go any further I will define the state of an object as a struct in 
             float v;      // velocity
         };
 
-We also need a struct to store the derivatives of the state values so we can easily pass them around to functions:
+We also need a struct to store the derivatives of the state values so we can easily pass them around:
 
         struct Derivative
         {
@@ -176,10 +177,12 @@ We also need a struct to store the derivatives of the state values so we can eas
             float dv;      // dv/dt = acceleration
         };
 
-The final piece of the puzzle that we need to implement the RK4 integrator is a function to advance the physics state ahead from t to t+dt using one set of derivatives, then once there, recalculate the derivatives using this new state. This routine is the heart of the RK4 integrator and in C++ it looks like this:
+The final piece of the puzzle that we need is a function to advance the physics state ahead from t to t+dt using one set of derivatives, and once there recalculate the derivatives at this new state. 
+
+This routine is the heart of the RK4 integrator and it looks like this:
 
         Derivative evaluate( const State & initial, 
-                             float t, 
+                             double t, 
                              float dt, 
                              const Derivative & d )
         {
@@ -193,23 +196,25 @@ The final piece of the puzzle that we need to implement the RK4 integrator is a 
             return output;
         }
 
-It's absolutely critical that you understand what this method is doing. First it takes the current state of the object (its position and velocity) and advances it ahead dt seconds using an Euler Integration step with the derivatives that were passed in (velocity and acceleration). Once this new position and velocity are calculated, it calculates new derivatives at this point in time using the integrated state. These derivatives will be different to the derivatives that were initially passed in to the method if the derivatives are not constant over the timestep.
+It's absolutely critical that you understand what this method is doing. First it takes the current state of the object (its position and velocity) and advances it ahead dt seconds using an Euler Integration step with the derivatives that were passed in (velocity and acceleration). Once this new position and velocity are calculated, it calculates new derivatives at this point in time using the integrated state. 
 
-In order to calculate the derivatives it copies the current state velocity into the derivative struct (this is the trick to doing position and velocity integration simultaneously) then it calls the acceleration function to calculate the acceleration for the current state at the time t+dt. The acceleration function is what drives the entire simulation and in the example source code for this article is defined as follows:
+Most importantly, each of these derivatives will be _different_ from the derivatives at the start of the time step when the rate of change in these quantities changes as a function of time, or as a function of the object state itself. For example, a Hooke's law spring force which is a function of the current position, or drag forces that are a function of the current velocity.
 
-        float acceleration( const State & state, float t )
+The acceleration function is what drives the entire simulation and in the example source code for this article is defined as follows:
+
+        float acceleration( const State & state, double t )
         {
             const float k = 10;
             const float b = 1;
             return -k * state.x - b*state.v;
         }
 
-This method calculates a spring and damper force and returns it as the acceleration assuming unit mass. What you write here of course is completely simulation dependent, but it is crucial that you structure your simulation in such a way that it can calculate the acceleration or force derivatives completely from inside this method given the current state and time, otherwise your simulation cannot work with the RK4 integrator.
+This function calculates a spring and damper force and returns it as the acceleration assuming unit mass. What you write here of course is completely simulation dependent, but you must structure your simulation so it can calculate the acceleration or force inside this method given the current state and time, otherwise your simulation cannot work with the RK4 integrator.
 
-Finally we get to the integration routine itself which integrates the state ahead from t to t+dt using RK4:
+Finally we get to the integration routine itself:
 
         void integrate( State & state, 
-                        float t, 
+                        double t, 
                         float dt )
         {
             Derivative a,b,c,d;
@@ -229,13 +234,11 @@ Finally we get to the integration routine itself which integrates the state ahea
             state.v = state.v + dvdt * dt;
         }
 
-Notice the multiple calls to evaluate that make up this routine. RK4 samples derivatives four times to detect curvature instead of just once in Euler integration. The important thing to understand is how it actually does this sampling.
+As you can see there are multiple calls to evaluate in this routine. RK4 samples derivatives four times to detect curvature instead of just once in Euler integration. Notice how it uses the previous derivative when calculating the next one. Derivative a is When calculating b, b is used when calculating c, and c is feed back into the calculation of d. This feedback of the current best derivative into the calculation of the next one is what gives the RK4 integrator its accuracy.
 
-If you look at the code above it should be clear what is going on. Notice how it uses the previous derivative when calculating the next one. When calculating derivative b it steps ahead from t to t+dt*0.5 using derivative a, then to calculate c it steps ahead using derivative b, and finally d is calculated by stepping ahead with c. This feedback of the current derivative into the calculation of the next one is what gives the RK4 integrator its accuracy.
+Once the four derivatives have been evaluated, the best overall derivative is calculated using a weighted sum derived from the [Taylor Series](https://en.wikipedia.org/wiki/Taylor_series). This combined derivative is used to advance the position and velocity over dt just as we did with the explicit euler integrator.
 
-Once the four derivative samples have been evaluated, the best overall derivative is calculated using a weighted sum of the derivatives. These weights comes from the Taylor Series. This single can then be used to advance the position and velocity over dt as we did before in the Euler integrator.
-
-Notice that even when using a complicated integrator such as RK4, it all boils down into something = something + change in something * change in time. This is because differentiation and integration are fundamentally linear operations. For now we are just integrating single values, but rest assured that it all ends up like this when integrating vectors or even quaternions for rotational dynamics.
+Notice that even when using a relatively complicated integrator such as RK4, it all boils down into something += rate of change of something * delta time. This is because differentiation and integration are fundamentally linear operations. For now we are just integrating single values, but rest assured it all ends up like this when integrating vectors or even quaternions for rotational dynamics.
 
 ## Conclusion
 

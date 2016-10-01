@@ -4,6 +4,12 @@ TODO
 
     Port across the existing "Game Physics" series.
 
+    Mostly done with this, but I need to:
+
+        a) calculate the result with dt=0.01f
+        b) fix up the overly ominous paragraph after the euler error
+        c) write a better conclusion basically saying, yeah, most physics engines just use semi-implicit euler. it's good enough for basic rigid body motion.
+
     -----------------
 
     Get nice syntax highlighting working:
