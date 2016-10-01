@@ -13,7 +13,7 @@ Hi, I'm [Glenn Fiedler](/about) and welcome to the first article in **[Game Phys
 
 If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.
 
-A physics simulation works by making many small predictions based on the laws of physics. These predictions are actually quite simple, and basically boil down to something like "that the object is here, and is traveling this fast in that direction, so in a short amount of time it should be over there". We perform these predictions using a mathematical technique called integration.
+A physics simulation works by making many small predictions based on the laws of physics. These predictions are actually quite simple, and basically boil down to something like "the object is here, and is traveling this fast in that direction, so in a short amount of time it should be over there". We perform these predictions using a mathematical technique called integration.
 
 Exactly how to implement this integration is the subject of this article.
 
@@ -23,7 +23,7 @@ You may remember from high school or university physics that force equals mass t
 
         f = ma
 
-We can switch this around to see that acceleration is force divided by mass. This makes intuitive sense because the more an object weighs, the less acceleration it receives from the same amount of force. Heavier objects are harder to throw.
+We can switch this around to see that acceleration is force divided by mass. This makes sense because the more an object weighs, the less acceleration it receives from the same amount of force. Heavier objects are harder to throw.
 
         a = f/m
 
