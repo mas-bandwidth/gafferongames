@@ -27,7 +27,7 @@ We can switch this around to see that acceleration is force divided by mass. Thi
 
         a = f/m
 
-Since acceleration is the rate of change in velocity over time, we can also say that force divided by mass is the rate of change in velocity:
+Since acceleration is the rate of change in velocity over time, we can say that force divided by mass is the rate of change in velocity:
 
         dv/dt = a = F/m
 
@@ -41,7 +41,7 @@ This means that if we know the current position and velocity of an object, and t
 
 For those who have not formally studied differential equations at university, take heart for you are in just as good a position as those who have! This is because we are not going to solve the differential equations as you would normally do in first year mathematics, instead we are going to **numerically integrate** to find the solution.
 
-Here's how numerical integration works. First, start at an initial position and velocity, then take a small step forward in time to find the velocity and position at the next time value. Then, repeat this, moving forward in time in small discrete steps, using the result of the previous step as the starting point for the next.
+Here's how numerical integration works. First, start at an initial position and velocity, then take a small step forward to find the velocity and position at a future time. Then, repeat this, moving forward in time in small discrete steps, using the result of the previous step as the starting point for the next.
 
 But how do we find the amount of change in velocity and position each step? 
 
@@ -59,9 +59,9 @@ Now we can put the equations of motion in a form anyone can understand:
 
 This makes intuitive sense because we know if we're traveling 60 kilometers per-hour in a car, then in one hour we’ll be exactly 60 kilometers further down the road. Similarly, if a car accelerates at 10 kilometers per-hour per-second from a standing start, in 10 seconds it will be travelling at 100 kilometers per hour.
 
-Of course this result only holds when acceleration and velocity are constant. But even when they're not, it's still a decent approximation to start with.
+Of course this logic lonly holds when acceleration and velocity are constant. But even when they're not, it's still a decent approximation to start with.
 
-Lets put this into code. Starting with a stationary object at the origin weighing one kilogram, we apply a constant force of 10 newtons per-second to the right, and step forward by one second each iteration:
+Lets put this into code. Starting with a stationary object at the origin weighing one kilogram we apply a constant force of 10 newtons per-second and step forward one second at a time:
 
         double t = 0.0;
         float dt = 1.0f;
@@ -102,9 +102,9 @@ To save you future embarrassment, I must point out now that Euler is pronounced 
 
 Euler integration is the most basic of numerical integration techniques. It is only 100% accurate when the rate of change is constant over the timestep.
 
-Since acceleration is constant in the example above the integration of velocity is without error. However, we are also integrating velocity to get the position each step, and velocity is increasing 10 meters per-second due to acceleration, so it is definitely _not_ constant. This means there is error in the integrated position.
+Since acceleration is constant in the example above, the integration of velocity is without error. However, we are also integrating velocity to get the position each step, and velocity is increasing 10 meters per-second per-second due to acceleration, so velocity is definitely _not_ constant. This means there is error in the integrated position.
 
-Just how large is this error?
+Just how large is this error? Lets find out!
 
 There is a closed form solution for how an object moves under constant acceleration. We can use this equation to compare our numerically integrated result against the exact result:
 
@@ -114,11 +114,11 @@ There is a closed form solution for how an object moves under constant accelerat
         s = 0.5(10)(100)
         s = 500 meters
 
-After 10 seconds, the object should have moved 500 meters to the right, but explicit euler integration with one second time steps gives a result of 450 meters. That's 50 meters off after just 10 seconds! 
+After 10 seconds, the object should have moved 500 meters, but explicit euler integration with one second time steps gives a result of 450 meters. That's 50 meters off after just 10 seconds! 
 
-This sounds really, really bad, but it's not common for games to step physics forward with such large time steps. In fact, physics usually steps forward at something closer to the display framerate. Otherwise, how would the physics simulation react to player input? 
+This sounds really, really bad, but it's not common for games to step physics forward with such large time steps. In fact, physics usually steps forward at something closer to the display framerate. Otherwise, how would the physics simulation react to player input?
 
-If we step forward with **dt** = 1/100, we get a result much closer to the exact value:
+If we step forward with **dt** = 1/100, the result is much closer to the exact value:
 
         t=10:   position = 450    velocity = 100
         t=10:   position = 450    velocity = 100
