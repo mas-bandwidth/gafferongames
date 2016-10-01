@@ -30,7 +30,7 @@ So what's going on? Why do so many games build their own custom network protocol
 
 ## Justification for using UDP instead of TCP
 
-Action games are different to web servers[*](#quic_footnote). 
+Action games are different to web servers[*](#quic_footnote).
 
 Action games send **time critical data**. 
 
