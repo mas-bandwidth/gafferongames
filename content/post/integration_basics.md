@@ -169,7 +169,7 @@ So before we go any further let's define the state of an object as a struct in C
             float v;      // velocity
         };
 
-We also need a struct to store the derivatives of the state values so we can easily pass them around:
+We also need a struct to store the derivatives of the state values:
 
         struct Derivative
         {
@@ -177,9 +177,7 @@ We also need a struct to store the derivatives of the state values so we can eas
             float dv;      // dv/dt = acceleration
         };
 
-The final piece of the puzzle that we need is a function to advance the physics state ahead from t to t+dt using one set of derivatives, and once there recalculate the derivatives at this new state. 
-
-This routine is the heart of the RK4 integrator and it looks like this:
+Next we need is a function to advance the physics state ahead from t to t+dt using one set of derivatives, and once there recalculate the derivatives at this new state. 
 
         Derivative evaluate( const State & initial, 
                              double t, 
@@ -196,10 +194,6 @@ This routine is the heart of the RK4 integrator and it looks like this:
             return output;
         }
 
-It's absolutely critical that you understand what this method is doing. First it takes the current state of the object (its position and velocity) and advances it ahead dt seconds using an Euler Integration step with the derivatives that were passed in (velocity and acceleration). Once this new position and velocity are calculated, it calculates new derivatives at this point in time using the integrated state. 
-
-Most importantly, each of these derivatives will typically be _different_ when the rate of change in these quantities changes as a function of time, or a function of the object state itself. For example, a Hooke's law spring force which is a function of the current position, or a drag force which is a function of the current velocity.
-
 The acceleration function is what drives the entire simulation and in the example source code for this article is defined as follows:
 
         float acceleration( const State & state, double t )
@@ -209,7 +203,7 @@ The acceleration function is what drives the entire simulation and in the exampl
             return -k * state.x - b * state.v;
         }
 
-This function calculates a spring and damper force and returns it as the acceleration assuming unit mass. What you write here of course is completely simulation dependent, but you must structure your simulation so it can calculate the acceleration or force inside this method given the current state and time, otherwise your simulation cannot work with the RK4 integrator.
+This function calculates a spring and damper force and returns it as the acceleration assuming unit mass. What you write here is simulation dependent, but you must structure your simulation so you can calculate the acceleration inside this method given the current state and time, otherwise it cannot work with the RK4 integrator.
 
 Finally we get to the integration routine itself:
 
@@ -234,11 +228,13 @@ Finally we get to the integration routine itself:
             state.v = state.v + dvdt * dt;
         }
 
-As you can see there are multiple calls to evaluate in this routine. RK4 samples derivatives four times to detect curvature instead of just once in euler integration. Notice how it uses the previous derivative when calculating the next one: derivative a is When calculating b, b is used when calculating c, and c is feed back into the calculation of d. This feedback of the current best derivative into the calculation of the next one is what gives the RK4 integrator its accuracy.
+Notice that RK4 samples derivatives four times to detect curvature instead of just once in euler integration. Notice also how it uses the previous derivative when calculating the next: derivative a is used when calculating b, b is used when calculating c, and so on. This feedback of the current derivative into the calculation of the next is what gives the RK4 integrator its accuracy.
 
-Once the four derivatives have been evaluated, the best overall derivative is calculated as a weighted sum that is derived from the [Taylor Series](https://en.wikipedia.org/wiki/Taylor_series) expansion. This combined derivative is then used to advance the position and velocity just like the explicit euler integrator.
+Importantly, each these derivatives will typically be _different_ when the rate of change in these quantities is a function of time or the state itself. For example, a Hooke's law spring force which is a function of the current position, or a drag force which is a function of the current velocity.
 
-Notice that even when using a relatively complicated integrator such as RK4, it all boils down into something += rate of change * delta time. This is because differentiation and integration are fundamentally linear operations. For now we are just integrating scalar values, but rest assured it still ends up like this when integrating vectors or even quaternions for rotational dynamics.
+Once the four derivatives have been evaluated, the best overall derivative is calculated as a weighted sum that is derived from the [Taylor Series](https://en.wikipedia.org/wiki/Taylor_series) expansion. Details [here](https://en.wikipedia.org/wiki/Runge–Kutta_methods#Derivation_of_the_Runge.E2.80.93Kutta_fourth-order_method). This combined derivative is then used to advance the position and velocity just like the explicit euler integrator.
+
+Notice that even when using a relatively complicated integrator such as RK4, it all boils down in the end to something += rate of change * dt. This is because differentiation and integration are fundamentally linear operations. For now we are just integrating scalar values, but rest assured it still ends up like this when integrating vectors or even quaternions for rotational dynamics.
 
 ## Conclusion
 
