@@ -27,17 +27,15 @@ upload:
 	open http://linux/gafferongames
 	rm -f config.toml
 
-commit:
-	rm -rf gafferongames
-	rm -f config.toml
+commit: clean
 	git add .
 	git commit -am "commit"
 	git push
 
 clean: 
+	rm -rf bin
 	rm -rf public
 	rm -f config.toml
-	rm -rf bin
 
 integration_basics:
 	mkdir -p bin
