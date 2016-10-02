@@ -170,8 +170,34 @@ void rk4_spring_damper( const char * filename, float dt, float k, float b )
 
 void exact_spring_undamped( const char * filename, float dt, float k )
 {
-    // From https://www.ncsu.edu/crsc/events/ugw05/slides/root_harmonic.pdf
+    FILE * file = fopen( filename, "w" );
+    if ( !file )
+        return;
 
+    fprintf( file, "time,position\n" );
+
+    double t = 0.0;
+
+    const float m = 1.0f;
+    const float y0 = 1000.0f;
+    const float w0 = (float) sqrt( k / m );
+
+    while ( t <= 100.0 )
+    {
+        const float y = y0 * cos( w0 * t );
+
+        fprintf( file, "%.2f,%f\n", t, y );
+
+        t += dt;
+    }
+
+    printf( "wrote %s\n", filename );
+
+    fclose( file );
+}
+
+void exact_spring_damper( const char * filename, float dt, float k )
+{
     FILE * file = fopen( filename, "w" );
     if ( !file )
         return;
@@ -232,6 +258,10 @@ int main()
     exact_spring_undamped( "exact_spring_undamped_100fps.csv", 0.01f, k );    
 
     exact_spring_undamped( "exact_spring_undamped_10fps.csv", 0.01f, k );    
+
+    exact_spring_damper( "exact_spring_undamped_100fps.csv", 0.01f, k, b );
+
+    exact_spring_damper( "exact_spring_undamped_10fps.csv", 0.01f, k, b );
 
     return 0;
 }

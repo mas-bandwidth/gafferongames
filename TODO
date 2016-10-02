@@ -1,18 +1,15 @@
+DONE
+
+
 TODO
-    
-    Implement closed form for the damped spring and output the data
-
-    https://www.ncsu.edu/crsc/events/ugw05/slides/root_harmonic.pdf
-
-    -----------------
-
-    Compare RK4 and symmetric euler with exact solution, damped and undamped.
 
     -----------------
 
     Compare my RK4 implementation with others and make sure my RK4 is actually RK4...
 
     -----------------
+
+    God I really hate plot.ly. It's so fucking slow. Is there a better solution for graphing that I can use locally?
 
     -----------------
 

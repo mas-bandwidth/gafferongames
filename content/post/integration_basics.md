@@ -134,7 +134,7 @@ Stepping forward with **dt** = 1/100 gives a result much closer to the exact val
 
 As you can see, this is a pretty good result. Certainly good enough for a game.
 
-## Why Euler Integration is not (always) so great
+## Why explicit euler is not (always) so great
 
 However, there are cases where explicit euler integration breaks down.
 

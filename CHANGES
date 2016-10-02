@@ -1,6 +1,36 @@
 
-Saturday 31st September, 2016
-=============================
+Sunday 1st October, 2016
+========================
+
+    Implement closed form for the damped spring and output the data
+
+    https://www.ncsu.edu/crsc/events/ugw05/slides/root_harmonic.pdf
+
+    ^--- Actually, this result seems wrong. y0*y0? Are you sure. Seems like it should be y0 + ...
+
+    Added closed form for mass spring system with zero initial velocity, cosine.
+
+    Now comparing this vs. RK4 and implicit euler solutions...
+
+    -----------------
+
+    Research shows that the implicit euler integration at 100fps matches the exact solution almost precisely.
+
+    As does the RK4...
+
+    -----------------
+
+    Compared RK4 and semi-implicit euler with exact solution for undamped at 10HZ
+
+    However, at 10HZ the implicit euler has a different phase to the RK4, while the RK4 has the correct phase, but loses energy!
+
+    This is very interesting result. This is something worth writing about!
+
+    -----------------
+
+
+Saturday 1st October, 2016
+==========================
 
     Bunch of work on the integration basics article.
 
