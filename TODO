@@ -7,6 +7,10 @@ TODO
 
     Implement closed form damped simple harmonic oscillator.
 
+    https://en.wikipedia.org/wiki/Harmonic_oscillator
+
+    https://www.ncsu.edu/crsc/events/ugw05/slides/root_harmonic.pdf
+
     -----------------
 
     God I really hate plot.ly. It's so fucking slow. Is there a better solution for graphing that I can use locally?
