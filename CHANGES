@@ -28,6 +28,18 @@ Sunday 1st October, 2016
 
     -----------------
 
+    Compare my 2nd order RK4 implementation to others. Have I actually implemented it correctly?!
+
+    Reading through this:
+
+    http://math.stackexchange.com/questions/721076/help-with-using-the-runge-kutta-4th-order-method-on-a-system-of-2-first-order-od
+
+    I think that I have it working correctly, it's just that I have already split up into position and velocity functions, whereas the specification of a typical 2nd order ODE is x'' - x' + c = 0. So it needs splitting apart into a form that I am used to working with.
+
+    The code in this answer seems to match my answer, but implemented in an obviously different way, so it is not clearly derived from it.
+
+    -----------------
+
 
 Saturday 1st October, 2016
 ==========================

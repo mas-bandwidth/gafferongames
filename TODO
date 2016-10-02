@@ -3,9 +3,9 @@ DONE
 
 TODO
 
-    -----------------
+    ------------------
 
-    Compare my RK4 implementation with others and make sure my RK4 is actually RK4...
+    Implement closed form damped simple harmonic oscillator.
 
     -----------------
 

@@ -157,3 +157,38 @@
     "methods for second order ODEs. We said that all higher-order ODEs can be transformed to first-order ODEs of the form (1). While this is certainly true, it may not be the best way to proceed. In particular, Nyström methods work directly with second-order equations."
 
     ----------------
+
+    What would happen if I switched the order of integration for the RK4 from previous velocity to current, in effect, using implicit euler steps instead of explicit euler?
+
+    Would it be improved? What is it called now?
+
+    Is this integrator symplectic?
+
+    ----------------
+
+    This paper looks particularly interesting:
+
+    http://www.sciencedirect.com/science/article/pii/S0377042701004927
+
+    Direct PDF link for the same paper I think: http://personales.upv.es/serblaza/2002JCAM.pdf
+
+    ----------------
+
+    More interesting reading about RKN:
+
+    http://www.sanzserna.org/pdf/56_physicaD.pdf
+
+    ----------------
+
+    More good stuff on symplectic integrators:
+
+    https://math.berkeley.edu/~alanw/242papers99/markiewicz.pdf
+
+    ----------------
+
+    PRK = Partitioned Runge-Kutta
+
+    RKN = Runge Kutta Nystrom
+
+    ----------------
+    
