@@ -55,11 +55,11 @@ Now we can put the equations of motion in a form that anyone can understand:
         change in position = velocity * dt
         change in velocity = acceleration * dt
         
-This makes intuitive sense because if you're traveling 60 kilometers per-hour in a car, in one hour you'll be 60 kilometers further down the road. Similarly, a car accelerating 10 kilometers per-hour per-second will be moving 100 kilometers per-hour faster after 10 seconds.
+This makes intuitive sense because if you're in a car traveling 60 kilometers per-hour, in one hour you'll be 60 kilometers further down the road. Similarly, a car accelerating 10 kilometers per-hour per-second will be moving 100 kilometers per-hour faster after 10 seconds.
 
 Of course this logic only holds when acceleration and velocity are constant. But even when they're not, it's still a decent approximation to start with.
 
-Let's put this into code. Starting with a stationary object at the origin weighing one kilogram, we apply a constant force of 10 newtons and step forward with time steps of one second:
+Let's put this into code. Starting with a stationary object at the origin weighing one kilogram, we apply a constant force of 10 newtons and step forward with time steps (dt) of one second:
 
         double t = 0.0;
         float dt = 1.0f;
@@ -142,11 +142,13 @@ Spring damper system. Description. Basic math describing the system.
 
 <img src="/img/game_physics/spring_damper_explicit_euler.png" width="100%"/>
 
-Conclusion: don't use explicit euler for a game beacuse it tends to add energy and explode.
+Conclusion: don't use explicit euler for a game becuse it tends to add energy and explode :)
 
 # Semi-implicit Euler
 
-Semi-implicit euler integrates velocity before integrating position. This seemingly trivial change makes the integrator [symplectic](todo: link). This means it tends to preserve energy when integrating the equations of motion.
+Another integration option to consider is [semi-implicit euler](https://en.wikipedia.org/wiki/Semi-implicit_Euler_method).
+
+Semi-implicit euler integrates velocity before integrating position. This seemingly trivial change makes the integrator [symplectic](https://en.wikipedia.org/wiki/Symplectic_integrator). This means it tends to preserve energy when integrating the equations of motion.
 
 Most commercial physics engines use this integrator.
 
@@ -174,7 +176,7 @@ If you take only one thing away from this article, this should be it.
 
 A completely different option is [implicit euler](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html). This method is better for simulating stiff equations that become unstable with other methods, but requires numerically solving a system of equations per-timestep. It's not often used in game physics.
 
-Another option for greater accuracy and less memory when simulating a large number of particles is [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration). This is a second order integrator and it is also symplectic. There is a variant that does not require storing velocity per-particle, as it deriven velocity from the two most recent position values. This makes collision response and position fix-up easy to implement and saves memory when you have lots of particles.
+Another option for greater accuracy and less memory when simulating a large number of particles is [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration). This is a second order integrator and it is also symplectic. There is a variant that does not require storing velocity per-particle, as it derives velocity from the two most recent position values. This makes collision response and position fix-up easy to implement and saves memory when you have lots of particles.
 
 (todo: don't "focus on RK4 for the rest of the article". explore it. lets compare it with semi-implicit euler and see which one comes out on top. beg the question. don't state that it's better. it's not automatically. in fact, it's *not* actually better for games in general)
 
@@ -183,6 +185,8 @@ There are many other integrators to consider: _(todo: list them with links to wi
 This is not to suggest that RK4 is automatically the "best" integrator for all applications _(there's no such thing)_, or that you should always use this integrator over the others listed above _(you shouldn’t)_. But it is one of the most accurate general purpose integration techniques available. 
 
 ## Implementing RK4 is not as hard as it looks
+
+(todo: fix sentence below. change logic too, there are already many mathematical explanations online: this, this and this. But since my target audience...)
 
 I could present to you RK4 in form of general mathematical equations, but seeing as my target audience for this article are programmers, not mathematicians, I will explain using code instead.
 
@@ -219,7 +223,7 @@ Next we need a function to advance the physics state ahead from t to t+dt using 
             return output;
         }
 
-The acceleration function is what drives the entire simulation and in the example source code for this article it calculates a spring and damper force and returns it as the acceleration assuming unit mass:
+The acceleration function is what drives the entire simulation. Let's set it to the spring damper system we have been using and return the acceleration assuming unit mass:
 
         float acceleration( const State & state, double t )
         {
@@ -253,15 +257,17 @@ Finally we get to the integration routine itself:
             state.v = state.v + dvdt * dt;
         }
 
-Notice how it uses the previous derivative when calculating the next: derivative a is used when calculating b, b is used when calculating c, and so on. This feedback of the current derivative into the calculation of the next is what gives the RK4 integrator its accuracy.
+Notice how derivative a is used when calculating b, b is used when calculating c, and so on. This feedback of the current derivative into the calculation of the next is what gives the RK4 integrator its accuracy.
 
-Importantly, each these derivatives will typically be _different_ when the rate of change in these quantities is a function of time or of the state itself. For example, a Hooke's law spring force which is a function of the current position, or a drag force which is a function of the current velocity.
+Importantly, each these derivatives a,b,c and d will be _different_ when the rate of change in these quantities is a function of time or a function of the state itself. For example, in the spring damper system composed of a Hooke's law spring force which is a function of the current position and a drag force which is a function of the current velocity.
 
-Once the four derivatives have been evaluated, the best overall derivative is calculated as a weighted sum that is derived from the [Taylor Series](https://en.wikipedia.org/wiki/Taylor_series) expansion. Details [here](https://en.wikipedia.org/wiki/Runge–Kutta_methods#Derivation_of_the_Runge.E2.80.93Kutta_fourth-order_method). This combined derivative is then used to advance the position and velocity forward, just like we did with the explicit euler integrator.
+Once the four derivatives have been evaluated, the best overall derivative is calculated as a weighted sum derived from the [Taylor Series](https://en.wikipedia.org/wiki/Taylor_series) expansion. Details [here](https://en.wikipedia.org/wiki/Runge–Kutta_methods#Derivation_of_the_Runge.E2.80.93Kutta_fourth-order_method). This combined derivative is then used to advance the position and velocity forward, just like we did with the explicit euler integrator.
 
-(todo: weak sentence below, rework, and show the result of the RK4 integrator on the spring damper system as a graph)
+(todo: transition sentence. is RK4 really the best or is it overkill for games?)
 
-Even when using a relatively complicated integrator such as RK4, it all boils down in the end to something += rate of change * dt. This is because differentiation and integration are fundamentally linear operations. For now we are just integrating scalar values, but rest assured it still ends up like this when integrating vectors or even quaternions for rotational dynamics.
+## Semi-implicit euler vs. RK4
+
+...
 
 ## Conclusion
 
