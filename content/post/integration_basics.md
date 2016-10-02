@@ -57,7 +57,7 @@ Now we can put the equations of motion in a form that anyone can understand:
 
         change in velocity = acceleration * dt
         
-This makes intuitive sense because if you're in a car traveling 60 kilometers per-hour, in one hour you'll be 60 kilometers further down the road. Similarly, a car that is accelerating 10 kilometers per-hour per-second from a standing start will be travelling 100 kilometers per-hour 10 seconds later.
+This makes intuitive sense because if you're traveling 60 kilometers per-hour in a car, in one hour you'll be 60 kilometers further down the road. Similarly, a car accelerating 10 kilometers per-hour per-second travels 100 kilometers per-hour faster after 10 seconds.
 
 Of course this logic only holds when acceleration and velocity are constant. But even when they're not, it's still a decent approximation to start with.
 
