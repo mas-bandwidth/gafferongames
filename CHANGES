@@ -40,6 +40,20 @@ Sunday 1st October, 2016
 
     -----------------
 
+    Implement closed form damped simple harmonic oscillator.
+
+    https://en.wikipedia.org/wiki/Harmonic_oscillator
+
+    https://www.ncsu.edu/crsc/events/ugw05/slides/root_harmonic.pdf
+
+    The result is that looking zoomed out, implicit euler and RK4 both match very closely. Hardly noticeable.
+
+    Zoomed in, it is clear that RK4 follows the exact result closer.
+
+    This is worth writing about.
+
+    -----------------
+    
 
 Saturday 1st October, 2016
 ==========================

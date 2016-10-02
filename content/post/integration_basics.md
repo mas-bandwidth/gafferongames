@@ -52,12 +52,10 @@ Let's call our current time **t**, and the time step **dt** or 'delta time'.
 Now we can put the equations of motion in a form that anyone can understand:
 
         acceleration = force / mass
-        
         change in position = velocity * dt
-
         change in velocity = acceleration * dt
         
-This makes intuitive sense because if you're traveling 60 kilometers per-hour in a car, in one hour you'll be 60 kilometers further down the road. Similarly, a car accelerating 10 kilometers per-hour per-second travels 100 kilometers per-hour faster after 10 seconds.
+This makes intuitive sense because if you're traveling 60 kilometers per-hour in a car, in one hour you'll be 60 kilometers further down the road. Similarly, a car accelerating 10 kilometers per-hour per-second will be moving 100 kilometers per-hour faster after 10 seconds.
 
 Of course this logic only holds when acceleration and velocity are constant. But even when they're not, it's still a decent approximation to start with.
 
@@ -102,7 +100,7 @@ To save you future embarrassment, I must point out now that Euler is pronounced 
 
 Euler integration is the most basic numerical integration technique. It is only 100% accurate when the rate of change is constant over the timestep.
 
-Since acceleration is constant in the example above, the integration of velocity is without error. However, we are also integrating velocity to get the position each step, and velocity is increasing due to acceleration. This means there is error in the integrated position.
+Since acceleration is constant in the example above, the integration of velocity is without error. However, we are also integrating velocity to get position, and velocity is increasing due to acceleration. This means there is error in the integrated position.
 
 Just how large is this error? Let's find out!
 
@@ -114,7 +112,7 @@ There is a closed form solution[*](#ballistic_footnote) for how an object moves 
         s = 0.5(10)(100)
         s = 500 meters
 
-After 10 seconds, the object should have moved 500 meters, but euler integration gave a result of 450 meters. That's 50 meters off after just 10 seconds! 
+After 10 seconds, the object should have moved 500 meters, but euler integration gives a result of 450 meters. That's 50 meters off after just 10 seconds! 
 
 This sounds really, really bad, but it's not common for games to step physics forward with such large time steps. In fact, physics usually steps forward at something closer to the display framerate.
 
@@ -136,28 +134,47 @@ As you can see, this is a pretty good result. Certainly good enough for a game.
 
 ## Why explicit euler is not (always) so great
 
+(todo: this is obviously a draft section...)
+
 However, there are cases where explicit euler integration breaks down.
+
+Spring damper system. Description. Basic math describing the system.
 
 <img src="/img/game_physics/spring_damper_explicit_euler.png" width="100%"/>
 
+Conclusion: don't use explicit euler for a game beacuse it tends to add energy and explode.
+
+# Semi-implicit Euler
+
+Semi-implicit euler integrates velocity before integrating position. This seemingly trivial change makes the integrator [symplectic](todo: link). This means it tends to preserve energy when integrating the equations of motion.
+
+Most commercial physics engines use this integrator.
+
+Switching from explicit to semi-implicit euler is is simple as changing:
+
+        position += velocity * dt;
+        velocity += acceleration * dt;
+
+to:
+
+        velocity += acceleration * dt;
+        position += velocity * dt;
+
+Applying semi-implicit euler to the spring damper gives us a stable result:
+
 <img src="/img/game_physics/spring_damper_implicit_euler.png" width="100%"/>
+
+Even though semi-implicit euler is still a first order method, we get a much better result when integrating the equations of motion because it is symplectic.
+
+If you take only one thing away from this article, this should be it.
 
 ## Many different integration methods exist
 
-Semi-implicit euler (symplectic euler) integrates velocity first before integrating position:
-
-        while ( t <= 10.0 )
-        {
-            velocity = velocity + ( force / mass ) * dt;
-            position = position + velocity * dt;
-            t = t + dt;
-        }
-
-This small change makes the integrator much more stable than explicit euler. (todo: link to wikipedia page for reasoning. also link to symplectic integrator page). Most commercial physics engines use this integrator.
+(todo: opening paragraph to ease in to this section)
 
 A completely different option is [implicit euler](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html). This method is better for simulating stiff equations that become unstable with other methods, but requires numerically solving a system of equations per-timestep. It's not often used in game physics.
 
-Another option for greater accuracy and less memory when simulating a large number of particles is [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration), specifically velocity-less verlet integration. This integrator does not require storing velocity per-particle, as it can derive velocity from the two most recent position values. This makes collision response and position fix-up easy to implement and saves memory when you have lots of particles.
+Another option for greater accuracy and less memory when simulating a large number of particles is [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration). This is a second order integrator and it is also symplectic. There is a variant that does not require storing velocity per-particle, as it deriven velocity from the two most recent position values. This makes collision response and position fix-up easy to implement and saves memory when you have lots of particles.
 
 (todo: don't "focus on RK4 for the rest of the article". explore it. lets compare it with semi-implicit euler and see which one comes out on top. beg the question. don't state that it's better. it's not automatically. in fact, it's *not* actually better for games in general)
 

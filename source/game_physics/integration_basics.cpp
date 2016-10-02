@@ -197,10 +197,8 @@ void exact_spring_undamped( const char * filename, float dt, float k )
     fclose( file );
 }
 
-void exact_spring_damper_underdamped( const char * filename, float dt, float k )
+void exact_spring_damper_underdamped( const char * filename, float dt, float k, float b )
 {
-    // from https://www.ncsu.edu/crsc/events/ugw05/slides/root_harmonic.pdf
-
     FILE * file = fopen( filename, "w" );
     if ( !file )
         return;
@@ -212,13 +210,13 @@ void exact_spring_damper_underdamped( const char * filename, float dt, float k )
     const float m = 1.0f;
     const float y0 = 1000.0f;
     const float w0 = (float) sqrt( k / m );
-    const float alpha = k*k - 4*w0*w0;
+    const float alpha = b*b - 4*w0*w0;
 
-    assert( alpha < 0 );
+    assert( alpha < 0 );        // otherwise not underdamped!
 
     while ( t <= 100.0 )
     {
-        const float y = y0 * cos( w0 * t );
+        const float y = y0 * exp( -b/2 * t ) * cos( w0*t );
 
         fprintf( file, "%.2f,%f\n", t, y );
 
@@ -267,7 +265,7 @@ int main()
 
     exact_spring_damper_underdamped( "exact_spring_damper_underdamped_100fps.csv", 0.01f, k, b );
 
-    exact_spring_damper_underdamped( "exact_spring_dampre_underdamped_10fps.csv", 0.01f, k, b );
+    exact_spring_damper_underdamped( "exact_spring_damper_underdamped_10fps.csv", 0.01f, k, b );
 
     return 0;
 }
