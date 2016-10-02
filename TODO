@@ -1,112 +1,18 @@
 TODO
+    
+    Implement closed form for the damped spring and output the data
+
+
 
     -----------------
 
-    Integration Basics:
-
-    Get RK4 working with the spring damper system.
-
-    Output all results to text and csv files.
-
-    Find a really good way to render high quality graphs.
-
-    Graph the and make the article much better looking.
-
-    Write a better conclusion basically saying, yeah, most physics engines just use semi-implicit euler. it's good enough for basic rigid body motion.
+    Compare RK4 and symmetric euler with exact solution, damped and undamped.
 
     -----------------
 
-    Research shows that my integration with RK4 is actually for spring-damper system not even particularly accurate, and certainly, seems to not be any more accurate for spring damper, or undamped spring than the symplectic euler.
+    Compare my RK4 implementation with others and make sure my RK4 is actually RK4...
 
     -----------------
-
-    Good constructive feedback on my article is here:
-
-    https://www.reddit.com/r/programming/comments/15f4qc/on_using_rk4_over_euler_to_integrate_for_physics/
-
-    The simple truth is I'm not actually qualified to discuss RK4.
-
-    Also, I've made a mistake by adaptive RK4 (which is for integrating position from velocity), clumsily to handle both position and velocity at the same time.
-
-    It seems that I actually get better results with the symplectic euler equation than RK4
-
-    Have I completely assed up the RK4 explanation to the point where it is worthless, or is pushing people in the wrong direction?
-
-    Almost certainly.
-
-    What then is the best thing to do?
-
-    The correct modification of the RK4 for a second order differential equation is:
-
-    "Runge-Kutta- Nyström"
-
-    ^--- This is a modification of the fourth-order Runge- Kutta method (RK4) for a second-order ordinary differential equation
-
-    Is this the same as what I have manually implemented? If so, good news. If not, I should update to use it.
-
-    -----------------
-
-    This is an excellent description of a symplectic integrator.
-
-    https://www.av8n.com/physics/symplectic-integrator.htm
-
-    http://www.iact.ugr-csic.es/personal/julyan_cartwright/papers/rkpaper/node9.html
-
-    "IT is now well known that numerical methods such as the ordinary Runge--Kutta methods are not ideal for integrating Hamiltonian systems, because Hamiltonian systems  are not generic in the set of all dynamical systems, in the sense that they are not structurally stable against non-Hamiltonian perturbations. The numerical approximation to a Hamiltonian system obtained from an ordinary numerical method does introduce a non-Hamiltonian perturbation. This means that a Hamiltonian system integrated using an ordinary numerical method will become a dissipative (non-Hamiltonian) system, with completely different long-term behaviour, since dissipative systems have attractors and Hamiltonian systems do not."
-
-    ^--- Note. Written in 1995. FFS...
-
-    -----------------
-
-    Khan academy:
-
-    https://www.youtube.com/watch?v=b-OSyxOpxKc
-
-    More stuff:
-
-    https://www.youtube.com/watch?v=1YZnic1Ug9g
-
-    -------------
-
-    Second order ODE predator/prey:
-
-    https://www.youtube.com/watch?v=0LzDiScAcJI
-
-    -----------------
-
-    This code shows how to implement RK4 for a second order ODE:
-
-    http://math.stackexchange.com/questions/721076/help-with-using-the-runge-kutta-4th-order-method-on-a-system-of-2-first-order-od
-
-    I should be able to compare this with what I have done, to make sure it is the same. Looking at it, I think it is.
-
-    -----------------
-
-    Another second order ODE RK4 that I can compare against:
-
-    http://www.engr.colostate.edu/~thompson/hPage/CourseMat/Tutorials/CompMethods/Rungekutta.pdf
-
-    -----------------
-
-    Wut
-
-    https://www.youtube.com/watch?v=45qcpa0FUZo
-
-    -----------------
-
-    More: 
-
-    http://physicsforgames.blogspot.com/2010/02/kinematic-integration.html
-
-    http://box2d.org/downloads/
-
-    https://www.reddit.com/r/gamedev/comments/4gu0ke/integrators_in_physics_engines_rk4_improved_euler/
-
-    -----------------
-
-    Excellent stuff here:
-
-    https://www.reddit.com/r/gamedev/comments/4gu0ke/integrators_in_physics_engines_rk4_improved_euler/
 
     -----------------
 
@@ -163,3 +69,4 @@ TODO
     https://www.aerobatic.com/docs/http-basic-authentication#custom-auth
 
     -----------------
+    

@@ -1,0 +1,159 @@
+    -----------------
+
+    Write a better conclusion basically saying, yeah, most physics engines just use semi-implicit euler. it's good enough for basic rigid body motion.
+
+    https://en.wikipedia.org/wiki/Semi-implicit_Euler_method
+
+    "The semi-implicit Euler is a first-order integrator, just as the standard Euler method. This means that it commits a global error of the order of Δt. However, the semi-implicit Euler method is a symplectic integrator, unlike the standard method. As a consequence, the semi-implicit Euler method almost conserves the energy (when the Hamiltonian is time-independent). Often, the energy increases steadily when the standard Euler method is applied, making it far less accurate."
+
+    -----------------
+
+    My research shows that my integration with RK4 is actually for spring-damper system not even particularly accurate, and certainly, seems to not be any more accurate for spring damper system, or undamped spring than the symplectic euler. (Well, they are both following sin curves, but maybe not the *same* sine curves...)
+
+    In fact, the RK4 is not conserving energy at higher timesteps for undamped spring. It is losing energy. This is known behavior apparently.
+
+    But is it more accurate? Probably more accurate in terms of matching the exact closed form solution...
+
+    Explore RK4 vs. the ideal, and compare, I'll bet the RK4 actually matches more accurately, however, it loses energy with larger timesteps.
+
+    https://en.wikipedia.org/wiki/Damping
+
+    -----------------
+
+    This is an excellent description of a symplectic integrator.
+
+    https://www.av8n.com/physics/symplectic-integrator.htm
+
+    http://www.iact.ugr-csic.es/personal/julyan_cartwright/papers/rkpaper/node9.html
+
+    "IT is now well known that numerical methods such as the ordinary Runge--Kutta methods are not ideal for integrating Hamiltonian systems, because Hamiltonian systems  are not generic in the set of all dynamical systems, in the sense that they are not structurally stable against non-Hamiltonian perturbations. The numerical approximation to a Hamiltonian system obtained from an ordinary numerical method does introduce a non-Hamiltonian perturbation. This means that a Hamiltonian system integrated using an ordinary numerical method will become a dissipative (non-Hamiltonian) system, with completely different long-term behaviour, since dissipative systems have attractors and Hamiltonian systems do not."
+
+    ^--- Note. Written in 1995. FFS...
+
+    -----------------
+
+    Khan academy:
+
+    https://www.youtube.com/watch?v=b-OSyxOpxKc
+
+    More stuff:
+
+    https://www.youtube.com/watch?v=1YZnic1Ug9g
+
+    -------------
+
+    Second order ODE predator/prey:
+
+    https://www.youtube.com/watch?v=0LzDiScAcJI
+
+    -----------------
+
+    This code shows how to implement RK4 for a second order ODE:
+
+    http://math.stackexchange.com/questions/721076/help-with-using-the-runge-kutta-4th-order-method-on-a-system-of-2-first-order-od
+
+    I should be able to compare this with what I have done, to make sure it is the same. Looking at it, I think it is.
+
+    -----------------
+
+    Another second order ODE RK4 that I can compare against:
+
+    http://www.engr.colostate.edu/~thompson/hPage/CourseMat/Tutorials/CompMethods/Rungekutta.pdf
+
+    -----------------
+
+    Another:
+
+    http://smath.info/wiki/GetFile.aspx?File=Examples/RK4-2ndOrderODE.pdf
+
+    -----------------
+
+    Some python code that seems to be derived from mine:
+
+    https://gist.github.com/mblondel/487187
+
+    -----------------
+
+    More: 
+
+    http://physicsforgames.blogspot.com/2010/02/kinematic-integration.html
+
+    http://box2d.org/downloads/
+
+    -----------------
+
+    Excellent stuff here:
+
+    https://www.reddit.com/r/gamedev/comments/4gu0ke/integrators_in_physics_engines_rk4_improved_euler/
+
+    ----------------
+
+    Worth reading through:
+
+    http://lpsa.swarthmore.edu/NumInt/NumIntSecond.html
+
+    ----------------
+
+    This paper seems relevant:
+
+    https://www.researchgate.net/publication/257143339_Construction_of_Improved_Runge-Kutta_Nystrom_Method_for_Solving_Second-Order_Ordinary_Differential_Equations
+
+    ----------------
+
+    Good list of resources:
+
+    http://brm.io/game-physics-for-beginners/
+
+    ----------------
+
+    Another beginner series:
+
+    http://buildnewgames.com/gamephysics/
+
+    ----------------
+
+    Some more good (critical) feedback of my RK4 implementation, suggesting that it is wrong, so it is less accurate.
+
+    http://www.gamedev.net/topic/679116-how-does-runge-kutta-4-work-in-games/
+
+    Worth reviewing this code to see how it differs. I may have an incorrect RK4 implementation.
+
+    "Don't use RK4 in games. It is not symplectic, which means that it doesn't conserve enery. Also, I believe that like other higher order integators, it behaves poorly with velocity dependent movement. Use symplectic Euler /semi-implicit Euler (at smaller timestep) instead. If you need the high accuracy, instead use David Whysong's excellent integrators that have 4th, 6th, and 8th order accuracy."
+
+    "RK4 is suitable for weak forces like changing gravity in space where extremely small drift in the beginning leads to complete failure in the end. The main idea of RK4 is made useless in cases of strong sudden forces because the movement is not continuous enough. If the gravity is just directed towards the ground on earth, RK4 does nothing at all while in the air and when you do collide, RK4 does more harm than good."
+
+    ----------------
+
+    Improving spring stability:
+
+    http://www.gamedev.net/page/resources/_/technical/math-and-physics/towards-a-simpler-stiffer-and-more-stable-spring-r3227
+
+    ----------------
+
+    Another instance where my code has caused problems:
+
+    http://gamedev.stackexchange.com/questions/69716/rk4-derivatives-understanding-game-physics
+
+    ----------------
+
+    This looks like an excellent paper that analyzes different integrators in the context of rigid body simulation:
+
+    https://arxiv.org/pdf/1311.5018v1.pdf
+
+    ----------------
+
+    Leapfrog integration:
+
+    https://en.wikipedia.org/wiki/Leapfrog_integration
+
+    ----------------
+
+    Watch Erin Catto's GDC talk on numerical integration
+
+    ----------------
+
+    https://en.wikipedia.org/wiki/Numerical_methods_for_ordinary_differential_equations
+
+    "methods for second order ODEs. We said that all higher-order ODEs can be transformed to first-order ODEs of the form (1). While this is certainly true, it may not be the best way to proceed. In particular, Nyström methods work directly with second-order equations."
+
+    ----------------

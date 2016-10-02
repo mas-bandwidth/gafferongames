@@ -5,7 +5,19 @@ Saturday 31st September, 2016
     Bunch of work on the integration basics article.
 
     Setup a new testbed for this article series with explicit and implicit euler integrators.
-    
+
+    Integration Basics:
+
+    Get RK4 working with the spring damper system.
+
+    Output all results to text and csv files.
+
+    Find a good way to render high quality graphs: http://plot.ly
+
+    Did a bunch of research. I have a lot to fix in the article. Specifically, I cannot just blanket recommend RK4 or even hint to this. Symmetric euler is good enough.
+
+    Also, my RK4 implementation may be slightly incorrect.
+
 
 Friday 30th September, 2016
 ===========================
