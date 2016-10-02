@@ -155,9 +155,9 @@ Semi-implicit euler (symplectic euler) integrates velocity first before integrat
 
 This small change makes the integrator much more stable than explicit euler. (todo: link to wikipedia page for reasoning. also link to symplectic integrator page). Most commercial physics engines use this integrator.
 
-A completely different option is implicit or [backwards euler](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html). This method is better for simulating stiff equations that break down and become unstable with other methods, but requires numerically solving a system of equations per-timestep. It's not often used in game physics.
+A completely different option is [implicit euler](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html). This method is better for simulating stiff equations that become unstable with other methods, but requires numerically solving a system of equations per-timestep. It's not often used in game physics.
 
-Another option for greater accuracy and less memory when simulating a large number of particles is [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration), specifically velocity-less verlet integration. This integrator does not require storing velocity per-particle, as it can derive velocity from the two most recent position values. This makes collision detection and position fix-up easy to implement and saves memory when you have lots of particles.
+Another option for greater accuracy and less memory when simulating a large number of particles is [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration), specifically velocity-less verlet integration. This integrator does not require storing velocity per-particle, as it can derive velocity from the two most recent position values. This makes collision response and position fix-up easy to implement and saves memory when you have lots of particles.
 
 (todo: don't "focus on RK4 for the rest of the article". explore it. lets compare it with semi-implicit euler and see which one comes out on top. beg the question. don't state that it's better. it's not automatically. in fact, it's *not* actually better for games in general)
 

@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <math.h>
 
 void explicit_euler_constant_acceleration( const char * filename, float dt ) 
 {
@@ -167,33 +168,70 @@ void rk4_spring_damper( const char * filename, float dt, float k, float b )
     fclose( file );
 }
 
+void exact_spring_undamped( const char * filename, float dt, float k )
+{
+    // From https://www.ncsu.edu/crsc/events/ugw05/slides/root_harmonic.pdf
+
+    FILE * file = fopen( filename, "w" );
+    if ( !file )
+        return;
+
+    fprintf( file, "time,position\n" );
+
+    double t = 0.0;
+
+    const float m = 1.0f;
+    const float y0 = 1000.0f;
+    const float w0 = (float) sqrt( k / m );
+
+    while ( t <= 100.0 )
+    {
+        const float y = y0 * cos( w0 * t );
+
+        fprintf( file, "%.2f,%f\n", t, y );
+
+        t += dt;
+    }
+
+    printf( "wrote %s\n", filename );
+
+    fclose( file );
+}
+
 int main()
 {
-    explicit_euler_constant_acceleration( "explicit_euler_constant_acceleration_dt_1.0.txt", 1.0f );
+    const float k = 15.0f;
+    const float b = 0.1f;
 
-    explicit_euler_constant_acceleration( "explicit_euler_constant_acceleration_dt_0.01.txt", 0.01f );
+    // explicit euler
 
-    explicit_euler_spring_damper( "explicit_euler_spring_damper.csv", 0.01f, 15.0f, 0.1f );
+    explicit_euler_constant_acceleration( "explicit_euler_constant_acceleration_1fps.txt", 1.0f );
 
-    implicit_euler_spring_damper( "implicit_euler_spring_damper.csv", 0.01f, 15.0f, 0.1f );
+    explicit_euler_constant_acceleration( "explicit_euler_constant_acceleration_100fps.txt", 0.01f );
 
-    rk4_spring_damper( "rk4_spring_damper.csv", 0.01f, 15.0f, 0.1f );
+    explicit_euler_spring_damper( "explicit_euler_spring_damper_100fps.csv", 0.01f, k, b );
 
-    rk4_spring_damper( "rk4_spring_no_damping.csv", 0.01f, 15.0f, 0.0f );
+    // implicic euler
 
-    implicit_euler_spring_damper( "implicit_euler_spring_no_damping.csv", 0.01f, 15.0f, 0.0f );
+    implicit_euler_spring_damper( "implicit_euler_spring_damper_100fps.csv", 0.01f, k, b );
 
-    rk4_spring_damper( "rk4_spring_no_damping_dt_0.1.csv", 0.1f, 15.0f, 0.0f );
+    implicit_euler_spring_damper( "implicit_euler_spring_undamped_100fps.csv", 0.01f, k, 0.0f );
 
-    implicit_euler_spring_damper( "implicit_euler_spring_no_damping_dt_0.1.csv", 0.1f, 15.0f, 0.0f );
+    implicit_euler_spring_damper( "implicit_euler_spring_undamped_10fps.csv", 0.1f, k, 0.0f );
 
-    rk4_spring_damper( "rk4_spring_no_damping_dt_0.25.csv", 0.25f, 15.0f, 0.0f );
+    // rk4
 
-    implicit_euler_spring_damper( "implicit_euler_spring_no_damping_dt_0.25.csv", 0.25f, 15.0f, 0.0f );
+    rk4_spring_damper( "rk4_spring_damper_100fps.csv", 0.01f, k, b );
 
-    rk4_spring_damper( "rk4_spring_no_damping_dt_1.0.csv", 0.25f, 15.0f, 0.0f );
+    rk4_spring_damper( "rk4_spring_undamped_100fps.csv", 0.01f, k, 0.0f );
 
-    implicit_euler_spring_damper( "implicit_euler_spring_no_damping_dt_1.0.csv", 0.25f, 15.0f, 0.0f );
+    rk4_spring_damper( "rk4_spring_undamped_10fps.csv", 0.1f, k, 0.0f );
+
+    // exact solution
+
+    exact_spring_undamped( "exact_spring_undamped_100fps.csv", 0.01f, k );    
+
+    exact_spring_undamped( "exact_spring_undamped_10fps.csv", 0.01f, k );    
 
     return 0;
 }
