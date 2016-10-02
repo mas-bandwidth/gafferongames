@@ -59,7 +59,7 @@ This makes intuitive sense because if you're in a car traveling 60 kilometers pe
 
 Of course this logic only holds when acceleration and velocity are constant. But even when they're not, it's still a decent approximation to start with.
 
-Let's put this into code. Starting with a stationary object at the origin weighing one kilogram, we apply a constant force of 10 newtons and step forward with time steps (dt) of one second:
+Let's put this into code. Starting with a stationary object at the origin weighing one kilogram, we apply a constant force of 10 newtons and step forward with time steps of one second:
 
         double t = 0.0;
         float dt = 1.0f;
@@ -144,7 +144,7 @@ Spring damper system. Description. Basic math describing the system.
 
 Conclusion: don't use explicit euler for a game becuse it tends to add energy and explode :)
 
-# Semi-implicit Euler
+## Semi-implicit Euler
 
 Another integration option to consider is [semi-implicit euler](https://en.wikipedia.org/wiki/Semi-implicit_Euler_method).
 
