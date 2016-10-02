@@ -138,7 +138,9 @@ As you can see, this is a pretty good result. Certainly good enough for a game.
 
 However, there are cases where explicit euler integration breaks down.
 
-(todo: new section, create a spring damper that breaks under explicit euler)
+<img src="/img/game_physics/spring_damper_explicit_euler.png" width="100%"/>
+
+<img src="/img/game_physics/spring_damper_implicit_euler.png" width="100%"/>
 
 ## Many different integration methods exist
 
