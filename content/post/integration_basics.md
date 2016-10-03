@@ -23,7 +23,7 @@ You may remember from high school or university physics that force equals mass t
 
         F = ma
 
-We can switch this around to see that acceleration is force divided by mass. This makes sense because the more an object weighs, the less acceleration it receives from the same amount of force. Heavier objects are harder to throw.
+We can switch this around to see that acceleration is force divided by mass. This makes intuitive sense because heavier objects are harder to throw.
 
         a = F/m
 
@@ -35,7 +35,7 @@ Similarly, velocity is the rate of change in position over time:
 
         dx/dt = v
 
-This means if we know the current position and velocity of an object, and the forces that will be applied to it, we can integrate to find its position and velocity at some time in the future.
+This means if we know the current position and velocity of an object, and the forces that will be applied to it, we can integrate to find its position and velocity at some point in the future.
 
 ## Numerical Integration
 
@@ -57,7 +57,7 @@ We can now put the equations of motion in a form that anyone can understand:
         
 This makes intuitive sense because if you're in a car traveling 60 kilometers per-hour, in one hour you'll be 60 kilometers further down the road. Similarly, a car accelerating 10 kilometers per-hour-per-second will be moving 100 kilometers per-hour faster after 10 seconds.
 
-Of course this logic only holds when acceleration and velocity are constant. But even when they're not, it's still a decent approximation to start with.
+Of course this logic only holds when acceleration and velocity are constant. But even when they're not, it's still a pretty decent approximation to start with.
 
 Let's put this into code. Starting with a stationary object at the origin weighing one kilogram, we apply a constant force of 10 newtons and step forward with time steps of one second:
 
