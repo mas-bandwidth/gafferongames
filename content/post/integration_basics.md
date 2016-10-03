@@ -39,7 +39,7 @@ This means if we know the current position and velocity of an object, and the fo
 
 ## Numerical Integration
 
-For those who have not formally studied differential equations at university, take heart for you are in just as good a position as those who have! This is because we are not going to analytically solve the differential equations as you would do in first year mathematics. Instead, we are going to **numerically integrate** to find the solution.
+For those who have not formally studied differential equations at university, take heart for you are in almost as good a position as those who have. This is because we're not going to analytically solve the differential equations as you would do in first year mathematics. Instead, we are going to **numerically integrate** to find the solution.
 
 Here is how numerical integration works. First, start at an initial position and velocity, then take a small step forward to find the velocity and position at a future time. Then repeat this, moving forward in small time steps, using the result of the previous calculation as the starting point for the next.
 
@@ -215,11 +215,9 @@ But I want to make a very important point here about RK4. Although it is more ac
 
 ## Implementing RK4
 
-(todo: fix sentence below. change logic too, there are already many mathematical explanations online: this, this and this. But since my target audience...)
+There are many great explanations of the mathematics behind RK4 already. For example: [here](https://en.wikipedia.org/wiki/Runge–Kutta_methods), [here](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node5.html) and [here](https://www.researchgate.net/publication/49587610_A_Simplified_Derivation_and_Analysis_of_Fourth_Order_Runge_Kutta_Method). But seeing as my target audience for this article are programmers, not mathematicians, I will explain using code instead.
 
-I could present to you RK4 in form of general mathematical equations, but seeing as my target audience for this article are programmers, not mathematicians, I will explain using code instead.
-
-So before we go any further let's define the state of an object as a struct in C++ so that we have both position and velocity values conveniently stored in one place:
+So before we go any further let's define the state of an object as a struct in C++ so we have both position and velocity stored conveniently in one place:
 
         struct State
         {
@@ -252,16 +250,16 @@ Next we need a function to advance the physics state ahead from t to t+dt using 
             return output;
         }
 
-The acceleration function is what drives the entire simulation. Let's set it to the spring damper system we have been using and return the acceleration assuming unit mass:
+The acceleration function is what drives the entire simulation. Let's set it to the spring damper system and return the acceleration assuming unit mass:
 
         float acceleration( const State & state, double t )
         {
-            const float k = 10;
-            const float b = 1;
+            const float k = 15.0f;
+            const float b = 0.1f;
             return -k * state.x - b * state.v;
         }
 
-What you write here is of course simulation dependent, but you must structure your simulation so you can calculate the acceleration inside this method given the current state and time, otherwise it will not work with the RK4 integrator.
+What you write here is of course simulation dependent, but you must structure your simulation so you can calculate the acceleration inside this method given the current state and time in order for it to work with the RK4 integrator.
 
 Finally we get to the integration routine itself:
 
@@ -286,28 +284,22 @@ Finally we get to the integration routine itself:
             state.v = state.v + dvdt * dt;
         }
 
-Notice how derivative a is used when calculating b, b is used when calculating c, and so on. This feedback of the current derivative into the calculation of the next is what gives the RK4 integrator its accuracy.
+Notice how the integrator evaluates derivatives at four points. Notice also how derivative a is used when calculating b, b is used when calculating c, and so on. This feedback of the current derivative into the calculation of the next is what gives the RK4 integrator its accuracy.
 
-Importantly, each these derivatives a,b,c and d will be _different_ when the rate of change in these quantities is a function of time or a function of the state itself. For example, in the spring damper system composed of a Hooke's law spring force which is a function of the current position and a drag force which is a function of the current velocity.
+Importantly, each of these derivatives a,b,c and d will be _different_ when the rate of change in these quantities is a function of time or a function of the state itself. For example, in our spring damper system where the acceleration is a function of the current position and velocity.
 
-Once the four derivatives have been evaluated, the best overall derivative is calculated as a weighted sum derived from the [Taylor Series](https://en.wikipedia.org/wiki/Taylor_series) expansion. Details [here](https://en.wikipedia.org/wiki/Runge–Kutta_methods#Derivation_of_the_Runge.E2.80.93Kutta_fourth-order_method). This combined derivative is then used to advance the position and velocity forward, just like we did with the explicit euler integrator.
-
-(todo: transition sentence. is RK4 really the best or is it overkill for games?)
+Once the four derivatives have been evaluated, the best overall derivative is calculated as a weighted sum derived from the [Taylor Series](https://en.wikipedia.org/wiki/Taylor_series) expansion. This combined derivative is then used to advance the position and velocity forward, just like we did with the explicit euler integrator.
 
 ## Semi-implicit euler vs. RK4
 
-...
+Let's put the RK4 integrator to the test. 
+
+Just how much more accurate is it than the implicit euler integrator?
+
+_(todo: write this section)_
 
 ## Conclusion
 
-_(todo: clean this up, this conclusion is poorly written)_
+_(todo: write a new conclusion. basically, RK4 is overkill, don't use explicit euler. you should probably use implicit euler. if you really need more accuracy aim for a higher order method that is sympletic such as verlet integration, or some of the more modern higher order symplectic integrators. links for further study)_
 
-I have demonstrated how to implement an RK4 integrator for a basic physics simulation. At this point if you are serious about learning game physics you should study the example source code that comes with this article and play around with it.
-
-Here are some ideas for study:
-
-Switch from integrating velocity directly from acceleration to integrating momentum from force instead (the derivative of momentum is force). You will need to add “mass” and “inverseMass” to the State struct and I recommend adding a method called “recalculate” which updates velocity = momentum * inverseMass whenever it is called. Every time you modify the momentum value you need to recalculate the velocity. You should also rename the acceleration method to “force”. Why do this? Later on when working with rotational dynamics you will need to work with angular momentum directly instead of angular velocity, so you might as well start now.
-Try modifying the integrate method to implement an Euler integrator. Compare the results of the simulation against the RK4 integrator. How much can you increase the spring constant k before the simulation explodes with Euler? How large can you make it with RK4?
-Extend position, velocity and force to 3D quantities using vectors. If you use your intuition you should easily be able to extend the RK4 integrator to do this.
-
-<a name="ballistic_footnote"></a> _\* It's tempting to see this closed form and think "Hey, why don't I just use this as the integrator!". While it is 100% accurate under constant acceleration, this is not useful in the general case because acceleration is not usually constant. Consider: drag forces (function of velocity), spring forces (function of position), and forces that are a function of time. All of these result in non-constant acceleration._
+<a name="ballistic_footnote"></a> _\* It is tempting to see this closed form and think "Hey, why don't I just use this as the integrator!". But while it is 100% accurate under constant acceleration, it is not useful in the general case because acceleration is not usually constant. Consider: drag forces (function of velocity), spring forces (function of position), and forces that are a function of time. All of these result in non-constant acceleration._
