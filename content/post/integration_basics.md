@@ -25,7 +25,7 @@ You may remember from high school or university physics that force equals mass t
 
 We can switch this around to see that acceleration is force divided by mass. This makes sense because the more an object weighs, the less acceleration it receives from the same amount of force. Heavier objects are harder to throw.
 
-        a = f/m
+        a = F/m
 
 Acceleration is the rate of change in velocity over time:
 
@@ -41,7 +41,7 @@ This means if we know the current position and velocity of an object, and the fo
 
 For those who have not formally studied differential equations at university, take heart for you are in just as good a position as those who have! This is because we are not going to solve the differential equations as you would normally do in first year mathematics, instead we are going to **numerically integrate** to find the solution.
 
-Here is how numerical integration works. First, start at an initial position and velocity, then take a small step forward to find the velocity and position at a future time. Then repeat this, moving forward in small discrete time steps, using the result of the previous calculation as the starting point for the next.
+Here is how numerical integration works. First, start at an initial position and velocity, then take a small step forward to find the velocity and position at a future time. Then repeat this, moving forward in small time steps, using the result of the previous calculation as the starting point for the next.
 
 But how do we find the change in velocity and position at each step? 
 
@@ -49,7 +49,7 @@ The answer lies in the **equations of motion**.
 
 Let's call our current time **t**, and the time step **dt** or 'delta time'.
 
-Now we can put the equations of motion in a form that anyone can understand:
+We can now put the equations of motion in a form that anyone can understand:
 
         acceleration = force / mass
         change in position = velocity * dt
@@ -112,11 +112,11 @@ There is a closed form solution[*](#ballistic_footnote) for how an object moves 
         s = 0.5(10)(100)
         s = 500 meters
 
-After 10 seconds, the object should have moved 500 meters, but euler integration gives a result of 450 meters. That's 50 meters off after just 10 seconds! 
+After 10 seconds, the object should have moved 500 meters, but explicit euler gives a result of 450 meters. That's 50 meters off after just 10 seconds! 
 
 This sounds really, really bad, but it's not common for games to step physics forward with such large time steps. In fact, physics usually steps forward at something closer to the display framerate.
 
-Stepping forward with **dt** = 1/100 gives a result much closer to the exact value:
+Stepping forward with **dt** = 1/100 yields a much better result:
 
         t=9.90:     position = 489.552155     velocity = 98.999062
         t=9.91:     position = 490.542145     velocity = 99.099060
@@ -134,7 +134,15 @@ As you can see, this is a pretty good result. Certainly good enough for a game.
 
 ## Why explicit euler is not (always) so great
 
-(todo: this is obviously a draft section...)
+With a small enough timestep explicit euler gives a good enough result for constant acceleration, but what about when acceleration isn't constant?
+
+A simple system with a non-constant is a spring damper system. Here a Hooke's law spring force is a function of the distance of the mass from the origin, and a damping force to slow the object down is proportional to the speed of the object, but in the opposite direction. 
+
+This is an example of a [simple harmonic oscillator](...).
+
+You can visualize it like this:
+
+What this means is that velocity changes continuously as a function of time, or perbut is a function of state of the object. For example, acceleration which is a function of the position of the object, or a function of its velocity, or even an acceleration that is a function of time.
 
 However, there are cases where explicit euler integration breaks down.
 
@@ -142,7 +150,7 @@ Spring damper system. Description. Basic math describing the system.
 
 <img src="/img/game_physics/spring_damper_explicit_euler.png" width="100%"/>
 
-Conclusion: don't use explicit euler for a game becuse it tends to add energy and explode :)
+Conclusion: don't use explicit euler for a game becuse it tends to add energy and explode.
 
 ## Semi-implicit Euler
 
@@ -152,7 +160,7 @@ Semi-implicit euler integrates velocity before integrating position. This seemin
 
 Most commercial physics engines use this integrator.
 
-Switching from explicit to semi-implicit euler is is simple as changing:
+Switching from explicit to semi-implicit euler is as simple as changing:
 
         position += velocity * dt;
         velocity += acceleration * dt;
@@ -178,13 +186,17 @@ A completely different option is [implicit euler](http://web.mit.edu/10.001/Web/
 
 Another option for greater accuracy and less memory when simulating a large number of particles is [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration). This is a second order integrator and it is also symplectic. There is a variant that does not require storing velocity per-particle, as it derives velocity from the two most recent position values. This makes collision response and position fix-up easy to implement and saves memory when you have lots of particles.
 
-(todo: don't "focus on RK4 for the rest of the article". explore it. lets compare it with semi-implicit euler and see which one comes out on top. beg the question. don't state that it's better. it's not automatically. in fact, it's *not* actually better for games in general)
+There are many other integrators to consider but the most classic higher order integrator which also acts as a good introduction to more complicated methods is the Runge Kutta order 4 or simply "RK4". So named for the two German physicists who discovered it: [Carl Runge](https://en.wikipedia.org/wiki/Carl_David_Tolmé_Runge) and [Martin Kutta](https://en.wikipedia.org/wiki/Martin_Wilhelm_Kutta). 
 
-There are many other integrators to consider: _(todo: list them with links to wikipedia pages)_. However, for the rest of this article I’m going to focus on the Runge Kutta order 4 or "RK4". So named for the two German physicists who discovered it: [Carl Runge](https://en.wikipedia.org/wiki/Carl_David_Tolmé_Runge) and [Martin Kutta](https://en.wikipedia.org/wiki/Martin_Wilhelm_Kutta). 
+These are German names so the 'g' is hard and the 'u' in front of 'tt' is a short 'oo' sound. I am sorry to inform you that this means we are talking about the _'roon-geh koo-ta'_ method and not a _'runge cutter'_, whatever that is.
+
+Perhaps this is why everyone just says: "**RK4**". :)
+
+(todo: clean up sentence below, a better transition would be, lets explore RK4 because it's an interesting way to explore higher order integrators)
 
 This is not to suggest that RK4 is automatically the "best" integrator for all applications _(there's no such thing)_, or that you should always use this integrator over the others listed above _(you shouldn’t)_. But it is one of the most accurate general purpose integration techniques available. 
 
-## Implementing RK4 is not as hard as it looks
+## Implementing RK4
 
 (todo: fix sentence below. change logic too, there are already many mathematical explanations online: this, this and this. But since my target audience...)
 
