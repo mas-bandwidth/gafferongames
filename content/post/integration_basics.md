@@ -134,29 +134,48 @@ As you can see, this is a pretty good result. Certainly good enough for a game.
 
 ## Why explicit euler is not (always) so great
 
-With a small enough timestep explicit euler gives a good enough result for constant acceleration, but what about when acceleration isn't constant?
+With a small enough timestep explicit euler gives decent results for constant acceleration, but what about when acceleration isn't constant?
 
-A simple system with a non-constant is a spring damper system. Here a Hooke's law spring force is a function of the distance of the mass from the origin, and a damping force to slow the object down is proportional to the speed of the object, but in the opposite direction. 
+An good example of non-constant acceleration is a [spring damper system](https://ccrma.stanford.edu/CCRMA/Courses/152/vibrating_systems.html).
 
-This is an example of a [simple harmonic oscillator](...).
+In this system a mass is attached to a spring and the motion is damped by some kind of friction. There is a force proportional to the distance of the object which pulls it towards the origin, and a force proportional to the velocity of the object, but in the opposite direction, which slows it down.
 
-You can visualize it like this:
+This force is definitely not constant throughout the timestep, and is instead a continously changing function which is a combination of the position and velocity, which are themselves changing continuously over the timestep.
 
-What this means is that velocity changes continuously as a function of time, or perbut is a function of state of the object. For example, acceleration which is a function of the position of the object, or a function of its velocity, or even an acceleration that is a function of time.
+This is an example of a [damped harmonic oscillator](https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator) and it's a well studied problem. There is a closed form solution that we can use to check our numerically integrated result against.
 
-However, there are cases where explicit euler integration breaks down.
+Let's start with the case of an underdamped system where the mass oscillates about the origin while slowing down.
 
-Spring damper system. Description. Basic math describing the system.
+Here are the input parameters to the mass spring system:
+
+* Mass: 1 kilogram
+* Initial position: 1000 meters from origin
+* Hooke's law spring coefficient: k = 15
+* Damping coefficient: b = 0.1
+
+And here is a graph of the exact solution:
+
+<img src="/img/game_physics/spring_damper_exact_solution.png" width="100%"/>
+
+But when we apply explicit euler to integrate this system, we get the following result, which has been scaled down vertically to fit:
+
+_(todo: this graph should be colored red)_
 
 <img src="/img/game_physics/spring_damper_explicit_euler.png" width="100%"/>
 
-Conclusion: don't use explicit euler for a game becuse it tends to add energy and explode.
+Instead of damping and converging on the origin, it gains energy over time!
+
+This system is unstable when integrated with explicit euler and **dt**=1/100. 
+
+Unfortunately, since we're already integrating with a small timestep, we don't have a lot of practical options to improve the accuracy. Even if we do reduce the timestep, there's still a threshold of spring tightness above which we'll see the same behavior.
+
+**Recommendation:** Don't use explicit euler because it tends to explode!
 
 ## Semi-implicit Euler
 
-Another integration option to consider is [semi-implicit euler](https://en.wikipedia.org/wiki/Semi-implicit_Euler_method).
+Another integrator to consider is [semi-implicit euler](https://en.wikipedia.org/wiki/Semi-implicit_Euler_method).
 
-Semi-implicit euler integrates velocity before integrating position. This seemingly trivial change makes the integrator [symplectic](https://en.wikipedia.org/wiki/Symplectic_integrator). This means it tends to preserve energy when integrating the equations of motion.
+Semi-implicit euler integrates velocity before integrating position instead of the other way around. This seemingly trivial change makes the integrator [symplectic](https://en.wikipedia.org/wiki/Symplectic_integrator). This means it tends to preserve energy when integrating the equations of motion.
 
 Most commercial physics engines use this integrator.
 
@@ -170,7 +189,9 @@ to:
         velocity += acceleration * dt;
         position += velocity * dt;
 
-Applying semi-implicit euler to the spring damper gives us a stable result:
+Applying the semi-implicit euler integrator with **dt** = 1/100 to the spring damper system gives us a stable result that is very close to the exact solution:
+
+_(todo: this should be colored consistently, eg. yellow or green, whichever it will be in the final graph)_
 
 <img src="/img/game_physics/spring_damper_implicit_euler.png" width="100%"/>
 

@@ -1,0 +1,476 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Gaffer On Games</title>
+    <link>http://173.255.195.190/gafferongames/</link>
+    <description>Recent content on Gaffer On Games</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© The Network Protocol Company, Inc.</copyright>
+    <lastBuildDate>Sun, 24 May 2015 18:51:50 +0200</lastBuildDate>
+    <atom:link href="http://173.255.195.190/gafferongames/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>About</title>
+      <link>http://173.255.195.190/gafferongames/about/</link>
+      <pubDate>Sun, 24 May 2015 18:51:50 +0200</pubDate>
+      
+      <guid>http://173.255.195.190/gafferongames/about/</guid>
+      <description>&lt;p&gt;Hi, I’m &lt;a href=&#34;https://www.linkedin.com/in/glennfiedler&#34;&gt;Glenn Fiedler&lt;/a&gt; the author of &lt;strong&gt;gafferongames.com&lt;/strong&gt;. I&amp;rsquo;m a professional network programmer with 15 years experience working in the game industry.&lt;/p&gt;
+
+&lt;p&gt;These days I run &lt;a href=&#34;http://www.thenetworkprotocolcompany.com&#34;&gt;The Network Protocol Company&lt;/a&gt; which is dedicated to helping people network their games by sharing information, consulting with teams, and of course, writing articles and open source code for this website.&lt;/p&gt;
+
+&lt;p&gt;Before I started my own company I worked as a senior and lead programmer on many different areas of code. I started out as a graphics programmer in my first industry job way back in 1998, but very quickly became more interested in game physics and networking. In 2006 I specialized in game networking and moved to the United States. The rest, as they say, is history.&lt;/p&gt;
+
+&lt;p&gt;During my career I&amp;rsquo;ve been fortunate enough to work on some great games:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/playstation-4/titanfall-2&#34;&gt;Titanfall 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/xbox-360/titanfall&#34;&gt;Titanfall&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/playstation-3/god-of-war-ascension&#34;&gt;God of War: Ascension&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/playstation-3/playstation-all-stars-battle-royale&#34;&gt;Playstation: All-Stars&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/playstation-3/journey&#34;&gt;Journey&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/playstation-3/la-noire&#34;&gt;L.A. Noire&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/playstation-3/god-of-war-iii&#34;&gt;God of War 3&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/xbox-360/mercenaries-2-world-in-flames&#34;&gt;Mercenaries 2&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/pc/tribes-vengeance&#34;&gt;Tribes: Vengeance&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/pc/swat-4&#34;&gt;SWAT 4&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://www.metacritic.com/game/pc/freedom-force&#34;&gt;Freedom Force&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And throughout all this I&amp;rsquo;ve always believed strongly in sharing information. Giving back. Writing articles and example source code so people encounting the same problems I did don&amp;rsquo;t have to learn everything through trial and error.&lt;/p&gt;
+
+&lt;p&gt;But writing articles and open source code is just so much work. I rely on donations to pay for hosting costs and to carve out enough time from consulting to write new articles and open source code for this website.&lt;/p&gt;
+
+&lt;p&gt;If you enjoy the articles on this website, please support my work on &lt;a href=&#34;https://www.patreon.com/gafferongames&#34;&gt;Patreon&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Thanks for your support!&lt;/p&gt;
+
+&lt;p&gt;&amp;ndash; Glenn&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Contact</title>
+      <link>http://173.255.195.190/gafferongames/contact/</link>
+      <pubDate>Sun, 24 May 2015 18:52:04 +0200</pubDate>
+      
+      <guid>http://173.255.195.190/gafferongames/contact/</guid>
+      <description>&lt;p&gt;Want to get in touch with me? Fill out the form below to send me a message.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Client Server Connection</title>
+      <link>http://173.255.195.190/gafferongames/post/client_server_connection/</link>
+      <pubDate>Wed, 28 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://173.255.195.190/gafferongames/post/client_server_connection/</guid>
+      <description>
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;http://173.255.195.190/gafferongames/about&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://173.255.195.190/gafferongames/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;In this article we&amp;rsquo;re going to build a client/server connection on top of UDP.&lt;/p&gt;
+
+&lt;p&gt;I can guarantee you already at this point that some people have decided not to read this article because I&amp;rsquo;m obviously a fool. Who could possibly justify all the effort required to build a completely custom client/server network protocol over UDP when for so many people, TCP is simply good enough?&lt;/p&gt;
+
+&lt;p&gt;But why is it in 2016 that discussions of UDP vs. TCP are still so controversial, when virtually all first person shooters are networked with UDP?&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Counterstrike&lt;/li&gt;
+&lt;li&gt;Call of Duty&lt;/li&gt;
+&lt;li&gt;Titanfall&lt;/li&gt;
+&lt;li&gt;Halo&lt;/li&gt;
+&lt;li&gt;Battlefront&lt;/li&gt;
+&lt;li&gt;Overwatch&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Clearly this is a solved problem. &lt;strong&gt;The game industry uses UDP.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;So what&amp;rsquo;s going on? Why do so many games build their own custom network protocol over UDP instead of TCP? What is it about the specific use case of multiplayer gaming that makes a custom protocol built on top of UDP such a slam dunk?&lt;/p&gt;
+
+&lt;h2 id=&#34;justification-for-using-udp-instead-of-tcp&#34;&gt;Justification for using UDP instead of TCP&lt;/h2&gt;
+
+&lt;p&gt;Action games are different to web servers&lt;a href=&#34;#quic_footnote&#34;&gt;*&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Action games send &lt;strong&gt;time critical data&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Time critical data is timestamped and must be received before that time to be useful. If time critical data arrives late, it is useless and is thrown away.&lt;/p&gt;
+
+&lt;p&gt;So why can&amp;rsquo;t we use TCP for time critical data?&lt;/p&gt;
+
+&lt;p&gt;The core problem with TCP is &lt;strong&gt;head of line blocking&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;This means that TCP delivers all packets reliably and in-order, so it holds more recent packets &lt;em&gt;(that we want)&lt;/em&gt; hostage in a queue while older packets &lt;em&gt;(that we don&amp;rsquo;t)&lt;/em&gt; are resent over the network.&lt;/p&gt;
+
+&lt;p&gt;For example, if the server sends 10 updates per-second, the following packets are sent to a client:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    t = 10.0
+    t = 10.1
+    t = 10.2
+    t = 10.3
+    t = 10.4
+    t = 10.5
+    t = 10.6
+    t = 10.7
+    t = 10.8
+    t = 10.9
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;But if the packet containing state for time t = 10.0 is lost, under TCP we must wait for it to be resent before we can access packets t = 10.1 and 10.2, even though they&amp;rsquo;ve already arrived. By the time the resent packet arrives, we&amp;rsquo;d much rather have just skipped over t = 10.0 and be displaying something around 10.3 or 10.4, but TCP simply does not give us this option. All data must be delivered reliably and in-order. It&amp;rsquo;s not possible to skip over dropped data with TCP.&lt;/p&gt;
+
+&lt;p&gt;This creates terrible problems for time critical data, leading to poor performance in situations where both packet loss and latency exist.&lt;/p&gt;
+
+&lt;p&gt;If we want the best performance when sending time critical data over the internet, it is necessary to build our own custom protocol over UDP. UDP doesn&amp;rsquo;t provide any ordering or reliability, so we are free to drop old packets and access the most recent state that we want.&lt;/p&gt;
+
+&lt;p&gt;But using UDP comes at a cost.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;UDP doesn&amp;rsquo;t provide any concept of connection.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;We have to build that ourselves. And that, my friend, is the subject of this article.&lt;/p&gt;
+
+&lt;p&gt;&lt;a name=&#34;quic_footnote&#34;&gt;&lt;/a&gt; &lt;em&gt;* These days even web servers are transitioning to UDP via &lt;a href=&#34;https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/&#34;&gt;Google&amp;rsquo;s QUIC&lt;/a&gt;. If you still think TCP is good enough for time critical data in 2016, I encourage you to put that in your pipe and smoke it.&lt;/em&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Integration Basics</title>
+      <link>http://173.255.195.190/gafferongames/post/integration_basics/</link>
+      <pubDate>Wed, 01 Jun 2005 00:00:00 +0000</pubDate>
+      
+      <guid>http://173.255.195.190/gafferongames/post/integration_basics/</guid>
+      <description>
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;http://173.255.195.190/gafferongames/about&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to the first article in &lt;strong&gt;&lt;a href=&#34;http://173.255.195.190/gafferongames/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.&lt;/p&gt;
+
+&lt;p&gt;A physics simulation works by making many small predictions based on the laws of physics. These predictions are actually quite simple, and basically boil down to something like &amp;ldquo;the object is here, and is traveling this fast in that direction, so in a short amount of time it should be over there&amp;rdquo;. We perform these predictions using a mathematical technique called integration.&lt;/p&gt;
+
+&lt;p&gt;Exactly how to implement this integration is the subject of this article.&lt;/p&gt;
+
+&lt;h2 id=&#34;integrating-the-equations-of-motion&#34;&gt;Integrating the Equations of Motion&lt;/h2&gt;
+
+&lt;p&gt;You may remember from high school or university physics that force equals mass times acceleration.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    f = ma
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We can switch this around to see that acceleration is force divided by mass. This makes sense because the more an object weighs, the less acceleration it receives from the same amount of force. Heavier objects are harder to throw.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    a = F/m
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Acceleration is the rate of change in velocity over time:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    dv/dt = a = F/m
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Similarly, velocity is the rate of change in position over time:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    dx/dt = v
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This means if we know the current position and velocity of an object, and the forces that will be applied to it, we can integrate to find its position and velocity at some time in the future.&lt;/p&gt;
+
+&lt;h2 id=&#34;numerical-integration&#34;&gt;Numerical Integration&lt;/h2&gt;
+
+&lt;p&gt;For those who have not formally studied differential equations at university, take heart for you are in just as good a position as those who have! This is because we are not going to solve the differential equations as you would normally do in first year mathematics, instead we are going to &lt;strong&gt;numerically integrate&lt;/strong&gt; to find the solution.&lt;/p&gt;
+
+&lt;p&gt;Here is how numerical integration works. First, start at an initial position and velocity, then take a small step forward to find the velocity and position at a future time. Then repeat this, moving forward in small time steps, using the result of the previous calculation as the starting point for the next.&lt;/p&gt;
+
+&lt;p&gt;But how do we find the change in velocity and position at each step?&lt;/p&gt;
+
+&lt;p&gt;The answer lies in the &lt;strong&gt;equations of motion&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s call our current time &lt;strong&gt;t&lt;/strong&gt;, and the time step &lt;strong&gt;dt&lt;/strong&gt; or &amp;lsquo;delta time&amp;rsquo;.&lt;/p&gt;
+
+&lt;p&gt;We can now put the equations of motion in a form that anyone can understand:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    acceleration = force / mass
+    change in position = velocity * dt
+    change in velocity = acceleration * dt
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;This makes intuitive sense because if you&amp;rsquo;re in a car traveling 60 kilometers per-hour, in one hour you&amp;rsquo;ll be 60 kilometers further down the road. Similarly, a car accelerating 10 kilometers per-hour per-second will be moving 100 kilometers per-hour faster after 10 seconds.&lt;/p&gt;
+
+&lt;p&gt;Of course this logic only holds when acceleration and velocity are constant. But even when they&amp;rsquo;re not, it&amp;rsquo;s still a decent approximation to start with.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s put this into code. Starting with a stationary object at the origin weighing one kilogram, we apply a constant force of 10 newtons and step forward with time steps of one second:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    double t = 0.0;
+    float dt = 1.0f;
+
+    float velocity = 0.0f;
+    float position = 0.0f;
+    float force = 10.0f;
+    float mass = 1.0f;
+
+    while ( t &amp;lt;= 10.0 )
+    {
+        position = position + velocity * dt;
+        velocity = velocity + ( force / mass ) * dt;
+        t += dt;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Here is the result:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    t=0:    position = 0      velocity = 0
+    t=1:    position = 0      velocity = 10
+    t=2:    position = 10     velocity = 20
+    t=3:    position = 30     velocity = 30
+    t=4:    position = 60     velocity = 40
+    t=5:    position = 100    velocity = 50
+    t=6:    position = 150    velocity = 60
+    t=7:    position = 210    velocity = 70
+    t=8:    position = 280    velocity = 80
+    t=9:    position = 360    velocity = 90
+    t=10:   position = 450    velocity = 100
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see, at at each step we know both the position and velocity of the object. This is numerical integration.&lt;/p&gt;
+
+&lt;h2 id=&#34;explicit-euler&#34;&gt;Explicit Euler&lt;/h2&gt;
+
+&lt;p&gt;What we just did is a type of Euler Integration called &lt;strong&gt;explicit euler&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;To save you future embarrassment, I must point out now that Euler is pronounced &amp;ldquo;Oiler&amp;rdquo; not &amp;ldquo;yew-ler&amp;rdquo; as it is the last name of the Swiss mathematician &lt;a href=&#34;https://en.wikipedia.org/wiki/Leonhard_Euler&#34;&gt;Leonhard Euler&lt;/a&gt; who first discovered this technique.&lt;/p&gt;
+
+&lt;p&gt;Euler integration is the most basic numerical integration technique. It is only 100% accurate when the rate of change is constant over the timestep.&lt;/p&gt;
+
+&lt;p&gt;Since acceleration is constant in the example above, the integration of velocity is without error. However, we are also integrating velocity to get position, and velocity is increasing due to acceleration. This means there is error in the integrated position.&lt;/p&gt;
+
+&lt;p&gt;Just how large is this error? Let&amp;rsquo;s find out!&lt;/p&gt;
+
+&lt;p&gt;There is a closed form solution&lt;a href=&#34;#ballistic_footnote&#34;&gt;*&lt;/a&gt; for how an object moves under constant acceleration. We can use this to compare our numerically integrated position with the exact result:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    s = ut + 0.5at^2
+    s = 0.0*t + 0.5at^2
+    s = 0.5(10)(10^2)
+    s = 0.5(10)(100)
+    s = 500 meters
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;After 10 seconds, the object should have moved 500 meters, but explicit euler gives a result of 450 meters. That&amp;rsquo;s 50 meters off after just 10 seconds!&lt;/p&gt;
+
+&lt;p&gt;This sounds really, really bad, but it&amp;rsquo;s not common for games to step physics forward with such large time steps. In fact, physics usually steps forward at something closer to the display framerate.&lt;/p&gt;
+
+&lt;p&gt;Stepping forward with &lt;strong&gt;dt&lt;/strong&gt; = &lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;100&lt;/sub&gt; yields a much better result:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    t=9.90:     position = 489.552155     velocity = 98.999062
+    t=9.91:     position = 490.542145     velocity = 99.099060
+    t=9.92:     position = 491.533142     velocity = 99.199059
+    t=9.93:     position = 492.525146     velocity = 99.299057
+    t=9.94:     position = 493.518127     velocity = 99.399055
+    t=9.95:     position = 494.512115     velocity = 99.499054
+    t=9.96:     position = 495.507111     velocity = 99.599052
+    t=9.97:     position = 496.503113     velocity = 99.699051
+    t=9.98:     position = 497.500092     velocity = 99.799049
+    t=9.99:     position = 498.498077     velocity = 99.899048
+    t=10.00:    position = 499.497070     velocity = 99.999046
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As you can see, this is a pretty good result. Certainly good enough for a game.&lt;/p&gt;
+
+&lt;h2 id=&#34;why-explicit-euler-is-not-always-so-great&#34;&gt;Why explicit euler is not (always) so great&lt;/h2&gt;
+
+&lt;p&gt;With a small enough timestep explicit euler gives decent results for constant acceleration, but what about when acceleration isn&amp;rsquo;t constant?&lt;/p&gt;
+
+&lt;p&gt;An good example of non-constant acceleration is a &lt;a href=&#34;https://ccrma.stanford.edu/CCRMA/Courses/152/vibrating_systems.html&#34;&gt;spring damper system&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In this system a mass is attached to a spring and the motion is damped by some kind of friction. There is a force proportional to the distance of the object which pulls it towards the origin, and a force proportional to the velocity of the object, but in the opposite direction, which slows it down.&lt;/p&gt;
+
+&lt;p&gt;This force is definitely not constant throughout the timestep, and is instead a continously changing function which is a combination of the position and velocity, which are themselves changing continuously over the timestep.&lt;/p&gt;
+
+&lt;p&gt;This is an example of a &lt;a href=&#34;https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator&#34;&gt;damped harmonic oscillator&lt;/a&gt; and it&amp;rsquo;s a well studied problem. There is a closed form solution that we can use to check our numerically integrated result against.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s start with the case of an underdamped system where the mass oscillates about the origin while slowing down.&lt;/p&gt;
+
+&lt;p&gt;Here are the input parameters to the mass spring system:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Mass: 1 kilogram&lt;/li&gt;
+&lt;li&gt;Initial position: 1000 meters from origin&lt;/li&gt;
+&lt;li&gt;Hooke&amp;rsquo;s law spring coefficient: k = 15&lt;/li&gt;
+&lt;li&gt;Damping coefficient: b = 0.1&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;And here is a graph of the exact solution:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://173.255.195.190/gafferongames/img/game_physics/spring_damper_exact_solution.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;But when we apply explicit euler to integrate this system, we get the following result, which has been scaled down vertically to fit:&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;(todo: this graph should be colored red)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://173.255.195.190/gafferongames/img/game_physics/spring_damper_explicit_euler.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;Instead of damping and converging on the origin, it gains energy over time!&lt;/p&gt;
+
+&lt;p&gt;This system is unstable when integrated with explicit euler and &lt;strong&gt;dt&lt;/strong&gt;=&lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;100&lt;/sub&gt;.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, since we&amp;rsquo;re already integrating with a small timestep, we don&amp;rsquo;t have a lot of practical options to improve the accuracy. Even if we do reduce the timestep, there&amp;rsquo;s still a threshold of spring tightness above which we&amp;rsquo;ll see the same behavior.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;Recommendation:&lt;/strong&gt; Don&amp;rsquo;t use explicit euler because it tends to explode!&lt;/p&gt;
+
+&lt;h2 id=&#34;semi-implicit-euler&#34;&gt;Semi-implicit Euler&lt;/h2&gt;
+
+&lt;p&gt;Another integrator to consider is &lt;a href=&#34;https://en.wikipedia.org/wiki/Semi-implicit_Euler_method&#34;&gt;semi-implicit euler&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;Semi-implicit euler integrates velocity before integrating position instead of the other way around. This seemingly trivial change makes the integrator &lt;a href=&#34;https://en.wikipedia.org/wiki/Symplectic_integrator&#34;&gt;symplectic&lt;/a&gt;. This means it tends to preserve energy when integrating the equations of motion.&lt;/p&gt;
+
+&lt;p&gt;Most commercial physics engines use this integrator.&lt;/p&gt;
+
+&lt;p&gt;Switching from explicit to semi-implicit euler is as simple as changing:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    position += velocity * dt;
+    velocity += acceleration * dt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;to:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    velocity += acceleration * dt;
+    position += velocity * dt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Applying the semi-implicit euler integrator with &lt;strong&gt;dt&lt;/strong&gt; = &lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;100&lt;/sub&gt; to the spring damper system gives us a stable result that is very close to the exact solution:&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;(todo: this should be colored consistently, eg. yellow or green, whichever it will be in the final graph)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://173.255.195.190/gafferongames/img/game_physics/spring_damper_implicit_euler.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;Even though semi-implicit euler is still a first order method, we get a much better result when integrating the equations of motion because it is symplectic.&lt;/p&gt;
+
+&lt;p&gt;If you take only one thing away from this article, this should be it.&lt;/p&gt;
+
+&lt;h2 id=&#34;many-different-integration-methods-exist&#34;&gt;Many different integration methods exist&lt;/h2&gt;
+
+&lt;p&gt;(todo: opening paragraph to ease in to this section)&lt;/p&gt;
+
+&lt;p&gt;A completely different option is &lt;a href=&#34;http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html&#34;&gt;implicit euler&lt;/a&gt;. This method is better for simulating stiff equations that become unstable with other methods, but requires numerically solving a system of equations per-timestep. It&amp;rsquo;s not often used in game physics.&lt;/p&gt;
+
+&lt;p&gt;Another option for greater accuracy and less memory when simulating a large number of particles is &lt;a href=&#34;https://en.wikipedia.org/wiki/Verlet_integration&#34;&gt;verlet integration&lt;/a&gt;. This is a second order integrator and it is also symplectic. There is a variant that does not require storing velocity per-particle, as it derives velocity from the two most recent position values. This makes collision response and position fix-up easy to implement and saves memory when you have lots of particles.&lt;/p&gt;
+
+&lt;p&gt;There are many other integrators to consider but the most classic higher order integrator which also acts as a good introduction to more complicated methods is the Runge Kutta order 4 or simply &amp;ldquo;RK4&amp;rdquo;. So named for the two German physicists who discovered it: &lt;a href=&#34;https://en.wikipedia.org/wiki/Carl_David_Tolmé_Runge&#34;&gt;Carl Runge&lt;/a&gt; and &lt;a href=&#34;https://en.wikipedia.org/wiki/Martin_Wilhelm_Kutta&#34;&gt;Martin Kutta&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;These are German names so the &amp;lsquo;g&amp;rsquo; is hard and the &amp;lsquo;u&amp;rsquo; in front of &amp;lsquo;tt&amp;rsquo; is a short &amp;lsquo;oo&amp;rsquo; sound. I am sorry to inform you that this means we are talking about the &lt;em&gt;&amp;lsquo;roon-geh koo-ta&amp;rsquo;&lt;/em&gt; method and not a &lt;em&gt;&amp;lsquo;runge cutter&amp;rsquo;&lt;/em&gt;, whatever that is.&lt;/p&gt;
+
+&lt;p&gt;Perhaps this is why everyone just says: &amp;ldquo;&lt;strong&gt;RK4&lt;/strong&gt;&amp;rdquo;. :)&lt;/p&gt;
+
+&lt;p&gt;(todo: clean up sentence below, a better transition would be, lets explore RK4 because it&amp;rsquo;s an interesting way to explore higher order integrators)&lt;/p&gt;
+
+&lt;p&gt;This is not to suggest that RK4 is automatically the &amp;ldquo;best&amp;rdquo; integrator for all applications &lt;em&gt;(there&amp;rsquo;s no such thing)&lt;/em&gt;, or that you should always use this integrator over the others listed above &lt;em&gt;(you shouldn’t)&lt;/em&gt;. But it is one of the most accurate general purpose integration techniques available.&lt;/p&gt;
+
+&lt;h2 id=&#34;implementing-rk4&#34;&gt;Implementing RK4&lt;/h2&gt;
+
+&lt;p&gt;(todo: fix sentence below. change logic too, there are already many mathematical explanations online: this, this and this. But since my target audience&amp;hellip;)&lt;/p&gt;
+
+&lt;p&gt;I could present to you RK4 in form of general mathematical equations, but seeing as my target audience for this article are programmers, not mathematicians, I will explain using code instead.&lt;/p&gt;
+
+&lt;p&gt;So before we go any further let&amp;rsquo;s define the state of an object as a struct in C++ so that we have both position and velocity values conveniently stored in one place:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    struct State
+    {
+        float x;      // position
+        float v;      // velocity
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We also need a struct to store the derivatives of the state values:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    struct Derivative
+    {
+        float dx;      // dx/dt = velocity
+        float dv;      // dv/dt = acceleration
+    };
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Next we need a function to advance the physics state ahead from t to t+dt using one set of derivatives, and once there recalculate the derivatives at this new state:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    Derivative evaluate( const State &amp;amp; initial, 
+                         double t, 
+                         float dt, 
+                         const Derivative &amp;amp; d )
+    {
+        State state;
+        state.x = initial.x + d.dx*dt;
+        state.v = initial.v + d.dv*dt;
+
+        Derivative output;
+        output.dx = state.v;
+        output.dv = acceleration( state, t+dt );
+        return output;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;The acceleration function is what drives the entire simulation. Let&amp;rsquo;s set it to the spring damper system we have been using and return the acceleration assuming unit mass:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    float acceleration( const State &amp;amp; state, double t )
+    {
+        const float k = 10;
+        const float b = 1;
+        return -k * state.x - b * state.v;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;What you write here is of course simulation dependent, but you must structure your simulation so you can calculate the acceleration inside this method given the current state and time, otherwise it will not work with the RK4 integrator.&lt;/p&gt;
+
+&lt;p&gt;Finally we get to the integration routine itself:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    void integrate( State &amp;amp; state, 
+                    double t, 
+                    float dt )
+    {
+        Derivative a,b,c,d;
+
+        a = evaluate( state, t, 0.0f, Derivative() );
+        b = evaluate( state, t, dt*0.5f, a );
+        c = evaluate( state, t, dt*0.5f, b );
+        d = evaluate( state, t, dt, c );
+
+        float dxdt = 1.0f / 6.0f * 
+            ( a.dx + 2.0f * ( b.dx + c.dx ) + d.dx );
+
+        float dvdt = 1.0f / 6.0f * 
+            ( a.dv + 2.0f * ( b.dv + c.dv ) + d.dv );
+
+        state.x = state.x + dxdt * dt;
+        state.v = state.v + dvdt * dt;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Notice how derivative a is used when calculating b, b is used when calculating c, and so on. This feedback of the current derivative into the calculation of the next is what gives the RK4 integrator its accuracy.&lt;/p&gt;
+
+&lt;p&gt;Importantly, each these derivatives a,b,c and d will be &lt;em&gt;different&lt;/em&gt; when the rate of change in these quantities is a function of time or a function of the state itself. For example, in the spring damper system composed of a Hooke&amp;rsquo;s law spring force which is a function of the current position and a drag force which is a function of the current velocity.&lt;/p&gt;
+
+&lt;p&gt;Once the four derivatives have been evaluated, the best overall derivative is calculated as a weighted sum derived from the &lt;a href=&#34;https://en.wikipedia.org/wiki/Taylor_series&#34;&gt;Taylor Series&lt;/a&gt; expansion. Details &lt;a href=&#34;https://en.wikipedia.org/wiki/Runge–Kutta_methods#Derivation_of_the_Runge.E2.80.93Kutta_fourth-order_method&#34;&gt;here&lt;/a&gt;. This combined derivative is then used to advance the position and velocity forward, just like we did with the explicit euler integrator.&lt;/p&gt;
+
+&lt;p&gt;(todo: transition sentence. is RK4 really the best or is it overkill for games?)&lt;/p&gt;
+
+&lt;h2 id=&#34;semi-implicit-euler-vs-rk4&#34;&gt;Semi-implicit euler vs. RK4&lt;/h2&gt;
+
+&lt;p&gt;&amp;hellip;&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;&lt;em&gt;(todo: clean this up, this conclusion is poorly written)&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;I have demonstrated how to implement an RK4 integrator for a basic physics simulation. At this point if you are serious about learning game physics you should study the example source code that comes with this article and play around with it.&lt;/p&gt;
+
+&lt;p&gt;Here are some ideas for study:&lt;/p&gt;
+
+&lt;p&gt;Switch from integrating velocity directly from acceleration to integrating momentum from force instead (the derivative of momentum is force). You will need to add “mass” and “inverseMass” to the State struct and I recommend adding a method called “recalculate” which updates velocity = momentum * inverseMass whenever it is called. Every time you modify the momentum value you need to recalculate the velocity. You should also rename the acceleration method to “force”. Why do this? Later on when working with rotational dynamics you will need to work with angular momentum directly instead of angular velocity, so you might as well start now.
+Try modifying the integrate method to implement an Euler integrator. Compare the results of the simulation against the RK4 integrator. How much can you increase the spring constant k before the simulation explodes with Euler? How large can you make it with RK4?
+Extend position, velocity and force to 3D quantities using vectors. If you use your intuition you should easily be able to extend the RK4 integrator to do this.&lt;/p&gt;
+
+&lt;p&gt;&lt;a name=&#34;ballistic_footnote&#34;&gt;&lt;/a&gt; &lt;em&gt;* It&amp;rsquo;s tempting to see this closed form and think &amp;ldquo;Hey, why don&amp;rsquo;t I just use this as the integrator!&amp;rdquo;. While it is 100% accurate under constant acceleration, this is not useful in the general case because acceleration is not usually constant. Consider: drag forces (function of velocity), spring forces (function of position), and forces that are a function of time. All of these result in non-constant acceleration.&lt;/em&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
