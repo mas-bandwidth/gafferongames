@@ -229,49 +229,6 @@ void exact_spring_damper_underdamped( const char * filename, float dt, float k, 
     fclose( file );
 }
 
-float rk4_derivative( float t, float y0, float w0 )
-{
-    return - y0 * w0 * (float) sin( w0 * t );
-}
-
-void rk4_undamped_spring_position_from_exact_velocity( const char * filename, float dt, float k )
-{
-    FILE * file = fopen( filename, "w" );
-    if ( !file )
-        return;
-
-    fprintf( file, "time,position\n" );
-
-    double t = 0.0;
-
-    const float m = 1.0f;
-    const float y0 = 1000.0f;
-    const float w0 = (float) sqrt( k / m );
-
-    float y = y0;
-
-    while ( t <= 100.0 )
-    {
-        float a = rk4_derivative( t, y0, w0 );
-        float b = rk4_derivative( t + dt*0.5f, y0, w0 );
-        float c = rk4_derivative( t + dt*0.5f, y0, w0 );
-        float d = rk4_derivative( t + dt, y0, w0 );
-
-        float dydt = 1.0f / 6.0f * 
-            ( a + 2.0f * ( b + c ) + d );
-        
-        fprintf( file, "%.2f,%f\n", t, y );
-
-        y += dydt * dt;
-
-        t += dt;
-    }
-
-    printf( "wrote %s\n", filename );
-
-    fclose( file );
-}
-
 int main()
 {
     const float k = 15.0f;
@@ -310,10 +267,6 @@ int main()
     exact_spring_undamped( "exact_spring_undamped.csv", 0.01f, k );    
 
     exact_spring_damper_underdamped( "exact_spring_damper_underdamped.csv", 0.01f, k, b );
-
-    // rk4 position from exact velocity
-
-    rk4_undamped_spring_position_from_exact_velocity( "rk4_undamped_spring_position_from_exact_velocity.csv", 0.1f, k );
 
     return 0;
 }
