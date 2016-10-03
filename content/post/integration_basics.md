@@ -142,9 +142,9 @@ In this system a mass is attached to a spring and the motion is damped by some k
 
 Now the acceleration is definitely not constant throughout the timestep, but is instead a continously changing function which is a combination of the position and velocity, which are themselves changing continuously over the timestep.
 
-This is an example of a [damped harmonic oscillator](https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator) and it's a well studied problem. There is a closed form solution that we can use to check our numerically integrated result.
+This is an example of a [damped harmonic oscillator](https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator). It's a well studied problem and there's a closed form solution that we can check our numerically integrated result against.
 
-Let's start with the case of an underdamped system where the mass oscillates about the origin while slowing down.
+Let's start with an underdamped system where the mass oscillates about the origin while slowing down.
 
 Here are the input parameters to the mass spring system:
 
@@ -157,7 +157,7 @@ And here is a graph of the exact solution:
 
 <img src="/img/game_physics/spring_damper_exact_solution.png" width="100%"/>
 
-But when we apply explicit euler to integrate this system, we get the following result, which has been scaled down vertically to fit:
+When we apply explicit euler to integrate this system, we get the following result, which has been scaled down vertically to fit:
 
 _(todo: this graph should be colored red)_
 
@@ -201,17 +201,17 @@ If you take only one thing away from this article, this should be it.
 
 ## Many different integration methods exist
 
-A completely different option is [implicit euler](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html). This method is better for simulating stiff equations that become unstable with other methods, but requires numerically solving a system of equations per-timestep. It's not often used in game physics.
+And now for something completely different. [Implicit euler](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html). This method is better for simulating stiff equations that become unstable with other methods, but requires numerically solving a system of equations per-timestep. It's not often used in game physics.
 
 Another option for greater accuracy and less memory when simulating a large number of particles is [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration). This is a second order integrator and it is also symplectic. There is a variant that does not require storing velocity per-particle, as it derives velocity from the two most recent position values. This makes collision response and position fix-up easy to implement and saves memory when you have lots of particles.
 
-Next is a whole family of integrators called the Runge-Kutta methods. The most classic of these is the Runge Kutta order 4 or simply 'RK4'. So named for the two German physicists who discovered it: [Carl Runge](https://en.wikipedia.org/wiki/Carl_David_Tolmé_Runge) and [Martin Kutta](https://en.wikipedia.org/wiki/Martin_Wilhelm_Kutta). 
+Up next are a whole family of integrators called the Runge-Kutta methods. In fact, explicit euler is considered part of this family, but it also includes higher order integrators. The most classic of these being the Runge Kutta order 4 or simply "**RK4**". This family of integrators is named for the two German physicists who discovered it: [Carl Runge](https://en.wikipedia.org/wiki/Carl_David_Tolmé_Runge) and [Martin Kutta](https://en.wikipedia.org/wiki/Martin_Wilhelm_Kutta). 
 
-These are German names so the 'g' is hard and the 'u' is a short 'oo' sound. I am sorry to inform but this means we are talking about the _'roon-geh koo-ta'_ method and not a _'runge cutter'_, whatever that is :)
+They are German names so the 'g' is hard and the 'u' is a short 'oo' sound. I am sorry to inform but this means we are talking about the _'roon-geh koo-ta'_ methods and not a _'runge cutter'_, whatever that is :)
 
-The RK4 is a fourth order integrator, which means its accumulated error is on the order of the fourth derivative. This makes it much more accurate than explicit and implicit euler which are only accurate to the first derivative, which is just a fancy way of saying they are only accurate when the rate of change is constant.
+The RK4 is a fourth order integrator, which means that its accumulated error is on the order of the fourth derivative. This makes it very accurate. Much more accurate than explicit and implicit euler which are only first order.
 
-I want to make an important point here about RK4. Although is more accurate, this is not to automatically say that RK4 is "the best", or that it is automatically better than implicit euler. It's much more complicated than that. But it's an interesting integrator and well worth studying its implementation.
+But I want to make a very important point here about RK4. Although it is more accurate, this is not to say that RK4 is "the best", or even that it is automatically better than implicit euler. It's much, much more complicated than that. But it is an interesting integrator and it's well worth studying its implementation.
 
 ## Implementing RK4
 
