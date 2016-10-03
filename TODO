@@ -9,19 +9,35 @@ TODO
 
     ------------------
 
-    Now that I have the basic research out of the way, I need to sketch out the rest of the article.
+    Render the graph for the unstable explicit euler in red.
 
-    First step towards this should be to grab the "evidence" from the various experiments that I have done to support the point and rewrite the rest of the article.
+    Render the graph for the stable implicit euler in green.
 
-    The text should be written around the diagrams. Make it visual!
+    ------------------
+
+    The next step is to verify that my RK4 is actually RK4, and that my reasoning and explanation is basically sound.
+
+    Start here: http://www.gamedev.net/topic/679116-how-does-runge-kutta-4-work-in-games/
+
+    Also watch Erin Catto's GDC presentation on integrators: http://www.gdcvault.com/play/1022197/Physics-for-Game-Programmers-Numerical
+
+    -----------------
+
+    After this, presuming I haven't totally fucked up RK4, it is time to grab the set of graphs to compare RK4 with implicit euler.
+
+    -----------------
+
+    Finally, if I can be arsed, it might be interesting to add another section "Beyond RK4"
+
+    If anything, this should be done for completeness. RK4 is not the only high order method!
+
+    Here is some very interesting stuff:
+
+    http://www.artcompsci.org/kali/vol/runge_kutta/ch04.html
 
     -----------------
 
     Rewrite the conclusion
-
-    -----------------
-
-    God I really hate plot.ly. It's so fucking slow. Is there a better solution for graphing that I can use locally?
 
     -----------------
 

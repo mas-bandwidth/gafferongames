@@ -207,11 +207,11 @@ Another option for greater accuracy and less memory when simulating a large numb
 
 Up next are a whole family of integrators called the Runge-Kutta methods. In fact, explicit euler is considered part of this family, but it also includes higher order integrators. The most classic of these being the Runge Kutta order 4 or simply "**RK4**". This family of integrators is named for the two German physicists who discovered it: [Carl Runge](https://en.wikipedia.org/wiki/Carl_David_Tolmé_Runge) and [Martin Kutta](https://en.wikipedia.org/wiki/Martin_Wilhelm_Kutta). 
 
-They are German names so the 'g' is hard and the 'u' is a short 'oo' sound. I am sorry to inform but this means we are talking about the _'roon-geh koo-ta'_ methods and not a _'runge cutter'_, whatever that is :)
+These are German names so the 'g' is hard and the 'u' is a short 'oo' sound. I am sorry to inform but this means we are talking about the _'roon-geh koo-ta'_ methods and not a _'runge cutter'_, whatever that is :)
 
 The RK4 is a fourth order integrator, which means that its accumulated error is on the order of the fourth derivative. This makes it very accurate. Much more accurate than explicit and implicit euler which are only first order.
 
-But I want to make a very important point here about RK4. Although it is more accurate, this is not to say that RK4 is "the best", or even that it is automatically better than implicit euler. It's much, much more complicated than that. But it is an interesting integrator and it's well worth studying its implementation.
+But I want to make a very important point here about RK4. Although it is more accurate, that's not to say RK4 is "the best" integrator, or even that it is automatically better than implicit euler. It's much, much more complicated than that. But it is an interesting integrator and it's worth studying.
 
 ## Implementing RK4
 
@@ -259,7 +259,7 @@ The acceleration function is what drives the entire simulation. Let's set it to 
             return -k * state.x - b * state.v;
         }
 
-What you write here is of course simulation dependent, but you must structure your simulation so you can calculate the acceleration inside this method given the current state and time in order for it to work with the RK4 integrator.
+What you write here is of course simulation dependent, but you must structure your simulation so you can calculate the acceleration inside this method given the current state and time for it to work with the RK4 integrator.
 
 Finally we get to the integration routine itself:
 
