@@ -5,13 +5,17 @@ TODO
 
     ------------------
 
-    Need to flesh out the section on the spring damper system.
+    Need to grab images for:
+
+        1. semi-implicit euler undamped at 0.25
+
+        2. RK4 undamped at dt 0.25
 
     ------------------
 
-    Render the graph for the unstable explicit euler in red.
+    Need to finish writing the next section, symplectic vs. non-symplectic integrators.
 
-    Render the graph for the stable implicit euler in green.
+    This is really a beyond RK4 section. It's going to be a bit hand wavey with links for further study.
 
     ------------------
 
