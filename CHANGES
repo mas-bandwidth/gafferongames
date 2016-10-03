@@ -1,5 +1,33 @@
 
-Sunday 1st October, 2016
+Monday 3rd October, 2016
+========================
+
+    Grabbed images for:
+
+        1. semi-implicit euler undamped at 0.25
+
+        2. RK4 undamped at dt 0.25
+
+    I've pretty much finished the section comparing RK4 with implicit euler.
+
+    ------------------
+
+    The next step is to verify that my RK4 is actually RK4, and that my reasoning and explanation is basically sound.
+
+    Start here: http://www.gamedev.net/topic/679116-how-does-runge-kutta-4-work-in-games/
+
+    As far as I can tell, the person complaining about my code being wrong is an idiot. They think I should have extra divide by twos, but they don't provide any reasoning for that. Also, their code is filled with C++ retarded operator overloading which demonstrates that they are a poor programmer and have difficulty reading C code.
+
+    Confirmed. The person is wrong. They are multiplying by dt twice. This is incredibly ignorant of them to post as if they are correct. I'll let them wear that.
+
+    It's pretty obvious looking at the code is their definition of "more accurate" is comes to zero faster because that's how they print it out. At no point is he comparing it against the analytical solution or doing any work at all to justify his claim that his fucked up version of RK4 is more accurate.
+
+    Moving on. This person is a fool.
+
+    ------------------
+
+
+Sunday 2nd October, 2016
 ========================
 
     Implement closed form for the damped spring and output the data

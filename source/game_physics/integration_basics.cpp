@@ -87,14 +87,14 @@ void implicit_euler_spring_damper( const char * filename, float dt, float k, flo
 
 struct State
 {
-    float x;      // position
-    float v;      // velocity
+    float x;
+    float v;
 };
 
 struct Derivative
 {
-    float dx;      // dx/dt = velocity
-    float dv;      // dv/dt = acceleration
+    float dx;
+    float dv;
 
     Derivative() { dx = 0; dv = 0; }
 };
@@ -115,11 +115,31 @@ Derivative evaluate_rk4( const State & initial, double t, float dt, const Deriva
 
     Derivative output;
     output.dx = state.v;
-    output.dv = acceleration_rk4( state, t+dt );
+    output.dv = acceleration_rk4( state, t + dt );
 
     return output;
 }
+
 void integrate_rk4( State & state, double t, float dt )
+{
+    Derivative a,b,c,d;
+
+    a = evaluate_rk4( state, t, 0.0f, Derivative() );
+    b = evaluate_rk4( state, t, dt*0.5f, a );
+    c = evaluate_rk4( state, t, dt*0.5f, b );
+    d = evaluate_rk4( state, t, dt, c );
+
+    float dxdt = 1.0f / 6.0f * 
+        ( a.dx + 2.0f * ( b.dx + c.dx ) + d.dx );
+    
+    float dvdt = 1.0f / 6.0f * 
+        ( a.dv + 2.0f * ( b.dv + c.dv ) + d.dv );
+
+    state.x = state.x + dxdt * dt;
+    state.v = state.v + dvdt * dt;
+}
+
+void integrate_rk4_fixed( State & state, double t, float dt )
 {
     Derivative a,b,c,d;
 
@@ -263,13 +283,9 @@ int main()
 
     // exact solution
 
-    exact_spring_undamped( "exact_spring_undamped_100fps.csv", 0.01f, k );    
+    exact_spring_undamped( "exact_spring_undamped.csv", 0.01f, k );    
 
-    exact_spring_undamped( "exact_spring_undamped_10fps.csv", 0.01f, k );    
-
-    exact_spring_damper_underdamped( "exact_spring_damper_underdamped_100fps.csv", 0.01f, k, b );
-
-    exact_spring_damper_underdamped( "exact_spring_damper_underdamped_10fps.csv", 0.01f, k, b );
+    exact_spring_damper_underdamped( "exact_spring_damper_underdamped.csv", 0.01f, k, b );
 
     return 0;
 }

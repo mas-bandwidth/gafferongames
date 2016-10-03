@@ -5,11 +5,13 @@ TODO
 
     ------------------
 
-    Need to grab images for:
+    I'm hesitant to really get into symplectic euler because it's above my current level of ability. It would make a good follow up article to cover symplectic integrators.
 
-        1. semi-implicit euler undamped at 0.25
+    It might be good to explain that RK4 is not symplectic, and it was originally design for integrating a single equation from derivative, not a second order ode.
 
-        2. RK4 undamped at dt 0.25
+    Mentioning hamiltonians and providing links for further study into hamiltonians would give people the ability to explore further.
+
+    Also linking to more advanced symplectic higher order integrators.
 
     ------------------
 
@@ -17,11 +19,10 @@ TODO
 
     This is really a beyond RK4 section. It's going to be a bit hand wavey with links for further study.
 
-    ------------------
+    No. I think it should be in the conclusion, or it's a lead up to the conclusion, and then the conclusion is just very short.
 
-    The next step is to verify that my RK4 is actually RK4, and that my reasoning and explanation is basically sound.
 
-    Start here: http://www.gamedev.net/topic/679116-how-does-runge-kutta-4-work-in-games/
+    I checked through the guys code and looking at his code I think he's actually an idiot.
 
     Also watch Erin Catto's GDC presentation on integrators: http://www.gdcvault.com/play/1022197/Physics-for-Game-Programmers-Numerical
 
