@@ -5,13 +5,19 @@ TODO
 
     ------------------
 
-    I'm hesitant to really get into symplectic euler because it's above my current level of ability. It would make a good follow up article to cover symplectic integrators.
+    The key thing is to say that RK4 was designed for:
 
-    It might be good to explain that RK4 is not symplectic, and it was originally design for integrating a single equation from derivative, not a second order ode.
+        1. Hand calculation
 
-    Mentioning hamiltonians and providing links for further study into hamiltonians would give people the ability to explore further.
+        2. First order ODEs, eg. integrating position from velocity, not velocity from acceleration *and* position from velocity at the same time.
 
-    Also linking to more advanced symplectic higher order integrators.
+    Then demonstrate this with an example.
+
+    I think the best example is to show the simple harmonic oscillator integrated from closed form velocity.
+
+    The closed form for my simple harmonic oscillator is easy. -A*w*cos(w*t)
+
+    Lets get this done. It'll make a great way to close out the article and make a good point with RK4.
 
     ------------------
 
@@ -19,30 +25,21 @@ TODO
 
     This is really a beyond RK4 section. It's going to be a bit hand wavey with links for further study.
 
-    No. I think it should be in the conclusion, or it's a lead up to the conclusion, and then the conclusion is just very short.
+    I'm hesitant to really get into symplectic euler because it's above my current level of ability. It would make a good follow up article to cover symplectic integrators.
 
+    It might be good to explain that RK4 is not symplectic, and it was originally design for integrating a single equation from derivative, not a second order ode.
 
-    I checked through the guys code and looking at his code I think he's actually an idiot.
+    Mentioning hamiltonians and providing links for further study into hamiltonians would give people the ability to explore further.
 
-    Also watch Erin Catto's GDC presentation on integrators: http://www.gdcvault.com/play/1022197/Physics-for-Game-Programmers-Numerical
-
-    -----------------
-
-    After this, presuming I haven't totally fucked up RK4, it is time to grab the set of graphs to compare RK4 with implicit euler.
-
-    -----------------
-
-    Finally, if I can be arsed, it might be interesting to add another section "Beyond RK4"
-
-    If anything, this should be done for completeness. RK4 is not the only high order method!
-
-    Here is some very interesting stuff:
-
-    http://www.artcompsci.org/kali/vol/runge_kutta/ch04.html
-
+    Also linking to more advanced symplectic higher order integrators.
+    
     -----------------
 
     Rewrite the conclusion
+
+    -----------------
+
+    Publicize article to patreon supporters.
 
     -----------------
 

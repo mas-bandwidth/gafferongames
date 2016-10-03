@@ -56,7 +56,7 @@ void explicit_euler_spring_damper( const char * filename, float dt, float k, flo
     fclose( file );
 }
 
-void implicit_euler_spring_damper( const char * filename, float dt, float k, float b )
+void semi_implicit_euler_spring_damper( const char * filename, float dt, float k, float b )
 {
     FILE * file = fopen( filename, "w" );
     if ( !file )
@@ -121,25 +121,6 @@ Derivative evaluate_rk4( const State & initial, double t, float dt, const Deriva
 }
 
 void integrate_rk4( State & state, double t, float dt )
-{
-    Derivative a,b,c,d;
-
-    a = evaluate_rk4( state, t, 0.0f, Derivative() );
-    b = evaluate_rk4( state, t, dt*0.5f, a );
-    c = evaluate_rk4( state, t, dt*0.5f, b );
-    d = evaluate_rk4( state, t, dt, c );
-
-    float dxdt = 1.0f / 6.0f * 
-        ( a.dx + 2.0f * ( b.dx + c.dx ) + d.dx );
-    
-    float dvdt = 1.0f / 6.0f * 
-        ( a.dv + 2.0f * ( b.dv + c.dv ) + d.dv );
-
-    state.x = state.x + dxdt * dt;
-    state.v = state.v + dvdt * dt;
-}
-
-void integrate_rk4_fixed( State & state, double t, float dt )
 {
     Derivative a,b,c,d;
 
@@ -248,6 +229,49 @@ void exact_spring_damper_underdamped( const char * filename, float dt, float k, 
     fclose( file );
 }
 
+float rk4_derivative( float t, float y0, float w0 )
+{
+    return - y0 * w0 * (float) sin( w0 * t );
+}
+
+void rk4_undamped_spring_position_from_exact_velocity( const char * filename, float dt, float k )
+{
+    FILE * file = fopen( filename, "w" );
+    if ( !file )
+        return;
+
+    fprintf( file, "time,position\n" );
+
+    double t = 0.0;
+
+    const float m = 1.0f;
+    const float y0 = 1000.0f;
+    const float w0 = (float) sqrt( k / m );
+
+    float y = y0;
+
+    while ( t <= 100.0 )
+    {
+        float a = rk4_derivative( t, y0, w0 );
+        float b = rk4_derivative( t + dt*0.5f, y0, w0 );
+        float c = rk4_derivative( t + dt*0.5f, y0, w0 );
+        float d = rk4_derivative( t + dt, y0, w0 );
+
+        float dydt = 1.0f / 6.0f * 
+            ( a + 2.0f * ( b + c ) + d );
+        
+        fprintf( file, "%.2f,%f\n", t, y );
+
+        y += dydt * dt;
+
+        t += dt;
+    }
+
+    printf( "wrote %s\n", filename );
+
+    fclose( file );
+}
+
 int main()
 {
     const float k = 15.0f;
@@ -261,17 +285,17 @@ int main()
 
     explicit_euler_spring_damper( "explicit_euler_spring_damper_100fps.csv", 0.01f, k, b );
 
-    // implicic euler
+    // semi-implicic euler
 
-    implicit_euler_spring_damper( "implicit_euler_spring_damper_100fps.csv", 0.01f, k, b );
+    semi_implicit_euler_spring_damper( "semi_implicit_euler_spring_damper_100fps.csv", 0.01f, k, b );
 
-    implicit_euler_spring_damper( "implicit_euler_spring_undamped_100fps.csv", 0.01f, k, 0.0f );
+    semi_implicit_euler_spring_damper( "semi_implicit_euler_spring_undamped_100fps.csv", 0.01f, k, 0.0f );
 
-    implicit_euler_spring_damper( "implicit_euler_spring_undamped_10fps.csv", 0.1f, k, 0.0f );
+    semi_implicit_euler_spring_damper( "semi_implicit_euler_spring_undamped_10fps.csv", 0.1f, k, 0.0f );
 
-    implicit_euler_spring_damper( "implicit_euler_spring_undamped_5fps.csv", 0.2f, k, 0.0f );
+    semi_implicit_euler_spring_damper( "semi_implicit_euler_spring_undamped_5fps.csv", 0.2f, k, 0.0f );
 
-    // rk4
+    // rk4 (second order)
 
     rk4_spring_damper( "rk4_spring_damper_100fps.csv", 0.01f, k, b );
 
@@ -281,11 +305,15 @@ int main()
 
     rk4_spring_damper( "rk4_spring_undamped_5fps.csv", 0.2f, k, 0.0f );
 
-    // exact solution
+    // exact solution for comparison
 
     exact_spring_undamped( "exact_spring_undamped.csv", 0.01f, k );    
 
     exact_spring_damper_underdamped( "exact_spring_damper_underdamped.csv", 0.01f, k, b );
+
+    // rk4 position from exact velocity
+
+    rk4_undamped_spring_position_from_exact_velocity( "rk4_undamped_spring_position_from_exact_velocity.csv", 0.1f, k );
 
     return 0;
 }

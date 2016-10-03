@@ -1,0 +1,9 @@
+IDEAS
+
+    Article on smallest 3 representation that explores the set of smallest 3 representation in 32 bits, and stability of conversion in/out with floating point.
+
+    Article exploring symplectic integrators for the equations of motion. Basically, a follow up to the RK4 article exploring symplectic integrators in more detail.
+
+    Article explaining what physics engines can do to make networked physics work better with their engines (especially, quantization).
+
+    Network compression challenge part 2. With position, orientation (expanded 4) and linear and angular velocity. Don't publish my code initially. But publish my results as a challenge to beat. The trick will be that I have excellent prediction working already. Do this after I finish with Oculus and the sample code is public.
