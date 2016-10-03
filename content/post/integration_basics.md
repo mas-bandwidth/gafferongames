@@ -286,9 +286,9 @@ Finally we get to the integration routine itself:
 
 Notice how the integrator evaluates derivatives at four points. Notice also how derivative a is used when calculating b, b is used when calculating c, and so on. This feedback of the current derivative into the calculation of the next is what gives the RK4 integrator its accuracy.
 
-Importantly, each of these derivatives a,b,c and d will be _different_ when the rate of change in these quantities is a function of time or a function of the state itself. For example, in our spring damper system where the acceleration is a function of the current position and velocity.
+Importantly, each of these derivatives a,b,c and d will be _different_ when the rate of change in these quantities is a function of time or a function of the state itself. For example, in our spring damper system acceleration is a function of the current position and velocity.
 
-Once the four derivatives have been evaluated, the best overall derivative is calculated as a weighted sum derived from the [Taylor Series](https://en.wikipedia.org/wiki/Taylor_series) expansion. This combined derivative is then used to advance the position and velocity forward, just like we did with the explicit euler integrator.
+Once the four derivatives have been evaluated, the best overall derivative is calculated as a weighted sum derived from the [Taylor Series](https://en.wikipedia.org/wiki/Taylor_series) expansion. This combined derivative is then used to advance the position and velocity forward, just as we did with the explicit euler integrator.
 
 ## Semi-implicit euler vs. RK4
 
