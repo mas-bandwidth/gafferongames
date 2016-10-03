@@ -21,7 +21,7 @@ Exactly how to implement this integration is the subject of this article.
 
 You may remember from high school or university physics that force equals mass times acceleration. 
 
-        f = ma
+        F = ma
 
 We can switch this around to see that acceleration is force divided by mass. This makes sense because the more an object weighs, the less acceleration it receives from the same amount of force. Heavier objects are harder to throw.
 
@@ -39,7 +39,7 @@ This means if we know the current position and velocity of an object, and the fo
 
 ## Numerical Integration
 
-For those who have not formally studied differential equations at university, take heart for you are in just as good a position as those who have! This is because we are not going to solve the differential equations as you would normally do in first year mathematics, instead we are going to **numerically integrate** to find the solution.
+For those who have not formally studied differential equations at university, take heart for you are in just as good a position as those who have! This is because we are not going to analytically solve the differential equations as you would do in first year mathematics. Instead, we are going to **numerically integrate** to find the solution.
 
 Here is how numerical integration works. First, start at an initial position and velocity, then take a small step forward to find the velocity and position at a future time. Then repeat this, moving forward in small time steps, using the result of the previous calculation as the starting point for the next.
 
@@ -55,7 +55,7 @@ We can now put the equations of motion in a form that anyone can understand:
         change in position = velocity * dt
         change in velocity = acceleration * dt
         
-This makes intuitive sense because if you're in a car traveling 60 kilometers per-hour, in one hour you'll be 60 kilometers further down the road. Similarly, a car accelerating 10 kilometers per-hour per-second will be moving 100 kilometers per-hour faster after 10 seconds.
+This makes intuitive sense because if you're in a car traveling 60 kilometers per-hour, in one hour you'll be 60 kilometers further down the road. Similarly, a car accelerating 10 kilometers per-hour-per-second will be moving 100 kilometers per-hour faster after 10 seconds.
 
 Of course this logic only holds when acceleration and velocity are constant. But even when they're not, it's still a decent approximation to start with.
 
@@ -140,9 +140,9 @@ An good example of non-constant acceleration is a [spring damper system](https:/
 
 In this system a mass is attached to a spring and the motion is damped by some kind of friction. There is a force proportional to the distance of the object which pulls it towards the origin, and a force proportional to the velocity of the object, but in the opposite direction, which slows it down.
 
-This force is definitely not constant throughout the timestep, and is instead a continously changing function which is a combination of the position and velocity, which are themselves changing continuously over the timestep.
+Now the acceleration is definitely not constant throughout the timestep, but is instead a continously changing function which is a combination of the position and velocity, which are themselves changing continuously over the timestep.
 
-This is an example of a [damped harmonic oscillator](https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator) and it's a well studied problem. There is a closed form solution that we can use to check our numerically integrated result against.
+This is an example of a [damped harmonic oscillator](https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator) and it's a well studied problem. There is a closed form solution that we can use to check our numerically integrated result.
 
 Let's start with the case of an underdamped system where the mass oscillates about the origin while slowing down.
 
@@ -167,7 +167,7 @@ Instead of damping and converging on the origin, it gains energy over time!
 
 This system is unstable when integrated with explicit euler and **dt**=1/100. 
 
-Unfortunately, since we're already integrating with a small timestep, we don't have a lot of practical options to improve the accuracy. Even if we do reduce the timestep, there's still a threshold of spring tightness above which we'll see the same behavior.
+Unfortunately, since we're already integrating with a small timestep, we don't have a lot of practical options to improve the accuracy. Even if we do reduce the timestep, there's always a spring tightness k above which we'll see this behavior.
 
 **Recommendation:** Don't use explicit euler because it tends to explode!
 
@@ -177,7 +177,7 @@ Another integrator to consider is [semi-implicit euler](https://en.wikipedia.org
 
 Semi-implicit euler integrates velocity before integrating position instead of the other way around. This seemingly trivial change makes the integrator [symplectic](https://en.wikipedia.org/wiki/Symplectic_integrator). This means it tends to preserve energy when integrating the equations of motion.
 
-Most commercial physics engines use this integrator.
+Most commercial game physics engines use this integrator.
 
 Switching from explicit to semi-implicit euler is as simple as changing:
 
@@ -201,21 +201,17 @@ If you take only one thing away from this article, this should be it.
 
 ## Many different integration methods exist
 
-(todo: opening paragraph to ease in to this section)
-
 A completely different option is [implicit euler](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html). This method is better for simulating stiff equations that become unstable with other methods, but requires numerically solving a system of equations per-timestep. It's not often used in game physics.
 
 Another option for greater accuracy and less memory when simulating a large number of particles is [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration). This is a second order integrator and it is also symplectic. There is a variant that does not require storing velocity per-particle, as it derives velocity from the two most recent position values. This makes collision response and position fix-up easy to implement and saves memory when you have lots of particles.
 
-There are many other integrators to consider but the most classic higher order integrator which also acts as a good introduction to more complicated methods is the Runge Kutta order 4 or simply "RK4". So named for the two German physicists who discovered it: [Carl Runge](https://en.wikipedia.org/wiki/Carl_David_Tolmé_Runge) and [Martin Kutta](https://en.wikipedia.org/wiki/Martin_Wilhelm_Kutta). 
+Next is a whole family of integrators called the Runge-Kutta methods. The most classic of these is the Runge Kutta order 4 or simply 'RK4'. So named for the two German physicists who discovered it: [Carl Runge](https://en.wikipedia.org/wiki/Carl_David_Tolmé_Runge) and [Martin Kutta](https://en.wikipedia.org/wiki/Martin_Wilhelm_Kutta). 
 
-These are German names so the 'g' is hard and the 'u' in front of 'tt' is a short 'oo' sound. I am sorry to inform you that this means we are talking about the _'roon-geh koo-ta'_ method and not a _'runge cutter'_, whatever that is.
+These are German names so the 'g' is hard and the 'u' is a short 'oo' sound. I am sorry to inform but this means we are talking about the _'roon-geh koo-ta'_ method and not a _'runge cutter'_, whatever that is :)
 
-Perhaps this is why everyone just says: "**RK4**". :)
+The RK4 is a fourth order integrator, which means its accumulated error is on the order of the fourth derivative. This makes it much more accurate than explicit and implicit euler which are only accurate to the first derivative, which is just a fancy way of saying they are only accurate when the rate of change is constant.
 
-(todo: clean up sentence below, a better transition would be, lets explore RK4 because it's an interesting way to explore higher order integrators)
-
-This is not to suggest that RK4 is automatically the "best" integrator for all applications _(there's no such thing)_, or that you should always use this integrator over the others listed above _(you shouldn’t)_. But it is one of the most accurate general purpose integration techniques available. 
+I want to make an important point here about RK4. Although is more accurate, this is not to automatically say that RK4 is "the best", or that it is automatically better than implicit euler. It's much more complicated than that. But it's an interesting integrator and well worth studying its implementation.
 
 ## Implementing RK4
 
