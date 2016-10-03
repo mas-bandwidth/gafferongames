@@ -249,6 +249,8 @@ int main()
 
     implicit_euler_spring_damper( "implicit_euler_spring_undamped_10fps.csv", 0.1f, k, 0.0f );
 
+    implicit_euler_spring_damper( "implicit_euler_spring_undamped_5fps.csv", 0.2f, k, 0.0f );
+
     // rk4
 
     rk4_spring_damper( "rk4_spring_damper_100fps.csv", 0.01f, k, b );
@@ -256,6 +258,8 @@ int main()
     rk4_spring_damper( "rk4_spring_undamped_100fps.csv", 0.01f, k, 0.0f );
 
     rk4_spring_damper( "rk4_spring_undamped_10fps.csv", 0.1f, k, 0.0f );
+
+    rk4_spring_damper( "rk4_spring_undamped_5fps.csv", 0.2f, k, 0.0f );
 
     // exact solution
 

@@ -104,7 +104,7 @@ Since acceleration is constant in the example above, the integration of velocity
 
 Just how large is this error? Let's find out!
 
-There is a closed form solution[*](#ballistic_footnote) for how an object moves under constant acceleration. We can use this to compare our numerically integrated position with the exact result:
+There is a closed form solution for how an object moves under constant acceleration. We can use this to compare our numerically integrated position with the exact result:
 
         s = ut + 0.5at^2
         s = 0.0*t + 0.5at^2
@@ -320,7 +320,7 @@ We can confirm this by increasing the time step to 0.25 seconds.
 
 RK4 maintains the correct frequency but loses energy:
 
-...
+<img src="/img/game_physics/rk4_undamped_5fps.png" width="100%"/>
 
 While semi-implicit euler conserves energy on average:
 
@@ -328,7 +328,9 @@ While semi-implicit euler conserves energy on average:
 
 What an interesting result!
 
-## Symplectic vs. Non-Symplectic Integrators
+## Conclusion
+
+_(todo: write a new conclusion. basically, RK4 is overkill, don't use explicit euler. you should probably use implicit euler. if you really need more accuracy aim for a higher order method that is sympletic such as verlet integration, or some of the more modern higher order symplectic integrators. links for further study)_
 
 These are interesting properties that come out of the fact that implicit euler is a symplectic integrator, while RK4 is not. 
 
@@ -336,8 +338,3 @@ In fact this is a known property with RK4, it loses energy over time, and is a p
 
 So you can see that accuracy is not the only criteria when evaluating an integrator. There is much more to it than that!
 
-## Conclusion
-
-_(todo: write a new conclusion. basically, RK4 is overkill, don't use explicit euler. you should probably use implicit euler. if you really need more accuracy aim for a higher order method that is sympletic such as verlet integration, or some of the more modern higher order symplectic integrators. links for further study)_
-
-<a name="ballistic_footnote"></a> _\* It is tempting to see this closed form and think "Hey, why don't I just use this as the integrator!". But while it is 100% accurate under constant acceleration, it is not useful in the general case because acceleration is not usually constant. Consider: drag forces (function of velocity), spring forces (function of position), and forces that are a function of time. All of these result in non-constant acceleration._
