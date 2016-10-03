@@ -35,6 +35,7 @@ commit: clean
 clean: 
 	rm -rf bin
 	rm -rf public
+	rm -rf gafferongames_upload
 	rm -f config.toml
 
 integration_basics:
