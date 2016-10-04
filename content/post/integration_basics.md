@@ -298,9 +298,7 @@ Wrong. Both integrators are so close to the exact result that it's impossible to
 
 <img src="/img/game_physics/integration_basics_damped_rk4_vs_semi_implicit_euler_zoomed_in.png" width="100%"/>
 
-Zooming in confirms that RK4 is more accurate than semi-implicit euler.
-
-But is it worth the complexity and extra runtime cost of RK4? Hard to say.
+Zooming in confirms that RK4 is more accurate than semi-implicit euler, but is it worth the complexity and extra runtime cost of RK4? It's hard to say.
 
 Let's push a bit harder and see if we can find a significant difference between the two integrators. Unfortunately, we can't look at this system for long periods of time because it quickly damps down to zero, so let's switch to a [simple harmonic oscillator](https://en.wikipedia.org/wiki/Harmonic_oscillator#Simple_harmonic_oscillator) which oscillates forever without any damping.
 
@@ -322,12 +320,34 @@ RK4 maintains the correct frequency but loses energy:
 
 <img src="/img/game_physics/integration_basics_undamped_rk4_5fps.png" width="100%"/>
 
-While semi-implicit euler does a better job at conserving energy, on average:
+While semi-implicit euler does a better job at conserving energy, on average: 
 
 <img src="/img/game_physics/integration_basics_undamped_semi_implicit_euler_5fps.png" width="100%"/>
 
-What an interesting result!
+What an interesting result. As you can see it's not simply the case that RK4 has a higher order of accuracy and is "better". It's much more complicated than that.
 
 ## Conclusion
 
-_(todo: write a new conclusion. basically, RK4 is overkill, don't use explicit euler. you should probably use implicit euler. if you really need more accuracy aim for a higher order method that is sympletic such as verlet integration, or some of the more modern higher order symplectic integrators. links for further study)_
+We've implemented three different integrators and compared their results.
+
+1. Explicit euler
+2. Semi-implicit euler
+3. Runge Kutta order 4 (RK4)
+
+So which integrator should you use in your game?
+
+My recommendation is **semi-implicit euler**. It's cheap and easy to implement, it's much more stable than explicit euler, and it tends to preserve energy on average even when pushed near its limit.
+
+If you really do need more accuracy than semi-implicit euler, I recommend you look into higher order [symplectic integrators](https://en.wikipedia.org/wiki/Symplectic_integrator) designed for [hamiltonian systems](https://en.wikipedia.org/wiki/Hamiltonian_system). This way you'll discover more modern higher order integration techniques that are better suited to your simulation than RK4.
+
+And finally, if you are still doing this in your game:
+
+        position += velocity * dt;
+        velocity += acceleration * dt;
+
+Please take a moment to change it to this:
+
+        velocity += acceleration * dt;
+        position += velocity * dt;
+
+You'll be glad you did :)
