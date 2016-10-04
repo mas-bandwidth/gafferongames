@@ -142,7 +142,7 @@ In this system a mass is attached to a spring and the motion is damped by some k
 
 Now the acceleration is definitely not constant throughout the timestep, but is a continously changing function that is a combination of the position and velocity, which are themselves changing continuously over the timestep.
 
-This is an example of a [damped harmonic oscillator](https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator). It's a well studied problem and there's a closed form solution that we can check our numerically integrated result against.
+This is an example of a [damped harmonic oscillator](https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator). It's a well studied problem and there's a closed form solution that we can use to check our numerically integrated result.
 
 Let's start with an underdamped system where the mass oscillates about the origin while slowing down.
 
@@ -155,11 +155,11 @@ Here are the input parameters to the mass spring system:
 
 And here is a graph of the exact solution:
 
-<img src="/img/game_physics/spring_damper_exact_solution.png" width="100%"/>
+<img src="/img/game_physics/integration_basics_damped_exact_solution.png" width="100%"/>
 
 When we apply explicit euler to integrate this system, we get the following result, which has been scaled down vertically to fit:
 
-<img src="/img/game_physics/spring_damper_explicit_euler.png" width="100%"/>
+<img src="/img/game_physics/integration_basics_damped_explicit_euler.png" width="100%"/>
 
 Instead of damping and converging on the origin, it gains energy over time!
 
@@ -189,7 +189,7 @@ to:
 
 Applying the semi-implicit euler integrator with **dt** = 1/100 to the spring damper system gives a stable result that is very close to the exact solution:
 
-<img src="/img/game_physics/spring_damper_implicit_euler.png" width="100%"/>
+<img src="/img/game_physics/integration_basics_damped_semi_implicit_euler.png" width="100%"/>
 
 Even though semi-implicit euler is still a first order method, we get a much better result when integrating the equations of motion because it is symplectic.
 
@@ -207,13 +207,13 @@ These are German names so the 'g' is hard and the 'u' is a short 'oo' sound. I a
 
 Anyway. The RK4 is a fourth order integrator, which means its accumulated error is on the order of the fourth derivative. This makes it very accurate. Much more accurate than explicit and implicit euler which are only first order.
 
-But I want to make a very important point here. Although it is more accurate, that's not to say RK4 is "the best" integrator, or even that it is automatically better than implicit euler. It's much more complicated than that. Regardless, it's an interesting integrator and it's worth studying.
+But I want to make a very important point here. Although it is more accurate, that's not to say RK4 is "the best" integrator, or even that it is automatically better than implicit euler. It's much more complicated than that. Regardless, it's an interesting integrator and it's well worth studying.
 
 ## Implementing RK4
 
-There are many great explanations of the mathematics behind RK4 already. For example: [here](https://en.wikipedia.org/wiki/Runge–Kutta_methods), [here](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node5.html) and [here](https://www.researchgate.net/publication/49587610_A_Simplified_Derivation_and_Analysis_of_Fourth_Order_Runge_Kutta_Method). But seeing as the target audience for this article are programmers, not mathematicians, I will explain using code instead.
+There are many great explanations of the mathematics behind RK4 already. For example: [here](https://en.wikipedia.org/wiki/Runge–Kutta_methods), [here](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node5.html) and [here](https://www.researchgate.net/publication/49587610_A_Simplified_Derivation_and_Analysis_of_Fourth_Order_Runge_Kutta_Method). I highly encourage you to follow the derivation and understand how and why it works at a mathematical level. But seeing as the target audience for this article are programmers, not mathematicians, we're all about implementation here. So lets get started.
 
-So before we go any further let's define the state of an object as a struct in C++ so we have both position and velocity stored conveniently in one place:
+Before we go any further let's define the state of an object as a struct in C++ so we have both position and velocity stored conveniently in one place:
 
         struct State
         {
@@ -280,7 +280,7 @@ Finally we get to the integration routine itself:
             state.v = state.v + dvdt * dt;
         }
 
-Notice how the integrator evaluates derivatives at four points. Notice also how derivative a is used when calculating b, b is used when calculating c, and c into d. This feedback of the current derivative into the calculation of the next is what gives the RK4 integrator its accuracy.
+The RK4 integrator samples the derivative at four points to detect curvative. Notice how derivative a is used when calculating b, b is used when calculating c, and c into d. This feedback of the current derivative into the calculation of the next is what gives the RK4 integrator its accuracy.
 
 Importantly, each of these derivatives a,b,c and d will be _different_ when the rate of change in these quantities is a function of time or a function of the state itself. For example, in our spring damper system acceleration is a function of the current position and velocity which change throughout the timestep.
 
@@ -292,11 +292,11 @@ Let's put the RK4 integrator to the test.
 
 Obviously it will be visibly more accurate than semi-implicit euler, right?
 
-<img src="/img/game_physics/rk4_vs_semi_implicit_euler.png" width="100%"/>
+<img src="/img/game_physics/integration_basics_damped_rk4_vs_semi_implicit_euler.png" width="100%"/>
 
 Wrong. Both integrators are so close to the exact result that it's impossible to make out any difference at this scale. Both integrators are stable and track the exact solution very well with **dt**=1/100.
 
-<img src="/img/game_physics/rk4_vs_semi_implicit_euler_zoomed_in.png" width="100%"/>
+<img src="/img/game_physics/integration_basics_damped_rk4_vs_semi_implicit_euler_zoomed_in.png" width="100%"/>
 
 Zooming in confirms that RK4 is more accurate than semi-implicit euler.
 
@@ -306,13 +306,13 @@ Let's push a bit harder and see if we can find a significant difference between 
 
 Here's the exact result we're aiming for:
 
-<img src="/img/game_physics/exact_solution_undamped.png" width="100%"/>
+<img src="/img/game_physics/integration_basics_undamped_exact_solution.png" width="100%"/>
 
 To make it harder on the integrators, let's increase delta time to 0.1 seconds. 
 
 Next, we let the integrators run for 90 seconds and zoom in:
 
-<img src="/img/game_physics/rk4_vs_semi_implicit_euler_undamped_zoomed_in.png" width="100%"/>
+<img src="/img/game_physics/integration_basics_undamped_rk4_vs_semi_implicit_euler.png" width="100%"/>
 
 After 90 seconds the semi-implicit euler solution (orange) has drifted out of phase with the exact solution because it has a slightly different frequency, while the green line of RK4 matches the frequency, but is losing energy!
 
@@ -320,21 +320,14 @@ We can confirm this by increasing the time step to 0.25 seconds.
 
 RK4 maintains the correct frequency but loses energy:
 
-<img src="/img/game_physics/rk4_undamped_5fps.png" width="100%"/>
+<img src="/img/game_physics/integration_basics_undamped_rk4_5fps.png" width="100%"/>
 
-While semi-implicit euler conserves energy on average:
+While semi-implicit euler does a better job at conserving energy, on average:
 
-...
+<img src="/img/game_physics/integration_basics_undamped_semi_implicit_euler_5fps.png" width="100%"/>
 
 What an interesting result!
 
 ## Conclusion
 
 _(todo: write a new conclusion. basically, RK4 is overkill, don't use explicit euler. you should probably use implicit euler. if you really need more accuracy aim for a higher order method that is sympletic such as verlet integration, or some of the more modern higher order symplectic integrators. links for further study)_
-
-These are interesting properties that come out of the fact that implicit euler is a symplectic integrator, while RK4 is not. 
-
-In fact this is a known property with RK4, it loses energy over time, and is a poor fit when integrating the equations of motion. It was not designed for that, it is meant as an accurate integrator for single value quantities, but does not work so well when applied to integrating position and velocity together.
-
-So you can see that accuracy is not the only criteria when evaluating an integrator. There is much more to it than that!
-

@@ -1,45 +1,16 @@
-DONE
-
-
 TODO
-
-    ------------------
-
-    The key thing is to say that RK4 was designed for:
-
-        1. Hand calculation
-
-        2. First order ODEs, eg. integrating position from velocity, not velocity from acceleration *and* position from velocity at the same time.
-
-    Then demonstrate this with an example.
-
-    I think the best example is to show the simple harmonic oscillator integrated from closed form velocity.
-
-    The closed form for my simple harmonic oscillator is easy. -A*w*cos(w*t)
-
-    Lets get this done. It'll make a great way to close out the article and make a good point with RK4.
-
-    ------------------
-
-    Need to finish writing the next section, symplectic vs. non-symplectic integrators.
-
-    This is really a beyond RK4 section. It's going to be a bit hand wavey with links for further study.
-
-    I'm hesitant to really get into symplectic euler because it's above my current level of ability. It would make a good follow up article to cover symplectic integrators.
-
-    It might be good to explain that RK4 is not symplectic, and it was originally design for integrating a single equation from derivative, not a second order ode.
-
-    Mentioning hamiltonians and providing links for further study into hamiltonians would give people the ability to explore further.
-
-    Also linking to more advanced symplectic higher order integrators.
     
     -----------------
 
     Rewrite the conclusion
 
+    Publicize article to patreon supporters.
+
+    STOP!
+
     -----------------
 
-    Publicize article to patreon supporters.
+    Finish writing "Client Server Connection"
 
     -----------------
 
@@ -51,9 +22,9 @@ TODO
 
     -----------------
 
-    Port across the existing "Networked Physics" article series.
+    Port across "Introduction to the Physcis Simulation" article.
 
-    Check them in both the browser and in the RSS reader. Do videos show up in RSS readers? Kindof a bummer if they don't!
+    Check videos in both the browser and in the RSS reader. Do videos show up in RSS readers? Kindof a bummer if they don't!
 
     -----------------
 
@@ -62,10 +33,6 @@ TODO
     Either a) get smart and delta it with git for the upload step, or separate out the upload of the videos from the rest of the content.
 
     Videos don't change often so no point waiting 30 seconds for them to upload everytime I make a small change.
-
-    -----------------
-
-    Finish writing "Client Server Connection"
 
     -----------------
 
@@ -94,5 +61,11 @@ TODO
     Auth looks nice though for supporter only articles:
 
     https://www.aerobatic.com/docs/http-basic-authentication#custom-auth
+
+    -----------------
+
+    Research comment options, eg. discus
+
+    But do I want this? Comments seem less popular on gafferongames.com lately.
 
     -----------------
