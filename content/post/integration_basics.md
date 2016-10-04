@@ -324,7 +324,7 @@ While semi-implicit euler does a better job at conserving energy, on average:
 
 <img src="/img/game_physics/integration_basics_undamped_semi_implicit_euler_5fps.png" width="100%"/>
 
-What an interesting result. As you can see it's not simply the case that RK4 has a higher order of accuracy and is "better". It's much, much more complicated.
+What an interesting result. As you can see it's not simply the case that RK4 has a higher order of accuracy and is "better". It's much more nuanced than this.
 
 ## Conclusion
 
