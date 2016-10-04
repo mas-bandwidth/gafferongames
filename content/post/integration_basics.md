@@ -316,7 +316,7 @@ Next, we let the integrators run for 90 seconds and zoom in:
 
 After 90 seconds the semi-implicit euler solution (orange) has drifted out of phase with the exact solution because it has a slightly different frequency, while the green line of RK4 matches the frequency, but is losing energy!
 
-We can confirm this by increasing the time step to 0.25 seconds.
+We can see this more clearly by increasing the time step to 0.25 seconds.
 
 RK4 maintains the correct frequency but loses energy:
 
