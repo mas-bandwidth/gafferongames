@@ -2,6 +2,10 @@ TODO
 
     -----------------
 
+    Port across "UDP vs. TCP"
+
+    -----------------
+
     Finish writing "Client Server Connection"
 
     -----------------
@@ -47,4 +51,3 @@ TODO
     I should be able to just go over each article and find its URL on the old gafferongames and setup nginx config for this redirection I think.
 
     -----------------
-    

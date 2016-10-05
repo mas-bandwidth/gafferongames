@@ -41,7 +41,7 @@ Each stone on the board has a number of liberties equal to the number of lines r
 
 <img src="/img/virtualgo/go-board-liberties-9x9.jpg" width="100%"/></a>
 
-If the opponent is able to surround all the liberties with stones of the opposite color the stone is removed from the board.
+If the opponent is able to surround all the liberties with stones of the opposite color, the stone is removed from the board.
 
 <img src="/img/virtualgo/capture-stones-9x9.jpg" width="100%"/></a>
 
