@@ -2,17 +2,19 @@ TODO
 
     -----------------
 
-    -----------------
-
-    Port across first article in virtual go series.
-
-    -----------------
-
     Find way to speed up video upload
 
     Either a) get smart and delta it with git for the upload step, or separate out the upload of the videos from the rest of the content.
 
     Videos don't change often so no point waiting 30 seconds for them to upload everytime I make a small change.
+
+    But I still want to see videos while I work. So I have to do something smart.
+
+    Does hugo follow symlinks in static?
+
+    -----------------
+
+    Need code to strip all the .DS_Store in static before running hugo. Ugh.
 
     -----------------
 
@@ -67,5 +69,9 @@ TODO
     Research comment options, eg. discus
 
     But do I want this? Comments seem less popular on gafferongames.com lately.
+
+    -----------------
+
+    Need to remember to 
 
     -----------------

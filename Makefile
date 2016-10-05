@@ -13,9 +13,7 @@ local:
 	hugo server --watch --verbose -D -F
 	rm -f config.toml
 
-upload:
-	rm -rf public
-	rm -f config.toml
+upload: clean
 	cp config_upload.toml config.toml
 	hugo
 	mv public gafferongames_upload
@@ -38,6 +36,7 @@ clean:
 	rm -rf gafferongames_upload
 	rm -f gafferongames_upload.zip
 	rm -f config.toml
+	find . -name .DS_Store -delete
 
 integration_basics:
 	mkdir -p bin
