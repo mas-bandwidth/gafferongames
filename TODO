@@ -2,22 +2,6 @@ TODO
 
     -----------------
 
-    Find way to speed up video upload
-
-    Either a) get smart and delta it with git for the upload step, or separate out the upload of the videos from the rest of the content.
-
-    Videos don't change often so no point waiting 30 seconds for them to upload everytime I make a small change.
-
-    But I still want to see videos while I work. So I have to do something smart.
-
-    Does hugo follow symlinks in static?
-
-    -----------------
-
-    Need code to strip all the .DS_Store in static before running hugo. Ugh.
-
-    -----------------
-
     Finish writing "Client Server Connection"
 
     -----------------
@@ -54,24 +38,13 @@ TODO
 
     -----------------
 
-    This could be a convenient option for hosting the static website content, but probably not the videos:
-
-    https://www.aerobatic.com
-
-    Not sure it really beats my nginx option though.
-
-    Auth looks nice though for supporter only articles:
-
-    https://www.aerobatic.com/docs/http-basic-authentication#custom-auth
+    Need to remember to fix the link to next article in "Introduction to Virtual Go". It currently points to the old gafferongames.com
 
     -----------------
 
-    Research comment options, eg. discus
+    Need to setup up http permanent redirects from old gafferongames URLs to the new hugo URLs
 
-    But do I want this? Comments seem less popular on gafferongames.com lately.
-
-    -----------------
-
-    Need to remember to 
+    I should be able to just go over each article and find its URL on the old gafferongames and setup nginx config for this redirection I think.
 
     -----------------
+    

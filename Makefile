@@ -1,6 +1,6 @@
-.PHONY: public local upload commit clean
+.PHONY: video public local upload commit clean
 
-public: 
+public: video
 	rm -rf public
 	rm -f config.toml
 	cp config_upload.toml config.toml
@@ -10,10 +10,13 @@ local:
 	rm -f config.toml
 	cp config_local.toml config.toml
 	bash -c "sleep 1.0 && open http://127.0.0.1:1313" &
+	mkdir -p public/static
+	cp -r video static/video
 	hugo server --watch --verbose -D -F
 	rm -f config.toml
 
 upload: clean
+	rm -rf static/video
 	cp config_upload.toml config.toml
 	hugo
 	mv public gafferongames_upload
@@ -21,9 +24,15 @@ upload: clean
 	scp gafferongames_upload.zip root@linux:~/www
 	rm gafferongames_upload.zip
 	rm -rf gafferongames_upload
-	ssh root@linux "cd ~/www && unzip gafferongames_upload.zip && rm -rf gafferongames_old && mv gafferongames gafferongames_old && mv gafferongames_upload gafferongames && rm -rf gafferongames_old"
+	ssh root@linux "cd ~/www && rm -rf gafferongames_upload && unzip gafferongames_upload.zip && rm -rf video && mv gafferongames/video video && rm -rf gafferongames && mv gafferongames_upload gafferongames && mv video gafferongames/video"
 	open http://linux/gafferongames
 	rm -f config.toml
+
+upload_video: clean
+	zip -9r video.zip video
+	scp video.zip root@linux:~/www
+	rm video.zip
+	ssh root@linux "cd ~/www && rm -rf video && unzip video.zip && rm -rf gafferongames/video && mv video gafferongames/video"
 
 commit: clean
 	git add .
@@ -33,7 +42,10 @@ commit: clean
 clean: 
 	rm -rf bin
 	rm -rf public
+	rm -rf video_upload
 	rm -rf gafferongames_upload
+	rm -rf static/video
+	rm -f video_upload.zip
 	rm -f gafferongames_upload.zip
 	rm -f config.toml
 	find . -name .DS_Store -delete

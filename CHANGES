@@ -8,6 +8,10 @@ Wednesday 5th October, 2016
 
     Ported across first article in virtual go series.
 
+    Added code to delete all the .DS_Store before running hugo.
+
+    Sped up video upload by splitting apart from "make upload" into "make upload_video"
+
 
 Tuesday 4th October, 2016
 =========================
