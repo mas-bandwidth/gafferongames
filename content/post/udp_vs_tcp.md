@@ -21,7 +21,7 @@ In light of the fact that we want to network an action game, we'll take a very c
 
 ## TCP/IP
 
-TCP stands for "transmission control protocol". IP stands for "internet protocol". Together they form the backbone for almost everything you do online, from web browsing to IRC to email, its all built on top of TCP/IP.
+TCP stands for "transmission control protocol". IP stands for "internet protocol". Together they form the backbone for almost everything you do online, from web browsing to IRC to email, it's all built on top of TCP/IP.
 
 If you have ever used a TCP socket, then you know it's a reliable connection based protocol. This means you create a connection between two machines, then you exchange data much like you're writing to a file on one side, and reading from a file on the other.
 
@@ -43,19 +43,23 @@ This is because the internet is designed to be self-organizing and self-repairin
 
 Instead of treating communications between computers like writing to files, what if we want to send and receive packets directly?
 
-We can do this using UDP. UDP stands for "user datagram protocol" and it is another protocol built on top of IP, just like TCP, but this time instead of adding lots of features and complexity it is just a very thin layer over IP.
+We can do this using UDP. 
 
-With UDP we can send a packet to a destination IP address (eg. 112.140.20.10) and port (say 52423), and it will get passed from computer to computer until it arrives at the destination computer or is lost along the way.
+UDP stands for "user datagram protocol" and it's another protocol built on top of IP, but unlike TCP, instead of adding lots of features and complexity, UDP is a very thin layer over IP.
 
-On the receiver side, we just sit there listening on a specific port (eg. 52423) and when a packet arrives from <em>any computer</em> (remember there are no connections!), we get notified of the address and port of the computer that sent the packet, the size of the packet, and can read the packet data.
+With UDP we can send a packet to a destination IP address (eg. 112.140.20.10) and port (say 52423), and it gets passed from computer to computer until it arrives at the destination or is lost along the way.
 
-UDP is an unreliable protocol. In practice, most packets that are sent <em>will</em> get through, but you'll usually have around 1-5% packet loss, and occasionally you'll get periods where no packets get through at all (remember that there are lots of computers between you and your destination where things can go wrong...)
+On the receiver side, we just sit there listening on a specific port (eg. 52423) and when a packet arrives from _any_ computer (remember there are no connections!), we get notified of the address and port of the computer that sent the packet, the size of the packet, and can read the packet data.
 
-There is also no guarantee of ordering of packets. You could send 5 packets in order 1,2,3,4,5 and they could arrive completely out of order like 3,1,2,5,4. In practice, they will actually arrive in order almost all of the time, but again, you cannot rely on this!
+Like IP, UDP is an unreliable protocol. In practice however, most packets that are sent _will_ get through, but you'll usually have around 1-5% packet loss, and occasionally you'll get periods where no packets get through at all (remember there are lots of computers between you and your destination where things can go wrong...)
 
-Finally, although UDP doesn't do much on top of IP, it does make one guarantee for you. If you send a packet, it will either arrive in whole at the destination, or not arrive at all. So if you send a 256 byte packet to another computer, that computer cannot receive just the first 100 bytes of the packet, it <em>must</em> get the full 256 bytes of data. This is pretty much the only guarantee you get with UDP, everything else is up to you!
+There is also no guarantee of ordering of packets with UDP. You could send 5 packets in order 1,2,3,4,5 and they could arrive completely out of order like 3,1,2,5,4. In practice, packets tend to arrive in order _most_ of the time, but you cannot rely on this!
 
-<strong>TCP vs. UDP</strong>
+UDP also provides a 16 bit checksum, which in theory is meant to protect you from receiving invalid or truncated data, but you can't even trust this, since 16 bits is just not enough protection when you are sending UDP packets rapidly over a long period of time. Statistically, you can't even rely on this checksum and must add your own. 
+
+So in short, when you use UDP you're pretty much on your own!
+
+## TCP vs. UDP
 
 We have a decision to make here, do we use TCP sockets or UDP sockets?
 
@@ -79,15 +83,18 @@ UDP:
     <li>You have to manually break your data up into packets and send them</li>
     <li>You have to make sure you don't send data too fast for your internet connection to handle</li>
     <li>If a packet is lost, you need to devise some way to detect this, and resend that data if necessary</li>
+    <li>You can't even rely on the UDP checksum so you must add your own</li>
 </ul>
 
-The decision seems pretty clear then, TCP does everything we want and its super easy to use, while UDP is a huge pain in the ass and we have to code everything ourselves from scratch. So obviously we just use TCP right?
+The decision seems pretty clear then, TCP does everything we want and its super easy to use, while UDP is a huge pain in the ass and we have to code everything ourselves from scratch. 
 
-Wrong.
+So obviously we just use TCP right?
 
-Using TCP is the worst possible mistake you can make when developing a networked action game like an FPS! To understand why, you need to see what TCP is actually doing above IP to make everything look so simple!
+Wrong!
 
-<strong>How TCP really works</strong>
+Using TCP is the worst possible mistake you can make when developing a multiplayer game! To understand why, you need to see what TCP is actually doing above IP to make everything look so simple.
+
+## How TCP really works
 
 TCP and UDP are both built on top of IP, but they are radically different. UDP behaves very much like the IP protocol underneath it, while TCP abstracts everything so it looks like you are reading and writing to a file, hiding all complexities of packets and unreliability from you.
 
@@ -95,41 +102,49 @@ So how does it do this?
 
 Firstly, TCP is a stream protocol, so you just write bytes to a stream, and TCP makes sure that they get across to the other side. Since IP is built on packets, and TCP is built on top of IP, TCP must therefore break your stream of data up into packets. So, some internal TCP code queues up the data you send, then when enough data is pending the queue, it sends a packet to the other machine.
 
-This can be a problem for multiplayer games if you are sending very small packets. What can happen here is that TCP may decide that its not going to send data until you have buffered up enough data to make a reasonably sized packet (say more than 100 bytes or so). This is a problem because you want your client player input to get to the server <em>as quickly as possible</em>, if it is delayed or "clumped up" like TCP can do with small packets, the client's user experience of the multiplayer game will be very poor. Game network updates will arrive late and infrequently, instead of on-time and frequently like we want.
+This can be a problem for multiplayer games if you are sending very small packets. What can happen here is that TCP may decide it's not going to send data until you have buffered up enough data to make a reasonably sized packet to send over the network.
 
-TCP has an option you can set that fixes this behavior called <b>TCP_NODELAY</b>. This option instructs TCP not to wait around until enough data is queued up, but to send whatever data you write to it immediately. This is typically referred to as disabling Nagle's algorithm.
+This is a problem because you want your client player input to get to the server _as quickly as possible_, if it is delayed or "clumped up" like TCP can do with small packets, the client's user experience of the multiplayer game will be very poor. Game network updates will arrive late and infrequently, instead of on-time and frequently like we want.
 
-Unfortunately, even if you set this option TCP still has serious problems for multiplayer games.
+TCP has an option to fix this behavior called [TCP_NODELAY](https://en.wikipedia.org/wiki/Nagle%27s_algorithm). This option instructs TCP not to wait around until enough data is queued up, but to flush any data you write to it immediately. This is referred to as disabling Nagle's algorithm.
 
-It all stems from how TCP handles lost and out of order packets, to present you with the "illusion" of a reliable, ordered stream of data.
+Unfortunately, even if you set this option TCP still has serious problems for multiplayer games and it all stems from how TCP handles lost and out of order packets to present you with the "illusion" of a reliable, ordered stream of data.
 
-<strong>How TCP implements reliability</strong>
+## How TCP implements reliability
 
 Fundamentally TCP breaks down a stream of data into packets, sends these packets over unreliable IP, then takes the packets received on the other side and reconstructs the stream.
 
-But what happens when a packet is lost? What happens when packets arrive out of order or are duplicated?
+But what happens when a packet is lost? 
 
-Without going too much into the details of how TCP works because its super-complicated (please refer to TCP/IP Illustrated) in essence TCP sends out a packet, waits a while until it detects that packet was lost because it didn't receive an ack (acknowledgement) for it, then resends the lost packet to the other machine. Duplicate packets are discarded on the receiver side, and out of order packets are resequenced so everything is reliable and in order.
+What happens when packets arrive out of order or are duplicated?
 
-The problem is that if we were to attempt to synchronize this using TCP, whenever a packet is dropped it has to stop and wait for that data to be resent. Yes, even if more recent data arrives, that new data gets put in a queue, and you cannot access it until that lost packet has been retransmitted. How long does it take to resend the packet? Well, it is going to take <em>at least</em> round trip latency for TCP to work out that data needs to be resent, but commonly it takes 2*RTT, and another one way trip from the sender to the receiver for the resent packet to get there. So if you have a 125ms ping, you will be waiting roughly 1/5th of a second for the packet data to be resent <em>at best</em>, and in worst case conditions you could be waiting up to half a second or more (consider what happens if the attempt to resend the packet fails to get through?). What happens if TCP decides the packet loss indicates network congestion and it backs off? Yes it does this. Fun times!
+Without going too much into the details of how TCP works because its super-complicated (please refer to [TCP/IP Illustrated](http://www.cs.newpaltz.edu/~pletcha/NET_PY/the-protocols-tcp-ip-illustrated-volume-1.9780201633467.24290.pdf)) in essence TCP sends out a packet, waits a while until it detects that packet was lost because it didn't receive an ack (or acknowledgement), then resends the lost packet to the other machine. Duplicate packets are discarded on the receiver side, and out of order packets are resequenced so everything is reliable and in order.
 
-<strong>Why you should never use TCP to network time critical data</strong>
+The problem is that if we were to send our time critical game data over TCP, whenever a packet is dropped it has to stop and wait for that data to be resent. Yes, even if more recent data arrives, that new data gets put in a queue, and you cannot access it until that lost packet has been retransmitted. How long does it take to resend the packet? 
 
-The problem with using TCP for realtime games like FPS is that unlike web browsers, or email or most other applications, these multiplayer games have a <em>real time requirement</em> on packet delivery. For many parts of your game, for example player input and character positions, it really doesn't matter what happened a second ago, you only care about the most recent data. TCP was simply not designed with this in mind.
+Well, it's going to take _at least_ round trip latency for TCP to work out that data needs to be resent, but commonly it takes 2*RTT, and another one way trip from the sender to the receiver for the resent packet to get there. So if you have a 125ms ping, you'll be waiting roughly 1/5th of a second for the packet data to be resent _at best_, and in worst case conditions you could be waiting up to half a second or more (consider what happens if the attempt to resend the packet fails to get through?). What happens if TCP decides the packet loss indicates network congestion and it backs off? Yes it actually does this. Fun times!
+
+## Never use TCP for time critical data
+
+The problem with using TCP for realtime games like FPS is that unlike web browsers, or email or most other applications, these multiplayer games have a _real time requirement_ on packet delivery. 
+
+What this means is that for many parts of a game, for example player input and character positions, it really doesn't matter what happened a second ago, the game only cares about the most recent data. 
+
+TCP was simply not designed with this in mind.
 
 Consider a very simple example of a multiplayer game, some sort of action game like a shooter. You  want to network this in a very simple way. Every frame you send the input from the client to the server (eg. keypresses, mouse input controller input), and each frame the server processes the input from each player, updates the simulation, then sends the current position of game objects back to the client for rendering.
 
-So in our simple multiplayer game, whenever a packet is lost, everything has to <em>stop and wait</em> for that packet to be resent. On the client game objects stop receiving updates so they appear to be standing still, and on the server input stops getting through from the client, so the players cannot move or shoot. When the resent packet finally arrives, you receive this stale, out of date information that you don't even care about! Plus, there are packets backed up in queue waiting for the resend which arrive at same time, so you have to process all of these packets in one frame. Everything is clumped up!
+So in our simple multiplayer game, whenever a packet is lost, everything has to _stop and wait_ for that packet to be resent. On the client game objects stop receiving updates so they appear to be standing still, and on the server input stops getting through from the client, so the players cannot move or shoot. When the resent packet finally arrives, you receive this stale, out of date information that you don't even care about! Plus, there are packets backed up in queue waiting for the resend which arrive at same time, so you have to process all of these packets in one frame. Everything is clumped up!
 
-Unfortunately, there is nothing you can do to fix this behavior with TCP, nor would you want to, it is just the fundamental nature of it! This is just what it takes to make the unreliable, packet-based internet look like a reliable-ordered stream.
+Unfortunately, there is nothing you can do to fix this behavior, it's just the fundamental nature of TCP. This is just what it takes to make the unreliable, packet-based internet look like a reliable-ordered stream.
 
 Thing is we don't want a reliable ordered stream.
 
 We want our data to get as quickly as possible from client to server without having to wait for lost data to be resent.
 
-This is why you should <span style="text-decoration:underline;">never</span> use TCP for networking time-critical data!
+This is why you should **never** use TCP when networking time-critical data!
 
-<strong>Wait? Why can't I use <em>both</em> UDP and TCP?</strong>
+## Wait? Why can't I use _both_ UDP and TCP?
 
 For realtime game data like player input and state, only the most recent data is relevant, but for other types of data, say perhaps a sequence of commands sent from one machine to another, reliability and ordering can be very important.
 
@@ -139,20 +154,10 @@ On the surface, this seems like a great idea. The problem is that since TCP and 
 
 Also, it's pretty complicated to mix UDP and TCP. If you mix UDP and TCP you lose a certain amount of control. Maybe you can implement reliability in a more efficient way that TCP does, better suited to your needs? Even if you need reliable-ordered data, it's possible, provided that data is small relative to the available bandwidth to get that data across faster and more reliably that it would if you sent it over TCP. Plus, if you have to do NAT to enable home internet connections to talk to each other, having to do this NAT once for UDP and once for TCP (not even sure if this is possible...) is kind of painful.
 
-<strong>Conclusion</strong>
+## Conclusion
 
-My recommendation then is not only that you use UDP, but that you <span style="text-decoration:underline;">only</span> use UDP for your game protocol. Don't mix TCP and UDP, instead learn how to implement the specific pieces of TCP that you wish to use <em>inside</em> your own custom UDP based protocol.
+My recommendation is not only that you use UDP, but that you _only_ use UDP for your game protocol. Don't mix TCP and UDP! Instead, learn how to implement the specific features of TCP that you need _inside_ your own custom UDP based protocol.
 
-Of course, it is no problem to use HTTP to talk to some RESTful services while your game is running -- that's not what I'm saying. A couple TCP connections running while your game is running isn't going to bring everything down. The point is, don't split your game protocol across UDP and TCP. Keep your game protocol running over UDP so you are fully in control of the data you send and receive and how reliability, ordering and congestion avoidance are implemented.
+Of course, it is no problem to use HTTP to talk to some RESTful services while your game is running. I'm not saying you can't do that. A few TCP connections running while your game is running isn't going to bring everything down. The point is, don't split your _game protocol_ across UDP and TCP. Keep your game protocol running over UDP so you are fully in control of the data you send and receive and how reliability, ordering and congestion avoidance are implemented.
 
-The rest of the articles in this series show you how to do this, from creating your own virtual connection based protocol on top of UDP, to creating your own reliability, flow control and congestion avoidance over UDP.
-
-<i>
-
-<h1><b>Next:</b> <a href="http://www.gafferongames.com/networking-for-game-programmers/sending-and-receiving-packets/">Sending And Receiving Packets</a></h1>
-
-</i>
-
-<a href="http://www.patreon.com/gafferongames"><img src="http://i0.wp.com/gafferongames.com/wp-content/uploads/2014/12/donate.png"></img></a>
-
-If you enjoyed this article please consider making a small donation. <b><u>Donations encourage me to write more articles!</u></b>
+The rest of this article series show you how to do this, from creating your own virtual connection on top of UDP, to creating your own reliability, flow control and congestion avoidance.

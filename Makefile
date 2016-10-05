@@ -9,7 +9,7 @@ public: video
 local:
 	rm -f config.toml
 	cp config_local.toml config.toml
-	bash -c "sleep 1.0 && open http://127.0.0.1:1313" &
+	bash -c "sleep 2.5 && open http://127.0.0.1:1313" &
 	mkdir -p public/static
 	cp -r video static/video
 	hugo server --watch --verbose -D -F
