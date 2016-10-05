@@ -12,6 +12,8 @@ Wednesday 5th October, 2016
 
     Sped up video upload by splitting apart from "make upload" into "make upload_video"
 
+    Ported across "UDP vs. TCP"
+
 
 Tuesday 4th October, 2016
 =========================

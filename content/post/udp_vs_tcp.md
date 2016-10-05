@@ -1,7 +1,7 @@
 +++
 categories = ["Game Networking"]
 tags = ["networking"]
-date = "2013-02-18"
+date = "2008-10-01"
 title = "UDP vs. TCP"
 description = "Which protocol is best for games?"
 draft = false
