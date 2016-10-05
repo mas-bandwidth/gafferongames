@@ -41,7 +41,7 @@ Your browser does not support the video tag.
 
 Notice when the player interacts with a cube it turns red. When that cube comes to rest it turns back to grey (non-interacting). Interactions aren’t just direct. Red cubes hit by the player turn other cubes they touch red as well. This way player interactions fan-out covering all affected objects.
 
-While it’s cool to roll around and interact with other cubes, but what I really wanted was a way to push _lots_ of of cubes around. What I came up with is this:
+While it’s cool to roll around and interact with other cubes, what I really wanted was a way to push _lots_ of cubes around. What I came up with is this:
 
 <video preload="auto" autoplay="autoplay" loop="loop" width="100%">
 <source src="/video/networked_physics/the_physics_simulation_cubes_blow.mp4" type="video/mp4" />
@@ -49,13 +49,13 @@ While it’s cool to roll around and interact with other cubes, but what I reall
 Your browser does not support the video tag.
 </video>
 
-To implement this I raycast to find the intersection with the ground below the center of mass of the player cube, then apply a spring force (see [Hooke’s law](https://en.wikipedia.org/wiki/Hooke%27s_law)) to the player cube so it floats in the air at a certain height above this point. 
+To implement this I raycast to find the intersection with the ground below the center of mass of the player cube, then apply a spring force (see [Hooke’s law](https://en.wikipedia.org/wiki/Hooke%27s_law)) relative to the distance from this point, making the player cube float in the air.
 
 Then all non-player cubes within a certain distance of that intersection point have a force applied proportional to their distance from this point and away from it, so they are pushed away out of the way like leaves from a leaf blower.
 
 ## A complicated case
 
-I also wanted a very complex coupled motion between the player and non-player cubes where the player interacts with lots of other objects very closely, such that the player and the objects its interacting with become a single system, a group of rigid bodies joined together by constraints. 
+I also wanted a very complex coupled motion between the player and non-player cubes such that the player and the objects its interacting with become one single system, a group of rigid bodies joined together by constraints. 
 
 To implement this I thought it would be cool if the player could roll around and create a ball of cubes, like in one of my favorite games [Katamari Damacy](https://en.wikipedia.org/wiki/Katamari_Damacy).
 
@@ -65,7 +65,7 @@ To implement this I thought it would be cool if the player could roll around and
 Your browser does not support the video tag.
 </video>
 
-To implement this effect, cubes within a certain distance of the player have a force applied towards the center of the cube. Note that these cubes remain physically simulated while in the katamari ball, they are not just “stuck” to the player like in the original game. 
+To implement this effect cubes within a certain distance of the player have a force applied towards the center of the cube. These cubes remain physically simulated while in the katamari ball, they are not just “stuck” to the player like in the original game. 
 
 This means that the cubes in the katamari are continually pushing and interacting with each other and the player cube via collision constraints. 
 

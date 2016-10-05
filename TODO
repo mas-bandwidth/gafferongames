@@ -1,12 +1,18 @@
 TODO
-    
+
     -----------------
 
-    Rewrite the conclusion
+    -----------------
 
-    Publicize article to patreon supporters.
+    Port across first article in virtual go series.
 
-    STOP!
+    -----------------
+
+    Find way to speed up video upload
+
+    Either a) get smart and delta it with git for the upload step, or separate out the upload of the videos from the rest of the content.
+
+    Videos don't change often so no point waiting 30 seconds for them to upload everytime I make a small change.
 
     -----------------
 
@@ -22,17 +28,7 @@ TODO
 
     -----------------
 
-    Port across "Introduction to the Physcis Simulation" article.
-
-    Check videos in both the browser and in the RSS reader. Do videos show up in RSS readers? Kindof a bummer if they don't!
-
-    -----------------
-
-    Find way to speed up video upload
-
-    Either a) get smart and delta it with git for the upload step, or separate out the upload of the videos from the rest of the content.
-
-    Videos don't change often so no point waiting 30 seconds for them to upload everytime I make a small change.
+    Port across rest of "Game Physics" series.
 
     -----------------
 
@@ -41,6 +37,10 @@ TODO
     -----------------
 
     Port across the "Virtual Go" article series.
+
+    -----------------
+
+    Port across the rest of "Building a Game Network Protocol" series.
 
     -----------------
 

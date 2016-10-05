@@ -1,4 +1,20 @@
 
+Wednesday 5th October, 2016
+===========================
+
+    Check videos in the RSS reader. Do videos show up in RSS readers? Kindof a bummer if they don't!
+
+    Videos do show up in my RSS reader. The text formatting is a bit off, but whatever. I can't control that.
+
+
+Tuesday 4th October, 2016
+=========================
+
+    Some polish on "Integration Basics".
+
+    Ported across "The Physics Simulation".
+
+
 Monday 3rd October, 2016
 ========================
 
@@ -20,7 +36,7 @@ Monday 3rd October, 2016
 
     Confirmed. The person is wrong. They are multiplying by dt twice. This is incredibly ignorant of them to post as if they are correct. I'll let them wear that.
 
-    It's pretty obvious looking at the code is their definition of "more accurate" is comes to zero faster because that's how they print it out. At no point is he comparing it against the analytical solution or doing any work at all to justify his claim that his fucked up version of RK4 is more accurate.
+    It's pretty obvious looking at the code is their definition of "more accurate" is comes to zero faster (or stays away from zero longer) because that's how they print it out. At no point is he comparing it against the analytical solution or doing any work at all to justify his claim that his fucked up version of RK4 is more accurate.
 
     Moving on. This person is a fool.
 
