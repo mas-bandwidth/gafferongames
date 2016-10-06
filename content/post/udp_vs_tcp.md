@@ -25,7 +25,7 @@ TCP stands for "transmission control protocol". IP stands for "internet protocol
 
 If you have ever used a TCP socket, then you know it's a reliable connection based protocol. This means you create a connection between two machines, then you exchange data much like you're writing to a file on one side, and reading from a file on the other.
 
-TCP connections are reliable and ordered, meaning that all data you send is guaranteed to arrive at the other side and in the same order that you wrote it. It's also a stream of data so TCP takes care of splitting up your data into packets and sending those across the network for you.
+TCP connections are reliable and ordered. All data you send is guaranteed to arrive at the other side and in the order you wrote it. It's also a stream protocol, so TCP automatically splits your data into packets and sends them over the network for you.
 
 ## IP
 

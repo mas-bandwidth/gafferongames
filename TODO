@@ -2,6 +2,14 @@ TODO
 
     -----------------
 
+    Port across the existing "Game Networking" series.
+
+    -----------------
+
+    Port across the "Virtual Go" article series.
+
+    -----------------
+
     Finish writing "Client Server Connection"
 
     -----------------
@@ -15,14 +23,6 @@ TODO
     -----------------
 
     Port across rest of "Game Physics" series.
-
-    -----------------
-
-    Port across the existing "Game Networking" series.
-
-    -----------------
-
-    Port across the "Virtual Go" article series.
 
     -----------------
 
@@ -45,5 +45,11 @@ TODO
     Need to setup up http permanent redirects from old gafferongames URLs to the new hugo URLs
 
     I should be able to just go over each article and find its URL on the old gafferongames and setup nginx config for this redirection I think.
+
+    -----------------
+
+    Need to remember to properly link up next/previous in "Game Networking" article series.
+
+    Also some conclusions need padding out, and the example source code needs to be updated and downloadable.
 
     -----------------
