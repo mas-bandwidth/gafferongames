@@ -28,19 +28,21 @@ Clearly this is a solved problem. **The game industry uses UDP.**
 
 So what's going on? Why do so many games build their own custom network protocol over UDP instead of using TCP? What is it about the specific use case of multiplayer gaming that makes a custom protocol built on top of UDP such a slam dunk?
 
-## Justification for using UDP instead of TCP
+## Justification for UDP
 
 Multiplayer games are different to web servers[*](#quic_footnote).
 
-Multiplayer games send **time critical, time series data**. 
+Multiplayer games send **time critical, time series data**.
 
-This is data that is both a function of time *and* must get across as quickly as possible. Games in this regard are more like video and voice chat than streaming video and websites. You cannot solve delivery problems like Netflix by simply buffering a few seconds more. Players demand the *minimum* possible latency, especially when playing competitive games.
+This is data that is both a function of time *and* must get across as quickly as possible. Data like (todo: examples...) Games in this regard are more like real-time video chat than streaming video. Here you cannot solve delivery problems by simply buffering a few seconds more, additional buffering adds latency and players demand the *lowest* possible latency, especially for competitive games.
 
-So we have this time series data and due to latency requirements the amount of time this data can be buffered is very short (<150ms). Time series data arriving after this small buffering window is useless and is thrown away. Naturally, the best method of delivery would be the one with the least time variance in packet delivery.
+So we have this time series data and due to player latency requirements the amount of time this data can be buffered is very short (<150ms). The client can only make use of time series data that arrives within this window. Data arriving later is useless and is thrown away. Naturally, it follows that the best method for sending network data is the one with the least time variance.
 
 So why can't we use TCP for time critical, time series data?
 
-TCP delivers all packets reliably and in-order. To implement this it is necessary to hold more recent packets in a queue while waiting for dropped packets to be resent. Otherwise, packets would not arrive in the same order they were sent. This is known as **head of line blocking**.
+The short answer is that delivering all packets reliably and in-order creates a large time variance in packet delivery under both packet loss and latency, this increases the amount of latency or hitches visible in the game. In time critical games like first person shooters, this additional latency or hitching caused by TCP significantly degrades the player experience in the game.
+
+To explain exactly why this is, it is necessary to understand the nature of TCP. In order to create the illusion that a stream of data is reliable-ordered on top of an unreliable, best effort delivery network (IP), TCP holds more recent packets in a queue while waiting for dropped packets to be resent. Otherwise, packets would not arrive in the same order they were sent. This is known as **head of line blocking**.
 
 This makes perfect sense for the streams of reliable-ordered data that TCP was designed for, but creates serious problems for time critical, time-series data. We don't care about all packets being delivered reliably and in order. All we care about is the most recent state hitting that small (<150ms) window before it becomes useless.
 
