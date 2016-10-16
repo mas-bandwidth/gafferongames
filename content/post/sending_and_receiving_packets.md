@@ -97,7 +97,7 @@ Now we have a platform independent way to initialize the socket layer.
 
 ## Creating a socket
 
-Its time to create a UDP socket, here's how to do it:
+It's time to create a UDP socket, here's how to do it:
 
         int handle = socket( AF_INET, 
                              SOCK_DGRAM, 
@@ -283,7 +283,7 @@ Hooray windows.
 
 So we've covered all the basic operations: creating a socket, binding it to a port, setting it to non-blocking, sending and receiving packets, and destroying the socket.
 
-But you'll notice most of these operations are slightly platform dependent, and its pretty annoying to have to remember to #ifdef and do platform specifics each time you want to perform socket operations.
+But you'll notice most of these operations are slightly platform dependent, and it's pretty annoying to have to remember to #ifdef and do platform specifics each time you want to perform socket operations.
 
 We're going to solve this by wrapping all our socket functionality up into a "Socket" class. While we're at it, we'll add an "Address" class to make it easier to specify internet addresses. This avoids having to manually encode or decode a "sockaddr_in" structure each time we send or receive packets.
 
@@ -294,18 +294,25 @@ So let's add a socket class:
         public:
 
             Socket();
+            
             ~Socket();
+            
             bool Open( unsigned short port );
+            
             void Close();
+            
             bool IsOpen() const;
+            
             bool Send( const Address & destination, 
                        const void * data, 
                        int size );
+            
             int Receive( Address & sender, 
                          void * data, 
                          int size );
 
         private:
+
             int handle;
         };
 
@@ -316,18 +323,23 @@ and an address class:
         public:
 
             Address();
+
             Address( unsigned char a, 
                      unsigned char b, 
                      unsigned char c, 
                      unsigned char d, 
                      unsigned short port );
+
             Address( unsigned int address, 
                      unsigned short port );
+
             unsigned int GetAddress() const;
+
             unsigned char GetA() const;
             unsigned char GetB() const;
             unsigned char GetC() const;
             unsigned char GetD() const;
+
             unsigned short GetPort() const;
 
         private:
@@ -336,12 +348,14 @@ and an address class:
             unsigned short port;
         };
 
-And here's how to to send and receive packets with these classes:
+Here's how to to send and receive packets with these classes:
 
         // create socket
 
         const int port = 30000;
+
         Socket socket;
+
         if ( !socket.Open( port ) )
         {
             printf( "failed to create socket!\n" );
@@ -351,6 +365,7 @@ And here's how to to send and receive packets with these classes:
         // send a packet
 
         const char data[] = "hello world!";
+
         socket.Send( Address(127,0,0,1,port), data, sizeof( data ) );
 
         // receive packets
@@ -369,7 +384,7 @@ And here's how to to send and receive packets with these classes:
             // process packet
         }
 
-As you can see its much simpler than using BSD sockets directly. 
+As you can see it's much simpler than using BSD sockets directly. 
 
 As an added bonus the code is the same on all platforms because everything platform specific is handled inside the socket and address classes.
 

@@ -2,6 +2,16 @@ TODO
 
     -----------------
 
+    Finish writing "Client Server Connection"
+
+    I can do this now because I have the article draft in PDF form
+
+    I would prefer to port across the other articles, but even though I can write offline, I don't have their source text captured.
+
+    So I will work on the next article instead, provided that it flows well, I could have a new article by the time I arrive in the USA.
+
+    -----------------
+
     Port across the existing "Game Networking" series.
 
     -----------------
@@ -10,15 +20,11 @@ TODO
 
     -----------------
 
-    Finish writing "Client Server Connection"
-
-    -----------------
-
     Get nice syntax highlighting working:
 
     https://gohugo.io/extras/highlighting/
 
-    Definely want to do this on page generation rather than javascript, so it works well inside an RSS feed.
+    Definety want to do this on page generation rather than javascript, so it works well inside an RSS feed.
 
     -----------------
 
@@ -38,7 +44,9 @@ TODO
 
     -----------------
 
-    Need to remember to fix the link to next article in "Introduction to Virtual Go". It currently points to the old gafferongames.com
+    Need to remember to fix the link to next article in "Introduction to Virtual Go". 
+
+    It currently points to the old gafferongames.com
 
     -----------------
 
@@ -51,5 +59,9 @@ TODO
     Need to remember to properly link up next/previous in "Game Networking" article series.
 
     Also some conclusions need padding out, and the example source code needs to be updated and downloadable.
+
+    -----------------
+
+    The title for "Sending and Receiving Packets" splits across two lines. This looks crap. It should go wide on one line.
 
     -----------------

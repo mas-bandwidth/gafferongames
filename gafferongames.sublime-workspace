@@ -631,7 +631,7 @@
 	"build_varint": "",
 	"command_palette":
 	{
-		"height": 107.0,
+		"height": 127.0,
 		"last_filter": "TODO",
 		"selected_items":
 		[
@@ -700,7 +700,7 @@
 				"Package Control: Install Package"
 			]
 		],
-		"width": 449.0
+		"width": 485.0
 	},
 	"console":
 	{
@@ -730,6 +730,14 @@
 	],
 	"file_history":
 	[
+		"/Users/gaffer/git/gafferongames/CHANGES",
+		"/Users/gaffer/git/gafferongames/TODO",
+		"/Users/gaffer/git/gafferongames/content/post/sending_and_receiving_packets.md",
+		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
+		"/Users/gaffer/git/gafferongames/Makefile",
+		"/Users/gaffer/git/gafferongames/content/post/udp_vs_tcp.md",
+		"/Users/gaffer/git/gafferongames/layouts/_default/list.html",
+		"/Users/gaffer/git/gafferongames/layouts/post/archive.html",
 		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
 		"/Users/gaffer/git/gafferongames/bin/rk4_spring_damper.csv",
 		"/Users/gaffer/git/gafferongames/source/game_physics/integration_basics.cpp",
@@ -739,13 +747,9 @@
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_constant_acceleration_dt_0.01.txt",
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_spring_damper.csv",
 		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
-		"/Users/gaffer/git/gafferongames/TODO",
-		"/Users/gaffer/git/gafferongames/Makefile",
-		"/Users/gaffer/git/gafferongames/CHANGES",
 		"/Users/gaffer/git/gafferongames/config.toml",
 		"/Users/gaffer/git/gafferongames/layouts/_default/terms.html",
 		"/Users/gaffer/git/gafferongames/layouts/_default/single.html",
-		"/Users/gaffer/git/gafferongames/layouts/_default/list.html",
 		"/Users/gaffer/git/gafferongames/layouts/_default/archive.html",
 		"/Users/gaffer/git/gafferongames/layouts/partials/navbar.html",
 		"/Users/gaffer/git/gafferongames/layouts/partials/header.html",
@@ -758,7 +762,6 @@
 		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/layouts/about/single.html",
 		"/Users/gaffer/git/gafferongames/layouts/contact/single.html",
-		"/Users/gaffer/git/gafferongames/layouts/post/archive.html",
 		"/Users/gaffer/git/gafferongames/layouts/post/single.html",
 		"/Users/gaffer/git/gafferongames/layouts/partials/tags.html",
 		"/Users/gaffer/git/gafferongames/content/post/old.txt",
@@ -854,10 +857,7 @@
 		"/Users/gaffer/git/protocol2/yojimbo_packet_processor.h",
 		"/Users/gaffer/git/protocol2/yojimbo_queue.h",
 		"/Users/gaffer/git/protocol2/yojimbo_types.h",
-		"/Users/gaffer/git/protocol2/clues.txt",
-		"/Users/gaffer/git/protocol2/clue2.txt",
-		"/Users/gaffer/git/protocol2/analysis.txt",
-		"/Users/gaffer/git/protocol2/output.txt"
+		"/Users/gaffer/git/protocol2/clues.txt"
 	],
 	"find":
 	{
@@ -908,6 +908,18 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"lets",
+			"Lets",
+			"gt",
+			"&lt",
+			"&amp",
+			"game!",
+			"TCP/IP Ill",
+			"its",
+			"that its",
+			"not arrive",
+			"passed",
+			"is is quite",
 			".jpg",
 			"10.0",
 			"< 10.0f",
@@ -1023,19 +1035,7 @@
 			"SendMessage",
 			"MESSAGE_TEST",
 			"MessageFactory",
-			"Message",
-			"m_messageSendQueue",
-			"m_messageSentPackets",
-			"const int",
-			"Hash",
-			"m_networkInterface",
-			"Decrypt",
-			"GenerateConnect",
-			"JSON",
-			"tokens",
-			"-j4",
-			"007",
-			"protocol2::"
+			"Message"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1140,6 +1140,30 @@
 		"selected_items":
 		[
 			[
+				"changes",
+				"CHANGES"
+			],
+			[
+				"todo",
+				"TODO"
+			],
+			[
+				"udp",
+				"content/post/udp_vs_tcp.md"
+			],
+			[
+				"make",
+				"Makefile"
+			],
+			[
+				"v",
+				"content/post/introduction_to_virtual_go.md"
+			],
+			[
+				"vir",
+				"content/post/introduction_to_virtual_go.md"
+			],
+			[
 				"rk",
 				"bin/rk4_spring_damper.csv"
 			],
@@ -1156,20 +1180,8 @@
 				"content/post/integration_basics.md"
 			],
 			[
-				"todo",
-				"TODO"
-			],
-			[
-				"changes",
-				"CHANGES"
-			],
-			[
 				"client",
 				"content/post/client_server_connection.md"
-			],
-			[
-				"make",
-				"Makefile"
 			],
 			[
 				"con",
@@ -1638,18 +1650,6 @@
 			[
 				"proto",
 				"protocol2.h"
-			],
-			[
-				"03",
-				"003_sending_large_blocks_of_data_quickly_and_reliably.cpp"
-			],
-			[
-				"001_read",
-				"001_reading_and_writing_packets.cpp"
-			],
-			[
-				"networ",
-				"network2.h"
 			]
 		],
 		"width": 0.0
@@ -1677,7 +1677,7 @@
 	{
 	},
 	"show_minimap": true,
-	"show_open_files": false,
+	"show_open_files": true,
 	"show_tabs": true,
 	"side_bar_visible": false,
 	"side_bar_width": 276.0,
