@@ -26,7 +26,7 @@ But why is it in 2016 that discussions of UDP vs. TCP are still so controversial
 
 Clearly this is a solved problem. **The game industry uses UDP.**
 
-So what's going on? Why do so many games build their own custom network protocol over UDP instead of TCP? What is it about the specific use case of multiplayer games that makes a custom protocol on top of UDP such a slam dunk?
+So what's going on? Why do so many games build their own custom network protocol over UDP instead of TCP? What is it about the specific use case of multiplayer gaming that makes a custom protocol built on top of UDP such a slam dunk?
 
 ## Justification for using UDP instead of TCP
 
@@ -34,17 +34,15 @@ Multiplayer games are different to web servers[*](#quic_footnote).
 
 Multiplayer games send **time critical, time series data**. 
 
-This is data that is both a function of time *and* must get across as quickly as possible. Games are more like video and voice chat than streaming video. You cannot solve delivery problems by simply buffering a few seconds longer. Players demand the *minimum* possible latency, especially when playing competitive games.
+This is data that is both a function of time *and* must get across as quickly as possible. Games in this regard are more like video and voice chat than streaming video and websites. You cannot solve delivery problems by simply buffering a few seconds longer. Players demand the *minimum* possible latency, especially when playing competitive games.
 
-So we have this time series data and due to latency requirements the amount of time this data can be buffered is short (<100ms). Any time series data that arrives after this small buffering window is useless and is thrown away. Naturally, the best method of delivery would be the one with the least time variance in packet delivery.
+So we have this time series data and due to latency requirements the amount of time this data can be buffered is short (<150ms). Time series data arriving after this small buffering window is useless and is thrown away. Naturally, the best method of delivery would be the one with the least time variance in packet delivery.
 
 So why can't we use TCP for time critical, time series data?
 
-The core problem with TCP is **head of line blocking**. 
+TCP delivers all packets reliably and in-order. To implement this it is necessary to hold more recent packets in a queue while waiting for dropped packets to be resent. Otherwise, packets would not arrive in the same order they were sent. This is known as **head of line blocking**.
 
-TCP delivers all packets reliably and in-order. To implement this it is necessary to hold more recent packets in a queue while waiting for dropped packets to be resent. Otherwise, packets would not arrive in the same order they were sent. 
-
-This makes perfect sense for the streams of reliable-ordered data that TCP was designed for, but it creates serious problems for time critical, time-series data. We don't care about old data being resent so packets are delivered reliably and in order. All we care about is the most recent state hitting that small (<100ms) window before it becomes useless.
+This makes perfect sense for the streams of reliable-ordered data that TCP was designed for, but creates serious problems for time critical, time-series data. We don't care about old data being resent so packets are delivered reliably and in order. All we care about is the most recent state hitting that small (<150ms) window before it becomes useless.
 
 To illustrate this, consider a game server sending 10 packets per-second to a client:
 
@@ -59,21 +57,19 @@ To illustrate this, consider a game server sending 10 packets per-second to a cl
         t = 10.8
         t = 10.9
 
-If the packet containing state for time t = 10.0 was lost, under TCP we must wait for that packet to be resent before we can access packets t = 10.1 and 10.2 even though they've already arrived. 
+But if the packet containing state for time t = 10.0 was lost, under TCP we must wait for that packet to be resent before we can access packets t = 10.1 and 10.2 even though they've already arrived over the network.
 
 Worse still, by the time the resent packet arrives, it's far too late to actually do anything with it, since the client now intends to display something around t = 10.3 or 10.4. Time series data that arrives after the buffering window is useless. The client doesn't stop and wait!
 
-What we'd really like is for an option to tell TCP: "hey, we really don't care about old packets being resent, just let me skip over them and let me access the more recent data instead". But TCP does not give us this option. All data must be delivered reliably and in-order. It's simply not possible to skip over dropped data with TCP.
+What we'd really like is for an option to tell TCP: "hey, we really don't care about old packets being resent, just let me skip over and access the more recent data instead". But TCP does not give us this option. All data must be delivered reliably and in-order. It's simply not possible to skip over dropped data with TCP.
 
-This creates terrible problems for time critical data where packet loss *and* latency exist. Large hitches are added to the stream of packets as TCP waits for dropped packets to be resent, which for time critical, time-series data means that the client sees either a) additional buffering added to smooth out this jitter (unacceptable for fast paced action games), or b) long pauses where the action in the game freezes and is non-responsive.
+This creates terrible problems for time critical data where packet loss *and* latency exist. Large hitches are added to the stream of packets as TCP waits for dropped packets to be resent, which for time critical, time-series data means that the client sees either a) additional buffering added to smooth out this jitter (unacceptable for fast paced action games), or b) long pauses where the game freezes and is non-responsive.
 
 Clearly neither option is acceptable for a first person shooter.
 
 If we want the best performance when sending time critical data over the internet, it is necessary to build our own custom protocol over UDP. UDP doesn't provide any ordering or reliability, so we are free to drop old packets and access the most recent state that we want.
 
-But using UDP comes at a cost.
-
-**UDP doesn't provide any concept of connection.**
+But using UDP comes at a cost: UDP doesn't provide any concept of connection.
 
 We have to build that ourselves. And that, my friend, is the subject of this article.
 
@@ -100,7 +96,6 @@ From that point of view, packets that arrive on the server are directed to the c
 queue they should be assigned to, and when sending packets the destination is specified typically as "send a packet to client 2", rather than the IP address and port.
 
 directly in the game, usually by assigning player 1, player 2 and so on, as the client index plus one.
-
 
 Such an abstraction looks something like this:
 
