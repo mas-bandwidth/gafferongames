@@ -30,23 +30,23 @@ So what's going on? Why do so many games build their own custom network protocol
 
 ## Justification for UDP
 
-Multiplayer games are different to web servers[*](#quic_footnote).
+Games are different to web servers[*](#quic_footnote).
 
-Multiplayer games send **time critical, time series data**.
+Games send **time critical, time series data**.
 
-This is data that is both a function of time *and* must get across as quickly as possible. Data like (todo: examples...) Games in this regard are more like real-time video chat than streaming video. Here you cannot solve delivery problems by simply buffering a few seconds more, additional buffering adds latency and players demand the *lowest* possible latency, especially for competitive games.
+Typical game data includes player inputs sent from client to server and the state of the world sent from server to clients. Both of these types of data are a function of time and both must get across as quickly as possible. 
 
-So we have this time series data and due to player latency requirements the amount of time this data can be buffered is very short (<150ms). The client can only make use of time series data that arrives within this window. Data arriving later is useless and is thrown away. Naturally, it follows that the best method for sending network data is the one with the least time variance.
+Games in this regard are much more like real-time video chat than streaming video. They can't solve delivery problems by just buffering a few seconds longer. Buffering adds latency and players demand the *minimum* possible latency, especially in competitive games.
 
-So why can't we use TCP for time critical, time series data?
+Now we have this time series data and due to player latency requirements the amount of time it can be buffered is very short (<150ms). To make it even harder, the receiver can only make use of data that arrives within the buffering window.
 
-The short answer is that delivering all packets reliably and in-order creates a large time variance in packet delivery under both packet loss and latency, this increases the amount of latency or hitches visible in the game. In time critical games like first person shooters, this additional latency or hitching caused by TCP significantly degrades the player experience in the game.
+So, why not use TCP for this time critical, time series data? 
 
-To explain exactly why this is, it is necessary to understand the nature of TCP. In order to create the illusion that a stream of data is reliable-ordered on top of an unreliable, best effort delivery network (IP), TCP holds more recent packets in a queue while waiting for dropped packets to be resent. Otherwise, packets would not arrive in the same order they were sent. This is known as **head of line blocking**.
+The short answer is that by delivering data reliably and in-order, TCP creates a large time variance or 'jitter' in packet delivery that makes it impossible to deliver time series data within the small window under typical internet conditions.
 
-This makes perfect sense for the streams of reliable-ordered data that TCP was designed for, but creates serious problems for time critical, time-series data. We don't care about all packets being delivered reliably and in order. All we care about is the most recent state hitting that small (<150ms) window before it becomes useless.
+The slightly more involved answer starts with the fact that TCP is a reliable-ordered stream protocol, and therefore must hold more recent packets in a queue while waiting for dropped packets to be resent. This is known as **head of line blocking**.
 
-To illustrate this, consider a game server sending 10 packets per-second to a client:
+To illustrate this effect, consider a game server sending 10 packets per-second to a client:
 
         t = 10.0
         t = 10.1
@@ -59,11 +59,11 @@ To illustrate this, consider a game server sending 10 packets per-second to a cl
         t = 10.8
         t = 10.9
 
-If the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access packets t = 10.1 and 10.2, even after they've already arrived over the network.
+If the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access packets t = 10.1 and 10.2, even when they've already arrived over the network.
 
-Worse still, by the time the resent packet arrives, it's far too late to actually do anything with it, since the client now intends to display something around t = 10.3 or 10.4. TCP blocked data we can use, waiting on data we can't. What a waste!
+Worse still, by the time the resent packet arrives, it's far too late to actually do anything with it, since the client now intends to display the state of the world somewhere around t = 10.3 or 10.4. TCP blocked data we can use, waiting on data we can't. What a waste!
 
-What we'd really like is for an option to tell TCP: "hey, we really don't care about old packets being resent, just let me skip over them and access more recent data instead". But TCP does not give us this option. All data must be delivered reliably and in-order. It's simply not possible to skip over dropped data with TCP.
+What we'd really like is  an option to tell TCP: "hey, we really don't care about old packets being resent, just let me skip over them and access more recent data instead". But TCP does not give us this option. All data must be delivered reliably and in-order. It's simply not possible to skip over dropped data with TCP.
 
 This creates terrible problems for time critical data where packet loss *and* latency exist. Large hitches are added to the stream of packets as TCP waits for dropped packets to be resent, which for time critical, time-series data means that the client sees either a) additional buffering added to smooth out this jitter (unacceptable for fast paced action games), or b) long pauses where the game freezes and is non-responsive.
 
