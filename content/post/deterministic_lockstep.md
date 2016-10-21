@@ -13,7 +13,7 @@ Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories
 
 In this article series we're exploring different ways to network a physics simulation. In this article specifically, we're going to network a physics simulation using deterministic lockstep.
 
-Deterministic lockstep is a method of networking a system from one computer to another by sending only the *inputs* that control that system, rather than the *state* of that system. In the context of networking a physics simulation, this means we send across a small amount of input, while avoiding state like position, orientation, linear velocity and angular velocity per-object.
+Deterministic lockstep is a method of networking a system from one computer to another by sending only the *inputs* that control that system, rather than the *state* of that system. In the context of networking a physics simulation, this means we send across a small amount of input, while avoiding sending state like position, orientation, linear velocity and angular velocity per-object.
 
 The benefit is that bandwidth is proportional to the size of the input, not the number of objects in the simulation. Yes, with deterministic lockstep you can network a physics simulation of one million objects with the same bandwidth as just one. 
 
@@ -49,13 +49,13 @@ Floating point determinism is a complicated subject and there's no silver bullet
 
 For more information please refer to this <a href="http://gafferongames.com/networking-for-game-programmers/floating-point-determinism/">article</a>.
 
-## Network Implementation
+## Networking Inputs
 
 Now that I have impressed upon you the complexity of perfect determinism, let's get down to implementation, assuming your simulation is in fact deterministic.
 
 You may wonder what the input in our example simulation is and how we should network it. Well, our example physics simulation is driven by keyboard input: arrow keys apply forces to make the player cube move, holding space lifts the cube up and blows other cubes around, and holding 'z' enables katamari mode.
 
-But how can we network these inputs? Must we send the entire state of the keyboard? No. It's not necessary to send the entire keyboard state, only the state of the keys that affect the simulation. What about key press and release events then? No. This is also not a good strategy. We need to ensure that exactly the same input is applied on the right side, and at exactly the same time, so we can't just send 'key pressed', and 'key released events' over TCP as they will be applied at slightly different times, causing the simulations to diverge.
+But how can we network these inputs? Must we send the entire state of the keyboard? No. It's not necessary to send the entire keyboard state, only the state of the keys that affect the simulation. What about key press and release events then? No. This is also not a good strategy. We need to ensure that exactly the same input is applied on the right side, and at exactly the same time, so we can't just send 'key pressed', and 'key released' events over TCP.
 
 What we do instead is represent the input with a struct and at the beginning of each simulation frame on the left side, sample this struct from the keyboard:
 
@@ -71,13 +71,13 @@ What we do instead is represent the input with a struct and at the beginning of 
 
 Next we send that input from the left simulation to the right simulation in a way that the simulation on the right side knows that the input belongs to frame n. 
 
-Here's the key part: the simulation on the right can only simulate frame n when it has the input for that frame. If it doesn't have the input, it has to wait.
+And here's the key part: the simulation on the right can only simulate frame n when it has the input for that frame. If it doesn't have the input, it has to wait.
 
-For example, if you were sending across using TCP you could simply send the inputs and nothing else, and on the other side you could read the packets coming in, and each input received corresponds to one frame for the simulation to step forward. If no input arrives in a current frame, the right side can't advance forward, it has to wait for the next input to arrive.
+For example, if you were sending across using TCP you could simply send the inputs and nothing else, and on the other side you could read the packets coming in, and each input received corresponds to one frame for the simulation to step forward. If no input arrives for render frame, the right side can't advance forward, it has to wait for the next input to arrive.
 
 Let's say you're using TCP, you've disabled [Nagle's Algorithm](http://en.wikipedia.org/wiki/Nagle's_algorithm), and you're sending inputs from the left to the right simulation once per-frame (60 times per-second).
 
-Here it gets a little complicated. Since we can't simulate forward unless we have the input for the next frame, it's not enough to just take whatever inputs arrive over the network and then run the simulation on inputs as they arrive because the result would be very jittery. Data sent across the network at 60HZ doesn't usually arrive nicely spaced, 1/60th of a second between each packet.
+Here it gets a little complicated. Since we can't simulate forward unless we have the input for the next frame, it's not enough to just take whatever inputs arrive over the network and then run the simulation on inputs as they arrive because the result would be very jittery. Data sent across the network at 60HZ doesn't typically arrive nicely spaced, 1/60th of a second between each packet.
 
 If you want this sort of behavior, you have to implement it yourself.
 
@@ -85,11 +85,11 @@ If you want this sort of behavior, you have to implement it yourself.
 
 Such a device is called a playout delay buffer.
 
-Unfortunately, the subject of playout delay buffers is a patent minefield. I would not advise searching for "playout delay buffer" or "adaptive playout delay" while at work. But in short, what you want to do is buffer packets for a short amount of time so they appear to be arriving at a steady rate even though in reality they arrive somewhat jittered.
+Unfortunately, the subject of playout delay buffers is a patent minefield. I would not advise searching for "playout delay buffer" or "adaptive playout delay" while at work. But in short, what you want to do is buffer packets for a short amount of time so they *appear* to be arriving at a steady rate even though in reality they arrive somewhat jittered.
 
-What you're doing here is similar to what Netflix does when you stream a video. You pause a little bit initially so you have a buffer in case some packets arrive late and then once the delay has elapsed video frames are presented spaced the correct time apart. Of course if your buffer isn't large enough then the video playback will be hitchy. With deterministic lockstep your simulation behaves exactly the same way: showing hitches when if the buffer isn't large enough to smooth out the jitter.
+What you're doing here is similar to what Netflix does when you stream a video. You pause a little bit initially so you have a buffer in case some packets arrive late and then once the delay has elapsed video frames are presented spaced the correct time apart. If your buffer isn't large enough then the video playback will be hitchy. With deterministic lockstep your simulation behaves exactly the same way: showing hitches when the buffer isn't large enough to smooth out the jitter. Of course, the cost of increasing the buffer size is additional latency, so you can't just buffer your way out of all problems. At some point the user says enough! That's too much latency added. No sir, I will *not* play your game with 1 second of extra delay :)
 
-My playout delay buffer implementation is really simple. You add inputs to it indexed by frame, and when the very first input is received, it stores the current local time on the receiver machine and from that point on delivers all packets assuming that frame 0 starts at that time + 100ms. You'll likely need to something more complex for a real world situation, perhaps something that handles clock drift, and detecting when the simulation should slightly speed up or slow down to maintain a nice amount of buffering safety (being "adaptive") while minimizing overall latency, but this is reasonably complicated and probably worth an article in itself.
+My playout delay buffer implementation is really simple. You add inputs to it indexed by frame, and when the very first input is received, it stores the current local time on the receiver machine and from that point on delivers all packets assuming that frames starts at that time + 100ms. You'll likely need to something more complex for a real world situation, perhaps something that handles clock drift, and detecting when the simulation should slightly speed up or slow down to maintain a nice amount of buffering safety (being "adaptive") while minimizing overall latency, but this is reasonably complicated and probably worth an article in itself.
 
 The goal is that under average conditions the playout delay buffer provides a steady stream of inputs for frame n, n+1, n+2 and so on, nicely spaced 1/60th of a second apart with no drama. In the worst case the time arrives for frame n and the input hasn't arrived yet it returns null and the simulation is forced to wait. If packets get bunched up and delivered late, it's possibly to have multiple inputs ready to dequeue per-frame. In this case I limit to 4 simulated frames per-render frame so the simulation has a chance to catch up, but doesn't simulate for so long that it falls further behind, aka. the "spiral of death".
 
@@ -110,9 +110,9 @@ But I'm here to tell you this kind of thinking is <u><b>dead wrong</b></u>.
 <source src="http://173.255.195.190/cubes_deterministic_lockstep_tcp_100ms_1pc.webm" type="video/webm"/>
 </video>
 
-Above you can see the simulation networked using deterministic lockstep over TCP at 100ms latency and 1% packet loss. If you look closely on the right side you can see hitching every few seconds. What is happening here is that when a packet is lost, TCP has to wait RTT*2 before resending it (actually it can be much worse, but I'm being generous...). The hitches happen because with deterministic lockstep the right simulation can't simulate frame n without input n, so it has to pause to wait for input n to be resent!
+Above you can see the simulation networked using deterministic lockstep over TCP at 100ms latency and 1% packet loss. If you look closely on the right side you can see hitches every few seconds. What's happening here is that each time a packet is lost, TCP has to wait RTT*2 before resending it (actually it can be much worse, but I'm being generous...). The hitches happen because with deterministic lockstep the right simulation can't simulate frame n without input n, so it has to pause to wait for input n to be resent!
 
-That's not all. It gets significantly worse as the amount of latency and packet loss increases. Here is the same simulation networked using deterministic lockstep over TCP at 250ms latency and 5% packet loss:
+That's not all. It gets significantly worse as latency and packet loss increase. Here is the same simulation networked using deterministic lockstep over TCP at 250ms latency and 5% packet loss:
 
 <video autoplay preload="auto" loop="true" width="100%">
   <source src="http://173.255.195.190/cubes_deterministic_lockstep_tcp_250ms_5pc.mp4" type="video/mp4"/>
@@ -127,15 +127,15 @@ Can we beat TCP at its own game. Reliable-ordered delivery?
 
 The answer is an emphatic <b>YES</b>. But *only* if we change the rules of the game.
 
-Here's the trick. We need to ensure that all inputs arrive reliably and in order. But if we just send inputs in UDP packets, some of those packets will be lost. What if, instead of detecting packet loss after the fact and resending lost packets, we just redundantly send all inputs we have stored until we know for sure that the other side has received them?
+Here's the trick. We need to ensure that all inputs arrive reliably and in order. But if we send inputs in UDP packets, some of those packets will be lost. What if, instead of detecting packet loss after the fact and resending lost packets, we redundantly include *all inputs* in each UDP packet until we know for sure the other side has received them?
 
 Inputs are very small (6 bits). Let's say we're sending 60 inputs per-second (60fps simulation) and round trip time we know is going the be somewhere in 30-250ms range. Let's say just for fun that it could be up to 2 seconds worst case and at this point we'll time out the connection (screw that guy). This means that on average we only need to include between 2-15 frames of input and worst case we'll need 120 inputs. Worst case is 120*6 = 720 bits. That's only 90 bytes of input! That's totally reasonable.
 
 We can do even better. It's not common for inputs to change every frame. What if when we send our packet instead we start with the sequence number of the most recent input, and the 6 bits of the first (oldest) input, and the number of un-acked inputs. Then as we iterate across these inputs to write them to the packet we can write a single bit (1) if the next input is different to the previous, and (0) if the input is the same. So if the input is different from the previous frame we write 7 bits (rare). If the input is identical we write just one (common). Where inputs change infrequently this is a big win and in the worst case this really isn't that bad. 120 bits of extra data sent. Just 15 bytes overhead worst case.
 
-Of course another packet is required from the right simulation to the left so the left side knows which inputs have been received. Each frame the right simulation reads input packets from the network before adding them to the playout delay buffer and keeps track of the most recent input it has received by frame number, or if you want to get fancy, a sequence number of only 16 bits that handles wrapping. This most recent input received is sent back to the left simulation as an "ack" or acknowledgment.
+Of course another packet is required from the right simulation to the left so the left side knows which inputs have been received. Each frame the right simulation reads input packets from the network before adding them to the playout delay buffer and keeps track of the most recent input it has received and sends this back to the left as an "ack" or acknowledgment for inputs.
 
-When the left simulation receives this ack it discards any inputs older than the most recent received input. This way we have only a small number of inputs in flight proportional to the round trip time between the two simulations.
+When the left side receives this ack it discards any inputs older than the most recent received input. This way we have only a small number of inputs in flight proportional to the round trip time between the two simulations.
 
 ## Flawless Victory
 
