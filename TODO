@@ -2,6 +2,12 @@ TODO
 
     -----------------
 
+    Converting "Deterministic Lockstep" to the new site.
+
+    The intro for this actually needed a lot of work, man my article intros from some articles are just BAD
+
+    -----------------
+
     Finish writing "Client Server Connection"
 
     I can do this now because I have the article draft in PDF form
@@ -64,4 +70,9 @@ TODO
 
     The title for "Sending and Receiving Packets" splits across two lines. This looks crap. It should go wide on one line.
 
+    -----------------
+
+    Need to remember to update links in "Deterministic Lockstep" to old gafferongames.com to the new articles as written.
+
+    Probably want to grep through all my MD files to look for any links to gafferongames
     -----------------

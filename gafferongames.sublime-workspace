@@ -730,9 +730,12 @@
 	],
 	"file_history":
 	[
-		"/Users/gaffer/git/gafferongames/CHANGES",
-		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/git/gafferongames/content/post/sending_and_receiving_packets.md",
+		"/Users/gaffer/git/gafferongames/CHANGES",
+		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
+		"/Users/gaffer/git/gafferongames/TODO",
+		"/Users/gaffer/git/gafferongames/IDEAS",
+		"/Users/gaffer/git/gafferongames/RESEARCH",
 		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
 		"/Users/gaffer/git/gafferongames/Makefile",
 		"/Users/gaffer/git/gafferongames/content/post/udp_vs_tcp.md",
@@ -746,7 +749,6 @@
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_constant_acceleration_dt_1.0.txt",
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_constant_acceleration_dt_0.01.txt",
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_spring_damper.csv",
-		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
 		"/Users/gaffer/git/gafferongames/config.toml",
 		"/Users/gaffer/git/gafferongames/layouts/_default/terms.html",
 		"/Users/gaffer/git/gafferongames/layouts/_default/single.html",
@@ -855,9 +857,7 @@
 		"/Users/gaffer/git/protocol2/yojimbo_memory.h",
 		"/Users/gaffer/git/protocol2/yojimbo_network_interface.h",
 		"/Users/gaffer/git/protocol2/yojimbo_packet_processor.h",
-		"/Users/gaffer/git/protocol2/yojimbo_queue.h",
-		"/Users/gaffer/git/protocol2/yojimbo_types.h",
-		"/Users/gaffer/git/protocol2/clues.txt"
+		"/Users/gaffer/git/protocol2/yojimbo_queue.h"
 	],
 	"find":
 	{
@@ -908,6 +908,14 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"100ms",
+			"It follows",
+			"multiplayer gam",
+			"Lets",
+			"lets",
+			"Lets",
+			"Its",
+			"its",
 			"lets",
 			"Lets",
 			"gt",
@@ -1027,15 +1035,7 @@
 			"HasMessages",
 			"HasMessagesToSend",
 			"GetMessagesToSend",
-			"GetMessages",
-			"GetMessagesToSend",
-			"created block message",
-			"GetMessagesToSend",
-			"BlockMessage`",
-			"SendMessage",
-			"MESSAGE_TEST",
-			"MessageFactory",
-			"Message"
+			"GetMessages"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1089,7 +1089,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 22.0
+		"height": 23.0
 	},
 	"input":
 	{
@@ -1130,7 +1130,7 @@
 	"project": "gafferongames.sublime-project",
 	"replace":
 	{
-		"height": 40.0
+		"height": 42.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1140,12 +1140,24 @@
 		"selected_items":
 		[
 			[
+				"todo",
+				"TODO"
+			],
+			[
 				"changes",
 				"CHANGES"
 			],
 			[
-				"todo",
-				"TODO"
+				"sending",
+				"content/post/sending_and_receiving_packets.md"
+			],
+			[
+				"client",
+				"content/post/client_server_connection.md"
+			],
+			[
+				"",
+				"RESEARCH"
 			],
 			[
 				"udp",
@@ -1178,10 +1190,6 @@
 			[
 				"int",
 				"content/post/integration_basics.md"
-			],
-			[
-				"client",
-				"content/post/client_server_connection.md"
 			],
 			[
 				"con",
@@ -1234,10 +1242,6 @@
 			[
 				"about",
 				"content/about.md"
-			],
-			[
-				"",
-				"config_deploy.toml"
 			],
 			[
 				"chang",
@@ -1646,10 +1650,6 @@
 			[
 				"done",
 				"~/Documents/DONE"
-			],
-			[
-				"proto",
-				"protocol2.h"
 			]
 		],
 		"width": 0.0
