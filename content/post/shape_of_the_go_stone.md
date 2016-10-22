@@ -1,8 +1,8 @@
 +++
 categories = ["Virtual Go"]
-tags = ["physics","networking","go/baduk/weiqi"]
+tags = ["physics","go/baduk/weiqi"]
 date = "2013-09-18"
-title = "The Go Stone"
+title = "Shape of The Go Stone"
 description = "Modelling the shape of a biconvex go stone"
 draft = false
 +++
@@ -13,7 +13,7 @@ Hi, I'm Glenn Fiedler. Welcome to [**Virtual Go**](/categories/virtual-go/), my 
 
 If you've ever played Go, you know that a biconvex go stone has an interesting wobble when it's placed on the board. This wobble is a direct consequence of its unique shape. 
 
-I'd like to reproduce this wobble in Virtual Go, so let's to spend some time studying the shape of Go stones, so we can capture and simulate them with a computer :)
+I'd like to reproduce this wobble in Virtual Go, so let's to spend some time studying their shape, so we can capture and simulate it with a computer :)
 
 ## Slate And Shell
 
@@ -35,13 +35,15 @@ We can study this shape by looking at the intersection of two circles:
 
 I quickly noticed that by varying the radius of the circles and the distance between their centers, I could generate go stones of different sizes.
 
-This is interesting, but when I'm creating a go stone I don't really want it to be parameterized this way. Instead I'd like to say, "Hey, I would like a stone of this width and height" and have a function that calculates the radius of the circles and how far apart they should be to generate that stone.
+This is interesting, but when creating a go stone I don't really want it to be parameterized this way. Instead I'd like to say, "Hey, I would like a stone of this width and height" and have a function that calculates the radius of the circles and how far apart they should be to generate that stone.
 
 To write this function we first need to do some math:
 
 <img src="/img/virtualgo/biconvex-unknowns.png" alt="biconvex unknowns" width="75%"/>
 
 First notice that the point Q lies on the generating circle, so the line CQ has length r:
+
+_todo: obviously I have a bunch of work to get the latex equations ported across to Hugo. I'm researching different options..._
 
 [latex size="2"]d + h/2 = r[/latex]
 [latex size="2"]d = r - h/2[/latex]
@@ -135,4 +137,3 @@ Now we have everything we need to write the function:
 Now we can calculate the bevel torus to round off any go stone we create as the intersection of two spheres.
 
 _todo: link to next article_
-

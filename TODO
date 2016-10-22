@@ -1,29 +1,5 @@
 TODO
 
-    What's the next best article to bring across quickly?
-
-    Maybe the next "Virtual Go" article, it's pretty lightweight, it's just bringing across images that are frustrating somewhat.
-
-    Urgh. "The Go Stone" article has a bunch of math, so I'm going to have to find a latex plugin for Hugo? Hopefully? Pretty please?!
-
-    Ugh... There is one that uses JavaScript:
-
-        https://gohugo.io/tutorials/mathjax/
-
-    But this is not accessible to RSS... big problem.
-
-    This guy has a solution, but it's a lot of work that requires post-processing the generated RSS, I could do this, no problem:
-
-        http://latkin.org/blog/2016/08/07/better-tex-math-typesetting-in-hugo/
-
-    Basically, it uses Javascript Latex for web, and then falls back to image generated latex for RSS. Not particularly great.
-
-    Starting option is probably just to use the image generating service, then optimize the web javascript version to get better text quality.
-
-    Katex is here:
-
-        https://khan.github.io/KaTeX/
-
     -----------------
 
     Finish writing "Client Server Connection"
@@ -93,5 +69,27 @@ TODO
     "Fix your Timestep!" could probably use a conclusion and some discussion of the cost of the interpolation, and the input latency at the end.
 
     Also discuss extrapolation as an option, and if you keep going down this path, you basically reinvent the quake network model.
+
+    -----------------
+
+    Need to do a lot of linking from the end of virtual go articles to the next, as they tend to peter out a little bit with no conclusion. They're really the same article built up across several, so I need to strongly link to the next one in the article text.
+
+    -----------------
+
+    Need a solution for bringing across the math. Bunch of research below. Critically, it needs to work both in HTML and in RSS.
+
+    This guy has a solution, but it's a lot of work that requires post-processing the generated RSS, I could do this, no problem:
+
+        http://latkin.org/blog/2016/08/07/better-tex-math-typesetting-in-hugo/
+
+    Basically, it uses Javascript Latex for web, and then falls back to image generated latex for RSS. Not particularly great.
+
+    Starting option is probably just to use the image generating service, then optimize the web javascript version to get better text quality.
+
+    Katex is here:
+
+        https://khan.github.io/KaTeX/
+
+    Need to hook something up like this. I should be able to do it.
 
     -----------------
