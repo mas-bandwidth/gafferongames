@@ -1,14 +1,12 @@
 TODO
 
+    What's the next best article to bring across quickly?
+
+    Maybe the next "Virtual Go" article, it's pretty lightweight, it's just bringing across images that are frustrating somewhat.
+
     -----------------
 
     Finish writing "Client Server Connection"
-
-    I can do this now because I have the article draft in PDF form
-
-    I would prefer to port across the other articles, but even though I can write offline, I don't have their source text captured.
-
-    So I will work on the next article instead, provided that it flows well, I could have a new article by the time I arrive in the USA.
 
     -----------------
 
@@ -24,7 +22,7 @@ TODO
 
     https://gohugo.io/extras/highlighting/
 
-    Definety want to do this on page generation rather than javascript, so it works well inside an RSS feed.
+    Definitely want to do this on page generation rather than javascript, so it works well inside an RSS feed.
 
     -----------------
 
@@ -69,4 +67,11 @@ TODO
     Need to remember to update links in "Deterministic Lockstep" to old gafferongames.com to the new articles as written.
 
     Probably want to grep through all my MD files to look for any links to gafferongames
+
+    -----------------
+
+    "Fix your Timestep!" could probably use a conclusion and some discussion of the cost of the interpolation, and the input latency at the end.
+
+    Also discuss extrapolation as an option, and if you keep going down this path, you basically reinvent the quake network model.
+
     -----------------
