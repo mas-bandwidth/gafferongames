@@ -28,8 +28,8 @@ In this context, determinism means that given the same initial condition and the
 Not close. Not near enough. **Exactly the same**. Exact down to the bit-level. So exact, you could take a checksum of your entire physics state at the end of each frame and it would be identical.
 
 <video preload="auto" autoplay="autoplay" loop="loop" width="100%">
-  <source src="http://173.255.195.190/cubes_deterministic_lockstep_desync.mp4" type="video/mp4"/>
-  <source src="http://173.255.195.190/cubes_deterministic_lockstep_desync.webm" type="video/webm"/>
+  <source src="/video/networked_physics/deterministic_lockstep_desync.mp4" type="video/mp4"/>
+  <source src="/video/networked_physics/deterministic_lockstep_desync.webm" type="video/webm"/>
 </video>
 
 Above you can see a simulation that is *almost* deterministic. The simulation on the left is controlled by the player. The simulation on the right has exactly the same inputs applied with a two second delay starting from the same initial condition. Both simulations step forward with the same delta time (a necessary precondition to ensure exactly the same result) and both simulations apply the same inputs. Notice how after the smallest divergence the simulation gets further and further out of sync. This simulation is **non-deterministic**.
@@ -39,8 +39,8 @@ What's going on is that the physics engine I'm using ([Open Dynamics Engine](htt
 Luckily all that is required to make ODE deterministic on the same machine, with the same complied binary and on the same OS (is that enough qualifications?) is to set its internal random seed to the current frame number before running the simulation via dSetRandomSeed. Once this is done ODE gives exactly the same result and the left and right simulations stay in sync.
 
 <video preload="auto" autoplay="autoplay" loop="loop" width="100%">
-  <source src="http://173.255.195.190/cubes_deterministic_lockstep.mp4" type="video/mp4"/>
-  <source src="http://173.255.195.190/cubes_deterministic_lockstep.webm" type="video/webm"/>
+  <source src="/video/networked_physics/deterministic_lockstep.mp4" type="video/mp4"/>
+  <source src="/video/networked_physics/deterministic_lockstep.webm" type="video/webm"/>
 </video>
 
 And now a word of warning. Even though the simulation above is deterministic on the same machine, that does *not* necessarily mean it would also be deterministic across different compilers, a different OS or different machine architectures (eg. PowerPC vs. Intel). In fact, it's probably not even deterministic between debug and release builds due to floating point optimizations. 
@@ -55,19 +55,19 @@ Now that I have impressed upon you the complexity of perfect determinism, let's 
 
 You may wonder what the input in our example simulation is and how we should network it. Well, our example physics simulation is driven by keyboard input: arrow keys apply forces to make the player cube move, holding space lifts the cube up and blows other cubes around, and holding 'z' enables katamari mode.
 
-But how can we network these inputs? Must we send the entire state of the keyboard? No. It's not necessary to send the entire keyboard state, only the state of the keys that affect the simulation. What about key press and release events then? No. This is also not a good strategy. We need to ensure that exactly the same input is applied on the right side, and at exactly the same time, so we can't just send 'key pressed', and 'key released' events over TCP.
+But how can we network these inputs? Must we send the entire state of the keyboard? No. It's not necessary to send the entire keyboard state, only the state of the keys that affect the simulation. What about key press and release events then? No. This is also not a good strategy. We need to ensure that exactly the same input is applied on the right side, at exactly the same time, so we can't just send 'key pressed', and 'key released' events over TCP.
 
 What we do instead is represent the input with a struct and at the beginning of each simulation frame on the left side, sample this struct from the keyboard:
 
-<pre>struct Input
-{
-    bool left;
-    bool right;
-    bool up;
-    bool down;
-    bool space;
-    bool z;
-};</pre>
+        struct Input
+        {
+            bool left;
+            bool right;
+            bool up;
+            bool down;
+            bool space;
+            bool z;
+        };
 
 Next we send that input from the left simulation to the right simulation in a way that the simulation on the right side knows that the input belongs to frame n. 
 
@@ -89,7 +89,7 @@ Unfortunately, the subject of playout delay buffers is a patent minefield. I wou
 
 What you're doing here is similar to what Netflix does when you stream a video. You pause a little bit initially so you have a buffer in case some packets arrive late and then once the delay has elapsed video frames are presented spaced the correct time apart. If your buffer isn't large enough then the video playback will be hitchy. With deterministic lockstep your simulation behaves exactly the same way: showing hitches when the buffer isn't large enough to smooth out the jitter. Of course, the cost of increasing the buffer size is additional latency, so you can't just buffer your way out of all problems. At some point the user says enough! That's too much latency added. No sir, I will *not* play your game with 1 second of extra delay :)
 
-My playout delay buffer implementation is really simple. You add inputs to it indexed by frame, and when the very first input is received, it stores the current local time on the receiver machine and from that point on delivers all packets assuming that frames starts at that time + 100ms. You'll likely need to something more complex for a real world situation, perhaps something that handles clock drift, and detecting when the simulation should slightly speed up or slow down to maintain a nice amount of buffering safety (being "adaptive") while minimizing overall latency, but this is reasonably complicated and probably worth an article in itself.
+My playout delay buffer implementation is really simple. You add inputs to it indexed by frame, and when the very first input is received, it stores the current local time on the receiver machine and from that point on delivers packets assuming they should play at that time + 100ms. You'll likely need to something more complex for a real world situation, perhaps something that handles clock drift, and detecting when the simulation should slightly speed up or slow down to maintain a nice amount of buffering safety (being "adaptive") while minimizing overall latency, but this is reasonably complicated and probably worth an article in itself.
 
 The goal is that under average conditions the playout delay buffer provides a steady stream of inputs for frame n, n+1, n+2 and so on, nicely spaced 1/60th of a second apart with no drama. In the worst case the time arrives for frame n and the input hasn't arrived yet it returns null and the simulation is forced to wait. If packets get bunched up and delivered late, it's possibly to have multiple inputs ready to dequeue per-frame. In this case I limit to 4 simulated frames per-render frame so the simulation has a chance to catch up, but doesn't simulate for so long that it falls further behind, aka. the "spiral of death".
 
@@ -106,17 +106,17 @@ In fact, It's a common thing out there on the Internet for pundits to say stuff 
 But I'm here to tell you this kind of thinking is <u><b>dead wrong</b></u>.
 
 <video autoplay preload="auto" loop="true" width="100%">
-<source src="http://173.255.195.190/cubes_deterministic_lockstep_tcp_100ms_1pc.mp4" type="video/mp4"/>
-<source src="http://173.255.195.190/cubes_deterministic_lockstep_tcp_100ms_1pc.webm" type="video/webm"/>
+<source src="/video/networked_physics/deterministic_lockstep_tcp_100ms_1pc.mp4" type="video/mp4"/>
+<source src="/video/networked_physics/deterministic_lockstep_tcp_100ms_1pc.webm" type="video/webm"/>
 </video>
 
-Above you can see the simulation networked using deterministic lockstep over TCP at 100ms latency and 1% packet loss. If you look closely on the right side you can see hitches every few seconds. What's happening here is that each time a packet is lost, TCP has to wait RTT*2 before resending it (actually it can be much worse, but I'm being generous...). The hitches happen because with deterministic lockstep the right simulation can't simulate frame n without input n, so it has to pause to wait for input n to be resent!
+Above you can see the simulation networked using deterministic lockstep over TCP at 100ms latency and 1% packet loss. If you look closely on the right side you can see hitches every few seconds. What's happening here is that each time a packet is lost, TCP has to wait RTT*2 while it is resent (actually it can be much worse, but I'm being generous...). The hitches happen because with deterministic lockstep the right simulation can't simulate frame n without input n, so it has to pause to wait for input n to be resent!
 
 That's not all. It gets significantly worse as latency and packet loss increase. Here is the same simulation networked using deterministic lockstep over TCP at 250ms latency and 5% packet loss:
 
 <video autoplay preload="auto" loop="true" width="100%">
-  <source src="http://173.255.195.190/cubes_deterministic_lockstep_tcp_250ms_5pc.mp4" type="video/mp4"/>
-  <source src="http://173.255.195.190/cubes_deterministic_lockstep_tcp_250ms_5pc.webm" type="video/webm"/>
+  <source src="/video/networked_physics/deterministic_lockstep_tcp_250ms_5pc.mp4" type="video/mp4"/>
+  <source src="/video/networked_physics/deterministic_lockstep_tcp_250ms_5pc.webm" type="video/webm"/>
 </video>
 
 Now I will concede that if you have no packet loss and/or a very small amount of latency then you very well may get acceptable results with TCP. But please be aware that if you use TCP to send time critical data it degrades <em><u>terribly</u></em> as packet loss and latency increase.
@@ -141,15 +141,15 @@ When the left side receives this ack it discards any inputs older than the most 
 
 We have beaten TCP by changing the rules of the game. 
 
-Instead of "implementing 95% of TCP on top of UDP" we implemented something *totally different* and better suited to our requirements. A protocol that redundantly sends inputs because we know they are small, so we never have to wait for retransmission.
+Instead of "implementing 95% of TCP on top of UDP" we have implemented something *totally different* and better suited to our requirements. A protocol that redundantly sends inputs because we know they are small, so we never have to wait for retransmission.
 
 So exactly how much better is this approach than sending inputs over TCP?
 
 Let's take a look...
 
 <video autoplay preload="auto" loop="true" width="100%">
-  <source src="http://173.255.195.190/cubes_deterministic_lockstep_udp_2sec_25pc.mp4" type="video/mp4"/>
-  <source src="http://173.255.195.190/cubes_deterministic_lockstep_udp_2sec_25pc.webm" type="video/webm"/>
+  <source src="/video/networked_physics/deterministic_lockstep_udp_2sec_25pc.mp4" type="video/mp4"/>
+  <source src="/video/networked_physics/deterministic_lockstep_udp_2sec_25pc.webm" type="video/webm"/>
 </video>
 
 The video above shows deterministic lockstep synchronized over UDP using this technique with <u>2 seconds</u> of latency and <u>25% packet loss</u>. Imagine how awful TCP would look under these conditions.
