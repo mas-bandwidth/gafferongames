@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler. Welcome to [**Virtual Go**](/categories/virtual-go/), my project to simulate a Go board and stones.
+Hi, I'm Glenn Fiedler. Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
 
 I'm a professional game programmer with 15 years experience in the game industry. Over the years I've worked for Irrational Games, Team Bondi, Pandemic Studios, Sony Santa Monica and most recently Respawn Entertainment. During my career I'm extremely proud to have worked on such games as 'Freedom Force', 'L.A. Noire', 'Journey', 'God of War: Ascension' and 'Titanfall'.
 
