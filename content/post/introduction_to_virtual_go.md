@@ -23,7 +23,7 @@ The end result I hope to achieve is a beautiful real-time computer rendering of 
 
 During the course of this article series I'm going to build this project entirely from scratch and include <u>you</u> in on all the details of building it as a tutorial. I believe in sharing knowledge and my hope is you can follow this project and understand the passion I bring to it and perhaps learn a few things along the way.
 
-If you already play Go and want to get right in to the details of building the simulation, I would recommend skipping ahead to the next article in the series: <a href="http://gafferongames.com/virtualgo/the-shape-of-the-go-stone/">The Shape Of The Go Stone</a>.
+If you already play Go and want to get right in to the details of building the simulation, I would recommend skipping ahead to the next article in the series: [Shape Of The Go Stone](/post/shape_of_the_go_stone/).
 
 Otherwise, if you would like a quick introduction to Go, please read on!
 

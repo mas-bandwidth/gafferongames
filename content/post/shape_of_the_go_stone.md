@@ -1,7 +1,7 @@
 +++
 categories = ["Virtual Go"]
 tags = ["physics","go/baduk/weiqi"]
-date = "2013-09-18"
+date = "2013-02-19"
 title = "Shape of The Go Stone"
 description = "Modelling the shape of a biconvex go stone"
 draft = false

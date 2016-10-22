@@ -17,7 +17,7 @@ Unfortunately we can't just tell the graphics card, "Hey! Please draw the inters
 
 This is called tessellation and there are several different ways to do it.
 
-<h2>Longitude And Lattitude</h2>
+## Longitude And Lattitude
 
 The first way that I tried was to consider sphere rendering like a globe with longitude/latitude. I started with a ring around the 'equator' of the go stone, stepping these rings up to the top of the sphere like the north pole on a globe.
 
@@ -27,7 +27,7 @@ Unfortunately, just like longitude/latitude on a globe, tessellating this way le
 
 <img src="/img/virtualgo/inefficient-tesselation-at-pole.gif" alt="inefficient tesselation at pole" width="100%"/>
 
-<h2>Triangle Subdivision</h2>
+## Triangle Subdivision
 
 The next method I tried was triangle subdivision. You start with an approximate shape then subdivide each triangle into four smaller triangles recursively like this:
 
@@ -43,17 +43,17 @@ With this technique I was able to generate a much more efficient tessellation:
 
 <img src="/img/virtualgo/regular-tessellation.gif" alt="regular tessellation" width="100%"/>
 
-<h2>Tessellating The Bevel</h2>
+## Tessellating The Bevel
 
 Now we need to tesselate the bevel. To do this I take the vertices which form the circle edge at the bottom of the top sphere surface and calculate the angle of each vertex about the y axis. I then use these angles to sweep around the torus ensuring that the torus vertices weld perfectly with the top and bottom sphere sections.
 
 <img src="/img/virtualgo/go-stone-with-bevel.gif" alt="go stone with bevel" width="100%"/>
 
-<h2>Vertex Welding</h2>
+## Vertex Welding
 
-Due to the way the recursive subdivision works a lot of duplicate vertices are generated. I'd rather not have the graphics card waste time transforming the same vertex over and over, so as I add vertices to the mesh I hash vertex positions into a 3D grid (~1mm cells) and reuse an existing vertex if the position and normals match within some small floating point tolerance.
+Due to how recursive subdivision works a lot of duplicate vertices are generated. I'd rather not have the graphics card waste time transforming the same vertex over and over, so as I add vertices to the mesh I hash vertex positions into a 3D grid (~1mm cells) and reuse an existing vertex if the position and normals match within some small epsilon value.
 
-With vertex welding the reduction in vertices is dramatic: 53000 to just 6500. Fewer vertices means I can render go stones more efficiently, which is handy because there can be up to 361 of them on a 19x19 go board!
+With vertex welding the reduction in vertices is dramatic: 53000 to just 6500. Fewer vertices means I can render more go stones, which is handy because there can be up to 361 of them on a 19x19 go board!
 
 For more information on vertex welding please refer to the discussion in <a href="http://www.amazon.com/Real-Time-Collision-Detection-Interactive-Technology/dp/1558607323/ref=sr_1_1?ie=UTF8&qid=1363029675&sr=8-1&keywords=real+time+collision+detection">Real-Time Collision Detection</a> by <a href="http://realtimecollisiondetection.net/blog/">Christer Ericson</a>.
 
