@@ -38,12 +38,6 @@ TODO
 
     -----------------
 
-    Need to remember to fix the link to next article in "Introduction to Virtual Go". 
-
-    It currently points to the old gafferongames.com
-
-    -----------------
-
     Need to setup up http permanent redirects from old gafferongames URLs to the new hugo URLs
 
     I should be able to just go over each article and find its URL on the old gafferongames and setup nginx config for this redirection I think.
@@ -91,5 +85,25 @@ TODO
         https://khan.github.io/KaTeX/
 
     Need to hook something up like this. I should be able to do it.
+
+    -----------------
+
+    It's bad that there is not a lot of visibility right now for articles in a series back *to* that series as a whole.
+
+    Also, within a series I would like to display article summaries automatically, not just lists of articles with their tags -- of course their tags will all be the same, they're all in the same article series!
+
+    I probably need some professional help to get this website into the form I am looking for.
+
+    I have good content, but the presentation needs to improve. Pulling the trigger on a blank website without final polish, especially if it is backwards in terms of discoverability of new articles could be a mistake.
+
+    But I do need to get this finished by the end of the year.
+
+    So I have to do my best, and then work on visual improvements in parallel once the website conversion is completed.
+
+    -----------------
+
+    The youtube links inside the virtual go articles kind of suck.
+
+    It would be nice to convert them to my own video hosting.
 
     -----------------

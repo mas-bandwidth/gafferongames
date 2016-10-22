@@ -2,7 +2,7 @@
 categories = ["Virtual Go"]
 tags = ["physics","networking","go/baduk/weiqi"]
 date = "2013-09-19"
-title = "Tesselating The Go Stone"
+title = "Tessellating The Go Stone"
 description = "Generating a triangle mesh for the go stone"
 draft = false
 +++
@@ -29,7 +29,7 @@ Unfortunately, just like longitude/latitude on a globe, tessellating this way le
 
 ## Triangle Subdivision
 
-The next method I tried was triangle subdivision. You start with an approximate shape then subdivide each triangle into four smaller triangles recursively like this:
+The next method is triangle subdivision. You start with an approximate shape then subdivide each triangle into four smaller triangles recursively like this:
 
 <img src="/img/virtualgo/sphere-tessellation.gif" alt="sphere tessellation" width="100%"/>
 
