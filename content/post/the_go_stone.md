@@ -17,29 +17,29 @@ I'd like to reproduce this wobble in Virtual Go, so we're going to spend some ti
 
 ## Slate And Shell
 
-In Japan, Go stones are traditionally made out of slate and clam shell.
+In Japan, Go stones are traditionally made out of slate and clam shell. 
 
-<a href="http://gafferongames.com/wp-content/uploads/2013/02/slate-and-shell-in-ko.jpg"><img src="http://gafferongames.com/wp-content/uploads/2013/02/slate-and-shell-in-ko-1024x768.jpg" alt="slate and shell in ko" width="700" height="525" class="size-large wp-image-2329" /></a>
+They are quite beautiful.
 
-Clam shell stones come in several grades of quality the highest being yuki or "snow" grade with fine regularly spaced lines.
+<img src="/img/virtualgo/slate-and-shell-in-ko.jpg" alt="slate and shell in ko" width="100%"/>
 
-Go stones also come in various sizes, the choice of which is mostly personal preference. The thicker the stone, the more expensive it is, as only a small portion of the clam shell is suitable.
+Clam shell stones come in several grades of quality. The highest being yuki or "snow" grade with fine, regularly spaced lines.
 
-<a href="http://gafferongames.com/wp-content/uploads/2013/02/Go-stone-side-profile-sizes.png"><img class="size-large wp-image-1792" alt="Go stone side profile sizes" src="http://gafferongames.com/wp-content/uploads/2013/02/Go-stone-side-profile-sizes-1024x576.png" width="700" height="400" /></a>
+Go stones also come in different sizes. The thicker the stone, the more expensive it is, as only a small portion of the clam shell is suitable for making the larger stones.
 
-At first the go stone seems like an ellipse, but side-on you can see that it is not. Instead it is a very interesting shape called a biconvex solid.
+<img src="/img/virtualgo/go-stone-side-profile-sizes.png" alt="go stone side profile sizes" width="100%"/>
 
-This shape is interesting to me because it is the *intersection of two spheres*.
+At first glance the go stone looks like it is an ellipse, but side-on you can see this is not the case. This shape is called a _biconvex solid_. I find this shape interesting because it is the intersection of two spheres.
 
-We can study this shape in 2D by looking at the intersection of two circles:
+We can study this shape by looking at the intersection of two circles:
 
-<a href="http://gafferongames.com/wp-content/uploads/2013/02/biconvex.gif"><img class="size-full wp-image-1825" alt="biconvex" src="http://gafferongames.com/wp-content/uploads/2013/02/biconvex.gif" width="462" height="685" /></a>
+<img src="/img/virtualgo/biconvex.gif" alt="biconvex" width="75%"/>
 
-By varying the radius of the circle and how far apart the center of the circles are, we can generate go stones of different sizes.
+I quickly noticed that by varying the radius of the circles and the distance between their centers, I could generate go stones of different sizes.
 
-This is interesting, but when I'm creating a go stone I don't really want it to be parameterized this way. Instead I'd like to say, "Hey, I want a stone this width and this height" and have a function that calculates what the radius of the circles are and how far apart they should be.
+This is interesting, but when I'm creating a go stone I don't really want it to be parameterized this way. Instead I'd like to say, "Hey, I would like a stone of this width and height" and have a function that calculates the radius of the circles and how far apart they should be.
 
-In order to write this function we need to do some math:
+To write this function we first need to do some math:
 
 <a href="http://gafferongames.com/wp-content/uploads/2013/02/biconvex-unknowns-take-2.png"><img src="http://gafferongames.com/wp-content/uploads/2013/02/biconvex-unknowns-take-2.png" alt="biconvex unknowns - take 2" width="455" height="657" class="size-full wp-image-2299" /></a>
 
