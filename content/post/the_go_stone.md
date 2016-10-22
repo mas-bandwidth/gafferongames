@@ -83,7 +83,7 @@ In three dimensions the bevel is actually a torus (donut) around the edge of the
 
 The key to solving this is to realize that if the go stone and the bevel are to match perfectly then the tangent of the two circles must be equal at the point P.
 
-_*Update*: A few years later and it occurs to me that it would be even more beautiful if the second derivative matched at this intersection as well. Is this possible in general, or must the generating spheres be converted to ellipses to make this happens? I suspect this is the case. Mathematicians who play go, [please let me know your thoughts](/contact)._
+_*Update*: A few years later and it occurs to me that it would be even more beautiful if the second derivative matched at this intersection as well. Is this possible in general, or must the generating spheres become to ellipses to make this happen? I suspect this is the case. Mathematicians who play Go, [please let me know your thoughts](/contact)._
 
 <img src="/img/virtualgo/bevel-math-2.gif" alt="bevel math part 2" width="100%"/>
 
