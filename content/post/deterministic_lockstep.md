@@ -17,7 +17,7 @@ Deterministic lockstep is a method of networking a system from one computer to a
 
 The benefit is that bandwidth is proportional to the size of the input, not the number of objects in the simulation. Yes, with deterministic lockstep you can network a physics simulation of one million objects with the same bandwidth as just one. 
 
-While this sounds great in theory, in practice it's difficult to implement deterministic lockstep because most physics simulations are not deterministic. Differences in floating point behavior between compilers, OS's and even instruction sets make determinism almost impossible to guarantee for floating point calculations.
+While this sounds great in theory, in practice it's difficult to implement deterministic lockstep because most physics simulations are not deterministic. Differences in floating point behavior between compilers, OS's and even instruction sets make it almost impossible to guarantee determinism for floating point calculations.
 
 ## Determinism
 
@@ -73,7 +73,7 @@ Next we send that input from the left simulation to the right simulation in a wa
 
 And here's the key part: the simulation on the right can only simulate frame n when it has the input for that frame. If it doesn't have the input, it has to wait.
 
-For example, if you were sending across using TCP you could simply send the inputs and nothing else, and on the other side you could read the packets coming in, and each input received corresponds to one frame for the simulation to step forward. If no input arrives for render frame, the right side can't advance forward, it has to wait for the next input to arrive.
+For example, if you were sending across using TCP you could simply send the inputs and nothing else, and on the other side you could read the packets coming in, and each input received corresponds to one frame for the simulation to step forward. If no input arrives for a given render frame, the right side can't advance forward, it has to wait for the next input to arrive.
 
 Let's say you're using TCP, you've disabled [Nagle's Algorithm](http://en.wikipedia.org/wiki/Nagle's_algorithm), and you're sending inputs from the left to the right simulation once per-frame (60 times per-second).
 
