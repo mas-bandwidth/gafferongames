@@ -1,7 +1,7 @@
 +++
 categories = ["Virtual Go"]
 tags = ["physics","networking","go/baduk/weiqi"]
-date = "2013-09-19"
+date = "2013-02-19"
 title = "Tessellating The Go Stone"
 description = "Generating a triangle mesh for the go stone"
 draft = false

@@ -1,7 +1,7 @@
 +++
 categories = ["Virtual Go"]
 tags = ["physics","networking","go/baduk/weiqi"]
-date = "2013-09-19"
+date = "2013-02-21"
 title = "How The Go Stone Moves"
 description = "Simulating the motion of go stones as rigid bodies"
 draft = false
@@ -33,7 +33,7 @@ This is known as the <a href="https://en.wikipedia.org/wiki/Rigid_body">rigid bo
 
 ## Working in Three Dimensions
 
-Because the go stones are rigid, all we need to represent their current position is the position of its center. As the center moves, so does the rest of the stone.
+Because the go stones are rigid, all we need to represent their current position is the position of the center. As the center moves, so does the rest of the stone.
 
 <img src="/img/virtualgo/biconvex-rigid-body-center-P.png" alt="biconvex go stone rigid body center" width="75%"/>
 
@@ -61,14 +61,14 @@ To do this we need the concept of velocity. Velocity is also a vector but it's n
 
 For example, if we the stone to move to the right at a rate of 5 centimeters per-second then the velocity vector is (5,0,0).
 
-Now to make the stone move, all we have to do is add the velocity to the position once per-second:
+To make the stone move, all we have to do is add the velocity to the position once per-second:
 
 <div class="video_container">
 <iframe src="//www.youtube.com/embed/d7H8MSrOBko" 
 frameborder="0" allowfullscreen class="video"></iframe>
 </div>
 
-While this works, it's not particularly exciting. We'd like the stone to move much more smoothly. Instead of updating once per-second, let's update 60 times per-second or 60 fps (frames per-second). Rather than taking one big step, we'll take 60 smaller steps each second, each step being 1/60 of the velocity.
+While this works, it's not particularly exciting. We'd like the stone to move much more smoothly. Instead of updating once per-second, let's update 60 times per-second or 60 fps (frames per-second). Rather than taking one big step, we'll take 60 smaller steps per-second, each step being 1/60 of the velocity.
 
 <div class="video_container">
 <iframe src="//www.youtube.com/embed/yK_Zh2u3D0w" 
@@ -92,9 +92,9 @@ This is actually a very simple type of [numerical integration](https://en.wikipe
 
 Next we want to add gravity.
 
-To do this we need to change velocity each frame by some amount downwards due to gravity. Change in velocity is known as acceleration. Gravity provides a constant acceleration of 9.8 meters per-second, per-second, or 98 centimeters per-second, per-second in our case because we're working in centimeters. 
+To do this we need to change velocity each frame by some amount downwards due to gravity. Change in velocity is known as acceleration. Gravity provides a constant acceleration of 9.8 meters per-second, per-second, or in our case, 98 centimeters per-second, per-second because we're working in centimeters. 
 
-Acceleration due to gravity is also a vector. Since gravity pulls objects down the acceleration vector is (0,-98,0). Remember, +y axis is up, so -y is down.
+Acceleration due to gravity is also a vector. Since gravity pulls objects down, the acceleration vector is (0,-98,0). Remember, +y axis is up, so -y is down.
 
 So how much does gravity accelerate the go stone in 1/60th of a second? Well, 98 * 1/60 = 1.633... Hey wait. This is exactly what we did with velocity to get position!
 
