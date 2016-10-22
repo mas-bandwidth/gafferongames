@@ -11,25 +11,23 @@ draft = false
 
 Hi, I'm Glenn Fiedler. Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
 
-If you've ever played Go, you know that a biconvex go stone has an interesting wobble when placed on the board. This wobble is a direct consequence of its unique shape. 
+If you've ever played Go, you know that a biconvex go stone has an interesting wobble when it's placed on the board. This wobble is a direct consequence of its unique shape. 
 
-I'd like to reproduce this wobble in Virtual Go, so we're going to spend some time studying the shape of Go stones, in order to capture and simulate this wobble inside a computer :)
+I'd like to reproduce this wobble in Virtual Go, so let's to spend some time studying the shape of Go stones, so we can capture and simulate them with a computer :)
 
 ## Slate And Shell
 
 In Japan, Go stones are traditionally made out of slate and clam shell. 
 
-They are quite beautiful.
-
 <img src="/img/virtualgo/slate-and-shell-in-ko.jpg" alt="slate and shell in ko" width="100%"/>
 
 Clam shell stones come in several grades of quality. The highest being yuki or "snow" grade with fine, regularly spaced lines.
 
-Go stones also come in different sizes. The thicker the stone, the more expensive it is, as only a small portion of the clam shell is suitable for making the larger stones.
+Go stones also come in different sizes. In general, the thicker the stone, the more expensive it is, as only a small portion of the clam shell is suitable for making them.
 
 <img src="/img/virtualgo/go-stone-side-profile-sizes.png" alt="go stone side profile sizes" width="100%"/>
 
-At first glance the go stone looks like it is an ellipse, but side-on you can see this is not the case. This shape is called a _biconvex solid_. I find this shape interesting because it is the intersection of two spheres.
+At first glance the go stone looks like an ellipse, but side-on you can see this is not the case. This shape is called a _biconvex solid_. I find this shape interesting because it is the intersection of two spheres.
 
 We can study this shape by looking at the intersection of two circles:
 
@@ -37,11 +35,11 @@ We can study this shape by looking at the intersection of two circles:
 
 I quickly noticed that by varying the radius of the circles and the distance between their centers, I could generate go stones of different sizes.
 
-This is interesting, but when I'm creating a go stone I don't really want it to be parameterized this way. Instead I'd like to say, "Hey, I would like a stone of this width and height" and have a function that calculates the radius of the circles and how far apart they should be.
+This is interesting, but when I'm creating a go stone I don't really want it to be parameterized this way. Instead I'd like to say, "Hey, I would like a stone of this width and height" and have a function that calculates the radius of the circles and how far apart they should be to generate that stone.
 
 To write this function we first need to do some math:
 
-<a href="http://gafferongames.com/wp-content/uploads/2013/02/biconvex-unknowns-take-2.png"><img src="http://gafferongames.com/wp-content/uploads/2013/02/biconvex-unknowns-take-2.png" alt="biconvex unknowns - take 2" width="455" height="657" class="size-full wp-image-2299" /></a>
+<img src="/img/virtualgo/biconvex-unknowns.png" alt="biconvex unknowns" width="75%"/>
 
 First notice that the point Q lies on the generating circle, so the line CQ has length r:
 
@@ -69,23 +67,25 @@ Which gives us everything we need to write the function:
             d = r - h/2;
         }
 
-Now that we can mathematically define a go stone parameterized by its width and height. There is just one problem: the edge is very sharp!
+Now we can mathematically define a go stone parameterized by its width and height. There is just one problem: the edge is very sharp!
 
-In order for our our stone to be aesthetically pleasing we need to round off the edge with a bevel.
+To make our stone aesthetically pleasing, lets round the edge with a bevel. Otherwise, you might cut yourself virtually when you play with it:
 
-<a href="http://gafferongames.com/wp-content/uploads/2013/02/go-stone-smooth-bevel.jpg"><img class="size-large wp-image-1847" alt="go-stone-smooth-bevel" src="http://gafferongames.com/wp-content/uploads/2013/02/go-stone-smooth-bevel-1024x575.jpg" width="700" height="438" /></a>
+<img src="/img/virtualgo/go-stone-smooth-bevel.jpg" alt="go stone smooth bevel" width="100%"/>
 
 Let's parameterize the bevel by its height b:
 
-<a href="http://gafferongames.com/wp-content/uploads/2013/02/bevel-b.gif"><img class="size-full wp-image-1856" alt="bevel-b" src="http://gafferongames.com/wp-content/uploads/2013/02/bevel-b.gif" width="492" height="669" /></a>
+<img src="/img/virtualgo/bevel-b.gif" alt="torus bevel height b" width="75%"/>
 
 In three dimensions the bevel is actually a torus (donut) around the edge of the go stone. We need to calculate the major and minor radii r<sub>1</sub> and r<sub>2</sub> of the torus as a function of b and the dimensions of the go stone:
 
-<a href="http://gafferongames.com/wp-content/uploads/2013/02/bevel-math-1.gif"><img class="size-large wp-image-1858" alt="bevel-math-1" src="http://gafferongames.com/wp-content/uploads/2013/02/bevel-math-1-1024x794.gif" width="700" height="543" /></a>
+<img src="/img/virtualgo/bevel-math-1.gif" alt="bevel math part 1" width="100%"/>
 
 The key to solving this is to realize that if the go stone and the bevel are to match perfectly then the tangent of the two circles must be equal at the point P.
 
-<a href="http://gafferongames.com/wp-content/uploads/2013/02/bevel-math-2.gif"><img class="size-full wp-image-1876" alt="bevel-math-2" src="http://gafferongames.com/wp-content/uploads/2013/02/bevel-math-2.gif" width="700" height="543" /></a>
+_*Update*: A few years later and it occurs to me that it would be even more beautiful if the second derivative matched at this intersection as well. Is this possible in general, or must the generating spheres be converted to ellipses to make this happens? I suspect this is the case. Mathematicians who play go, [please let me know your thoughts](/contact)._
+
+<img src="/img/virtualgo/bevel-math-2.gif" alt="bevel math part 2" width="100%"/>
 
 If the tangent is equal then the normal must be equal as well. This means that the center of the bevel circle lies at the intersection of the line CP and the x axis. 
 
@@ -132,8 +132,7 @@ Now we have everything we need to write the function:
             r2 = r - sqrt( d*d + r1*r1 );
         }
 
-An important note: we're only going to apply this bevel to the go stone that we render.
+Now we can calculate the bevel torus to round off any go stone we create as the intersection of two spheres.
 
-All physics calculations use the biconvex solid with sharp edges.
+_todo: link to next article_
 
-Why? The bevel is very small and it has very little effect on how the stone moves. Plus, seeing as how the go stone typically spends most of it's time wobbling about on the sphere surface, cutting a small corner here (or not) is a reasonable approximation.
