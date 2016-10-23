@@ -3,7 +3,7 @@ categories = ["Virtual Go"]
 tags = ["physics","networking","go/baduk/weiqi"]
 date = "2013-02-22"
 title = "Go Stone vs. Go Board"
-description = "Collision detection for go stones with the board"
+description = "Collision detection between stones and the board"
 draft = false
 +++
 
@@ -160,7 +160,9 @@ The primary surface case is easy because only one axis needs to be tested, but i
 
 <img src="/img/virtualgo/multiple-axes-SAT.png" alt="multiple axis SAT" width="100%"/>
 
-When considering multiple axes, apply the separating axis test as follows:
+This is where the SAT really starts to shine. Now instead of combinatorial explosion testing each of the features of the go stone vs. each of the features on the go board, we flatten both the go stone and the go board into support and test for collision one axis at a time.
+
+The separating axis test as applied as follows:
 
 * Test all features in the region and determine if there is any separating axis
 * If a separating axis exists then the go stone is not colliding with the board
@@ -168,7 +170,7 @@ When considering multiple axes, apply the separating axis test as follows:
 
 If the stone is colliding we must now work out what direction to push the stone out. I thought about this for a while and tried to come up with a simple pattern that worked.
 
-First, I tried pushing the stone out along the axis with the greatest amount of penetration, but that breaks down pretty severely in the case where a go stone approaches the go board from the side:
+First, I tried pushing the stone out along the axis with the greatest amount of penetration, but this breaks down pretty severely in the case where a go stone approaches the go board from the side:
 
 <img src="/img/virtualgo/multiple-axes-push-out-most-penetration.png" alt="push out most penetration" width="100%"/>
 
@@ -178,6 +180,6 @@ In the end I settled on the simplest solution I could come up with: push the go 
 
 <img src="/img/virtualgo/multiple-axes-push-out-least-penetration.png" alt="push out least penetration" width="100%"/>
 
-This seems counter-intuitive at first, but it has some nice parallels with other physical laws. Nature is lazy and always takes the shortest path. It does the *least work*.
+This seems counter-intuitive at first, but it has some nice parallels with other physical laws. Nature is lazy and always takes the shortest path. Nature does the *least amount of work*.
 
 We should probably do the same :)
