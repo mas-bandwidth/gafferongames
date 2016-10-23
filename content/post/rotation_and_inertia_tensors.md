@@ -27,7 +27,7 @@ Consider the following case in two dimensions:
 
 <img src="/img/virtualgo/rotation-in-2d.png" alt="rotation in 2d" width="75%"/>
 
-It's easy because there is only one possible axis for rotation. Clockwise or counter-clockwise.
+It's easy because there is only one possible axis for rotation: clockwise or counter-clockwise.
 
 It follows that as long as we are only rotating about the center of mass, we can represent the orientation of an object in 2D with a single theta value, angular velocity with a scalar radians per-second, and a scalar 'moment of inertia' that works just like an angular equivalent of mass: how hard it is to rotate that object.
 
@@ -35,7 +35,7 @@ When we move to three dimensions suddenly rotation can occur about any axis. Ori
 
 <img src="/img/virtualgo/rotation-in-3d.png" alt="rotation in 3d" width="75%"/>
 
-How can we represent an angular mass that depends on the shape of the object and the axis of rotation?
+But how can we represent an angular mass that depends on the shape of the object and the axis of rotation?
 
 <h2>Inertia Tensor</h2>
 
