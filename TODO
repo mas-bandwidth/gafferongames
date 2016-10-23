@@ -2,6 +2,14 @@ TODO
 
     Port across the "Virtual Go" article series.
 
+    Just one article remaining, but then a bunch of work potentially to get the Latex equations working properly in Javascript *and* RSS. Ugh.
+
+    Try to get this done on Sunday. I don't want this to drag on much further.
+
+    In fact, it might be a good idea to skip ahead from the latex to port over more articles from other series first.
+
+    Think about it tomorrow, but do as *much as possible* on Sunday.
+
     -----------------
 
     Finish writing "Client Server Connection"
@@ -107,5 +115,11 @@ TODO
     -----------------
 
     Search for "gafferongames.com" for any stale links before going live
+
+    In fact, why not write a script to parse my markdown for stale links? This could be fun.
+
+    -----------------
+
+    Impulse j general response equation in "Collision Response and Coulomb Friction" would be nice to convert from an image to an actual equation. The image is low resolution.
 
     -----------------
