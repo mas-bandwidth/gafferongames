@@ -21,7 +21,7 @@ Now in this article we reach our first milestone:
 
 We're going do this using a technique called <a href="https://en.wikipedia.org/wiki/Collision_response#Impulse-Based_Contact_Model">impulse-based collision response</a>.
 
-The concept is simple: apply an impulse, an instantaneous change in momentum, at the point of impact to make the go stone bounce.
+The concept is simple. To handle a collision we apply an impulse, an instantaneous change in momentum, at the point of impact to make the go stone bounce.
 
 ## Linear Collision Response
 
@@ -33,13 +33,13 @@ We have a contact point and a contact normal for the collision.
 
 Let's start by calculating a collision response impulse without rotation.
 
-First, take the dot product of the linear momentum of the go stone with the contact normal. If this value is less than zero the go stone is moving towards the go board, and we need to apply an impulse.
+First, take the dot product of the linear momentum of the go stone with the contact normal. If this value is less than zero, it means the go stone is moving towards the go board, and we need to apply an impulse.
 
-To calculate the impulse we need the concept of 'elasticity'. If the collision is perfectly elastic the go stone bounces off the board without losing any energy:
+To calculate the impulse we need the concept of 'elasticity'. If the collision is perfectly elastic, the go stone bounces off the board without losing any energy:
 
 <img src="/img/virtualgo/linear-collision-response-elastic.png" alt="linear collision response elastic" width="100%"/>
 
-If the collision is inelastic, then the go stone loses all its vertical motion post-collision and slides along the surface of the board:
+If the collision is inelastic then the go stone loses all its vertical motion post-collision and slides along the surface of the board:
 
 <img src="/img/virtualgo/linear-collision-response-inelastic.png" alt="linear collision response inelastic" width="100%"/>
 
@@ -79,21 +79,21 @@ And here's the result:
 frameborder="0" allowfullscreen class="video"></iframe>
 </div>
 
-The stone is definitely bouncing, but in the real world, stones don't usually hit the board perfectly flat like this. In the common case, stones hit at an angle and the collision response causes the stone to rotate.
+Now the stone is definitely bouncing, but in the real world stones don't usually hit the board perfectly flat like this. In the common case, they hit at an angle and the collision makes the stone rotate.
 
 ## Collision Response With Rotation
 
-Now let's calculate collision response with rotation.
+To capture this effect we need to calculate collision response with rotation.
 
 <img src="/img/virtualgo/collision-response-rotation.png" alt="collision response rotation" width="100%"/>
 
-Above you can see the effect that we want. Obviously, if a stone were to drop like this we know from experience that it would rotate in response to that collision.
+Above you can see the effect that we want. If a stone were to collide with the board like this, we know from experience that it would rotate in response.
 
-To do this we start by calculating the velocity of the stone at the contact point, then take the dot product of this vs. the contact normal to check if the stone is moving towards the board. This is necessary because when the stone is rotating, different points on the stone have different velocities.
+We start by calculating the velocity of the stone at the contact point, and take the dot product of this vs. the contact normal to check if the stone is moving towards the board. This is necessary because when the stone is rotating, different points on the stone have different velocities.
 
-Next we apply a collision impulse along the contact normal with magnitude j except this impulse is now applied to the go stone at the contact point instead of the center of mass. This gives the collision impulse linear _and_ rotational effects, such that an at the edge of the stone will induce the stone to rotate in response to the collision.
+Next, we apply a collision impulse along the contact normal with magnitude j except this impulse is applied at the contact point instead of the center of mass of the stone. This gives the collision response its rotational effect.
 
-Here is the general equation for the magnitude of this collision impulse:
+Here is the general equation for the magnitude of this collision impulse.
 
 <img src="/img/virtualgo/impulse-j-general-case.png" alt="impulse j general case" width="75%"/>
 
@@ -115,18 +115,18 @@ Where:
 * I is the inertia tensor of the go stone
 * m is the mass of the go stone
 
-And here is the result:
+Here is the result of our collision response with rotational effects:
 
 <div class="video_container">
 <iframe src="//www.youtube.com/embed/SCckKzO_280" 
 frameborder="0" allowfullscreen class="video"></iframe>
 </div>
 
-The collision response is working properly and induces rotation in the go stone as expected when the stone hits at an angle.
+As you can see, collision response working properly and induces rotation when the go stone hits the board at an angle. It is also able to handle the stone hitting the board while rotating.
 
 ## Coulomb Friction
 
-But it still looks somewhat strange. The reason is that we we don't often get to see frictionless collisions in the real world. To get realistic behavior out of the go stone, we need to add friction. 
+We don't often get to see friction-less collisions in the real world so the video above looks a bit strange. To get realistic behavior out of the go stone, we need to add friction. 
 
 We'll model sliding friction using the Coulomb friction model.
 
@@ -159,7 +159,7 @@ Which gives the following result:
 frameborder="0" allowfullscreen class="video"></iframe>
 </div>
 
-Which looks much more realistic. This is definite progress!
+This looks much more realistic!
 
 ## Rolling Friction
 
@@ -178,13 +178,11 @@ Why is it spinning for so long? Shouldn't coulomb friction handle this for us?
 
 No. Coulomb friction only handles friction when the two surfaces are sliding relative to each other. Here at the point of contact, the stone is spinning about that point, not sliding, so from coulomb friction point of view, the contact point is stationary and no friction is applied.
 
-It turns out that sliding friction is just one type of friction and there are <a href="https://en.wikipedia.org/wiki/Friction">many others</a>.
-
-What we have in this case is a combination of rolling and spinning friction.
+It turns out that sliding friction is just one type of friction and there are <a href="https://en.wikipedia.org/wiki/Friction">many others</a>. What we have in this case is a combination of rolling and spinning friction.
 
 I had very little patience at this point so I came up with my own hack approximation of spinning and rolling friction that gives me the result that I want: vibrant motion at high energies but slightly damped so the stone slows down, collapses from spinning, wobbles a bit and then come to rest.
 
-My hack was to apply exponential decay (eg. linearVelocity *= factor [0.9990-0.9999] each frame) to linear and angular velocity. The decay factor was linear interpolated between two key speeds such that there was more damping at low speeds and much less at high speeds. There is no physical basis for this that I know of, it's just a hack to get the behavior I want.
+My hack was to apply exponential decay (eg. linearVelocity *= factor [0.9990-0.9999] each frame) to linear and angular velocity. The decay factor was linear interpolated between two key speeds such that there was more damping at low speeds and much less at high speeds. There is no physical basis for this, it's just a hack to get the behavior I want.
 
 With a bit of tuning, it seems to work reasonably well:
 
