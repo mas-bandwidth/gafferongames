@@ -28,7 +28,7 @@ During my career I’ve been fortunate enough to work on some great games:
 
 And throughout all this I've always believed strongly in sharing information. Giving back. Writing articles and example source code so people encounting the same problems I did don't have to learn everything through trial and error. 
 
-I've been writing articles for over 10 years now and people tell me all the time how much the articles have helped them. But writing articles and open source code is just so much work. I rely on donations to pay for hosting costs and to help carve time from consulting to write new articles and open source code.
+I've been writing articles for over 10 years now and people tell me all the time how much the articles have helped them. But writing articles and open source code is just so much work. I rely on donations to pay for hosting costs and to carve out time from consulting to write new articles and open source code.
 
 So if you enjoy the articles on this website, please support my work on [Patreon](https://www.patreon.com/gafferongames).
 

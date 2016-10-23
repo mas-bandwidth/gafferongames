@@ -1,11 +1,5 @@
 TODO
 
-    Port across the "Virtual Go" article series.
-
-    Just one article remaining, but then a bunch of work potentially to get the Latex equations working properly in Javascript *and* RSS. Ugh.
-
-    Try to get this done on Sunday. I don't want this to drag on much further.
-
     In fact, it might be a good idea to skip ahead from the latex to port over more articles from other series first.
 
     Think about it tomorrow, but do as *much as possible* on Sunday.
@@ -121,5 +115,13 @@ TODO
     -----------------
 
     Impulse j general response equation in "Collision Response and Coulomb Friction" would be nice to convert from an image to an actual equation. The image is low resolution.
+
+    -----------------
+
+    Concept of "adjacent selectors" should let me fine tune the CSS of my document.
+
+    Specifically, if a H2 comes after a code sample or video or whatever, I can make sure it puts a bit of extra spacing in.
+
+    http://stackoverflow.com/questions/10309408/how-to-add-vertical-spacing-between-block-elements-but-not-top-and-bottom
 
     -----------------
