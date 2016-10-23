@@ -1,5 +1,7 @@
 TODO
 
+    Converting across the rest of "Game Networking".
+
     -----------------
 
     Finish writing "Client Server Connection"
@@ -119,5 +121,11 @@ TODO
     Specifically, if a H2 comes after a code sample or video or whatever, I can make sure it puts a bit of extra spacing in.
 
     http://stackoverflow.com/questions/10309408/how-to-add-vertical-spacing-between-block-elements-but-not-top-and-bottom
+
+    -----------------
+
+    What Every Programmer Needs to Know About Game Networking
+
+    Is a bit rough. It could use a good pass over
 
     -----------------
