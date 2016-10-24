@@ -34,15 +34,15 @@ First person shooters are different to web servers[*](#quic_footnote).
 
 First person shooters send **time critical data**. 
 
-Time critical data is timestamped and must be received before that time to be useful. If time critical data arrives late, it's useless and is thrown away.
+Time critical data is timestamped and must be received before that time in order to be useful. If time critical data arrives late, it is useless and is thrown away.
 
 So... why can't we use TCP for time critical data?
 
 The core problem with TCP is **head of line blocking**. 
 
-TCP delivers all data reliably and in-order. To do this on top of IP which is unreliable and unordered, TCP holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't!)* are resent over the network.
+TCP delivers all data reliably and in-order. To do this on top of IP, which is unreliable and unordered, TCP holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't!)* are resent over the network.
 
-To see why this is a problem for time critical data, consider a game server sending 10 packets per-second to a client, where the client advances forward in time and wants to display the most recent state of the world to the player. You know, like pretty much every FPS out there:
+To see why this is such a huge problem for time critical data, consider a game server sending 10 packets per-second to a client, where the client advances forward in time and wants to display the most recent state of the world to the player. You know, like pretty much every FPS out there:
 
         t = 10.0
         t = 10.1
@@ -55,19 +55,19 @@ To see why this is a problem for time critical data, consider a game server send
         t = 10.8
         t = 10.9
 
-If the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access packets t = 10.1 and 10.2, even though they've already arrived over the network and this is the most recent state the client wants to display to the player. Worse still, by the time the resent packet arrives it's far too late to do anything useful with it. The client has already advanced past t = 10.0 and wants to display something around t = 10.3 or 10.4!
+If the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access packets t = 10.1 and 10.2, even though they've already arrived over the network and are the most recent state the client wants to display to the player. Worse still, by the time the resent packet arrives it's far too late to do anything useful with it. The client has already advanced past t = 10.0 and wants to display something around t = 10.3 or 10.4!
 
 So why resend lost packets at all? **BINGO**. What we'd really like is an option to tell TCP: "Hey, I don't care about old packets being resent, just let me skip over them and access the most recent data". But TCP does not give us this option. All data must be delivered reliably and in-order. It's simply not possible to skip over dropped data with TCP.
 
 This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches are added to the stream as TCP waits for dropped packets to be resent, which means additional buffering to smooth out these hitches, or long pauses where the game freezes and is non-responsive.
 
-Neither option is acceptable for first person shooters. This is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a protocol built on top of UDP can access the most recent data without head of line blocking.
+Neither option is acceptable for first person shooters, and this is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a protocol built on top of it can access the most recent data without head of line blocking.
 
 But, using UDP comes at a cost: 
 
 **UDP doesn't provide any concept of connection.**
 
-We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques that first person shooter use when build custom protocols over UDP. I know, I've worked on them. You can use this protocol for your games or non-gaming applications, and provided that the data you send is time critical, it's well worth the effort.
+We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques that first person shooters use when build custom protocols over UDP. I know, I've worked on them. You can use this protocol for your games or non-gaming applications and provided that the data you send is time critical, I promise you, it's well worth the effort.
 
 ## Exactly What We're Building
 
@@ -97,7 +97,7 @@ One key thing to remember is that each server instance represents a shared insta
 
 This client index lets players identify themselves and other players in the game, both in game code, and when sending and receiving packets. For example, the server might want to send a packet to client 4, or may receive a packet from client 10, while in a first person shooter, you were shot and killed player 5. This is how we want everything to appear in our abstraction, not IP addresses, but client indices in [0,MaxClients-1].
 
-Why is this so important? The answer is security. The last thing you want in a competitive game is to expose player's IP addresses to each other, because people will try to DDoS people off the Internet. High profile streamers deal with this all the time. For these reasons, and many others, virtual client slots over UDP make a lot of sense.
+Why is this so important? The answer is security. The last thing you want in a competitive game is to expose player's IP addresses to each other, because people will try to DDoS people off the Internet. High profile streamers deal with this all the time. For these reasons, and many others, virtual client slots make a lot of sense.
 
 ## Implementation over UDP
 
