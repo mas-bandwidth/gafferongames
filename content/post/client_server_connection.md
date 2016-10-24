@@ -67,29 +67,31 @@ But, using UDP comes at a cost:
 
 **UDP doesn't provide any concept of connection.**
 
-We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques first person shooters use when creating their custom protocols over UDP. I know, I've worked on them. You can use this protocol for your games or non-gaming applications and provided that the data you send is time critical, I promise you, it's well worth the effort.
+We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques first person shooters use when creating their custom protocols over UDP. I know, I've worked on them. You can use this protocol for either games or non-gaming applications and provided that the data you send is time critical, I promise you, it's well worth the effort.
 
-## Exactly What We're Building
+## What We're Building
 
 The goal is to create an abstraction on top of a UDP socket where our server presents a number of _virtual slots_ for clients to connect to:
 
-_(todo: diagram showing 4 player server slots)_
+<img src="/img/network-protocol/connection-request.png" width="100%"/>
 
 When a client requests a connection, it gets assigned to one of these slots:
 
-_(todo: diagram showing connection request deny)_
+<img src="/img/network-protocol/connection-accepted.png" width="100%"/>
 
 If a client requests connection, but no slots are available, the server is full and the connection request is denied:
 
-_(todo: diagram showing connection request deny)_
+<img src="/img/network-protocol/server-is-full.png" width="100%"/>
 
-In our client/server protocol, packets are continuously exchanged between client and server. This matches how first person shooters work, because in these games the client continuously sends their input to the server, while the server sends the current state of the world to each client 10, 20 or even 60 times per-second.
+Once a client is connected, packets are exchanged continuously in both directions:
 
-_(todo: diagram showing packets continually transmitted in both directions)_
+<img src="/img/network-protocol/client-packets.png" width="100%"/>
 
-Because of this, if at any point packets stop being received from the other side the connection should time out. No packets received for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want. When a client slot times out on the server, it becomes available for another client to connect. When the client times out, it transitions to an error state.
+This matches how first person shooters work. In these games the client sends their input to the server (typically at 60HZ), while the server sends the state of the world to each client 10, 20 or even 60 times per-second.
 
-_(todo: diagram showing client slot being opened up after timeout)_
+If at any point packets stop being received from the other side the connection should time out. No packets received for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want. When a client slot times out on the server, it becomes available for another client to connect. When the client times out, it transitions to an error state.
+
+## How Many Clients Per-Server?
 
 How many client slots should we open? This depends entirely on the game. I recommend the approach in this article for games with [2,64] clients per-server. Any more than 64 and you start creeping in to MMO territory where the best practice may differ from what is presented here. You'll notice that most first person shooters in 2016 are in this range. For example, [Battlefield 1](https://en.wikipedia.org/wiki/Battlefield_1) has a maximum of 64 players.
 
@@ -100,6 +102,8 @@ So this client index lets players identify themselves and other players in the g
 Finally, why are client indices so important? The answer is security. The last thing we want in a competitive game is to expose player's IP addresses to each other, because some people try to DDoS people off the Internet. High profile streamers deal with this all the time. For these reasons, and many others, virtual client slots make a lot of sense.
 
 ## Implementation
+
+_(todo: draft below here...)_
 
 Let's get down to implementation.
 

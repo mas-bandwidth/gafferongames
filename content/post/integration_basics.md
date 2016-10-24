@@ -155,11 +155,11 @@ Here are the input parameters to the mass spring system:
 
 And here is a graph of the exact solution:
 
-<img src="/img/game_physics/integration_basics_damped_exact_solution.png" width="100%"/>
+<img src="/img/game-physics/integration_basics_damped_exact_solution.png" width="100%"/>
 
 When we apply explicit euler to integrate this system, we get the following result, which has been scaled down vertically to fit:
 
-<img src="/img/game_physics/integration_basics_damped_explicit_euler.png" width="100%"/>
+<img src="/img/game-physics/integration_basics_damped_explicit_euler.png" width="100%"/>
 
 Instead of damping and converging on the origin, it gains energy over time!
 
@@ -189,7 +189,7 @@ to:
 
 Applying the semi-implicit euler integrator with **dt** = 1/100 to the spring damper system gives a stable result that is very close to the exact solution:
 
-<img src="/img/game_physics/integration_basics_damped_semi_implicit_euler.png" width="100%"/>
+<img src="/img/game-physics/integration_basics_damped_semi_implicit_euler.png" width="100%"/>
 
 Even though semi-implicit euler has the same order of accuracy as explicit euler (order 1), we get a much better result when integrating the equations of motion because it is symplectic.
 
@@ -292,11 +292,11 @@ Let's put the RK4 integrator to the test.
 
 Obviously it will be visibly more accurate than semi-implicit euler, right?
 
-<img src="/img/game_physics/integration_basics_damped_rk4_vs_semi_implicit_euler.png" width="100%"/>
+<img src="/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler.png" width="100%"/>
 
 Wrong. Both integrators are so close to the exact result that it's impossible to make out any difference at this scale. Both integrators are stable and track the exact solution very well with **dt**=1/100.
 
-<img src="/img/game_physics/integration_basics_damped_rk4_vs_semi_implicit_euler_zoomed_in.png" width="100%"/>
+<img src="/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler_zoomed_in.png" width="100%"/>
 
 Zooming in confirms that RK4 is more accurate than semi-implicit euler, but is it really worth the complexity and extra runtime cost of RK4? It's hard to say.
 
@@ -304,13 +304,13 @@ Let's push a bit harder and see if we can find a significant difference between 
 
 Here's the exact result we're aiming for:
 
-<img src="/img/game_physics/integration_basics_undamped_exact_solution.png" width="100%"/>
+<img src="/img/game-physics/integration_basics_undamped_exact_solution.png" width="100%"/>
 
 To make it harder on the integrators, let's increase delta time to 0.1 seconds. 
 
 Next, we let the integrators run for 90 seconds and zoom in:
 
-<img src="/img/game_physics/integration_basics_undamped_rk4_vs_semi_implicit_euler.png" width="100%"/>
+<img src="/img/game-physics/integration_basics_undamped_rk4_vs_semi_implicit_euler.png" width="100%"/>
 
 Wow. After 90 seconds the semi-implicit euler solution (orange) has drifted out of phase with the exact solution because it has a slightly different frequency, while the green line of RK4 matches the frequency, but is losing energy!
 
@@ -318,11 +318,11 @@ We can see this more clearly by increasing the time step to 0.25 seconds.
 
 RK4 maintains the correct frequency but loses energy:
 
-<img src="/img/game_physics/integration_basics_undamped_rk4_5fps.png" width="100%"/>
+<img src="/img/game-physics/integration_basics_undamped_rk4_5fps.png" width="100%"/>
 
 While semi-implicit euler does a better job at conserving energy, on average: 
 
-<img src="/img/game_physics/integration_basics_undamped_semi_implicit_euler_5fps.png" width="100%"/>
+<img src="/img/game-physics/integration_basics_undamped_semi_implicit_euler_5fps.png" width="100%"/>
 
 What an interesting result. As you can see it's not simply the case that RK4 has a higher order of accuracy and is "better". It's much more nuanced than this.
 
