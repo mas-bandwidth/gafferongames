@@ -83,13 +83,13 @@ If a client requests connection, but no slots are available, the server is full 
 
 <img src="/img/network-protocol/server-is-full.png" width="100%"/>
 
-Once a client is connected, packets are exchanged continuously in both directions:
+Once a client is connected, packets are exchanged in both directions. These packets form the basis for whatever custom protocol between the client and server which is game specific.
 
 <img src="/img/network-protocol/client-packets.png" width="100%"/>
 
-This matches how first person shooters work. In these games the client sends their input to the server (typically at 60HZ), while the server sends the state of the world to each client 10, 20 or even 60 times per-second.
+In a first person shooter, packets are sent continuously in both directions. The clients sents player input to the server rapidly (typically 60HZ), while receiving the most recent state of the world from the server at 10, 20 or even 60 times per-second.
 
-If at any point packets stop being received from the other side the connection should time out. No packets received for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want. When a client slot times out on the server, it becomes available for another client to connect. When the client times out, it transitions to an error state.
+Under such a situation there is no need for keep-alive packets. If at any point packets stop being received from the other side then the connection should time out. No packets for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want. When a client slot times out on the server, it becomes available for another client to connect. When the client times out, it transitions to an error state.
 
 ## How Many Clients Per-Server?
 
