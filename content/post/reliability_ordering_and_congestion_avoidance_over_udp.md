@@ -1,7 +1,7 @@
 +++
 categories = ["Game Networking"]
 tags = ["networking"]
-date = "2008-10-08"
+date = "2008-10-20"
 title = "Reliability and Congestion Avoidance over UDP"
 description = "How to implement reliability and congestion avoidance in a completely different way to TCP"
 draft = false

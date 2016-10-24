@@ -4,9 +4,33 @@ TODO
 
     Finish writing "Client Server Connection"
 
+    It is essential to write a new article for supporters in the new format, and it must be excellent.
+
+    Ideally, I would also have a draft of a new article in the worsk as well, for the securing dedicated servers.
+
+    I should be able to get both of these out next week, at the cost of Oculus, which will keep supporters happy for this month.
+
     -----------------
 
-    Port across the existing "Game Networking" series.
+    There is so much work with the conversion of the website to the new, it's important not to rush it:
+
+        I still have 3 articles to bring across from "Game Physics".
+
+        "Game Networking" is done.
+
+        "Virtual Go" is done but needs Latex pass...
+
+        Need to convert across 3 more in "Networked Physics".
+
+            Also need to work out what to do with draft articles at the end of it...
+
+        Also need to convert a bunch more articles from "Building a Game Network Protocol". These articles will likely need a good pass... they must all be excellent.
+
+        Having the articles that are for supporters only be visible is a large part of driving new supporters...
+
+        Also need to work out what to do about blog posts. Do I convert those across as well?
+
+        Finally, I need to work out links and redirects from the old to new site.
 
     -----------------
 
@@ -15,14 +39,6 @@ TODO
     https://gohugo.io/extras/highlighting/
 
     Definitely want to do this on page generation rather than javascript, so it works well inside an RSS feed.
-
-    -----------------
-
-    Port across rest of "Game Physics" series.
-
-    -----------------
-
-    Port across the rest of "Building a Game Network Protocol" series.
 
     -----------------
 
@@ -46,23 +62,13 @@ TODO
 
     -----------------
 
-    The title for "Sending and Receiving Packets" splits across two lines. This looks crap. It should go wide on one line.
-
-    -----------------
-
     Need to remember to update links in "Deterministic Lockstep" to old gafferongames.com to the new articles as written.
 
     Probably want to grep through all my MD files to look for any links to gafferongames
 
     -----------------
 
-    "Fix your Timestep!" could probably use a conclusion and some discussion of the cost of the interpolation, and the input latency at the end.
-
-    Also discuss extrapolation as an option, and if you keep going down this path, you basically reinvent the quake network model.
-
-    -----------------
-
-    Need to do a lot of linking from the end of virtual go articles to the next, as they tend to peter out a little bit with no conclusion. They're really the same article built up across several, so I need to strongly link to the next one in the article text.
+    Need to do a lot of linking from the end of articles to the next in the series. Many articles tend to just peter out, especially old ones.
 
     -----------------
 
@@ -98,12 +104,6 @@ TODO
 
     -----------------
 
-    The youtube links inside the virtual go articles kind of suck.
-
-    It would be nice to convert them to my own video hosting.
-
-    -----------------
-
     Search for "gafferongames.com" for any stale links before going live
 
     In fact, why not write a script to parse my markdown for stale links? This could be fun.
@@ -124,6 +124,6 @@ TODO
 
     What Every Programmer Needs to Know About Game Networking
 
-    Is a bit rough. It could use a good pass over
+    Is a bit rough. It could use a good pass over for accuracy and tone.
 
     -----------------
