@@ -15,7 +15,7 @@ In this article we're going to build a client/server connection on top of UDP.
 
 I can guarantee you already at this point that some people have decided not to read this article because I'm obviously a fool. Who could possibly justify all the effort required to build a completely custom client/server network protocol over UDP when for so many people, TCP is simply good enough?
 
-But why is it in 2016 that UDP vs. TCP is still so controversial, when virtually all first person shooters are networked with UDP?
+But why is it in 2016 that discussions about UDP vs. TCP are still so controversial, when virtually all first person shooters are networked with UDP?
 
 * Counterstrike
 * Call of Duty
@@ -34,7 +34,7 @@ First person shooters are different to web servers[*](#quic_footnote).
 
 First person shooters send **time critical data**. 
 
-Time critical data is timestamped and must be received before that time to be useful. If time critical data arrives late, it is useless and is thrown away.
+Time critical data is timestamped and must be received before that time to be useful. If time critical data arrives late, it's useless and is thrown away.
 
 So... why can't we use TCP for time critical data?
 
@@ -59,47 +59,47 @@ If the packet containing state for time t = 10.0 is lost, under TCP we must wait
 
 So why resend lost packets at all? **BINGO**. What we'd really like is an option to tell TCP: "Hey, I don't care about old packets being resent, just let me skip over them and access the most recent data". But TCP does not give us this option. All data must be delivered reliably and in-order. It's simply not possible to skip over dropped data with TCP.
 
-This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches are added to the stream of packets as TCP waits for dropped packets to be resent, which means additional buffering to smooth out these hitches, or long pauses where the game freezes and is non-responsive.
+This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches are added to the stream as TCP waits for dropped packets to be resent, which means additional buffering to smooth out these hitches, or long pauses where the game freezes and is non-responsive.
 
-Neither option is acceptable for a first person shooter. This is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a game network protocol built on top of UDP can access the most recent data without head of line blocking.
+Neither option is acceptable for first person shooters. This is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a protocol built on top of UDP can access the most recent data without head of line blocking.
 
-But using UDP comes at a cost: 
+But, using UDP comes at a cost: 
 
 **UDP doesn't provide any concept of connection.**
 
-We have to build that ourselves. And that, my friend, is the subject of this article!
+We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques that first person shooter use when build custom protocols over UDP. I know, I've worked on them. You can use this protocol for your games or non-gaming applications, and provided that the data you send is time critical, it's well worth the effort.
 
-## The Goal
+## Exactly What We're Building
 
-What we wish to create is an abstraction on top of UDP where a server provides n slots for clients to connect to:
+The goal is to create an abstraction on top of a UDP socket where our server presents a number of _virtual slots_ for clients to connect to:
 
-*(todo: diagram showing slots. keep it generic with ... n-1 at the bottom)*
+_(todo: diagram showing 4 player server slots)_
 
-It is common for n to be in the range [2,64]. This covers most cooperative and competitive client/server action games, with the higher player counts being for competitive first person shooters. Going above 64 starts to move into MMO territory, where the best practice may be different than what is presented here.
+When a client requests a connection, it gets assigned to one of these slots:
 
-*(todo: diagram showing 4 client slots, with 3 connected clients)*
+_(todo: diagram showing connection request deny)_
 
-Each time a client requests a connection, it is assigned one of these slots. 
+If a client requests connection, but no slots are available, the server is full and the connection request is denied:
 
-*(todo: diagram showing connection request on the 3rd slot, assign to 3rd slot, granted... you are slot #3)*
+_(todo: diagram showing connection request deny)_
 
-If no slot is available, the connection request is denied. 
+In our client/server protocol, packets are continuously exchanged between client and server. This matches how first person shooters work, because in these games the client is continuously sending their input to the server, while the server is sending the current state of the world back to each client 10, 20 or even 60 times per-second.
 
-*(todo: diagram showing all 4 slots taken up, connection request, denied)*
+_(todo: diagram showing packets continually transmitted in both directions)_
 
-The slot number which a client is assigned is quite important. Once a client is connected, packets from its IP:port combination are routed to the correct receive queue for that client index. When packets are sent 
+Because of this, if at any point packets stop being received from the other side the connection should time out. No packets received for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want. When a client slot times out on the server, it becomes available for another client to connect.
 
-Packets arriving on the server are directed to the correct per-client queue according to which IP:port combination is assigned to each slot.
+_(todo: diagram showing client slot being opened up after timeout)_
 
-*(todo: diagram showing connection request)*
+How many client slots should we open? This depends on the game. I recommend the approach presented in this article for games with [2,64] clients per-server. Any more than 64 and you start creeping in to MMO territory where the best practice may be different to what is presented here. You'll notice that most first person shooters in 2016 are in this range. For example, [Battlefield 1](https://en.wikipedia.org/wiki/Battlefield_1) has a maximum of 64 players.
 
-queue they should be assigned to, and when sending packets the destination is specified typically as "send a packet to client 2", rather than the IP address and port.
+One key thing to remember is that each server instance represents a shared instance of the world where players can directly interact with each other. For this reason it's good for clients to know which client slot they were assigned, so they know if they are player 1 or player 2. By convention, player numbers are considered to be client index + 1. 
 
-directly in the game, usually by assigning player 1, player 2 and so on, as the client index plus one.
+This client index lets players identify themselves and other players in the game, both in game code, and when sending and receiving packets. For example, the server might want to send a packet to client 4, or may receive a packet from client 10, while in a first person shooter, you were shot and killed player 5. This is how we want everything to appear in our abstraction, not IP addresses, but client indices in [0,MaxClients-1].
 
-Such an abstraction looks something like this:
+Why is this so important? The answer is security. The last thing you want in a competitive game is to expose player's IP addresses to each other, because people will try to DDoS people off the Internet. High profile streamers deal with this all the time. For these reasons, and many others, virtual client slots over UDP make a lot of sense.
 
-(todo: diagram showing server with a number of slots, with clients connecting and filling slots)
+## Implementation over UDP
 
 ...
 
