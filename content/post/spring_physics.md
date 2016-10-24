@@ -1,7 +1,7 @@
 +++
 categories = ["Game Physics"]
 tags = ["physics"]
-date = "2006-09-03"
+date = "2004-09-03"
 title = "Spring Physics"
 description = "How to simulate springs and dampers"
 draft = false

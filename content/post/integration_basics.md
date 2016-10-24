@@ -1,7 +1,7 @@
 +++
 categories = ["Game Physics"]
 tags = ["physics"]
-date = "2005-06-01"
+date = "2004-06-01"
 title = "Integration Basics"
 description = "How to integrate the equations of motion"
 draft = false

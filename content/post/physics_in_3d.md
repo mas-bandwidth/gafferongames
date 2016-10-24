@@ -1,7 +1,7 @@
 +++
 categories = ["Game Physics"]
 tags = ["physics"]
-date = "2006-09-02"
+date = "2004-09-02"
 title = "Physics in 3D"
 description = "How to simulate the motion of rigid bodies"
 draft = false

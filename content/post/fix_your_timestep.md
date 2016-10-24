@@ -1,7 +1,7 @@
 +++
 categories = ["Game Physics"]
 tags = ["physics"]
-date = "2005-06-10"
+date = "2004-06-10"
 title = "Fix Your Timestep!"
 description = "How to step your physics simulation forward"
 draft = false
