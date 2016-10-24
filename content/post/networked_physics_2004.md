@@ -1,6 +1,6 @@
 +++
 categories = ["Game Physics"]
-tags = ["physics"]
+tags = ["physics", "networking"]
 date = "2004-09-04"
 title = "Networked Physics (2004)"
 description = "Network a physics simulation using the same techniques as first person shooters"
@@ -163,7 +163,7 @@ The standard technique to do this is to store a circular buffer of saved moves o
 
 When the client receives a correction it looks through the saved move buffer to compare its physics state at that time with the corrected physics state sent from the server. If the two physics states differ above some threshold then the client rewinds to the corrected physics state and time and replays the stored moves starting from the corrected state in the past, the result of this re-simulation being the corrected physics state at the current time on the client.
 
-Sometimes packet loss or out of order delivery occurs and the server input differs from that stored on the client. In this case the server snaps the client to the correct position automatically via rewind and replay. This snapping is quite noticeable to the player, so we reduce it with the same smoothing technique we used above for the other player characters. This smoothing is done <i>after</i> we recalculate the corrected position via rewind and replay.
+Sometimes packet loss or out of order delivery occurs and the server input differs from that stored on the client. In this case the server snaps the client to the correct position automatically via rewind and replay. This snapping is quite noticeable to the player, so we reduce it with the same smoothing technique we used above for the other player characters. This smoothing is done <i>after</i> recalculating the corrected position via rewind and replay.
 
 ## Conclusion
 

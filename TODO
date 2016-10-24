@@ -1,13 +1,5 @@
 TODO
 
-    Port across rest of "Game Physics" articles.
-
-    Convert "Networked Physics"
-
-    Seems that I have brought the "Game Physics" series ahead in time from 2004 to 2006.
-
-    It was actually published in 2004, so bring them all back to that time. Since the articles are really old, this is better.
-
     -----------------
 
     Finish writing "Client Server Connection"
@@ -18,17 +10,9 @@ TODO
 
     -----------------
 
-    There is so much work with the conversion of the website to the new, it's important not to rush it:
-
-    I still have 3 articles to bring across from "Game Physics".
-
-    "Game Networking" is done.
-
-    "Virtual Go" is done but needs Latex pass...
-
     Need to convert across 3 more in "Networked Physics".
 
-        Also need to work out what to do with draft articles at the end of it...
+        Also need to work out what to do with draft articles at the end of it (!!!)
 
     Also need to convert a bunch more articles from "Building a Game Network Protocol". These articles will likely need a good pass... they must all be excellent.
 
@@ -41,6 +25,8 @@ TODO
     -----------------
 
     Definitely need to dredge up the source code for "Game Networking" and "Game Physics" as example source code to give to supporters.
+
+    Also, need a bunch of linking across articles to the next, as well as linking to source code and a footer for support on Patreon.
 
     -----------------
 
