@@ -31,7 +31,7 @@ Or we could just use vectors.
 
 Vectors are a mathematical type representing an array of numbers. A three dimensional vector has three components x, y and z. Each component corresponds to a dimension. In this article x is left and right, y is up and down, and z is forward and back.
 
-In C++ we will implement vectors using a struct as follows:
+In C++ we implement vectors using a struct as follows:
 
 <pre>
     struct Vector
