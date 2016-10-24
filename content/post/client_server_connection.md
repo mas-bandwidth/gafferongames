@@ -105,9 +105,7 @@ Let's get down to implementation.
 
 First, the client and server both have their own UDP socket. Let's say the client binds to an ephemiral port, and the server binds to port 50000. 
 
-Unlike a TCP-server where each accepted connection gets its own socket, the UDP server processes packets for all clients on the same socket, so we have to handle multiplexing and demultiplexing of client packets ourselves.
-
-Also, since UDP is unreliabile, we need a strategy for packets being lost. We do this not by implementing a complicated reliability system at this early stage, but by implementing parallel state machines on the client and on the server:
+Unlike a TCP-server where each accepted connection gets its own socket, the UDP server processes packets for all clients on the same socket. Also, since UDP is unreliabile, we need a strategy for packets being lost. We do this not by implementing a complicated reliability system at this early stage, but by implementing parallel state machines on the client and on the server:
 
 At this early stage we have this state machine on the client:
 
@@ -128,7 +126,7 @@ And on the server, let's start with a bool "connected" for each slot, and the cl
 
 While the client is in the connection request state, it sends "connection request" packets to the server 10 times per-second. This continues until the client receives a response from the server, or the connection request times out. This simple approach works well and leaves the complexity of implementing reliability over UDP until _after_ a connection has been established.
 
-Responses from the server to client can also be lost. To handle this all that is required is to 
+For example “connection accepted” response packet could be lost. This is handled by making the server respond to each request (or at least, setting a dirty flag to trigger a response) each time a request is received. That way if the first “connect accepted” packet doesn’t get through, the next “connection request” from the client triggers another response. This way, by some sort of strange induction, the client and server are able to advance forward through an arbitrarily complicated state machine until they are both connected.
 
 On the server there have a similar state machine, but this time it is per-client. For the moment, lets keep it simple with a basic data structure which simply keeps track of whether a client slot is assigned to a particular client IP+port:
 
