@@ -15,7 +15,7 @@ In this article we're going to build a client/server connection on top of UDP.
 
 I can guarantee you already at this point that some people have decided not to read this article because I'm obviously a fool. Who could possibly justify all the effort required to build a completely custom client/server network protocol over UDP when for so many people, TCP is simply good enough?
 
-But why is it in 2016 that discussions of UDP vs. TCP are so controversial, when virtually all first person shooters are networked with UDP?
+But why is it in 2016 that discussions about UDP vs. TCP are still so controversial, when virtually all first person shooters are networked with UDP?
 
 * Counterstrike
 * Call of Duty
@@ -26,7 +26,7 @@ But why is it in 2016 that discussions of UDP vs. TCP are so controversial, when
 
 Clearly this is a solved problem. **The game industry uses UDP.**
 
-So what's going on? Why do so many games go through all the effort of building their own custom network protocol on top of UDP instead of just using TCP? What is it about the specific use case of multiplayer gaming that makes a custom protocol built on top of UDP such a slam dunk?
+So what's going on? Why do so many games go through all the effort of building their own custom network protocol on top of UDP instead of just using TCP? What is it about the specific use case of multiplayer games that makes a custom protocol built on top of UDP such a slam dunk?
 
 ## Why First Person Shooters Use UDP
 
