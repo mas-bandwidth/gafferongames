@@ -32,17 +32,15 @@ So what's going on? Why do so many games go through all the effort of building t
 
 First person shooters are different to web servers[*](#quic_footnote).
 
-First person shooters send **time critical data**. 
+First person shooters send **time critical data**.
 
-Time critical data is timestamped and must be received before that time in order to be useful. If time critical data arrives late, it is useless and is thrown away.
+This data includes player inputs sent from client to server, and the state of the world at the current time sent from the server to clients. If this data arrives late, it is _useless_ and must be thrown away. The client has no use for the state of the world 1/2 a second ago, and the server has no use for player inputs from the past.
 
-So... why can't we use TCP for time critical data?
+So, why can't we use TCP for time critical data? The answer is that TCP delivers all data reliably and in-order, and to do this on top of IP, which is unreliable and unordered, it holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't!)* are resent over the network.
 
-The core problem with TCP is **head of line blocking**. 
+To see why this is such a huge problem for time critical data, consider a game server sending 10 packets per-second to a client, where the client advances forward in time and wants to display the most recent state of the world to the player. You know, like pretty much every FPS out there.
 
-TCP delivers all data reliably and in-order. To do this on top of IP, which is unreliable and unordered, TCP holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't!)* are resent over the network.
-
-To see why this is such a huge problem for time critical data, consider a game server sending 10 packets per-second to a client, where the client advances forward in time and wants to display the most recent state of the world to the player. You know, like pretty much every FPS out there:
+Each packet sent from server to client over one second describes the state of the world at a specific time:
 
         t = 10.0
         t = 10.1
@@ -55,7 +53,7 @@ To see why this is such a huge problem for time critical data, consider a game s
         t = 10.8
         t = 10.9
 
-If the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access packets t = 10.1 and 10.2, even though they've already arrived over the network and are the most recent state the client wants to display to the player. Worse still, by the time the resent packet arrives it's far too late to do anything useful with it; the client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!
+If the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access packets t = 10.1 and 10.2, even though they've already arrived over the network and are the most recent state the client wants to display. Worse still, by the time the resent packet arrives it's far too late to do anything useful with it. The client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!
 
 So why resend lost packets at all? **BINGO**. What we'd really like is an option to tell TCP: "Hey, I don't care about old packets being resent, just let me skip over them and access the most recent data". But TCP does not give us this option. All data must be delivered reliably and in-order. It's simply not possible to skip over dropped data with TCP.
 
