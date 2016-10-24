@@ -15,7 +15,7 @@ In this article we're going to build a client/server connection on top of UDP.
 
 I can guarantee you already at this point that some people have decided not to read this article because I'm obviously a fool. Who could possibly justify all the effort required to build a completely custom client/server network protocol over UDP when for so many people, TCP is simply good enough?
 
-But why is it in 2016 that discussions of UDP vs. TCP are still so controversial, when virtually all first person shooters are networked with UDP?
+But why is it in 2016 that discussions of UDP vs. TCP are so controversial, when virtually all first person shooters are networked with UDP?
 
 * Counterstrike
 * Call of Duty
@@ -26,23 +26,23 @@ But why is it in 2016 that discussions of UDP vs. TCP are still so controversial
 
 Clearly this is a solved problem. **The game industry uses UDP.**
 
-So what's going on? Why do so many games build their own custom network protocol over UDP instead of using TCP? What is it about the specific use case of multiplayer gaming that makes a custom protocol built on top of UDP such a slam dunk?
+So what's going on? Why do so many games go through all the effort of building their own custom network protocol on top of UDP instead of just using TCP? What is it about the specific use case of multiplayer gaming that makes a custom protocol built on top of UDP such a slam dunk?
 
-## Justification for UDP
+## Why First Person Shooters Use UDP
 
-Games are different to web servers[*](#quic_footnote).
+First person shooters are different to web servers[*](#quic_footnote).
 
-Games send **time critical data**. 
+First person shooters send **time critical data**. 
 
 Time critical data is timestamped and must be received before that time to be useful. If time critical data arrives late, it is useless and is thrown away.
 
-So why can't we use TCP for time critical data?
+So, why can't we use TCP for time critical data?
 
 The core problem with TCP is **head of line blocking**. 
 
-This means that TCP delivers all packets reliably and in-order, so it holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't)* are resent over the network.
+TCP delivers all data reliably and in-order. To do this on top of IP which is unreliable and unordered, TCP holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't!)* are resent over the network.
 
-Consider a game server sending 10 packets per-second to a client:
+To see why this is a problem for time critical data, consider a game server sending 10 packets per-second to a client, where the client advances forward in time and wants to display the most recent state of the world to the player. You know, like pretty much every FPS out there:
 
         t = 10.0
         t = 10.1
@@ -55,21 +55,21 @@ Consider a game server sending 10 packets per-second to a client:
         t = 10.8
         t = 10.9
 
-If the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access packets t = 10.1 and 10.2, even though they've already arrived over the network. Worse still, by the time the resent packet arrives it's far too late to do anything useful with it.
+If the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access packets t = 10.1 and 10.2, even though they've already arrived over the network and this is the time the client wants to display to the player. Worse still, by the time the resent packet arrives it's far too late to do anything useful with it. The client has already advanced past that time and wants to display something around t = 10.3 or 10.4!
 
-So why resend it at all? What we'd really like is an option to tell TCP: "we don't care about old packets being resent, just let me skip over them and access more recent data". But TCP does not give us this option. All data must be delivered reliably and in-order. It's simply not possible to skip over dropped data with TCP.
+So why resend lost packets at all? **BINGO**. What we'd really like is an option to tell TCP: "hey, I don't care about old packets being resent, just let me skip over them and access more recent data". But TCP simply does not give us this option. All data must be delivered reliably and in-order. It's not possible to skip over dropped data with TCP.
 
-This creates terrible problems for time critical data where packet loss *and* latency exist. Large hitches are added to the stream of packets as TCP waits for dropped packets to be resent, which means ddditional buffering added to smooth out this jitter (unacceptable for fast paced action games), or long pauses where the game freezes and is non-responsive.
+This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches are added to the stream of packets as TCP waits for dropped packets to be resent, which means additional buffering to smooth out these hitches, or long pauses where the game freezes and is non-responsive.
 
-Neither option is acceptable for a first person shooter. This is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a game network protocol built on top of it can access the most recent data without head of line blocking.
+Neither option is acceptable for a first person shooter. This is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a game network protocol built on top of UDP can access the most recent data without head of line blocking.
 
 But using UDP comes at a cost: 
 
 **UDP doesn't provide any concept of connection.**
 
-We have to build that ourselves. And that, my friend, is the subject of this article :)
+We have to build that ourselves. Exactly how is the subject of this article :)
 
-# The Goal
+## The Goal
 
 What we wish to create is an abstraction on top of UDP where a server provides n slots for clients to connect to:
 
