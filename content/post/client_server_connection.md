@@ -26,7 +26,7 @@ But why is it in 2016 that discussions about UDP vs. TCP are still so controvers
 
 Clearly this is a solved problem. **The game industry uses UDP.**
 
-So what's going on? Why do so many games go through all the effort of building their own custom network protocol on top of UDP instead of just using TCP? What is it about the specific use case of first person shooters that makes a protocol built on top of UDP a slam dunk?
+So what's going on? Why do so many games go through all the effort of building their own custom network protocol on top of UDP instead of just using TCP? What is it about first person shooters that makes a protocol built on top of UDP such a slam dunk?
 
 ## Why First Person Shooters Use UDP
 
@@ -48,13 +48,13 @@ So why resend dropped packets at all? **BINGO!** What we'd really like is an opt
 
 This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches corresponding to multiples of RTT are added to the stream as TCP waits for dropped packets to be resent, which means additional buffering is needed to smooth out these hitches (adding even more latency), or long pauses where the game freezes and is non-responsive.
 
-Neither option is acceptable for first person shooters, and this is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a protocol built on top of it can access the most recent data without waiting for lost packets to be resent.
+Neither option is acceptable for first person shooters, and this is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a protocol built on top of UDP can access the most recent data without waiting for lost packets to be resent.
 
 But, using UDP comes at a cost: 
 
 **UDP doesn't provide any concept of connection.**
 
-We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques first person shooters use when creating their protocols over UDP. I know, I've worked on them. You can use this protocol for either games or non-gaming applications and provided the data you send is time critical, I promise you, it's well worth the effort.
+We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques first person shooters use when creating their protocols over UDP. I know, I've worked on them. You can use this protocol for games or non-gaming applications and provided the data you send is time critical, I promise you, it's well worth the effort.
 
 ## What We're Building
 
@@ -74,7 +74,7 @@ Once a client is connected, packets are exchanged in both directions. These pack
 
 <img src="/img/network-protocol/client-packets.png" width="100%"/>
 
-In a first person shooter, packets are sent continuously in both directions. The clients sends input to the server rapidly typically at 30 or 60 packets per-second, while receiving the most recent state of the world from the server 10, 20 or even 60 times per-second.
+In a first person shooter, packets are sent continuously in both directions. The clients sends input to the server typically at 30 or 60 packets per-second, while receiving the most recent state of the world from the server 10, 20 or even 60 times per-second.
 
 Under such a situation there is no need for keep-alive packets. If at any point packets stop being received from the other side then the connection times out. No packets for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want. 
 
