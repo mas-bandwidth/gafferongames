@@ -24,9 +24,7 @@ But why is it in 2016 that discussions about UDP vs. TCP are still so controvers
 * Battlefront
 * Overwatch
 
-Clearly this is a solved problem. **The game industry uses UDP.**
-
-So what's going on? Why do so many games go through all the effort of building their own custom network protocol on top of UDP instead of just using TCP? What is it about first person shooters that makes a protocol built on top of UDP such a slam dunk?
+So what's going on? Why do so many first shooters go through all the effort of building their own custom network protocol on top of UDP instead of just using TCP?
 
 ## Why First Person Shooters Use UDP
 
@@ -34,21 +32,21 @@ First person shooters are different to web servers[*](#quic_footnote).
 
 First person shooters send **time critical data**.
 
-This data includes player inputs sent from client to server, and the state of the world sent from the server to clients. If this data arrives late, it is _useless_ and is thrown away; the client has no use for the state of the world 1/2 a second ago, and the server has no use for player input from the past.
+This data includes player inputs sent from client to server, and the state of the world sent from the server to clients. If this data arrives late, it is _useless_ and is thrown away; the client has no use for the state of the world 1/2 a second ago, just like the server has no use for player input from the past.
 
 So, why can't we use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP, which is unreliable and unordered, it holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't!)* are resent over the network. 
 
-This is known as **head of line blocking** and it's a huge problem for time critical data. To understand why, consider a game server sending the state of the world to a client 10 packets per-second. The client advances time forward and wants to display the most recent state it has received from the server.
+This is known as **head of line blocking** and it's a huge problem for time critical data. To understand why, consider a game server sending the state of the world to a client 10 times per-second. The client advances time forward and wants to display the most recent state it has received from the server.
 
 <img src="/img/network-protocol/client-time.png" width="100%"/>
 
-But if the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access t = 10.1 and 10.2, even when these packets have already arrived over the network and contain the state the client wants to show. Worse still, by the time the resent packet arrives, it's far, far too late to do anything useful with it. The client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!
+But if the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access t = 10.1 and 10.2, even though these packets have already arrived and contain the state the client wants to show. Worse still, by the time the resent packet arrives, it's far too late to actually do anything useful with it. The client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!
 
-So why resend dropped packets at all? **BINGO!** What we'd really like is an option to tell TCP: "Hey, I don't care about old packets being resent, by they time they arrive I can't use them anyway, so let me skip over them and access the most recent data". But TCP does not give us this option. All data must be delivered reliably and in-order. It's simply not possible to skip over dropped data with TCP.
+So why resend dropped packets at all? **BINGO!** What we'd really like is an option to tell TCP: "Hey, I don't care about old packets being resent, by they time they arrive I can't use them anyway, so let me skip over them and access the most recent data". But TCP simply does not give us this option. All data must be delivered reliably and in-order.
 
-This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches corresponding to multiples of RTT are added to the stream as TCP waits for dropped packets to be resent, which means additional buffering to smooth out these hitches (adding even more latency), or long pauses where the game freezes and is non-responsive.
+This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches corresponding to multiples of RTT are added to the stream of data as TCP waits for dropped packets to be resent, which means additional buffering to smooth out these hitches, or long pauses where the game freezes and is non-responsive.
 
-Neither option is acceptable for first person shooters, and this is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a protocol built on top of UDP can access the most recent data without waiting for lost packets to be resent. Protocols built on top of UDP are also free to implement whatever reliability they need in radically different ways to TCP.
+Neither option is acceptable for first person shooters, which is why virtually all first person shooters are networked with UDP. UDP does not provide any reliability or ordering, so protocols built on top of UDP can access the most recent data without waiting for lost packets to be resent, and can implement whatever reliability they need in radically different ways to TCP.
 
 But, using UDP comes at a cost: 
 
@@ -74,7 +72,7 @@ Once a client is connected, packets are exchanged in both directions. These pack
 
 <img src="/img/network-protocol/client-server-packets.png" width="100%"/>
 
-In a first person shooter, packets are sent continuously in both directions. The clients sends input to the server typically at 30 or 60 packets per-second, while the state of the world is sent from the server to the client 10, 20 or even 60 times per-second.
+In a first person shooter, packets are sent continuously in both directions. The clients send input to the server typically at 30 or 60 packets per-second, while the state of the world is sent from the server to all clients 10, 20 or even 60 times per-second.
 
 Under such a situation there is no need for keep-alive packets. If at any point packets stop being received from the other side then the connection simply times out. No packets for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want. 
 
@@ -96,16 +94,85 @@ At this point the client transitions to the **connecting** state and sends _conn
 
 <img src="/img/network-protocol/connection-request-packet.png" width="100%"/>
 
-The CRC32 and implicit protocol id in the packet header are there so the server can trivially reject UDP packets not composed by our protocol. For more details about reading and writing packets, please see [Reading and Writing Packets](http://gafferongames.com/building-a-game-network-protocol/reading-and-writing-packets/) and [Serialization Strategies](http://gafferongames.com/building-a-game-network-protocol/serialization-strategies/).
+The CRC32 and implicit protocol id in the packet header allow the server to trivially reject UDP packets not composed by our protocol. For details, please see [Reading and Writing Packets](http://gafferongames.com/building-a-game-network-protocol/reading-and-writing-packets/) and [Serialization Strategies](http://gafferongames.com/building-a-game-network-protocol/serialization-strategies/).
 
-Since connection request packets are sent over UDP, they may be lost, or received in duplicate or out of order. Because of this we do two things: 1) we keep resending packets corresponding to the current client state until we get a response or time out, and 2) on both client and server we ignore any packets that don't correspond to what we are expecting, since a lot of redundant packets are flying over the network.
+Since connection request packets are sent over UDP, they may be lost, received in duplicate or out of order. Because of this we do two things: 1) we keep resending packets corresponding to the current client state until we get a response from the server or time out, and 2) on both client and server we ignore any packets that don't correspond to what we are expecting, since a lot of redundant packets are flying over the network.
 
 Now on the server side we have the following minimal data structure:
 
+        const int MaxClients = 64;
 
+        class Server
+        {
+            int m_maxClients;                 // dynamically configured max in [1,MaxClients]
+            int m_numConnectedClients;
+            bool m_clientConnected[MaxClients];
+            Address m_clientAddress[MaxClients];
+        };
 
+Which lets the server lookup a free slot for a client to join (if any are free):
 
+        int Server::FindFreeClientIndex() const
+        {
+            for ( int i = 0; i < m_maxClients; ++i )
+            {
+                if ( !m_clientConnected[i] )
+                    return i;
+            }
+            return -1;
+        }
 
+Find the client index corresponding to an IP address and port:
+
+        int Server::FindExistingClientIndex( const Address & address ) const
+        {
+            for ( int i = 0; i < m_maxClients; ++i )
+            {
+                if ( m_clientConnected[i] && m_clientAddress[i] == address )
+                    return i;
+            }
+            return -1;
+        }
+
+Check if a client is connected to a given slot:
+
+    const Address & Server::GetClientAddress( int clientIndex ) const
+    {
+        assert( clientIndex >= 0 );
+        assert( clientIndex < m_maxClients );
+        return m_clientAddress[clientIndex];
+    }
+
+and retrieve a client’s IP address and port by client index:
+
+    const Address & Server::GetClientAddress( int clientIndex ) const
+    {
+        assert( clientIndex >= 0 );
+        assert( clientIndex < m_maxClients );
+        return m_clientAddress[clientIndex];
+    }
+
+Using these queries we implement the following logic when a _connection request_ packet is received on the server:
+
+* If the server is full, reply with a _connection denied: server full_ response.
+
+* If sender of the connection request is received that corresponds to the address of a client that is already connected, reply with _connection accepted_ because our previous response may have been dropped. If we don't resend this response, the client will never know they were accepted and will gets stuck in the **connecting** state until timing out.
+
+* Otherwise, this is new connection request from a new client and we have a slot free. Assign the client address that sent the connection request to the free slot and respond with _connection accepted_.
+
+The connection accepted packet tells the client which client index it was assigned, which the client uses so it knows which player it is in the game:
+
+<img src="/img/network-protocol/connection-accepted-packet.png" width="100%"/>
+
+Once the server sends the first connection accepted packet from it's point of view it considers that client fully connected. As the server ticks forward, it watches each connected client slot, and if no packets have been received from that client slot for 5 seconds, the slot times out and is reset, ready for another client to connect to it.
+
+Back on the client, the client in the **connecting** state listens for _connection denied_ and _connection accepted_ packets from the server. Any other packets are ignored. If the client receives a _connection accepted_ packet, it transitions to **connected**. If it receives _connection denied_, or after 5 second hasn't received any suitable response for the server, it transitions to *disconnected*.
+
+Once the client hits **connected** it starts sending connection payload packets to the server. If no packets are received from the server in 5 seconds, the client times out and transitions to **disconnected**.
+
+## Limitations
+
+...
 
 
 
