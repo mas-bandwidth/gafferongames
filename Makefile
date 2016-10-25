@@ -15,7 +15,7 @@ local:
 	hugo server --watch --verbose -D -F
 	rm -f config.toml
 
-upload: clean
+upload: clean commit
 	rm -rf static/video
 	cp config_upload.toml config.toml
 	hugo
