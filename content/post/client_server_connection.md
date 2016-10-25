@@ -36,17 +36,17 @@ This data includes player inputs sent from client to server, and the state of th
 
 So, why can't we use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP, which is unreliable and unordered, it holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't!)* are resent over the network. 
 
-This is known as **head of line blocking** and it's a huge problem for time critical data. To understand why, consider a game server sending the state of the world to a client 10 times per-second. The client advances time forward and wants to display the most recent state it has received from the server.
+This is known as **head of line blocking** and it's a huge problem for time critical data. To understand why, consider a game server sending the state of the world to clients 10 times per-second. The client advances time forward and wants to display the most recent state it has received from the server.
 
 <img src="/img/network-protocol/client-time.png" width="100%"/>
 
-But if the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access t = 10.1 and 10.2, even though these packets have already arrived and contain the state the client wants to show. Worse still, by the time the resent packet arrives, it's far too late to actually do anything useful with it. The client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!
+But if the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access t = 10.1 and 10.2, even though those packets have already arrived and contain the state the client wants to show. Worse still, by the time the resent packet arrives, it's far too late to actually do anything useful with it. The client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!
 
-So why resend dropped packets at all? **BINGO!** What we'd really like is an option to tell TCP: "Hey, I don't care about old packets being resent, by they time they arrive I can't use them anyway, so let me skip over them and access the most recent data". But TCP simply does not give us this option. All data must be delivered reliably and in-order.
+So why resend dropped packets at all? **BINGO!** What we'd really like is an option to tell TCP: "Hey, I don't care about old packets being resent, by they time they arrive I can't use them anyway, so just let me skip over them and access the most recent data". But TCP simply does not give us this option. All data must be delivered reliably and in-order.
 
-This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches corresponding to multiples of RTT are added to the stream of data as TCP waits for dropped packets to be resent, which means additional buffering to smooth out these hitches, or long pauses where the game freezes and is non-responsive.
+This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches corresponding to multiples of round trip time are added to the stream of data as TCP waits for dropped packets to be resent, which means additional buffering to smooth out these hitches, or long pauses where the game freezes and is non-responsive.
 
-Neither option is acceptable for first person shooters, which is why virtually all first person shooters are networked with UDP. UDP does not provide any reliability or ordering, so protocols built on top of UDP can access the most recent data without waiting for lost packets to be resent, and can implement whatever reliability they need in radically different ways to TCP.
+Neither option is acceptable for first person shooters, which is why virtually all first person shooters are networked with UDP. UDP doesn't provide any reliability or ordering, so protocols built on top of UDP can access the most recent data without waiting for lost packets to be resent, and implement whatever reliability they need in radically different ways to TCP.
 
 But, using UDP comes at a cost: 
 
