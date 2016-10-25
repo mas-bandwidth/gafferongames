@@ -6,7 +6,7 @@ public: video
 	cp config_upload.toml config.toml
 	hugo
 
-local:
+local: commit
 	rm -f config.toml
 	cp config_local.toml config.toml
 	bash -c "sleep 2.5 && open http://127.0.0.1:1313" &
