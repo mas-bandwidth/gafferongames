@@ -48,13 +48,13 @@ So why resend dropped packets at all? **BINGO!** What we'd really like is an opt
 
 This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches corresponding to multiples of RTT are added to the stream as TCP waits for dropped packets to be resent, which means additional buffering is needed to smooth out these hitches (adding even more latency), or long pauses where the game freezes and is non-responsive.
 
-Neither option is acceptable for first person shooters, and this is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a protocol built on top of UDP can access the most recent data without waiting for lost packets to be resent.
+Neither option is acceptable for first person shooters, and this is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a protocol built on top of UDP can access the most recent data without waiting for lost packets to be resent and implement whatever reliability it needs in radically different ways to TCP.
 
 But, using UDP comes at a cost: 
 
 **UDP doesn't provide any concept of connection.**
 
-We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques first person shooters use when creating their protocols over UDP. I know, I've worked on them. You can use this protocol for games or non-gaming applications and provided the data you send is time critical, I promise you, it's well worth the effort.
+We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques first person shooters use when creating their protocols over UDP. I know, [I've worked on them](/about). You can use this protocol for games or non-gaming applications and provided the data you send is time critical, I promise you, it's well worth the effort.
 
 ## What We're Building
 
