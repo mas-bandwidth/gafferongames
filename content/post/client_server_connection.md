@@ -80,7 +80,7 @@ Under such a situation there is no need for keep-alive packets. If at any point 
 
 When a client slot times out on the server, it becomes available for other clients to connect. When the client times out, it transitions to an error state.
 
-## Basic Connection State Machine
+## Simple Connection Protocol
 
 First up we have the client state machine. 
 
@@ -140,19 +140,15 @@ Find the client index corresponding to an IP address and port:
 
 Check if a client is connected to a given slot:
 
-        const Address & Server::GetClientAddress( int clientIndex ) const
+        bool Server::IsClientConnected( int clientIndex ) const
         {
-            assert( clientIndex >= 0 );
-            assert( clientIndex < m_maxClients );
-            return m_clientAddress[clientIndex];
+            return m_clientConnected[clientIndex];
         }
 
 and retrieve a client’s IP address and port by client index:
 
         const Address & Server::GetClientAddress( int clientIndex ) const
         {
-            assert( clientIndex >= 0 );
-            assert( clientIndex < m_maxClients );
             return m_clientAddress[clientIndex];
         }
 
@@ -174,9 +170,28 @@ Back on the client, while in the **connecting** state the client listens for <u>
 
 Once the client hits **connected** it starts sending connection payload packets to the server. If no packets are received from the server in 5 seconds, the client times out and transitions to **disconnected**.
 
-## Making it More Robust
+## Weaknesses of the Simple Connection Protocol
 
-The system presented above is a good starting point, but it's not remotely hardened enough to use in a production environment:
+This protocol is easy to implement, and it's a good starting point, but we can't use a protocol like this in production. 
+
+It simply has too many weaknesses:
+
+* Spoofed packet source addresses can be used to redirect connection accepted responses to a target (victim) address. If the connection accepted packet is larger than the connection request packet, attackers can use this protocol as part of a [DDoS amplification attack](https://www.us-cert.gov/ncas/alerts/TA14-017A).
+
+* Spoofed packet source addresses can also be used to trivially fill all client slots on a server by sending connection request packets from n different IP addresses, where n is the maximum number of clients allowed per-server.
+
+* Even without spoofed packet source addresses, an attacker can trivially fill all client slots on a server by varying the client UDP port number on each client connection because clients are assigned to slots on a address + port basis. Due to NAT (network address translation) it's not advisable to treat the IP address alone as a unique client identifier, because multiple players behind the same NAT will be collapsed to the same IP address with only the port being different.
+
+* Traffic between the client and server can be read and modified in transit by a third party.
+
+* If an attacker knows the client and server IP addresses and ports, they can impersonate the client or server. This gives an attacker the power to completely a hijack the client’s connection and perform actions on their behalf.
+
+* Once a client is connected to a server there is no way for them to disconnect cleanly. This creates a delay before the server realizes a client has disconnected, or before a client realizes the server has shut down. It would be nice if both the client and server could indicate a clean disconnect somehow, so the other side didn’t need to wait for timeout in the common case.
+
+* Clean disconnection is usually implement with a disconnect packet sent, however because an attacker can impersonate the client and server with spoofed packets, doing so would give the attacker the ability to disconnect a client from the server provided client and server IP addresses and the structure of the disconnect packet.
+
+* If a client disconnects dirty and attempts to reconnect before their slot times out on the server, the server still thinks that client connected and replies with redundant <u>_connection accepted_</u> packets, which are necessary to handle packet loss. The client processes this response and thinks it is connected to the server but is actually in an undefined state.
+
 
 
 
