@@ -90,7 +90,7 @@ The client is in one of three states:
 * Connecting
 * Connected
 
-Initially the client starts in **disconnected**, and is told to connect to a server with a particular IP address and port:
+Initially the client starts in **disconnected**, and is told to connect to a server with a particular IP address and port.
 
 At this point the client transitions to the **connecting** state and sends _connection request_ packets to the server. They look something like this:
 
@@ -98,7 +98,7 @@ At this point the client transitions to the **connecting** state and sends _conn
 
 The CRC32 and implicit protocol id in the packet header are there so the server can trivially reject UDP packets not composed by our protocol. For more details about reading and writing packets, please see [Reading and Writing Packets](http://gafferongames.com/building-a-game-network-protocol/reading-and-writing-packets/) and [Serialization Strategies](http://gafferongames.com/building-a-game-network-protocol/serialization-strategies/).
 
-Since connection request packets are sent over UDP, they may be lost, or received in duplicate or out of order. Because of this we do two things: 1) we keep resending packets corresponding to the current client state until we get a response or we time out, and 2) on both sides we ignore any packets or responses that don't correspond to what we are expecting, since lots of redundant packets are flying over the network, a few stale packets are sure to creep through.
+Since connection request packets are sent over UDP, they may be lost, or received in duplicate or out of order. Because of this we do two things: 1) we keep resending packets corresponding to the current client state until we get a response or time out, and 2) on both client and server we ignore any packets that don't correspond to what we are expecting, since a lot of redundant packets are flying over the network.
 
 Now on the server side we have the following minimal data structure:
 
@@ -119,10 +119,11 @@ Now on the server side we have the following minimal data structure:
 
 
 <hr>
+<hr>
+<hr>
+<hr>
 
-<hr>
-<hr>
-<hr>
+_(very rough draft below here)_
 
 
 To handle this, instead of implementing some sort of reliability at this early stage, we'll create the concept of connection as a set of parallel state machines on the client and server that are able to handle packet loss.
