@@ -27,7 +27,7 @@ This tumbling is why I chose a cube instead a sphere. I _want_ this complex, unp
 
 If you want to know where a rigid body is at a future time, you have to run the whole physics simulation: dynamics, collision detection, collision response and friction in order to find out!
 
-## An interactive world
+## An Interactive World
 
 Networking a physics simulation is easy if there is only one object interacting with a static world. It starts to get interesting when the player interacts with other physically simulated objects, _especially_ when those objects push back and affect the motion of the player. 
 
@@ -53,7 +53,7 @@ To implement this I raycast to find the intersection with the ground below the c
 
 Then all non-player cubes within a certain distance of that intersection point have a force applied proportional to their distance from this point and away from it, so they are pushed away out of the way like leaves from a leaf blower.
 
-## A complicated case
+## A Complicated Case
 
 I also wanted a very complex coupled motion between the player and non-player cubes such that the player and the objects its interacting with become one single system, a group of rigid bodies joined together by constraints. 
 
