@@ -174,9 +174,11 @@ Back on the client, while in the **connecting** state the client listens for <u>
 
 Once the client hits **connected** it starts sending connection payload packets to the server. If no packets are received from the server in 5 seconds, the client times out and transitions to **disconnected**.
 
-## Limitations
+## Making it More Robust
 
-...
+The system presented above is a good starting point, but it's not remotely hardened enough to use in a production environment:
+
+
 
 
 
