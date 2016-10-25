@@ -26,7 +26,7 @@ But why is it in 2016 that discussions about UDP vs. TCP are still so controvers
 
 Clearly this is a solved problem. **The game industry uses UDP.**
 
-So what's going on? Why do so many games go through all the effort of building their own custom network protocol on top of UDP instead of just using TCP? What is it about the specific use case of first person shooters that makes a protocol built on top of UDP such a slam dunk?
+So what's going on? Why do so many games go through all the effort of building their own custom network protocol on top of UDP instead of just using TCP? What is it about the specific use case of first person shooters that makes a protocol built on top of UDP a slam dunk?
 
 ## Why First Person Shooters Use UDP
 
@@ -34,38 +34,27 @@ First person shooters are different to web servers[*](#quic_footnote).
 
 First person shooters send **time critical data**.
 
-This data includes player inputs sent from client to server, and the state of the world at the current time sent from the server to clients. If this data arrives late, it is _useless_ and must be thrown away. The client has no use for the state of the world 1/2 a second ago, and the server has no use for player inputs from the past.
+This data includes player inputs sent from client to server, and the state of the world sent from the server to clients. If this data arrives late, it is _useless_ and is thrown away; the client has no use for the state of the world 1/2 a second ago, and the server has no use for player input from the past.
 
-So, why can't we use TCP for time critical data? The answer is that TCP delivers all data reliably and in-order, and to do this on top of IP, which is unreliable and unordered, it holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't!)* are resent over the network.
+So, why can't we use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP, which is unreliable and unordered, it holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't!)* are resent over the network. 
 
-To see why this is such a huge problem for time critical data, consider a game server sending 10 packets per-second to a client, where the client advances forward in time and wants to display the most recent state of the world to the player. You know, like pretty much every FPS out there.
+This is known as **head of line blocking** and it's a huge problem for time critical data. To understand why, consider a game server sending 10 packets per-second to a client. The client advances time forward and wants to display the most recent state it has received from the server.
 
-Each packet sent from server to client over one second describes the state of the world at a specific time:
+<img src="/img/network-protocol/client-time.png" width="100%"/>
 
-        t = 10.0
-        t = 10.1
-        t = 10.2
-        t = 10.3
-        t = 10.4
-        t = 10.5
-        t = 10.6
-        t = 10.7
-        t = 10.8
-        t = 10.9
+But if the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access t = 10.1 and 10.2, even when these packets have already arrived over the network and contain the state the client wants to show to the player. Worse still, by the time the resent packet arrives, it's far, far too late to do anything useful with it. The client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!
 
-If the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access packets t = 10.1 and 10.2, even though they've already arrived over the network and are the most recent state the client wants to display. Worse still, by the time the resent packet arrives it's far too late to do anything useful with it. The client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!
+So why resend dropped packets at all? **BINGO!** What we'd really like is an option to tell TCP: "Hey, I don't care about old packets being resent, by they time they arrive I can't use them anyway, so just let me skip over and access the most recent data". But TCP does not give us this option. All data must be delivered reliably and in-order. It's simply not possible to skip over dropped data with TCP.
 
-So why resend lost packets at all? **BINGO**. What we'd really like is an option to tell TCP: "Hey, I don't care about old packets being resent, just let me skip over them and access the most recent data". But TCP does not give us this option. All data must be delivered reliably and in-order. It's simply not possible to skip over dropped data with TCP.
+This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches corresponding to multiples of RTT are added to the stream as TCP waits for dropped packets to be resent, which means additional buffering is needed to smooth out these hitches (adding even more latency), or long pauses where the game freezes and is non-responsive.
 
-This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches are added to the stream as TCP waits for dropped packets to be resent, which means additional buffering to smooth out these hitches, or long pauses where the game freezes and is non-responsive.
-
-Neither option is acceptable for first person shooters, and this is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a protocol built on top of it can access the most recent data without head of line blocking.
+Neither option is acceptable for first person shooters, and this is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a protocol built on top of it can access the most recent data without waiting for lost packets to be resent.
 
 But, using UDP comes at a cost: 
 
 **UDP doesn't provide any concept of connection.**
 
-We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques first person shooters use when creating their custom protocols over UDP. I know, I've worked on them. You can use this protocol for either games or non-gaming applications and provided that the data you send is time critical, I promise you, it's well worth the effort.
+We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques first person shooters use when creating their protocols over UDP. I know, I've worked on them. You can use this protocol for either games or non-gaming applications and provided the data you send is time critical, I promise you, it's well worth the effort.
 
 ## What We're Building
 
@@ -81,13 +70,15 @@ If a client requests connection, but no slots are available, the server is full 
 
 <img src="/img/network-protocol/server-is-full.png" width="100%"/>
 
-Once a client is connected, packets are exchanged in both directions. These packets form the basis for whatever custom protocol between the client and server which is game specific.
+Once a client is connected, packets are exchanged in both directions. These packets form the basis for the custom protocol between the client and server which is game specific.
 
 <img src="/img/network-protocol/client-packets.png" width="100%"/>
 
-In a first person shooter, packets are sent continuously in both directions. The clients sents player input to the server rapidly (typically 60HZ), while receiving the most recent state of the world from the server at 10, 20 or even 60 times per-second.
+In a first person shooter, packets are sent continuously in both directions. The clients sends input to the server rapidly typically at 30 or 60 packets per-second, while receiving the most recent state of the world from the server 10, 20 or even 60 times per-second.
 
-Under such a situation there is no need for keep-alive packets. If at any point packets stop being received from the other side then the connection should time out. No packets for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want. When a client slot times out on the server, it becomes available for another client to connect. When the client times out, it transitions to an error state.
+Under such a situation there is no need for keep-alive packets. If at any point packets stop being received from the other side then the connection times out. No packets for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want. 
+
+When a client slot times out on the server, it becomes available for other clients to connect. When the client times out, it transitions to an error state.
 
 ## How Many Clients Per-Server?
 
