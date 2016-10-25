@@ -38,7 +38,7 @@ This data includes player inputs sent from client to server, and the state of th
 
 So, why can't we use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP, which is unreliable and unordered, it holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't!)* are resent over the network. 
 
-This is known as **head of line blocking** and it's a huge problem for time critical data. To understand why, consider a game server sending 10 packets per-second to a client. The client advances time forward and wants to display the most recent state it has received from the server.
+This is known as **head of line blocking** and it's a huge problem for time critical data. To understand why, consider a game server sending the state of the world to a client 10 packets per-second. The client advances time forward and wants to display the most recent state it has received from the server.
 
 <img src="/img/network-protocol/client-time.png" width="100%"/>
 
@@ -46,15 +46,15 @@ But if the packet containing state for time t = 10.0 is lost, under TCP we must 
 
 So why resend dropped packets at all? **BINGO!** What we'd really like is an option to tell TCP: "Hey, I don't care about old packets being resent, by they time they arrive I can't use them anyway, so let me skip over them and access the most recent data". But TCP does not give us this option. All data must be delivered reliably and in-order. It's simply not possible to skip over dropped data with TCP.
 
-This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches corresponding to multiples of RTT are added to the stream as TCP waits for dropped packets to be resent, which means additional buffering is needed to smooth out these hitches (adding even more latency), or long pauses where the game freezes and is non-responsive.
+This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches corresponding to multiples of RTT are added to the stream as TCP waits for dropped packets to be resent, which means additional buffering to smooth out these hitches (adding even more latency), or long pauses where the game freezes and is non-responsive.
 
-Neither option is acceptable for first person shooters, and this is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a protocol built on top of UDP can access the most recent data without waiting for lost packets to be resent and implement whatever reliability it needs in radically different ways to TCP.
+Neither option is acceptable for first person shooters, and this is why virtually all first person shooters are networked using UDP. UDP does not provide any reliability or ordering, so a protocol built on top of UDP can access the most recent data without waiting for lost packets to be resent. Protocols built on top of UDP are also free to implement whatever reliability they need in radically different ways to TCP.
 
 But, using UDP comes at a cost: 
 
 **UDP doesn't provide any concept of connection.**
 
-We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques first person shooters use when creating their protocols over UDP. I know, I've worked on a few. You can use this protocol for games or non-gaming applications and provided the data you send is time critical, I promise you, it's well worth the effort.
+We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques first person shooters use when creating their protocols over UDP. I know, I've worked on a few. You can use this client/server protocol for games or non-gaming applications and, provided the data you send is time critical, I promise you, it's well worth the effort.
 
 ## What We're Building
 
@@ -78,17 +78,32 @@ In a first person shooter, packets are sent continuously in both directions. The
 
 Under such a situation there is no need for keep-alive packets. If at any point packets stop being received from the other side then the connection simply times out. No packets for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want. 
 
-When a client slot times out on the server, it becomes available for other clients to connect. When the client times out, it transitions to an error state. I like to maintain an timeout error state for each state a client can time out from, so it's clear looking at the error state how the timeout occured. This becomes important as the connection state machine become more complex.
+When a client slot times out on the server, it becomes available for other clients to connect. When the client times out, it transitions to an error state.
+
+## Connection State Machine
+
+...
+
+
+
+
+
+
+
+
+
+
+
 
 ## How Many Clients Per-Server?
 
 How many client slots should you open? That depends entirely on the game. I recommend the approach in this article for games with [2,64] clients per-server. Any more than 64 and you start creeping in to MMO territory where the best practice may differ from what is presented here. You'll notice that most first person shooters in 2016 are in this range. For example, [Battlefield 1](https://en.wikipedia.org/wiki/Battlefield_1) has a maximum of 64 players.
 
-This is a far cry from web development where [C10K is old hat](https://linuxjedi.co.uk/posts/2015/Feb/14/why-the-c10k-problem-is-important/). What's going on? Why are these game servers able to handle only a tiny fraction of the number of connected clients as web servers from the late 90s? 
+This is a far cry from web development where [C10K is old hat](https://linuxjedi.co.uk/posts/2015/Feb/14/why-the-c10k-problem-is-important/). What's going on? Why are game servers able to handle only a tiny fraction of the number of connected clients of a web server from the late 90s? :)
 
-The key thing to remember is that a game server represents a shared instance of the game world where players can directly interact with each other. The game server doesn't just handle requests and responses but runs a simulation of the entire game world that steps forward 60 times per-second. The whole game, player processing, shooting, hit detection, scripting, physics and AIs.
+The key thing to remember is that a game server represents a shared instance of the game world where players can directly interact with each other. Shooting enemies, helping teammates, fighting against the same AIs and inhabiting the same world. Any change made by one player must be reflected to the rest of the players in that instance. 
 
-Because of this, game servers are completely stateful, not stateless, and tend to be simulation bound, not I/O bound. Effort spent optimizing game servers is less about reducing I/O overhead, but on how cheaply the game simulation can be made to run, so more game server instances, and therefore more players, can be handled by the same amount of dedicated server hardware.
+Each client slot corresponds to a player in that game instance. This isn't a stateless system. This isn't request/response. The game server runs a simulation of the entire game world that steps forward 60 times per-second. The server _is_ the game. Because of this, game servers tend to be simulation, not I/O bound. Effort spent optimizing game servers is all about how cheaply the game simulation can be made to run, so more game server instances, and therefore more players, can be handled by the same amount of hardware. 
 
 In most cases each client slot corresponds to a connected player in the game. For this reason it's good for clients to know which client slot they are assigned to, so they know if they are player 1, player 2 or player n. By convention, player numbers are usually considered to be client index + 1. 
 
