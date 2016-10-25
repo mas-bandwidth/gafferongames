@@ -80,7 +80,7 @@ Under such a situation there is no need for keep-alive packets. If at any point 
 
 When a client slot times out on the server, it becomes available for other clients to connect. When the client times out, it transitions to an error state.
 
-## Connection State Machine
+## Basic Connection State Machine
 
 First up we have the client state machine. 
 
@@ -92,24 +92,26 @@ The client is in one of three states:
 
 Initially the client starts in **disconnected**, and is told to connect to a server with a particular IP address and port.
 
-At this point the client transitions to the **connecting** state and sends _connection request_ packets to the server. They look something like this:
+At this point the client transitions to the **connecting** state and sends <u>_connection request_</u> packets to the server. They look something like this:
 
 <img src="/img/network-protocol/connection-request-packet.png" width="100%"/>
 
 The CRC32 and implicit protocol id in the packet header allow the server to trivially reject UDP packets not composed by our protocol. For details, please see [Reading and Writing Packets](http://gafferongames.com/building-a-game-network-protocol/reading-and-writing-packets/) and [Serialization Strategies](http://gafferongames.com/building-a-game-network-protocol/serialization-strategies/).
 
-Since connection request packets are sent over UDP, they may be lost, received in duplicate or out of order. Because of this we do two things: 1) we keep resending packets corresponding to the current client state until we get a response from the server or time out, and 2) on both client and server we ignore any packets that don't correspond to what we are expecting, since a lot of redundant packets are flying over the network.
+Since connection request packets are sent over UDP, they may be lost, received in duplicate or out of order. Because of this we do two things: 1) we keep resending packets for the client state until we get a response from the server, or the client times out, and 2) on both client and server we ignore any packets that don't correspond to what we are expecting, since a lot of redundant packets are flying over the network.
 
-Now on the server side we have the following minimal data structure:
+On the server, we have the following minimal data structure:
 
         const int MaxClients = 64;
 
         class Server
         {
-            int m_maxClients;                 // dynamically configured max in [1,MaxClients]
+            int m_maxClients;                     // dynamically configured in [1,MaxClients]
             int m_numConnectedClients;
             bool m_clientConnected[MaxClients];
             Address m_clientAddress[MaxClients];
+
+            // ...
         };
 
 Which lets the server lookup a free slot for a client to join (if any are free):
@@ -138,37 +140,37 @@ Find the client index corresponding to an IP address and port:
 
 Check if a client is connected to a given slot:
 
-    const Address & Server::GetClientAddress( int clientIndex ) const
-    {
-        assert( clientIndex >= 0 );
-        assert( clientIndex < m_maxClients );
-        return m_clientAddress[clientIndex];
-    }
+        const Address & Server::GetClientAddress( int clientIndex ) const
+        {
+            assert( clientIndex >= 0 );
+            assert( clientIndex < m_maxClients );
+            return m_clientAddress[clientIndex];
+        }
 
 and retrieve a client’s IP address and port by client index:
 
-    const Address & Server::GetClientAddress( int clientIndex ) const
-    {
-        assert( clientIndex >= 0 );
-        assert( clientIndex < m_maxClients );
-        return m_clientAddress[clientIndex];
-    }
+        const Address & Server::GetClientAddress( int clientIndex ) const
+        {
+            assert( clientIndex >= 0 );
+            assert( clientIndex < m_maxClients );
+            return m_clientAddress[clientIndex];
+        }
 
-Using these queries we implement the following logic when a _connection request_ packet is received on the server:
+Using these queries we can implement the following logic when a <u>_connection request_</u> packet is received on the server:
 
-* If the server is full, reply with a _connection denied: server full_ response.
+* If the server is full, reply with <u>_connection denied: server is full_</u>.
 
-* If sender of the connection request is received that corresponds to the address of a client that is already connected, reply with _connection accepted_ because our previous response may have been dropped. If we don't resend this response, the client will never know they were accepted and will gets stuck in the **connecting** state until timing out.
+* If the sender corresponds to the address of a client that is already connected, reply with <u>_connection accepted_</u>. This is necessary because the first response may not have gotten through. If we don't resend this response, the client gets stuck in the **connecting** state until it times out.
 
-* Otherwise, this is new connection request from a new client and we have a slot free. Assign the client address that sent the connection request to the free slot and respond with _connection accepted_.
+* Otherwise, this connection request is from a new client and we have a slot free. Assign the client to the free slot and respond with <u>_connection accepted_</u>.
 
-The connection accepted packet tells the client which client index it was assigned, which the client uses so it knows which player it is in the game:
+The connection accepted packet tells the client which client index it was assigned, which the client uses to know which player it is in the game:
 
 <img src="/img/network-protocol/connection-accepted-packet.png" width="100%"/>
 
-Once the server sends the first connection accepted packet from it's point of view it considers that client fully connected. As the server ticks forward, it watches each connected client slot, and if no packets have been received from that client slot for 5 seconds, the slot times out and is reset, ready for another client to connect to it.
+Once the server sends the first connection accepted packet, from its point of view that client is fully connected. As the server ticks forward, it watches connected client slots, and if no packets have been received from that client for 5 seconds, the slot times out and is reset, ready for another client to connect.
 
-Back on the client, the client in the **connecting** state listens for _connection denied_ and _connection accepted_ packets from the server. Any other packets are ignored. If the client receives a _connection accepted_ packet, it transitions to **connected**. If it receives _connection denied_, or after 5 second hasn't received any suitable response for the server, it transitions to *disconnected*.
+Back on the client, while in the **connecting** state the client listens for <u>_connection denied_</u> and <u>_connection accepted_</u> packets from the server. Any other packets are ignored. If the client receives a <u>_connection accepted_</u> packet, it transitions to **connected**. If it receives <u>_connection denied_</u>, or after 5 second hasn't received any response from the server, it transitions to **disconnected**.
 
 Once the client hits **connected** it starts sending connection payload packets to the server. If no packets are received from the server in 5 seconds, the client times out and transitions to **disconnected**.
 
