@@ -172,157 +172,42 @@ Once the client hits **connected** it starts sending connection payload packets 
 
 ## Weaknesses of the Simple Connection Protocol
 
-This protocol is easy to implement, and it's a good starting point, but we can't use a protocol like this in production. 
-
-It simply has too many weaknesses:
+While this protocol is easy to implement, we can't use a protocol like this in production. It's way too naive. It simply has too many weaknesses to be taken seriously:
 
 * Spoofed packet source addresses can be used to redirect connection accepted responses to a target (victim) address. If the connection accepted packet is larger than the connection request packet, attackers can use this protocol as part of a [DDoS amplification attack](https://www.us-cert.gov/ncas/alerts/TA14-017A).
 
-* Spoofed packet source addresses can also be used to trivially fill all client slots on a server by sending connection request packets from n different IP addresses, where n is the maximum number of clients allowed per-server.
+* Spoofed packet source addresses can be used to trivially fill all client slots on a server by sending connection request packets from n different IP addresses, where n is the number of clients allowed per-server. This is a real problem for dedicated servers which cost the game developer money. Obviously you want to make sure that only real clients are filling slots on servers that you are paying for.
 
-* Even without spoofed packet source addresses, an attacker can trivially fill all client slots on a server by varying the client UDP port number on each client connection because clients are assigned to slots on a address + port basis. Due to NAT (network address translation) it's not advisable to treat the IP address alone as a unique client identifier, because multiple players behind the same NAT will be collapsed to the same IP address with only the port being different.
+* Even without spoofed packet source addresses, an attacker can trivially fill all slots on a server by varying the client UDP port number on each client connection because clients are assigned to slots on a address + port being unique basis. This isn't easy to fix because due to NAT (network address translation), different players behind the same router collapse to the same address with only the port being different. Even if you could filter out by address, we just circle back to spoofed packet source addresses.
 
-* Traffic between the client and server can be read and modified in transit by a third party.
+* Traffic between the client and server can be read and modified in transit by a third party. This is the last thing you want in a competitive game.
 
-* If an attacker knows the client and server IP addresses and ports, they can impersonate the client or server. This gives an attacker the power to completely a hijack the client’s connection and perform actions on their behalf.
+* If an attacker knows the client and server IP addresses and ports, they can impersonate the client or server. This gives an attacker the power to completely a hijack a client’s connection and perform actions on their behalf.
 
-* Once a client is connected to a server there is no way for them to disconnect cleanly. This creates a delay before the server realizes a client has disconnected, or before a client realizes the server has shut down. It would be nice if both the client and server could indicate a clean disconnect somehow, so the other side didn’t need to wait for timeout in the common case.
+* Once a client is connected to a server there is no way for them to disconnect cleanly, they can only time out. This creates a delay before the server realizes a client has disconnected, and before a client realizes the server has shut down. It would be nice if both the client and server could indicate a clean disconnect, so the other side didn’t need to wait for timeout in the common case.
 
-* Clean disconnection is usually implement with a disconnect packet sent, however because an attacker can impersonate the client and server with spoofed packets, doing so would give the attacker the ability to disconnect a client from the server provided client and server IP addresses and the structure of the disconnect packet.
+* Clean disconnection is usually implemented with a disconnect packet, however because an attacker can impersonate the client and server with spoofed packets, doing so would give the attacker the ability to disconnect a client from the server provided they know the client and server IP addresses and the structure of the disconnect packet.
 
-* If a client disconnects dirty and attempts to reconnect before their slot times out on the server, the server still thinks that client connected and replies with redundant <u>_connection accepted_</u> packets, which are necessary to handle packet loss. The client processes this response and thinks it is connected to the server but is actually in an undefined state.
+* If a client disconnects dirty and attempts to reconnect before their slot times out on the server, the server still thinks that client is connected and replies with connection accepted to handle packet loss on responses. The client processes the connection acceptepd response and thinks it's connected to the server, but is actually in an undefined state.
 
+While some of these problems require authentication and encryption before they can be fully solved, we can make some small steps forward to improve the protocol before we get to that. These changes are instructive.
 
+## Improving The Connection Protocol
 
+The first thing we want to do is only allow clients to connect if they can prove they are actually at the IP address and port they say they are.
 
+To do this, we no longer accept client connections immediately on connection request, but instead send back a challenge packet, and only complete connection when a client replies back with information they could only have obtained by receiving that challenge packet.
 
+The sequence of operations in a typical connect are now:
 
+* **client to server:** <u>_connection request_</u>
+* **server to client:** <u>_challenge_</u>
+* **client to server:** <u>_challenge response_</u>
+* **server to client:** <u>_connection accepted_</u>
 
+To implement this we need an additional data structure on the server. Somewhere to put the pending client challenges, so when a challenge response packet comes in from a client we can check against this data structure and make sure it's actually a response to a challenge we sent to that address.
 
+While the pending connect data structure can be made larger than the maximum number of connected clients, it is still ultimately finite and is still subject to attack. We'll cover some defenses against this in the next article. But for the moment, be happy at least that attackers can't progress to **connected** state with spoofed packet source addresses.
 
+To guard against our protocol we'll inflate client to server packets such that they are large relative to the responses on the server. This means we add padding to both <u>_conenction request_</u> and <u>_challenge response_</u> packets and enforce this padding on the server, ignoring any packets without the expected padding. Now that our protocol has a DDoS minification effect for requests -> responses, it's no longer attractive for people launching this sort of attack.
 
-
-
-
-
-
-<hr>
-<hr>
-<hr>
-<hr>
-
-_(very rough draft below here)_
-
-
-To handle this, instead of implementing some sort of reliability at this early stage, we'll create the concept of connection as a set of parallel state machines on the client and server that are able to handle packet loss.
-
-
-
-
-
-
-
-
-
-
-## How Many Clients Per-Server?
-
-How many client slots should you open? That depends entirely on the game. I recommend the approach in this article for games with [2,64] clients per-server. Any more than 64 and you start creeping in to MMO territory where the best practice may differ from what is presented here. You'll notice that most first person shooters in 2016 are in this range. For example, [Battlefield 1](https://en.wikipedia.org/wiki/Battlefield_1) has a maximum of 64 players.
-
-This is a far cry from web development where [C10K is old hat](https://linuxjedi.co.uk/posts/2015/Feb/14/why-the-c10k-problem-is-important/). What's going on? Why are game servers able to handle only a tiny fraction of the number of connected clients of a web server from the late 90s? :)
-
-The key thing to remember is that a game server represents a shared instance of the game world where players can directly interact with each other. Shooting enemies, helping teammates, fighting against the same AIs and inhabiting the same world. Any change made by one player must be reflected to the rest of the players in that instance. 
-
-Each client slot corresponds to a player in that game instance. This isn't a stateless system. This isn't request/response. The game server runs a simulation of the entire game world that steps forward 60 times per-second. The server _is_ the game. Because of this, game servers tend to be simulation, not I/O bound. Effort spent optimizing game servers is all about how cheaply the game simulation can be made to run, so more game server instances, and therefore more players, can be handled by the same amount of hardware. 
-
-In most cases each client slot corresponds to a connected player in the game. For this reason it's good for clients to know which client slot they are assigned to, so they know if they are player 1, player 2 or player n. By convention, player numbers are usually considered to be client index + 1. 
-
-This way the client index lets players identify themselves and other players in the game, both when sending and receiving packets and in game code. For example, the server might send a packet to client 4, and receive a packet from client 10, while in a first person shooter you are killed by player 5 and the camera zooms in on that player and maybe shows a kill replay from their point of view. This is how we want everything to appear in our abstraction, not IP addresses, but client indices in [0,MaxClients-1].
-
-Why is it so important to use client indices? The answer is security. The last thing we want in a competitive game is to expose player's IP addresses to each other, because some people try to DDoS people off the Internet. High profile streamers deal with this all the time. For these reasons, and many others, virtual client slots make a lot of sense.
-
-## Implementation
-
-_(todo: draft below here...)_
-
-Let's get down to implementation.
-
-First, the client and server both have their own UDP socket. Let's say the client binds to an ephemiral port, and the server binds to port 50000. 
-
-Unlike a TCP-server where each accepted connection gets its own socket, the UDP server processes packets for all clients on the same socket. Also, since UDP is unreliabile, we need a strategy for packets being lost. We do this not by implementing a complicated reliability system at this early stage, but by implementing parallel state machines on the client and on the server:
-
-At this early stage we have this state machine on the client:
-
-* Disconnected
-* Connecting
-* Connected
-
-And on the server, let's start with a bool "connected" for each slot, and the client address that is assigned to that slot:
-
-    const int MaxClients = 64;
-
-    class Server
-    {
-        int m_numConnectedClients;
-        bool m_clientConnected[MaxClients];
-        Address m_clientAddress[MaxClients];
-    };
-
-While the client is in the connection request state, it sends "connection request" packets to the server 10 times per-second. This continues until the client receives a response from the server, or the connection request times out. This simple approach works well and leaves the complexity of implementing reliability over UDP until _after_ a connection has been established.
-
-For example “connection accepted” response packet could be lost. This is handled by making the server respond to each request (or at least, setting a dirty flag to trigger a response) each time a request is received. That way if the first “connect accepted” packet doesn’t get through, the next “connection request” from the client triggers another response. This way, by some sort of strange induction, the client and server are able to advance forward through an arbitrarily complicated state machine until they are both connected.
-
-On the server there have a similar state machine, but this time it is per-client. For the moment, lets keep it simple with a basic data structure which simply keeps track of whether a client slot is assigned to a particular client IP+port:
-
-Which lets the server lookup a free slot for a client to join (if any are free):
-
-        int Server::FindFreeClientIndex() const
-        {
-            for ( int i = 0; i < m_maxClients; ++i )
-            {
-                if ( !m_clientConnected[i] )
-                    return i;
-            }
-            return -1;
-        }
-
-Find the client index corresponding to an IP address and port:
-
-        int Server::FindExistingClientIndex( const Address & address ) const
-        {
-            for ( int i = 0; i < m_maxClients; ++i )
-            {
-                if ( m_clientConnected[i] && m_clientAddress[i] == address )
-                    return i;
-            }
-            return -1;
-        }
-
-Check if a client is connected to a given slot:
-
-    const Address & Server::GetClientAddress( int clientIndex ) const
-    {
-        assert( clientIndex >= 0 );
-        assert( clientIndex < m_maxClients );
-        return m_clientAddress[clientIndex];
-    }
-
-and retrieve a client’s IP address and port by client index:
-
-    const Address & Server::GetClientAddress( int clientIndex ) const
-    {
-        assert( clientIndex >= 0 );
-        assert( clientIndex < m_maxClients );
-        return m_clientAddress[clientIndex];
-    }
-
-For example "connection accepted" response packet could be lost. This is handled by making the server respond to each request (or at least, setting a dirty flag to trigger a response) each time a request is received. That way if the first "connect accepted" packet doesn't get through, the next "connection request" from the client triggers another response. This way, by some sort of strange induction, the client and server are able to advance forward through an arbitrarily complicated state machine until they are both connected.
-
-On the server, we add the following data structure:
-
-
-
-
-
-
-With these simple queries, the server is ready to start processing connection requests from clients.
