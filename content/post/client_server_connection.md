@@ -13,7 +13,7 @@ Hi, I'm [Glenn Fiedler](/about) and welcome to **[Building a Game Network Protoc
 
 In this article we're going to build a client/server connection on top of UDP.
 
-I can guarantee you already at this point that some people have decided not to read this article because I'm obviously a fool. Who could possibly justify all the effort required to build a completely custom client/server network protocol over UDP when for so many people, TCP is simply good enough?
+I can guarantee you already at this point that some people have decided not to read this article because I'm obviously a fool. I mean, who could possibly justify all the effort required to build a completely custom client/server network protocol over UDP when for so many people, TCP is simply good enough?
 
 But why is it in 2016 that discussions about UDP vs. TCP are still so controversial, when virtually all first person shooters are networked with UDP?
 
@@ -53,6 +53,8 @@ But, using UDP comes at a cost:
 **UDP doesn't provide any concept of connection.**
 
 We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques first person shooters use when creating their protocols over UDP. I know, I've worked on a few. You can use this client/server protocol for games or non-gaming applications and, provided the data you send is time critical, I promise you, it's well worth the effort.
+
+<a name="quic_footnote"></a> _\* These days even web servers are transitioning to UDP via [Google's QUIC](https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/). If you still think TCP is good enough for time critical data in 2016, I encourage you to put that in your pipe and smoke it :)_
 
 ## What We're Building
 
@@ -305,5 +307,3 @@ On the server, we add the following data structure:
 
 
 With these simple queries, the server is ready to start processing connection requests from clients.
-
-<a name="quic_footnote"></a> _\* These days even web servers are transitioning to UDP via [Google's QUIC](https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/). If you still think TCP is good enough for time critical data in 2016, I encourage you to put that in your pipe and smoke it._
