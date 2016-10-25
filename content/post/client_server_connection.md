@@ -40,7 +40,7 @@ This is known as **head of line blocking** and it's a huge problem for time crit
 
 <img src="/img/network-protocol/client-time.png" width="100%"/>
 
-But if the packet containing state for time t = 10.0 is lost, under TCP we must wait for that packet to be resent before we can access t = 10.1 and 10.2, even though those packets have already arrived and contain the state the client wants to show. Worse still, by the time the resent packet arrives, it's far too late to actually do anything useful with it. The client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!
+But if the packet containing state for time t = 10.0 is lost, under TCP we must for it to be resent before we can access t = 10.1 and 10.2, even though those packets have already arrived and contain the state the client wants to show. Worse still, by the time the resent packet arrives, it's far too late to actually do anything useful with it. The client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!
 
 So why resend dropped packets at all? **BINGO!** What we'd really like is an option to tell TCP: "Hey, I don't care about old packets being resent, by they time they arrive I can't use them anyway, so just let me skip over them and access the most recent data". But TCP simply does not give us this option. All data must be delivered reliably and in-order.
 
