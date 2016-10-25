@@ -74,7 +74,7 @@ Once a client is connected, packets are exchanged in both directions. These pack
 
 <img src="/img/network-protocol/client-server-packets.png" width="100%"/>
 
-In a first person shooter, packets are sent continuously in both directions. The clients send input to the server typically at 30 or 60 packets per-second, while the state of the world is sent from the server to all clients 10, 20 or even 60 times per-second.
+In a first person shooter, packets are sent continuously in both directions. Clients send input to the server typically 30 or 60 times per-second, while the state of the world is sent from the server to all clients 10, 20 or even 60 times per-second.
 
 Under such a situation there is no need for keep-alive packets. If at any point packets stop being received from the other side then the connection simply times out. No packets for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want. 
 
