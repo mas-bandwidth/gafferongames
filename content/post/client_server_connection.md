@@ -54,7 +54,7 @@ But, using UDP comes at a cost:
 
 **UDP doesn't provide any concept of connection.**
 
-We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques first person shooters use when creating their protocols over UDP. I know, [I've worked on them](/about). You can use this protocol for games or non-gaming applications and provided the data you send is time critical, I promise you, it's well worth the effort.
+We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques first person shooters use when creating their protocols over UDP. I know, I've worked on a few. You can use this protocol for games or non-gaming applications and provided the data you send is time critical, I promise you, it's well worth the effort.
 
 ## What We're Building
 
