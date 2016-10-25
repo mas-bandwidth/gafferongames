@@ -82,9 +82,50 @@ When a client slot times out on the server, it becomes available for other clien
 
 ## Connection State Machine
 
-...
+First up we have the client state machine. 
+
+The client is in one of three states:
+
+* Disconnected
+* Connecting
+* Connected
+
+Initially the client starts in **disconnected**, and is told to connect to a server with a particular IP address and port:
+
+At this point the client transitions to the **connecting** state and sends _connection request_ packets to the server. They look something like this:
+
+<img src="/img/network-protocol/connection-request-packet.png" width="100%"/>
+
+The CRC32 and implicit protocol id in the packet header are there so the server can trivially reject UDP packets not composed by our protocol. For more details about reading and writing packets, please see [Reading and Writing Packets](http://gafferongames.com/building-a-game-network-protocol/reading-and-writing-packets/) and [Serialization Strategies](http://gafferongames.com/building-a-game-network-protocol/serialization-strategies/).
+
+Since connection request packets are sent over UDP, they may be lost, or received in duplicate or out of order. Because of this we do two things: 1) we keep resending packets corresponding to the current client state until we get a response or we time out, and 2) on both sides we ignore any packets or responses that don't correspond to what we are expecting, since lots of redundant packets are flying over the network, a few stale packets are sure to creep through.
+
+Now on the server side we have the following minimal data structure:
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<hr>
+
+<hr>
+<hr>
+<hr>
+
+
+To handle this, instead of implementing some sort of reliability at this early stage, we'll create the concept of connection as a set of parallel state machines on the client and server that are able to handle packet loss.
 
 
 
