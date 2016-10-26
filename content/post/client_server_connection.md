@@ -76,11 +76,13 @@ Once a client is connected, packets are exchanged in both directions. These pack
 
 In a first person shooter, packets are sent continuously in both directions. Clients send input to the server typically 30 or 60 times per-second, while the state of the world is sent from the server to all clients 10, 20 or even 60 times per-second.
 
-Under such a situation there is no need for keep-alive packets. If at any point packets stop being received from the other side then the connection simply times out. No packets for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want. 
+Because of this steady flow of packets in both directions there is no need for keep-alive packets. If at any point packets stop being received from the other side, the connection simply times out. No packets for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want. 
 
 When a client slot times out on the server, it becomes available for other clients to connect. When the client times out, it transitions to an error state.
 
 ## Simple Connection Protocol
+
+Let's get started with the implementation of a simple protocol. It's a bit basic and a more than a bit naive, but it's a good starting point and we'll build on it.
 
 First up we have the client state machine. 
 
@@ -90,15 +92,15 @@ The client is in one of three states:
 * Connecting
 * Connected
 
-Initially the client starts in **disconnected**, and is told to connect to a server with a particular IP address and port.
+Initially the client starts in **disconnected**, and is told to connect to a server with a particular IP address and port. At this point the client transitions to the **connecting** state and sends <u>_connection request_</u> packets to the server. 
 
-At this point the client transitions to the **connecting** state and sends <u>_connection request_</u> packets to the server. They look something like this:
+They look something like this:
 
 <img src="/img/network-protocol/connection-request-packet.png" width="100%"/>
 
-The CRC32 and implicit protocol id in the packet header allow the server to trivially reject UDP packets not composed by our protocol. For details, please see [Reading and Writing Packets](http://gafferongames.com/building-a-game-network-protocol/reading-and-writing-packets/) and [Serialization Strategies](http://gafferongames.com/building-a-game-network-protocol/serialization-strategies/).
+The CRC32 and implicit protocol id in the packet header allow the server to trivially reject UDP packets not belonging to this protocol or from a different version of it. For details, please see [Reading and Writing Packets](http://gafferongames.com/building-a-game-network-protocol/reading-and-writing-packets/) and [Serialization Strategies](http://gafferongames.com/building-a-game-network-protocol/serialization-strategies/).
 
-Since connection request packets are sent over UDP, they may be lost, received in duplicate or out of order. Because of this we do two things: 1) we keep resending packets for the client state until we get a response from the server, or the client times out, and 2) on both client and server we ignore any packets that don't correspond to what we are expecting, since a lot of redundant packets are flying over the network.
+Since connection request packets are sent over UDP, they may be lost, received in duplicate, or out of order. Because of this we do two things: 1) we keep resending packets for the client state until we get a response from the server, or the client times out, and 2) on both client and server we ignore any packets that don't correspond to what we are expecting, since a lot of redundant packets are flying over the network.
 
 On the server, we have the following minimal data structure:
 
@@ -152,11 +154,11 @@ and retrieve a client’s IP address and port by client index:
             return m_clientAddress[clientIndex];
         }
 
-Using these queries we can implement the following logic when a <u>_connection request_</u> packet is received on the server:
+Using these queries we implement the following logic when a <u>_connection request_</u> packet is received on the server:
 
 * If the server is full, reply with <u>_connection denied: server is full_</u>.
 
-* If the sender corresponds to the address of a client that is already connected, reply with <u>_connection accepted_</u>. This is necessary because the first response may not have gotten through. If we don't resend this response, the client gets stuck in the **connecting** state until it times out.
+* If the sender corresponds to the address of a client that is already connected, reply with <u>_connection accepted_</u>. This is necessary because the first response packet may not have gotten through. If we don't resend this response, the client gets stuck in the **connecting** state until it times out.
 
 * Otherwise, this connection request is from a new client and we have a slot free. Assign the client to the free slot and respond with <u>_connection accepted_</u>.
 
@@ -164,9 +166,9 @@ The connection accepted packet tells the client which client index it was assign
 
 <img src="/img/network-protocol/connection-accepted-packet.png" width="100%"/>
 
-Once the server sends the first connection accepted packet, from its point of view that client is fully connected. As the server ticks forward, it watches connected client slots, and if no packets have been received from that client for 5 seconds, the slot times out and is reset, ready for another client to connect.
+Once the server sends a connection accepted packet, from its point of view it considers that client fully connected. As the server ticks forward, it watches connected client slots, and if no packets have been received from that client for 5 seconds, the slot times out and is reset, ready for another client to connect.
 
-Back on the client, while in the **connecting** state the client listens for <u>_connection denied_</u> and <u>_connection accepted_</u> packets from the server. Any other packets are ignored. If the client receives a <u>_connection accepted_</u> packet, it transitions to **connected**. If it receives <u>_connection denied_</u>, or after 5 second hasn't received any response from the server, it transitions to **disconnected**.
+Back on the client, while in the **connecting** state the client listens for <u>_connection denied_</u> and <u>_connection accepted_</u> packets from the server. Any other packets are ignored. If the client receives <u>_connection accepted_</u>, it transitions to **connected**. If it receives <u>_connection denied_</u>, or after 5 seconds hasn't received any response from the server, it transitions to **disconnected**.
 
 Once the client hits **connected** it starts sending connection payload packets to the server. If no packets are received from the server in 5 seconds, the client times out and transitions to **disconnected**.
 
@@ -174,21 +176,21 @@ Once the client hits **connected** it starts sending connection payload packets 
 
 While this protocol is easy to implement, we can't use a protocol like this in production. It's way too naive. It simply has too many weaknesses to be taken seriously:
 
-* Spoofed packet source addresses can be used to redirect connection accepted responses to a target (victim) address. If the connection accepted packet is larger than the connection request packet, attackers can use this protocol as part of a [DDoS amplification attack](https://www.us-cert.gov/ncas/alerts/TA14-017A).
+* Spoofed packet source addresses can be used to redirect connection accepted responses to a target (victim) address. If the connection accepted packet is larger than the connection request packet, attackers can use this connection protocol as part of a [DDoS amplification attack](https://www.us-cert.gov/ncas/alerts/TA14-017A).
 
-* Spoofed packet source addresses can be used to trivially fill all client slots on a server by sending connection request packets from n different IP addresses, where n is the number of clients allowed per-server. This is a real problem for dedicated servers which cost the game developer money. Obviously you want to make sure that only real clients are filling slots on servers that you are paying for.
+* Spoofed packet source addresses can be used to trivially fill all client slots on a server by sending connection request packets from n different IP addresses, where n is the number of clients allowed per-server. This is a real problem for dedicated servers. Obviously you want to make sure that only real clients are filling slots on servers you are paying for.
 
-* Even without spoofed packet source addresses, an attacker can trivially fill all slots on a server by varying the client UDP port number on each client connection because clients are assigned to slots on a address + port being unique basis. This isn't easy to fix because due to NAT (network address translation), different players behind the same router collapse to the same address with only the port being different. Even if you could filter out by address, we just circle back to spoofed packet source addresses.
+* An attacker can trivially fill all slots on a server by varying the client UDP port number on each client connection. This is because clients are considered unique on an address + port basis. This isn't easy to fix because due to NAT (network address translation), different players behind the same router collapse to the same IP address with only the port being different.
 
-* Traffic between the client and server can be read and modified in transit by a third party. This is the last thing you want in a competitive game.
+* Traffic between the client and server can be read and modified in transit by a third party. While the CRC32 protects against packet corruption, an attacker would simply recalculate the CRC32 to match the modified packet.
 
 * If an attacker knows the client and server IP addresses and ports, they can impersonate the client or server. This gives an attacker the power to completely a hijack a client’s connection and perform actions on their behalf.
 
-* Once a client is connected to a server there is no way for them to disconnect cleanly, they can only time out. This creates a delay before the server realizes a client has disconnected, and before a client realizes the server has shut down. It would be nice if both the client and server could indicate a clean disconnect, so the other side didn’t need to wait for timeout in the common case.
+* Once a client is connected to a server there is no way for them to disconnect cleanly, they can only time out. This creates a delay before the server realizes a client has disconnected, or before a client realizes the server has shut down. It would be nice if both the client and server could indicate a clean disconnect, so the other side didn’t need to wait for timeout in the common case.
 
-* Clean disconnection is usually implemented with a disconnect packet, however because an attacker can impersonate the client and server with spoofed packets, doing so would give the attacker the ability to disconnect a client from the server provided they know the client and server IP addresses and the structure of the disconnect packet.
+* Clean disconnection is usually implemented with a disconnect packet, however because an attacker can impersonate the client and server with spoofed packets, doing so would give the attacker the ability to disconnect a client from the server whenever they like, provided they know the client and server IP addresses and the structure of the disconnect packet.
 
-* If a client disconnects dirty and attempts to reconnect before their slot times out on the server, the server still thinks that client is connected and replies with connection accepted to handle packet loss on responses. The client processes the connection acceptepd response and thinks it's connected to the server, but is actually in an undefined state.
+* If a client disconnects dirty and attempts to reconnect before their slot times out on the server, the server still thinks that client is connected and replies with <u>_connection accepted_</u> to handle packet loss. The client processes this response and thinks it's connected to the server, but is actually in an undefined state.
 
 While some of these problems require authentication and encryption before they can be fully solved, we can make some small steps forward to improve the protocol before we get to that. These changes are instructive.
 
@@ -196,9 +198,11 @@ While some of these problems require authentication and encryption before they c
 
 The first thing we want to do is only allow clients to connect if they can prove they are actually at the IP address and port they say they are.
 
-To do this, we no longer accept client connections immediately on connection request, but instead send back a challenge packet, and only complete connection when a client replies back with information they could only have obtained by receiving that challenge packet.
+To do this, we no longer accept client connections immediately on connection request, instead sending back a challenge packet, and only completing connection when a client replies back with information that can only be obtained by receiving that challenge packet.
 
-The sequence of operations in a typical connect are now:
+The sequence of operations in a typical connect is now:
+
+_(todo: do this as a diagram, it'll look much better)_
 
 * **client to server:** <u>_connection request_</u>
 * **server to client:** <u>_challenge_</u>
@@ -211,3 +215,14 @@ While the pending connect data structure can be made larger than the maximum num
 
 To guard against our protocol we'll inflate client to server packets such that they are large relative to the responses on the server. This means we add padding to both <u>_conenction request_</u> and <u>_challenge response_</u> packets and enforce this padding on the server, ignoring any packets without the expected padding. Now that our protocol has a DDoS minification effect for requests -> responses, it's no longer attractive for people launching this sort of attack.
 
+Something something:
+
+<img src="/img/network-protocol/connection-request-packet-2.0.png" width="100%"/>
+
+Something something:
+
+<img src="/img/network-protocol/challenge-packet.png" width="100%"/>
+
+Something something:
+
+<img src="/img/network-protocol/challenge-response-packet.png" width="100%"/>
