@@ -206,30 +206,34 @@ To implement this we need an additional data structure on the server. Somewhere 
 
 While the pending connect data structure can be made larger than the maximum number of connected clients, it's still ultimately finite and is therefore subject to attack. We'll cover some defenses against this in the next article. But for the moment, be happy at least that attackers can't progress to the **connected** state with spoofed packet source addresses.
 
-Next, to guard against our protocol being used in a DDoS amplification attack, we'll inflate client to server packets so they're large relative to the response packet sent by the server. This means we add padding to both <u>_connection request_</u> and <u>_challenge response_</u> packets and enforce this padding on the server, ignoring any packets without the expected padding. Now our protocol effectively has DDoS _minification_ for requests -> responses, making it highly unattractive for anyone thinking of launching this kind of attack.
+Next, to guard against our protocol being used in a DDoS amplification attack, we'll inflate client to server packets so they're large relative to the response packet sent from the server. This means we add padding to both <u>_connection request_</u> and <u>_challenge response_</u> packets and enforce this padding on the server, ignoring any packets without it. Now our protocol effectively has DDoS _minification_ for requests -> responses, making it highly unattractive for anyone thinking of launching this kind of attack.
 
-Finally, we'll do one last small thing to improve the robustness and security of the protocol. It's not perfect, we need authentication and encryption for that, but it at least it ups the ante, requiring attackers to actually sniff traffic in order to impersonate the client or server.
+Finally, we'll do one last small thing to improve the robustness and security of the protocol. It's not perfect, we need authentication and encryption for that, but it at least it ups the ante, requiring attackers to actually sniff traffic in order to impersonate the client or server. We'll add some unique random identifiers, or 'salts', to distinguish each client session from each other.
 
 The connection request packet now looks like this:
 
 <img src="/img/network-protocol/connection-request-packet-2.0.png" width="100%"/>
 
-The client salt in the packet is a random 64 bit integer rolled each time the client starts a new connect. This distinguishes packets from the current connection from any packets belonging a previous connection that may still be in flight, which helps make connection and reconnection to the server more robust.
+The client salt in the packet is a random 64 bit integer rolled each time the client starts a new connect. Connection requests are now uniquely identified by the IP address and port combined with this client salt value. This distinguishes packets from the current connection from any packets belonging to a previous connection, which makes connection and reconnection to the server much more robust.
 
-While we still only allow one connection per IP address + port combination, connection requests are now uniquely identified not just by the IP address and port, from but also with this client salt value. 
-
-Now when a connection request arrives and a pending connection entry can't be found in the data structure (according to IP, port and client salt) the server rolls its own server-side salt and stores it with the rest of the data for the pending connection and sends a challange packet back to the client. If a pending connection is found, the salt value stored in the data structure is used for the challenge. This way there is a consistent pair of client and server salt values corresponding to each client session.
+Now when a connection request arrives and a pending connection entry can't be found in the data structure (according to IP, port and client salt) the server rolls a server salt and stores it with the rest of the data for the pending connection before sending a challange packet back to the client. If a pending connection is found, the salt value stored in the data structure is used for the challenge. This way there is a consistent pair of client and server salt values corresponding to each client session.
 
 <img src="/img/network-protocol/challenge-packet.png" width="100%"/>
 
-The client receives the challenge packet and verifies the server address and the client salt match the values it expects, then responds with a challenge response. Much like the previous state machine, the client now has **sending connection request** and **sending challenge response** before progressing to **connected**, but it's the same basic idea. In each state the client sends the packet to the server for that state, and listens for response packets from the server to progress forward to the next state, or to fail into an error state, or time out.
+The client state machine is expanded so **connecting** is replaced with two new states: **sending connection request** and **sending challenge response**, but it's the same idea as before. Client states repeatedly send the packet corresponding to that state to the server while listening for the response that moves it forward to the next state, or back to an error state. If no response is received, the state times out and the client transitions to **disconnected**.
+
+The challenge response sent back from the client to server looks like this:
 
 <img src="/img/network-protocol/challenge-response-packet.png" width="100%"/>
 
-Something something:
+And the utility of this being that once the client and server have established connection, we're able to prefix all payload packets with the xor of the client and server salt values and discard these packets if they don't match. This neatly filters out any packets from a previous session and at requires an attacker to sniff packets in order to impersonate a client or server instead of just knowing their IP addresses.
 
 <img src="/img/network-protocol/connection-payload-packet.png" width="100%"/>
 
-Something something:
+Now that we have at least a _basic_ level of security, it's not much, but at least it's **something**, we can implement a disconnect packet:
 
 <img src="/img/network-protocol/disconnect-packet.png" width="100%"/>
+
+And when the client or server want to disconnect clean, they simply fire 10 of these over the network to the other side, in the hope that some of them get through, and the other side disconnects cleanly instead of waiting for timeout.
+
+## ...
