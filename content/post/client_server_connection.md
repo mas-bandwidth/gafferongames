@@ -102,18 +102,16 @@ The CRC32 and implicit protocol id in the packet header allow the server to triv
 
 Since connection request packets are sent over UDP, they may be lost, received in duplicate, or out of order. Because of this we do two things: 1) we keep resending packets for the client state until we get a response from the server, or the client times out, and 2) on both client and server we ignore any packets that don't correspond to what we are expecting, since a lot of redundant packets are flying over the network.
 
-On the server, we have the following minimal data structure:
+On the server, we have something like the following data structure:
 
         const int MaxClients = 64;
 
         class Server
         {
-            int m_maxClients;                     // dynamically configured in [1,MaxClients]
+            int m_maxClients;
             int m_numConnectedClients;
             bool m_clientConnected[MaxClients];
             Address m_clientAddress[MaxClients];
-
-            // ...
         };
 
 Which lets the server lookup a free slot for a client to join (if any are free):
@@ -162,7 +160,7 @@ Using these queries we implement the following logic when a <u>_connection reque
 
 * Otherwise, this connection request is from a new client and we have a slot free. Assign the client to the free slot and respond with <u>_connection accepted_</u>.
 
-The connection accepted packet tells the client which client index it was assigned, which the client uses to know which player it is in the game:
+The connection accepted packet tells the client which client index it was assigned, which the client needs to know which player it is in the game:
 
 <img src="/img/network-protocol/connection-accepted-packet.png" width="100%"/>
 
@@ -198,32 +196,31 @@ While some of these problems require authentication and encryption before they c
 
 The first thing we want to do is only allow clients to connect if they can prove they are actually at the IP address and port they say they are.
 
-To do this, we no longer accept client connections immediately on connection request, instead sending back a challenge packet, and only completing connection when a client replies back with information that can only be obtained by receiving that challenge packet.
+To do this, we no longer accept client connections immediately on connection request, instead sending back a challenge packet, and only complete connection when a client replies back with information that can only be obtained from that challenge packet.
 
-The sequence of operations in a typical connect is now:
+The sequence of operations in a typical connect now looks like this:
 
-_(todo: do this as a diagram, it'll look much better)_
+<img src="/img/network-protocol/challenge-response.png" width="100%"/>
 
-* **client to server:** <u>_connection request_</u>
-* **server to client:** <u>_challenge_</u>
-* **client to server:** <u>_challenge response_</u>
-* **server to client:** <u>_connection accepted_</u>
+To implement this we need an additional data structure on the server. Somewhere to store the challenge data for pending connections, so when a challenge response packet comes in from a client we can check against the corresponding entry in the data structure and make sure it's a valid response to the challenge we sent to that address.
 
-To implement this we need an additional data structure on the server. Somewhere to put the pending client challenges, so when a challenge response packet comes in from a client we can check against this data structure and make sure it's actually a response to a challenge we sent to that address.
+While the pending connect data structure can be made larger than the maximum number of connected clients, it's still ultimately finite and is subject to attack. We'll cover some defenses against this in the next article. But for the moment, be happy at least that attackers can't progress to the **connected** state with spoofed packet source addresses.
 
-While the pending connect data structure can be made larger than the maximum number of connected clients, it is still ultimately finite and is still subject to attack. We'll cover some defenses against this in the next article. But for the moment, be happy at least that attackers can't progress to **connected** state with spoofed packet source addresses.
+Next, to guard against our protocol being used in a DDoS amplification attack, we'll inflate client to server packets so they're large relative to the response packet sent by the server. This means we add padding to both <u>_conenction request_</u> and <u>_challenge response_</u> packets and enforce this padding on the server, ignoring any packets without the expected padding. Now our protocol effectively has DDoS _minification_ for requests -> responses, making it highly unattractive for anyone thinking of launching this kind of attack.
 
-To guard against our protocol we'll inflate client to server packets so they're large relative to the packets sent in response. This means we add padding to both <u>_conenction request_</u> and <u>_challenge response_</u> packets and enforce this padding on the server, ignoring any packets without the expected padding. Now that our protocol effectively has DDoS _minification_ for requests -> responses, it's no longer attractive for anyone thinking of launching this sort of attack.
+Finally, we'll do some small thing to improve the robustness and security of the protocol. It's not perfect, we need authentication and encryption for that, but it's at least something, requiring attackers to actually sniff traffic in order impersonate the client or server rather than just knowing their IP addresses.
 
-Something something:
+The connection request packet now looks like this:
 
 <img src="/img/network-protocol/connection-request-packet-2.0.png" width="100%"/>
 
-Something something:
+The client salt is a random 64 bit integer rolled each time the client wants to connect. This distinguishes the current connection from the client to the server IP address from any packets corresponding to a previous connection that may still be in flight over the network, which helps make connection and reconnection to the server more robust.
+
+Now when the server receives a connection request for a packet, it is uniquely identified not just by 
 
 <img src="/img/network-protocol/challenge-packet.png" width="100%"/>
 
-Something something:
+The challenge 
 
 <img src="/img/network-protocol/challenge-response-packet.png" width="100%"/>
 
