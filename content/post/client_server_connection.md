@@ -32,7 +32,7 @@ First person shooters are different to web servers[*](#quic_footnote).
 
 First person shooters send **time critical data**.
 
-This data includes player inputs sent from client to server, and the state of the world sent from the server to clients. If this data arrives late, it is _useless_ and is thrown away; the client has no use for the state of the world 1/2 a second ago, just like the server has no use for player input from the past.
+This data includes player inputs sent from client to server, and the state of the world sent from the server to clients. If this data arrives late, it is _useless_ and is thrown away; the client has no use for the state of the world 1/4 of a second ago, just like the server has no use for player input from the past.
 
 So, why can't we use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP, which is unreliable and unordered, it holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't!)* are resent over the network. 
 
@@ -46,7 +46,7 @@ So why resend dropped packets at all? **BINGO!** What we'd really like is an opt
 
 This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches corresponding to multiples of round trip time are added to the stream of data as TCP waits for dropped packets to be resent, which means additional buffering to smooth out these hitches, or long pauses where the game freezes and is non-responsive.
 
-Neither option is acceptable for first person shooters, which is why virtually all first person shooters are networked with UDP. UDP doesn't provide any reliability or ordering, so protocols built on top of UDP can access the most recent data without waiting for lost packets to be resent, and implement whatever reliability they need in radically different ways to TCP.
+Neither option is acceptable for first person shooters, which is why virtually all first person shooters are networked using UDP. UDP doesn't provide any reliability or ordering, so protocols built on top of UDP can access the most recent data without waiting for lost packets to be resent, and implement whatever reliability they need in radically different ways to TCP.
 
 But, using UDP comes at a cost: 
 
