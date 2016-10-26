@@ -186,7 +186,7 @@ While this protocol is easy to implement, we can't use a protocol like this in p
 
 * If an attacker knows the client and server IP addresses and ports, they can impersonate the client or server. This gives an attacker the power to completely a hijack a client’s connection and perform actions on their behalf.
 
-* Once a client is connected to a server there is no way for them to disconnect cleanly, they can only time out. This creates a delay before the server realizes a client has disconnected, or before a client realizes the server has shut down. It would be nice if both the client and server could indicate a clean disconnect, so the other side didn’t need to wait for timeout in the common case.
+* Once a client is connected to a server there is no way for them to disconnect cleanly, they can only time out. This creates a delay before the server realizes a client has disconnected, or before a client realizes the server has shut down. It would be nice if both the client and server could indicate a clean disconnect, so the other side doesn’t need to wait for timeout in the common case.
 
 * Clean disconnection is usually implemented with a disconnect packet, however because an attacker can impersonate the client and server with spoofed packets, doing so would give the attacker the ability to disconnect a client from the server whenever they like, provided they know the client and server IP addresses and the structure of the disconnect packet.
 
@@ -213,7 +213,7 @@ To implement this we need an additional data structure on the server. Somewhere 
 
 While the pending connect data structure can be made larger than the maximum number of connected clients, it is still ultimately finite and is still subject to attack. We'll cover some defenses against this in the next article. But for the moment, be happy at least that attackers can't progress to **connected** state with spoofed packet source addresses.
 
-To guard against our protocol we'll inflate client to server packets such that they are large relative to the responses on the server. This means we add padding to both <u>_conenction request_</u> and <u>_challenge response_</u> packets and enforce this padding on the server, ignoring any packets without the expected padding. Now that our protocol has a DDoS minification effect for requests -> responses, it's no longer attractive for people launching this sort of attack.
+To guard against our protocol we'll inflate client to server packets so they're large relative to the packets sent in response. This means we add padding to both <u>_conenction request_</u> and <u>_challenge response_</u> packets and enforce this padding on the server, ignoring any packets without the expected padding. Now that our protocol effectively has DDoS _minification_ for requests -> responses, it's no longer attractive for anyone thinking of launching this sort of attack.
 
 Something something:
 
@@ -226,3 +226,11 @@ Something something:
 Something something:
 
 <img src="/img/network-protocol/challenge-response-packet.png" width="100%"/>
+
+Something something:
+
+<img src="/img/network-protocol/connection-payload-packet.png" width="100%"/>
+
+Something something:
+
+<img src="/img/network-protocol/disconnect-packet.png" width="100%"/>
