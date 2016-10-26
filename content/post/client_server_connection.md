@@ -208,21 +208,21 @@ While the pending connect data structure can be made larger than the maximum num
 
 Next, to guard against our protocol being used in a DDoS amplification attack, we'll inflate client to server packets so they're large relative to the response packet sent by the server. This means we add padding to both <u>_connection request_</u> and <u>_challenge response_</u> packets and enforce this padding on the server, ignoring any packets without the expected padding. Now our protocol effectively has DDoS _minification_ for requests -> responses, making it highly unattractive for anyone thinking of launching this kind of attack.
 
-Finally, we'll do one last small thing to improve the robustness and security of the protocol. It's not perfect, we need authentication and encryption for that, but it's at least it ups the ante, requiring attackers to actually sniff traffic in order to impersonate the client or server.
+Finally, we'll do one last small thing to improve the robustness and security of the protocol. It's not perfect, we need authentication and encryption for that, but it at least it ups the ante, requiring attackers to actually sniff traffic in order to impersonate the client or server.
 
 The connection request packet now looks like this:
 
 <img src="/img/network-protocol/connection-request-packet-2.0.png" width="100%"/>
 
-The client salt in this packet is a random 64 bit integer rolled on the client each time it starts a new connect. This distinguishes packets from the current connection from the client from any packets belonging a previous connection that may still be in flight, which helps make connection and reconnection to the server more robust.
+The client salt in the packet is a random 64 bit integer rolled each time the client starts a new connect. This distinguishes packets from the current connection from any packets belonging a previous connection that may still be in flight, which helps make connection and reconnection to the server more robust.
 
-While we still only allow one connection per-server for IP address + port, connection requests are now uniquely identified not just by the IP address and port, from but also with this client salt value. 
+While we still only allow one connection per IP address + port combination, connection requests are now uniquely identified not just by the IP address and port, from but also with this client salt value. 
 
 Now when a connection request arrives and a pending connection entry can't be found in the data structure (according to IP, port and client salt) the server rolls its own server-side salt and stores it with the rest of the data for the pending connection and sends a challange packet back to the client. If a pending connection is found, the salt value stored in the data structure is used for the challenge. This way there is a consistent pair of client and server salt values corresponding to each client session.
 
 <img src="/img/network-protocol/challenge-packet.png" width="100%"/>
 
-The client receives the challenge packet and verifies the server address and the client salt match the values it expects. 
+The client receives the challenge packet and verifies the server address and the client salt match the values it expects, then responds with a challenge response. Much like the previous state machine, the client now has **sending connection request** and **sending challenge response** before progressing to **connected**, but it's the same basic idea. In each state the client sends the packet to the server for that state, and listens for response packets from the server to progress forward to the next state, or to fail into an error state, or time out.
 
 <img src="/img/network-protocol/challenge-response-packet.png" width="100%"/>
 
