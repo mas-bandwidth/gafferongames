@@ -214,7 +214,7 @@ The connection request packet now looks like this:
 
 <img src="/img/network-protocol/connection-request-packet-2.0.png" width="100%"/>
 
-The client salt in the packet is a random 64 bit integer rolled each time the client starts a new connect. Connection requests are now uniquely identified by the IP address and port combined with this client salt value. This distinguishes packets from the current connection from any packets belonging to a previous connection, which makes connection and reconnection to the server much more robust.
+The client salt in the packet is a random 64 bit integer rolled each time the client starts a new connect. Connection requests are now uniquely identified by the IP address and port combined with this client salt value. This distinguishes packets from the current connection from any packets belonging to a previous connection from this address + port, which makes connection and reconnection to the server much more robust.
 
 Now when a connection request arrives and a pending connection entry can't be found in the data structure (according to IP, port and client salt) the server rolls a server salt and stores it with the rest of the data for the pending connection before sending a challange packet back to the client. If a pending connection is found, the salt value stored in the data structure is used for the challenge. This way there is a consistent pair of client and server salt values corresponding to each client session.
 
@@ -226,7 +226,7 @@ The challenge response sent back from the client to server looks like this:
 
 <img src="/img/network-protocol/challenge-response-packet.png" width="100%"/>
 
-And the utility of this being that once the client and server have established connection, we're able to prefix all payload packets with the xor of the client and server salt values and discard these packets if they don't match. This neatly filters out any packets from a previous session and at requires an attacker to sniff packets in order to impersonate a client or server instead of just knowing their IP addresses.
+The utility of this being that once the client and server have established connection, we prefix all payload packets with the xor of the client and server salt values and discard any packets with the incorrect salt values. This neatly filters out packets from previous sessions and requires an attacker to sniff packets in order to impersonate a client or server.
 
 <img src="/img/network-protocol/connection-payload-packet.png" width="100%"/>
 
@@ -236,4 +236,12 @@ Now that we have at least a _basic_ level of security, it's not much, but at lea
 
 And when the client or server want to disconnect clean, they simply fire 10 of these over the network to the other side, in the hope that some of them get through, and the other side disconnects cleanly instead of waiting for timeout.
 
-## ...
+## Conclusion
+
+We've explored why first person shooters use UDP instead of TCP and created a simple client/server connection protocol on top of UDP based around the concept of client slots.
+
+We explored the downsides of an inital naive implementation and hardened it against DDoS amplification and spoofed packet source addresses. We also extended it with the concept of client sessions using salt values, so packets from a previous session from the same client can be filtered out and attackers must sniff traffic to impersonate the client or server.
+
+But we're far from done. The protocol is improved but it's still only one I would consider suitable for a LAN game played in your office. Hostile actors can still sniff traffic and impersonate a client or server, read the contents of your protocol and modify it in flight. Also, zombie clients can spam connections to your dedicated servers, costing you money. 
+
+Stay tuned for the next article in this series: **Securing Dedicated Servers** where I take this protocol from amateur to professional grade, incorporating authentication and encryption so only real clients can connect to your server, and it's no longer possible to sniff traffic, modify it in flight, or impersonate a client or server.
