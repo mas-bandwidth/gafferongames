@@ -23,7 +23,7 @@ And why is this even a point for discussion, when it's been a solved problem in 
 * Call of Duty
 * Titanfall
 * Halo
-* Battlefront
+* Battlefield
 * Overwatch
 
 All of these games. Every. Single. One. Is networked with a custom client/server network protocol built on top of UDP. This is the established best practice in the industry because it gets the best result. If you're making a first person shooter and you're networking it with TCP, you're making a mistake. Simple as that.
