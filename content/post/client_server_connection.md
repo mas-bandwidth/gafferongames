@@ -36,11 +36,11 @@ First person shooters are different to web servers[*](#quic_footnote).
 
 First person shooters send **time critical data**.
 
-This data includes player inputs sent from client to server, and the state of the world sent from the server to clients. If this data arrives late, it is _utterly useless_ and is thrown away. The client has no use for the state of the world 1/4 of a second ago, just like the server has no use for player input from the past.
+Data like player inputs sent from client to server, or the state of the world sent from server to client. If this data arrives late, it is _utterly useless_ and is thrown away. The client has no use for the state of the world 1/4 of a second ago, just like the server has no use for player input from the past.
 
 So, why can't we use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP, which is unreliable and unordered, it holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't!)* are resent over the network. 
 
-This is known as **head of line blocking** and it's a huge problem for time critical data. To understand why, consider a game server broadcasting the state of the world to clients 10 times per-second. Each client advances time forward and wants to display the most recent state it has received from the server.
+This is known as **head of line blocking** and it's a _huuuuuge_ problem for time critical data. To understand why, consider a game server broadcasting the state of the world to clients 10 times per-second. Each client advances time forward and wants to display the most recent state it has received from the server.
 
 <img src="/img/network-protocol/client-time.png" width="100%"/>
 
@@ -48,15 +48,15 @@ But if the packet containing state for time t = 10.0 is lost, under TCP we must 
 
 So why resend dropped packets at all? **BINGO!** What we'd really like is an option to tell TCP: "Hey, I don't care about old packets being resent, by they time they arrive I can't use them anyway, so just let me skip over them and access the most recent data". But TCP simply does not give us this option. All data must be delivered reliably and in-order.
 
-This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches corresponding to multiples of round trip time are added to the stream of data as TCP waits for dropped packets to be resent, which means additional buffering to smooth out these hitches, adding even more latency, or long pauses where the game freezes and is non-responsive.
+This creates terrible problems for time critical data where packet loss *and* latency exist. Situations like, you know, The Internet, where people play FPS games. Large hitches corresponding to multiples of round trip time are added to the stream of data as TCP waits for dropped packets to be resent, which means additional buffering to smooth out these hitches, or long pauses where the game freezes and is non-responsive.
 
-Neither option is acceptable for first person shooters, which is why virtually all first person shooters are networked using UDP. UDP doesn't provide any reliability or ordering, so protocols built on top of UDP can access the most recent data without waiting for lost packets to be resent, and implement whatever reliability they need in radically different ways to TCP.
+Neither option is acceptable for first person shooters, which is why virtually all first person shooters are networked using UDP. UDP doesn't provide any reliability or ordering, so protocols built on top of UDP can access the most recent data without waiting for lost packets to be resent, implementing whatever reliability they need in radically different ways to TCP.
 
 But, using UDP comes at a cost: 
 
 **UDP doesn't provide any concept of connection.**
 
-We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using same basic techniques first person shooters use when creating their protocols over UDP. I know, I've worked on a few. You can use this client/server protocol for games or non-gaming applications and, provided the data you send is time critical, I promise you, it's well worth the effort.
+We have to build that ourselves. This is a lot of work! So strap in, get ready, because we're going to build it all up from scratch using the same basic techniques first person shooters use when creating their protocols over UDP. I know, I've worked on a few. You can use this client/server protocol for games or non-gaming applications and, provided the data you send is time critical, I promise you, it's well worth the effort.
 
 <a name="quic_footnote"></a> _\* These days even web servers are transitioning to UDP via [Google's QUIC](https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/). If you still think TCP is good enough for time critical data in 2016, I encourage you to put that in your pipe and smoke it :)_
 
@@ -86,7 +86,7 @@ When a client slot times out on the server, it becomes available for other clien
 
 ## Simple Connection Protocol
 
-Let's get started with the implementation of a simple protocol. It's a bit basic and a more than a bit naive, but it's a good starting point and we'll build on it.
+Let's get started with the implementation of a simple protocol. It's a bit basic and a more than a bit naive, but it's a good starting point and we'll build on it during the rest of this article, and the next few articles in this series.
 
 First up we have the client state machine. 
 
