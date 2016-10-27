@@ -13,9 +13,11 @@ Hi, I'm [Glenn Fiedler](/about) and welcome to **[Building a Game Network Protoc
 
 In this article we're going to build a client/server connection on top of UDP.
 
-I can guarantee you already at this point that some people have decided not to read this article because I'm obviously a fool. I mean, who could possibly justify all the effort required to build a completely custom client/server network protocol over UDP when for so many people, TCP is simply good enough?
+And I can almost guarantee you at this point that some people have decided not to read this article because I'm obviously a fool. I mean, who could possibly justify all the effort required to build a completely custom client/server network protocol on top of UDP, when, for so many people, TCP is simply good enough? Check out this clown! Obviously you should just use TCP, or _(insert some other protocol that happens to be built on top of UDP anyway)_. Sigh.
 
-But why is it in 2016 that discussions about UDP vs. TCP are still so controversial, when virtually all first person shooters are networked with UDP?
+Why is it in 2016 that discussions about UDP vs. TCP are still so controversial, why is it that pages of uninformed comments spring up on Hacker News with each post I make about UDP-based protocols, posts written about the best practices I've learned over 10 years working in the game industry as a network programmer? I'm not mad, just frustrated, and honestly kind of perplexed! Why does this topic bring out such strong reactions in people?
+
+Why is this even a point for discussion, when it's been a solved problem in the game industry for at least 20 years, when most fast paced games, and virtually _all_ first person shooters are networked using UDP?
 
 * Counterstrike
 * Call of Duty
@@ -24,7 +26,9 @@ But why is it in 2016 that discussions about UDP vs. TCP are still so controvers
 * Battlefront
 * Overwatch
 
-So what's going on? Why do so many first shooters go through all the effort of building their own custom network protocol on top of UDP instead of just using TCP?
+All of these games. Every. Single. One. Is networked with a custom client/server network protocol built on top of UDP. This is the established best practice in the industry because it gets the best result. If you're making a first person shooter and you're networking it with TCP, you're making a mistake. Simple as that.
+
+So while TCP is useful in some many contexts, in the context of fast paced action games played over the internet, it's all UDP, baby. Before we get down to the gritty details of implementing one of these protocols, let's spend a bit of time exploring why this is.
 
 ## Why First Person Shooters Use UDP
 
@@ -32,7 +36,7 @@ First person shooters are different to web servers[*](#quic_footnote).
 
 First person shooters send **time critical data**.
 
-This data includes player inputs sent from client to server, and the state of the world sent from the server to clients. If this data arrives late, it is _useless_ and is thrown away. The client has no use for the state of the world 1/4 of a second ago, just like the server has no use for player input from the past.
+This data includes player inputs sent from client to server, and the state of the world sent from the server to clients. If this data arrives late, it is _utterly useless_ and is thrown away. The client has no use for the state of the world 1/4 of a second ago, just like the server has no use for player input from the past.
 
 So, why can't we use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP, which is unreliable and unordered, it holds more recent packets *(that we want)* hostage in a queue while older packets *(that we don't!)* are resent over the network. 
 
@@ -40,7 +44,7 @@ This is known as **head of line blocking** and it's a huge problem for time crit
 
 <img src="/img/network-protocol/client-time.png" width="100%"/>
 
-But if the packet containing state for time t = 10.0 is lost, under TCP we must for it to be resent before we can access t = 10.1 and 10.2, even though those packets have already arrived and contain the state the client wants to show. Worse still, by the time the resent packet arrives, it's far too late for the client to actually do anything useful with it. The client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!
+But if the packet containing state for time t = 10.0 is lost, under TCP we must wait for it to be resent before we can access t = 10.1 and 10.2, even though those packets have already arrived and contain the state the client wants to show. Worse still, by the time the resent packet arrives, it's far too late for the client to actually do anything useful with it. The client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!
 
 So why resend dropped packets at all? **BINGO!** What we'd really like is an option to tell TCP: "Hey, I don't care about old packets being resent, by they time they arrive I can't use them anyway, so just let me skip over them and access the most recent data". But TCP simply does not give us this option. All data must be delivered reliably and in-order.
 
@@ -74,7 +78,7 @@ Once a client is connected, packets are exchanged in both directions. These pack
 
 <img src="/img/network-protocol/client-server-packets.png" width="100%"/>
 
-In a first person shooter, packets are sent continuously in both directions. Clients send input to the server typically 30 or 60 times per-second, while the state of the world is sent from the server to all clients 10, 20 or even 60 times per-second.
+In a first person shooter, packets are sent continuously in both directions. Clients send input to the server as quickly as possible, often 30 or 60 times per-second, and the server broadcasts the state of the world to clients 10, 20 or even 60 times per-second.
 
 Because of this steady flow of packets in both directions there is no need for keep-alive packets. If at any point packets stop being received from the other side, the connection simply times out. No packets for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want. 
 
