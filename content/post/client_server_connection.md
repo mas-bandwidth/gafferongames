@@ -17,7 +17,7 @@ And I can almost guarantee you at this point that some people have decided not t
 
 Why is it in 2016 that discussions about UDP vs. TCP are still so controversial, why is it that pages of uninformed comments spring up on Hacker News with each post I make about UDP-based protocols, posts written about the best practices I've learned over 10 years working in the game industry as a network programmer? I'm not mad, just frustrated, and honestly kind of perplexed! Why does this topic bring out such strong reactions in people?
 
-Why is this even a point for discussion, when it's been a solved problem in the game industry for at least 20 years, when most fast paced games, and virtually _all_ first person shooters are networked using UDP?
+And why is this even a point for discussion, when it's been a solved problem in the game industry for at least 20 years, when most fast paced games, and virtually _all_ first person shooters are networked using UDP?
 
 * Counterstrike
 * Call of Duty
