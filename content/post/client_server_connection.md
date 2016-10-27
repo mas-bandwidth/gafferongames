@@ -86,7 +86,7 @@ When a client slot times out on the server, it becomes available for other clien
 
 ## Simple Connection Protocol
 
-Let's get started with the implementation of a simple protocol. It's a bit basic and a more than a bit naive, but it's a good starting point and we'll build on it during the rest of this article, and the next few articles in this series.
+Let's get started with the implementation of a simple protocol. It's a bit basic and more than a bit naive, but it's a good starting point and we'll build on it during the rest of this article, and the next few articles in this series.
 
 First up we have the client state machine. 
 
