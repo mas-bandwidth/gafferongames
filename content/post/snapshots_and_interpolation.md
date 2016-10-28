@@ -3,7 +3,7 @@ categories = ["Networked Physics"]
 tags = ["physics","networking"]
 date = "2014-11-30"
 title = "Snapshots and Interpolation"
-description = "How to reconstruct a visual approximation of a physics simulation without running the simulation itself"
+description = "How to reconstruct a visual approximation of a physics simulation"
 draft = false
 +++
 
