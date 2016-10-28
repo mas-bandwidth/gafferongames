@@ -1,22 +1,14 @@
-TODO
-
-    -----------------
-
-    Write next article "Securing Dedicated Servers"
+ TODO
 
     -----------------
 
     Need to convert across 3 more in "Networked Physics".
 
-        Also need to work out what to do with draft articles at the end of it (!!!)
+    Also need to work out what to do with draft articles at the end of this series!
 
-    Also need to convert a bunch more articles from "Building a Game Network Protocol". These articles will likely need a good pass... they must all be excellent.
+    -----------------
 
-    Having the articles that are for supporters only be visible is a large part of driving new supporters...
-
-    Also need to work out what to do about blog posts. Do I convert those across as well?
-
-    Finally, I need to work out links and redirects from the old to new site.
+    Write next article "Securing Dedicated Servers"
 
     -----------------
 
@@ -33,6 +25,10 @@ TODO
     Definitely want to do this on page generation rather than javascript, so it works well inside an RSS feed.
 
     Having some problem getting this work with my CSS. The code background is not getting set to black. Something in my theme CSS fucking it up?
+
+    Would be nice if a javascript library could do code highlighting (and scrolling!), especially for mobile, where code samples just don't fit, as long as I can fall back to something static HTML for RSS
+
+    Whatever I do, I always have to make sure the RSS is readable.
 
     -----------------
 
