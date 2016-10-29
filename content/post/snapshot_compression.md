@@ -13,22 +13,22 @@ Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories
 
 In the <a href="http://gafferongames.com/networked-physics/snapshots-and-interpolation/">previous article</a> we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.
 
-The problem with a low snapshot rate is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second the minimum interpolation delay is 100ms and a more practical minimum considering network jitter is 150ms. If protection against one or two lost packets in a row is desired, this blows out to 250ms or 350ms.
+The problem with a low snapshot rate is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms. If protection against one or two lost packets in a row is desired, this blows out to 250ms or 350ms.
 
-This is not an acceptable amount of delay for most games and we'd like to reduce it, but when the physics simulation is as unpredictable as ours, the only way to reduce this is to increase the packet send rate. Unfortunately, increasing the send rate also increases bandwidth. So what we're going to do in this article is work through every possible bandwidth optimization _(that I can think of at least)_ until we get bandwidth under control. 
+This is not an acceptable amount of delay for most games, but when the physics simulation is as unpredictable as ours, the only way to reduce it is to increase the packet send rate. Unfortunately, increasing the send rate also increases bandwidth. So what we're going to do in this article is work through every possible bandwidth optimization _(that I can think of at least)_ until we get bandwidth under control. 
 
-Our target bandwidth is **256 kilobits per-second**.
+Our target bandwidth is **<u>256 kilobits per-second</u>**.
 
 # Starting Point @ 60HZ
 
-Life is rarely easy, and an easy life for a network programmer is something I've never heard of. As network programmers we're often tasked with the impossible, so in that spirit, let's increase the snapshot send rate from 10 to 60 snapshots per-second and see exactly how far away we are from our target bandwidth:
+Life is rarely easy, and the life of a network programmer, even less so. As network programmers we're often tasked with the impossible, so in that spirit, let's increase the snapshot send rate from 10 to 60 snapshots per-second and see exactly how far away we are from our target bandwidth.
 
 <video preload="auto" controls="controls" width="100%">
   <source src="/video/networked_physics/snapshot_compression_uncompressed.mp4" type="video/mp4"/>
   <source src="/video/networked_physics/snapshot_compression_uncompressed.webm" type="video/webm"/>
 </video>
 
-Ouch.
+o_O
 
 That's a _LOT_ of bandwidth: **<u>17.37 megabits per-second!</u>**.
 
@@ -67,7 +67,7 @@ We'll start by optimizing orientation because it's the largest field. (When opti
 
 Many people when compressing a quaternion think: "I know. I'll just pack it into 8.8.8.8 with one 8 bit signed integer per-component!". Sure, that works, but with a bit of math you can get much better accuracy with fewer bits using a trick called the "smallest three".
 
-How does the smallest three work? Since we know the quaternion represents a rotation its length must be 1, we know that x^2+y^2+z^2+w^2 = 1. We can use this identity to drop one component and reconstruct it on the other side. For example, if you sent x,y,z you could reconstruct w = sqrt( 1 - x^2 - y^2 - z^2 ). You might think you need to send a sign bit for w in case it is negative, but you don't, because you can make w always positive by negating the entire quaternion if w is negative (in quaternion space (x,y,z,w) and (-x,-y,-z,-w) represent the same rotation.)
+How does the smallest three work? Since we know the quaternion represents a rotation its length must be 1, so x^2+y^2+z^2+w^2 = 1. We can use this identity to drop one component and reconstruct it on the other side. For example, if you send x,y,z you can reconstruct w = sqrt( 1 - x^2 - y^2 - z^2 ). You might think you need to send a sign bit for w in case it is negative, but you don't, because you can make w always positive by negating the entire quaternion if w is negative (in quaternion space (x,y,z,w) and (-x,-y,-z,-w) represent the same rotation.)
 
 Don't always drop the same component due to numerical precision issues. Instead, find the component with the largest absolute value and encode its index using two bits \[0,3\] (0=x, 1=y, 2=z, 3=w), then send the index of the largest component and the smallest three components over the network (hence the name). On the other side use the index of the largest bit to know which component you have to reconstruct from the other three.
 
@@ -85,15 +85,15 @@ This optimization reduces bandwidth by over 5 megabits per-second, and I think i
 
 ## Optimizing Linear Velocity
 
-What should we optimize next? It's a tie between linear velocity and position. Both are 96 bits. In my experience position is the harder quantity to compress so let's start with linear velocity first.
+What should we optimize next? It's a tie between linear velocity and position. Both are 96 bits. In my experience position is the harder quantity to compress so let's start with linear velocity.
 
-To compress linear velocity we first need to bound the linear velocity components in some range so we don't need to send full float values for its components. I found that a maximum speed of 32 meters per-second is a nice power of two and doesn't negatively affect the player experience in the cube simulation. Since we're really only using the linear velocity as a _hint_ to improve interpolation between position sample points we can be pretty rough with compression. I found that 32 distinct values per-meter per second provides acceptable precision.
+To compress linear velocity we need to bound its x,y,z components in some range so we don't need to send full float values. I found that a maximum speed of 32 meters per-second is a nice power of two and doesn't negatively affect the player experience in the cube simulation. Since we're really only using the linear velocity as a _hint_ to improve interpolation between position sample points we can be pretty rough with compression. 32 distinct values per-meter per-second provides acceptable precision.
 
 Linear velocity has been bounded and quantized and is now three integers in the range [-1024,1023]. That breaks down as follows: \[-32,+31\] (6 bits) for integer component and multiply 5 bits fraction precision. I hate messing around with sign bits so I just add 1024 to get the value in range [0,2047] and send that instead. To decode on receive just subtract 1024 to get back to signed integer range before converting to float.
 
 11 bits per-component gives 33 bits total per-linear velocity. Just over 1/3 the original uncompressed size!
 
-We can do better because most cubes are stationary. To take advantage just write a single bit "at rest". If this bit is 1, then velocity is known zero and not sent. Otherwise, the compressed velocity follows after the bit (33 bits). Cubes at rest now cost just 127 bits, while cubes that are moving cost one bit more than they previously did: 159 + 1 = 160 bits.
+We can do even better than this because most cubes are stationary. To take advantage of this we just write a single bit "at rest". If this bit is 1, then velocity is known zero and is not sent. Otherwise, the compressed velocity follows after the bit (33 bits). Cubes at rest now cost just 127 bits, while cubes that are moving cost one bit more than they previously did: 159 + 1 = 160 bits.
 
 <video controls="controls" width="100%">
 <source src="http://173.255.195.190/cubes_compression_at_rest_flag.mp4" type="video/mp4" />
@@ -109,7 +109,7 @@ But why are we sending linear velocity at all? In the <a href="http://gafferonga
 Your browser does not support the video tag.
 </video>
 
-Linear interpolation is good enough at 60HZ. This means we can avoid sending linear velocity. Sometimes the best bandwidth optimizations aren't about optimizing what you send, they're about what you _don't_ send.
+Linear interpolation is good enough at 60HZ. This means we can avoid sending linear velocity entirely. Sometimes the best bandwidth optimizations aren't about optimizing what you send, they're about what you _don't_ send.
 
 ## Optimizing Position
 
