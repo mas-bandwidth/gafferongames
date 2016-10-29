@@ -213,12 +213,14 @@ These two probabilities are mutually exclusive, because if both are the same the
 Your browser does not support the video tag.
 </video>
 
-There are many options for bandwidth optimization and with a bit of work the seemingly impossible is in fact possible. We just took 20mbit down to less than 0.25mbit on average. That's less than 1.25% of original uncompressed bandwidth!
+As you can see the end result is pretty good.
 
-That's about as far as I can take it using traditional hand-rolled bit-packing techniques.
+## Conclusion
+
+And that's about as far as I can take it using traditional hand-rolled bit-packing techniques. You can find source code for my implementation of all compression techniques mentioned in this article <a href="https://gist.github.com/gafferongames/bb7e593ba1b05da35ab6">here</a>.
 
 It's possible to get even better compression using a different approach. Bit-packing is inefficient because not all bit values have equal probability of 0 vs 1. No matter how hard you tune your bit-packer a context aware arithmetic encoding can beat your result by more accurately modeling the probability of values that occur in your data set. This <a href="https://github.com/rygorous/gaffer_net/blob/master/main.cpp">implementation</a> by Fabian Giesen beat my best bit-packed result by 25%.
 
-It's also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly. Chris Doran from Geomerics wrote an excellent <a href="http://www.geomerics.com/wp-content/uploads/2015/04/rotation_blog_toprint.pdf">article</a> exploring the mathematics of quaternion compression that is worth reading.
+It's also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly. Chris Doran from Geomerics wrote also wrote an excellent <a href="http://www.geomerics.com/wp-content/uploads/2015/04/rotation_blog_toprint.pdf">article</a> exploring the mathematics of quaternion compression that is worth reading.
 
 <strong>NEXT ARTICLE</strong>: <a href="http://gafferongames.com/networked-physics/state-synchronization/">State Synchronization</a>
