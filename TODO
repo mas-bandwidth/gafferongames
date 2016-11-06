@@ -1,4 +1,6 @@
- TODO
+TODO
+
+    Make sure I didn't mess up the challenge/response packet diagrams in the article, because if the client index is only assigned after the challenge response is received, the keepalive packet in yojimbo is used to communicate client index back to the client, it cannot be passed to client before the challenge response is processed.
 
     -----------------
 

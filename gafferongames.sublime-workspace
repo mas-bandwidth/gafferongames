@@ -4,6 +4,10 @@
 		"selected_items":
 		[
 			[
+				"inertia",
+				"inertia-tensor-ix1"
+			],
+			[
 				"packet",
 				"packets"
 			],
@@ -510,10 +514,6 @@
 			[
 				"CLIENT_STT",
 				"CLIENT_STATE_CONNECTED"
-			],
-			[
-				"test_client_and_",
-				"test_client_and_server_data_reconnect"
 			]
 		]
 	},
@@ -730,18 +730,47 @@
 	],
 	"file_history":
 	[
-		"/Users/gaffer/git/gafferongames/content/post/sending_and_receiving_packets.md",
-		"/Users/gaffer/git/gafferongames/CHANGES",
-		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
+		"/Users/gaffer/git/gafferongames/content/post/snapshots_and_interpolation.md",
+		"/Users/gaffer/git/gafferongames/content/post/snapshot_compression.md",
 		"/Users/gaffer/git/gafferongames/TODO",
+		"/Users/gaffer/git/gafferongames/CHANGES",
+		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
+		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
+		"/Users/gaffer/git/gafferongames/Makefile",
+		"/Users/gaffer/git/gafferongames/config_local.toml",
+		"/Users/gaffer/Desktop/ROBLOX",
+		"/Users/gaffer/git/gafferongames/scratch.md",
+		"/Users/gaffer/git/gafferongames/content/post/the_physics_simulation.md",
+		"/Users/gaffer/git/gafferongames/content/about.md",
+		"/Users/gaffer/Desktop/devon.txt",
+		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
+		"/Users/gaffer/git/gafferongames/archetypes/post.md",
+		"/Users/gaffer/git/gafferongames/content/post/networked_physics_2004.md",
+		"/Users/gaffer/git/gafferongames/content/post/fix_your_timestep.md",
+		"/Users/gaffer/git/gafferongames/content/post/physics_in_3d.md",
+		"/Users/gaffer/git/gafferongames/content/post/spring_physics.md",
+		"/Users/gaffer/git/gafferongames/content/post/what_every_programmer_needs_to_know_about_game_networking.md",
+		"/Users/gaffer/git/gafferongames/content/post/reliability_ordering_and_congestion_avoidance_over_udp.md",
+		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
+		"/Users/gaffer/git/gafferongames/content/post/virtual_connection_over_udp",
+		"/Users/gaffer/git/gafferongames/content/post/rotation_and_inertia_tensors.md",
+		"/Users/gaffer/git/gafferongames/content/post/go_stone_vs_go_board.md",
+		"/Users/gaffer/git/gafferongames/content/post/collision_response_and_coulomb_friction.md",
+		"/Users/gaffer/git/gafferongames/content/post/collision_response_and_friction.md",
+		"/Users/gaffer/git/gafferongames/content/post/how_the_go_stone_moves.md",
+		"/Users/gaffer/git/gafferongames/static/css/clean-blog.min.css",
+		"/Users/gaffer/git/gafferongames/static/css/bootstrap.min.css",
+		"/Users/gaffer/git/gafferongames/content/post/tessellating_the_go_stone.md",
+		"/Users/gaffer/git/gafferongames/content/post/tesselating_the_go_stone.md",
+		"/Users/gaffer/git/gafferongames/content/post/shape_of_the_go_stone.md",
+		"/Users/gaffer/git/gafferongames/content/post/the_go_stone.md",
+		"/Users/gaffer/Desktop/TODO",
+		"/Users/gaffer/git/gafferongames/content/post/sending_and_receiving_packets.md",
 		"/Users/gaffer/git/gafferongames/IDEAS",
 		"/Users/gaffer/git/gafferongames/RESEARCH",
-		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
-		"/Users/gaffer/git/gafferongames/Makefile",
 		"/Users/gaffer/git/gafferongames/content/post/udp_vs_tcp.md",
 		"/Users/gaffer/git/gafferongames/layouts/_default/list.html",
 		"/Users/gaffer/git/gafferongames/layouts/post/archive.html",
-		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
 		"/Users/gaffer/git/gafferongames/bin/rk4_spring_damper.csv",
 		"/Users/gaffer/git/gafferongames/source/game_physics/integration_basics.cpp",
 		"/Users/gaffer/git/gafferongames/bin/implicit_euler_spring_damper.csv",
@@ -759,9 +788,6 @@
 		"/Users/gaffer/git/gafferongames/layouts/partials/footer.html",
 		"/Users/gaffer/git/gafferongames/layouts/partials/categories.html",
 		"/Users/gaffer/git/gafferongames/layouts/post/summary.html",
-		"/Users/gaffer/git/gafferongames/config_local.toml",
-		"/Users/gaffer/git/gafferongames/archetypes/post.md",
-		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/layouts/about/single.html",
 		"/Users/gaffer/git/gafferongames/layouts/contact/single.html",
 		"/Users/gaffer/git/gafferongames/layouts/post/single.html",
@@ -831,33 +857,7 @@
 		"/Users/gaffer/git/protocol2/001_reading_and_writing_packets.cpp",
 		"/Users/gaffer/git/protocol2/008_packet_encryption.cpp",
 		"/Users/gaffer/git/protocol2/CHANGES",
-		"/Users/gaffer/git/protocol2/009_client_server.cpp",
-		"/Users/gaffer/git/protocol2/protocol2.h",
-		"/Users/gaffer/git/protocol2/network2.h",
-		"/Users/gaffer/git/protocol/external/nvImage/nvImage.h",
-		"/Users/gaffer/git/protocol2/009_connect_tokens.cpp",
-		"/Users/gaffer/git/protocol2/007_packet_encryption.cpp",
-		"/Users/gaffer/git/protocol2/test.cpp",
-		"/Users/gaffer/git/protocol2/yojimbo.h",
-		"/Users/gaffer/git/protocol2/yojimbo_socket_interface.cpp",
-		"/Users/gaffer/git/protocol2/yojimbo_socket_interface.h",
-		"/Users/gaffer/git/protocol2/yojimbo_packet_processor.cpp",
-		"/Users/gaffer/git/protocol2/007_client_server.cpp",
-		"/Users/gaffer/git/protocol2/yojimbo_util.h",
-		"/Users/gaffer/git/protocol2/yojimbo_crypto.h",
-		"/Users/gaffer/git/protocol2/yojimbo_crypto.cpp",
-		"/Users/gaffer/git/protocol2/LICENCE",
-		"/Users/gaffer/git/protocol2/009_securing_dedicated_servers.cpp",
-		"/Users/gaffer/git/protocol2/yojimbo.cpp",
-		"/Users/gaffer/git/protocol2/yojimbo_allocator.h",
-		"/Users/gaffer/git/protocol2/yojimbo_array.h",
-		"/Users/gaffer/git/protocol2/yojimbo_config.h",
-		"/Users/gaffer/git/protocol2/yojimbo_hash.h",
-		"/Users/gaffer/git/protocol2/yojimbo_memory.cpp",
-		"/Users/gaffer/git/protocol2/yojimbo_memory.h",
-		"/Users/gaffer/git/protocol2/yojimbo_network_interface.h",
-		"/Users/gaffer/git/protocol2/yojimbo_packet_processor.h",
-		"/Users/gaffer/git/protocol2/yojimbo_queue.h"
+		"/Users/gaffer/git/protocol2/009_client_server.cpp"
 	],
 	"find":
 	{
@@ -908,6 +908,68 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			" we know",
+			"large range",
+			"at all.",
+			"I chose ",
+			"in fact",
+			"Lets",
+			"lets",
+			"Lets",
+			"lets",
+			"do)_",
+			"the state",
+			"The client",
+			"the client or",
+			"it starts",
+			"pygment",
+			"and before",
+			"This applies",
+			"Connection",
+			"to be resent",
+			"times out",
+			"connection ",
+			"the world",
+			"wants to ",
+			"over the ",
+			"particular ",
+			"game_physics",
+			"Unlike",
+			"...",
+			"more rec",
+			"processInput",
+			"float t",
+			"lets",
+			"Lets",
+			"lets",
+			"Lets",
+			"rotation",
+			"ul",
+			"h2",
+			"consider",
+			"once per",
+			"simply ",
+			"You can",
+			"<em>",
+			"Lets",
+			"lets",
+			"y'",
+			"on this.",
+			"the center",
+			"realistiic",
+			"lets",
+			"Lets",
+			"&lt",
+			"&gt",
+			"Lets",
+			"lets",
+			"gt",
+			"and at",
+			"left sim",
+			"frame n",
+			"Lets",
+			"lets",
+			"your simul",
 			"100ms",
 			"It follows",
 			"multiplayer gam",
@@ -973,69 +1035,7 @@
 			"connection error",
 			"ReceiveQueueSize",
 			"ReceiveMessage",
-			"1290",
-			"todo",
-			"// todo",
-			"simulator",
-			"Serialize*",
-			"// todo",
-			"todo",
-			"random_float",
-			"// todo",
-			"Serialize(",
-			"numFragments",
-			"AddFragmentToPacket",
-			"ReadPacket",
-			"1804",
-			"SendPacket(",
-			"ConnectionContext",
-			"ReceivePacket",
-			"ReadPacket",
-			"DestroyPacket",
-			"todo",
-			"CONNECTION_ERROR_OUT",
-			"memcpy",
-			"ReadPacket",
-			"Connect",
-			"Serialize",
-			"Create(",
-			"packet->blockMessageType",
-			"messageType = ",
-			"AddFragmentToPacket",
-			"packet->block",
-			"blockMessageId = ",
-			"m_receiveBlock",
-			"MESSAGE_DESYNC",
-			"CONNECTION_ERROR",
-			"ProcessAck",
-			"AddFragment",
-			"ProcessPacketMessages",
-			"sending block ",
-			"large block",
-			"AddMessage",
-			"AddFragmentToPacket",
-			"blockSize",
-			"AddFragmentTo",
-			"oldest_mess",
-			"AddFragmentToPacket",
-			"GetBlock",
-			"#ig 0",
-			"printf",
-			"block size",
-			"TestBlockMessage",
-			"AssignId",
-			"FragmentToSend",
-			"SendingBlock",
-			"AddMessagePacketEntry",
-			"AddMessages",
-			"SendingBlockMessage",
-			"HasMessagesToSend",
-			"DEBUG_LOGS",
-			"DEBUG_LOG",
-			"HasMessages",
-			"HasMessagesToSend",
-			"GetMessagesToSend",
-			"GetMessages"
+			"1290"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1089,7 +1089,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 23.0
+		"height": 22.0
 	},
 	"input":
 	{
@@ -1130,7 +1130,7 @@
 	"project": "gafferongames.sublime-project",
 	"replace":
 	{
-		"height": 42.0
+		"height": 40.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1140,32 +1140,188 @@
 		"selected_items":
 		[
 			[
-				"todo",
-				"TODO"
-			],
-			[
 				"changes",
 				"CHANGES"
 			],
 			[
-				"sending",
-				"content/post/sending_and_receiving_packets.md"
+				"todo",
+				"TODO"
+			],
+			[
+				"snapshots_",
+				"content/post/snapshots_and_interpolation.md"
+			],
+			[
+				"snapshots",
+				"content/post/snapshots_and_interpolation.md"
+			],
+			[
+				"det",
+				"content/post/deterministic_lockstep.md"
+			],
+			[
+				"interpolation.md",
+				"content/post/snapshots_and_interpolation.md"
 			],
 			[
 				"client",
 				"content/post/client_server_connection.md"
 			],
 			[
-				"",
-				"RESEARCH"
+				"conf",
+				"config_local.toml"
+			],
+			[
+				"make",
+				"Makefile"
+			],
+			[
+				"the",
+				"content/post/the_physics_simulation.md"
+			],
+			[
+				"about",
+				"content/about.md"
+			],
+			[
+				"integrat",
+				"content/post/integration_basics.md"
+			],
+			[
+				"2004",
+				"content/post/networked_physics_2004.md"
+			],
+			[
+				"spr",
+				"content/post/spring_physics.md"
+			],
+			[
+				"int",
+				"content/post/integration_basics.md"
+			],
+			[
+				"fi",
+				"content/post/fix_your_timestep.md"
+			],
+			[
+				"_3d",
+				"content/post/physics_in_3d.md"
+			],
+			[
+				"net",
+				"content/post/networked_physics_2004.md"
+			],
+			[
+				"phys",
+				"content/post/physics_in_3d.md"
+			],
+			[
+				"fix",
+				"content/post/fix_your_timestep.md"
+			],
+			[
+				"virtualconn",
+				"content/post/virtual_connection_over_udp.md"
+			],
+			[
+				"virtula",
+				"content/post/virtual_connection_over_udp.md"
+			],
+			[
+				"virtual",
+				"content/post/virtual_connection_over_udp"
 			],
 			[
 				"udp",
 				"content/post/udp_vs_tcp.md"
 			],
 			[
-				"make",
+				"todto",
+				"content/post/introduction_to_virtual_go.md"
+			],
+			[
+				"ud",
+				"content/post/udp_vs_tcp.md"
+			],
+			[
+				"about.md",
+				"content/about.md"
+			],
+			[
+				"gostonevs",
+				"content/post/go_stone_vs_go_board.md"
+			],
+			[
+				"coll",
+				"content/post/collision_response_and_coulomb_friction.md"
+			],
+			[
+				"iner",
+				"content/post/rotation_and_inertia_tensors.md"
+			],
+			[
+				"coulomb",
+				"content/post/collision_response_and_coulomb_friction.md"
+			],
+			[
+				"inertia",
+				"content/post/rotation_and_inertia_tensors.md"
+			],
+			[
+				"mov",
+				"content/post/how_the_go_stone_moves.md"
+			],
+			[
+				"moves",
+				"content/post/how_the_go_stone_moves.md"
+			],
+			[
+				"tess",
+				"content/post/tessellating_the_go_stone.md"
+			],
+			[
+				"css",
+				"static/css/clean-blog.min.css"
+			],
+			[
+				"boot",
+				"static/css/bootstrap.min.css"
+			],
+			[
+				"sha",
+				"content/post/shape_of_the_go_stone.md"
+			],
+			[
+				"go",
+				"content/post/the_go_stone.md"
+			],
+			[
+				"go_stone.md",
+				"content/post/the_go_stone.md"
+			],
+			[
+				"virt",
+				"content/post/introduction_to_virtual_go.md"
+			],
+			[
+				"vi",
+				"content/post/introduction_to_virtual_go.md"
+			],
+			[
+				"integra",
+				"content/post/integration_basics.md"
+			],
+			[
+				"makefile",
 				"Makefile"
+			],
+			[
+				"sending",
+				"content/post/sending_and_receiving_packets.md"
+			],
+			[
+				"",
+				"RESEARCH"
 			],
 			[
 				"v",
@@ -1186,10 +1342,6 @@
 			[
 				"im",
 				"bin/implicit_euler_spring_damper.csv"
-			],
-			[
-				"int",
-				"content/post/integration_basics.md"
 			],
 			[
 				"con",
@@ -1238,10 +1390,6 @@
 			[
 				"fa-",
 				"themes/startbootstrap-clean-blog/static/fonts/glyphicons-halflings-regular.svg"
-			],
-			[
-				"about",
-				"content/about.md"
 			],
 			[
 				"chang",
@@ -1502,154 +1650,6 @@
 			[
 				"memory.h",
 				"yojimbo_memory.h"
-			],
-			[
-				"allocator",
-				"yojimbo_allocator.h"
-			],
-			[
-				"yoh",
-				"yojimbo.h"
-			],
-			[
-				"ya",
-				"yojimbo_allocator.h"
-			],
-			[
-				"yojim",
-				"yojimbo.cpp"
-			],
-			[
-				"y",
-				"yojimbo.h"
-			],
-			[
-				"allocator.h",
-				"yojimbo_allocator.h"
-			],
-			[
-				"memory.cpp",
-				"yojimbo_memory.cpp"
-			],
-			[
-				"alloc",
-				"yojimbo_allocator.h"
-			],
-			[
-				"yojm",
-				"yojimbo_config.h"
-			],
-			[
-				"mem",
-				"yojimbo_memory.cpp"
-			],
-			[
-				"memo",
-				"yojimbo_memory.h"
-			],
-			[
-				"queue.h",
-				"yojimbo_queue.h"
-			],
-			[
-				"yojimbo.h",
-				"yojimbo.h"
-			],
-			[
-				"types.h",
-				"yojimbo_types.h"
-			],
-			[
-				"queue",
-				"yojimbo_queue.h"
-			],
-			[
-				"yom",
-				"yojimbo.cpp"
-			],
-			[
-				"006_",
-				"006_client_server.cpp"
-			],
-			[
-				"net",
-				"network2.h"
-			],
-			[
-				"netwokr2.h",
-				"network2.h"
-			],
-			[
-				"netwo",
-				"network2.h"
-			],
-			[
-				"netwokr2",
-				"network2.h"
-			],
-			[
-				"protocl2.h",
-				"protocol2.h"
-			],
-			[
-				"tw",
-				"network2.h"
-			],
-			[
-				"chanes",
-				"CHANGES"
-			],
-			[
-				"prem",
-				"premake5.lua"
-			],
-			[
-				"premake4.lua",
-				"premake4.lua"
-			],
-			[
-				"protocol2h.",
-				"protocol2.h"
-			],
-			[
-				"quat",
-				"vectorial/quat4f.h"
-			],
-			[
-				"quat4.f",
-				"vectorial/quat4f.h"
-			],
-			[
-				"protoco2l.h",
-				"protocol2.h"
-			],
-			[
-				"quat4.h",
-				"vectorial/quat4f.h"
-			],
-			[
-				"vec4.h",
-				"vectorial/vec4f.h"
-			],
-			[
-				"quat4f.h",
-				"vectorial/quat4f.h"
-			],
-			[
-				"test",
-				"test.cpp"
-			],
-			[
-				"2",
-				"002_serialization_strategies.cpp"
-			],
-			[
-				"work",
-				"~/Documents/WORKLOG"
-			],
-			[
-				"done",
-				"~/Documents/DONE"
 			]
 		],
 		"width": 0.0
