@@ -730,13 +730,13 @@
 	],
 	"file_history":
 	[
+		"/Users/gaffer/git/gafferongames/Makefile",
+		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/git/gafferongames/content/post/snapshots_and_interpolation.md",
 		"/Users/gaffer/git/gafferongames/content/post/snapshot_compression.md",
-		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/git/gafferongames/CHANGES",
 		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
 		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
-		"/Users/gaffer/git/gafferongames/Makefile",
 		"/Users/gaffer/git/gafferongames/config_local.toml",
 		"/Users/gaffer/Desktop/ROBLOX",
 		"/Users/gaffer/git/gafferongames/scratch.md",
@@ -1140,12 +1140,16 @@
 		"selected_items":
 		[
 			[
-				"changes",
-				"CHANGES"
+				"makefile",
+				"Makefile"
 			],
 			[
 				"todo",
 				"TODO"
+			],
+			[
+				"changes",
+				"CHANGES"
 			],
 			[
 				"snapshots_",
@@ -1310,10 +1314,6 @@
 			[
 				"integra",
 				"content/post/integration_basics.md"
-			],
-			[
-				"makefile",
-				"Makefile"
 			],
 			[
 				"sending",
