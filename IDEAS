@@ -1,5 +1,11 @@
 IDEAS
 
+    -----------------------
+
+    Gap encoding. Study all the options. Write an article about them.
+
+    -----------------------
+
     Article about options for networking a game, following "Network Trends" presentation from Remedy.
 
     FPS network model from the ground up, following "FPS Deep Dive" presentation from Remedy, but with source code and worked examples of all concepts built on top of libyojimbo. This would be a whole article series.

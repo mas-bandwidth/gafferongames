@@ -1,408 +1,93 @@
+DONE
+
+    Setup template for white paper.
+
 TODO
-
-    "Why can't I send UDP packets in a browser?"
-
-    White paper style.
-
-    Good guideline articles for writing white papers:
-
-        http://www.idemployee.id.tue.nl/g.w.m.rauterberg/lecturenotes/Eight-Rules-for-Writing-Great-White-Papers.pdf
-        http://www.writerswrite.com/journal/sep02/effective-business-writing-the-white-paper-9027
-        http://www.wikihow.com/Write-White-Papers
-        http://www.calpoly.edu/~jgphelan/_Media%20Assets/ch3_white_paper_outlines.pdf
-
-    3-7 pages
-
-    3 graphs/diagrams
-
-    3 interview quotes within white paper.
-
-    'When writing a white paper you should mainly concentrate on the problems your customers may have and only later provide them with solutions. This is when your audience is likely to read the white paper. If you give solutions first, the audience is prone to turn away from the very beginning. Thus, it is vital to emphasize on the reader's interests and desires above your own.'
-
-    Outline the problem first, before solving it.
-
-    "- A White Paper offers solutions to your prospects' problems;
-     - It doesn't try to praise your company or products;
-     - It makes the reader curious when reading it;
-     - It urges the reader to take action and search more for the problem solving product."
-
-    ------------------
-
-    1. Introduction - gives you an insight of the paper without stating the whole conclusion. It should be not longer than one paragraph. Sometimes customers read only the introductory part and the conclusion, so better provide material that gives them a reason to keep on reading.
-
-    2. Problem - provide readers with general information that helps them understand facts about certain issues and to identify themselves with the problem described.
-
-    3. Solution - propose your solution to the problems in question, explain how the software works in general. Given enough details, readers can make their own decisions about the usefulness of the proposed solution.
-
-    4. Advertisement - tell the readers about your product or services but ONLY after you have convinced them of the truths of your argument. Explain them why your solution is the best available. Talk about the benefits and provide supporting evidence.
-
-    5. Conclusion - write a one paragraph summary of why your solution is the best. Emphasize the advantage of using this product as well as the disadvantage of not using it. Also, don't forget to mention the works cited and the hyperlink sources you used. Give the reader details about how you can be contacted. Visit your site? Contact your company?
-
-    -----------------
-
-    1. Use graphics, charts, diagrams, tables and photos. They make a white paper more appealing and convincing and they are likely to increase its credibility.
-
-    2. Give examples and study cases, they are much sought after. Readers want to see facts, real cases, inspiring stories.
-
-    3. Use casual, easy-understandable language.
-
-    4. Stick to no more than 25 pages. The length of a white paper usually varies between 4 and 25 pages. Writing more than that becomes risky, as you may lose the audience.
-
-    4. Cite third-party sources (analyst research or industry reports) whenever is possible.
-
-    5. Avoid direct selling. People hate the idea of knowing that they are offered something for money. Write in a positive "non-salesy" style.
-    Focus on benefits more than features. This is how they'll know that you are not trying to sell them something they don't want. They have the opportunity to see what the service is for. Just as simple.
-
-    6. Use new and practical information. It would be a pity to pass on information that is maybe out-of-date. So, a deep research on the topic is more than recommended before starting writing a white paper.
-
-    7. Use concrete hints or "How tos"
-
-    8. Avoid such as "revolutionary", "cutting edge" etc. If your product is any of these things, buyers will definitely recognize that.
-
-    -----------------
-
-    "Before you get to the heart of the paper, outline the relevant background materials, such as industry research figures, that support your arguments. In the opening section, highlight why your solution exists; in other words, what specific problem does it solve?
-
-    Don’t meander from topic to topic or you will lose the reader. Each paragraph should only discuss one idea. Don’t mix ideas in the same sentence or paragraph.
-
-    For example, before you begin, assume that the reader is completely new to the subject matter. Then outline the most significant issues and progressively walk through the solution; begin with the larger issues first and sequentially move though the other points."
-
-    -----------------
-
-    "Many white papers discuss the theoretical application on the solution, e.g. Product X will do Y in situation Z. That’s fine up to a point as it helps paint a picture for the reader. However, you need to underline your ‘theory’ with real world examples.
-
-    Case studies and customers quotes are a very effective way of demonstrating how your solution performs in a working environment. Case studies reinforce the theoretical concepts. They help the reader see how the solution could work for them.
-
-    If the reader can’t relate to your solution in a practical sense, they will search elsewhere for another product."
-
-    -----------------
-
-    "Oddly enough, many of us read the summary first. Because of this, it should capture the essence of the white paper and identify the most interesting points."
-
-    -----------------
-
-    "Focus on the needs of your readers. This can be effectively accomplished by leading with the problems your solution overcomes, rather than the actual solution itself".
-
-    "By focusing on the pain points experienced by the reader and talking about the problems caused by those pains, you are establishing credibility with the reader, and simultaneously filtering out unqualified customers".
-
-    "The goal of most white papers is to gracefully lead the reader toward the conclusion that your product or service will best meet his or her needs. To accomplish this, you must substantially make your case".
-
-    "The goal of discussing challenges is to build affinity with your readers"
-
-    "Market driver or trends section. Wherever possible, market trends should reference 3rd party resource". <--- eg. FPS trend to client/server, dedicated servers.
-
-    "Background section". Discuss web technologies, WebRTC, QUIC, etc.
-
-    Really the goal here has to be to *fuse* these two areas together, web and FPS game networking techniques. That's the whole point!
-
-    "How it works section". This is the meat of the white paper. I think this white paper will need this section obviously.
-
-
-
-    -----------------
-
-    Bought some good ebooks to read about writing a white paper. Read them tonight!
-
-    -----------------
-
-    I need to come up with a strategy that will allow me to continue to convert the old articles on gafferongames.com over to the new format, piece by piece, while still having some old articles unconverted.
-
-    This is important because I'm not going to have time to completely pass over all articles before GDC, but I do need to switch to the new format for the front page.
-
-    -----------------
-
-    1. Introduction
-
-        Introduce the high level problem and the high level solution in the first few paragraphs.
-
-    2. Market Drivers
-
-        Discuss what is driving the market towards your solution.
-
-    3. Problems
-
-        Identify the top 3-5 issues related to the high level problem.
-
-    4. Generic Solution
-
-        Introduce the solution in a generic way.
-
-        * Define: Clearly define the solution
-
-        * Benefits: Explain how it overcomes the problems listed earlier.
-
-        * What to look for: List of top 10 considerations when looking for a solution.
-
-    5. Specific Solution
-
-        Discuss the specific advantages of your product, service or solution.
-
-    6. Call to action
-
-        Provide a logical next step and include company contact information.
-
-    -----------------
-
-    Longer form:
-
-        1. Introduction
-
-        2. Market Drivers
-
-        3. Problems
-
-        4. Historical Approach
-
-        5. Generic Solution
-
-            * Define
-            * Benefits
-            * What to look for
-            * >>> How it works <<<
-            * Examples: case studies
-
-        6. Specific Solution
-
-        7. Call to action
-
-    ------------------
-
-    Technical white paper form:
-
-    1. Introduction. 
-
-        Introduce the technology
-
-    2. Market Drivers
-
-        Discuss the challenges that are driving the need for your technology.
-
-    3. Historical Approach
-
-    4. Specific solution
-
-        * Define
-        * Benefits
-        * How It Works
-        * Applications
-        * Key Features
-        * Comparison with alternatives
     
-    5. Conclusion / Call to action
+    Now I need to do research.
 
-    --------------------
+    First thing I need is evidence of a problem.
 
-    "A white paper typically argues a
-    specific position or solution to a problem. Although white papers take their roots in governmental policy, they have become a common tool used to introduce technology innovations and products. A typical search engine query on "white paper" will return millions of results, with many focused on technology-related issues."
+    This can come from the hacker news thread, plus stack overflow questions "why can't i send udp packets" over the years.
 
-    "A white paper must quickly identify problems or concerns faced by its readers and lead them down the path to a solution provided by your product or service."
+    Example 1 with citation can be agar.io, with a quote from the author complaining about WebRTC being too complicated, and using web sockets, getting bad performance from this.
 
-    "The alternative approach, and the one I strongly recommend, is to focus on the needs of your readers. This can be effectively accomplished by leading with the problems your solution overcomes, rather than the actual solution itself."
+    Example 2 can be a discussion about UDP being "well known" to provide better performance in the game industry, and people searching for ways to send UDP packets from the browser. Or something better, if I can find it.
 
-    "You can take it a step further by looking at issues such as historical precedents, describing new classes of solutions that address the problems and even identifying what to look for in a solution, while never once mentioning your product name or company (at least not yet). This altruistic approach will score major points with the reader and greatly increase the likelihood he or she will actually read the entire paper."
+    Straw solution #1 should be web sockets:
 
-    "A white paper must contain informative and persuasive information. The goal of a white paper is to lead the reader toward the conclusion that your product or service will best meet his or her needs. To accomplish this, you must substantially make your case."
+        Web sockets are bad because they are built on TCP not UDP.
 
-    "Provide a historical overview: A historical overview can be a powerful addition to your white paper. In the world of technology, it's useful to discuss what has led to the modern-day dilemma solved by your solution."
+        Explain why this is bad (head of line blocking)
 
-    ^--- IMPORTANT
+        Packet loss and latency still exist (most bad behavior is at the edges of the network, *citation*)
 
-    "Offer the "what to look for" pitch: Providing an overview of the key considerations to look for when seeking a solution can be very useful and persuasive. This section of your paper can be "the buyer's guide" that helps your readers set a standard by which all of your competitors will be judged. This is a great opportunity for you to toot your own horn and get away with it. For example, you might state that it is important to work with a company that has an established client base and a global support team. You could explain the benefits and ultimately knock your smaller competitors out of the equation for the reader. This should all be done at a high level without getting into the specifics regarding your company or product."
+        Therefore TCP is not a good choice for time series data.
 
-    ^---- I like this in terms of 'what would a solution look like?'. But this is more in the generic solution area.
+    Straw solution #2 should be SPDY:
 
-    "Provide examples: It is always useful to explain situations where your solution would be particularly effective. You can be as specific or as generic as you like. Sometimes it is useful to talk about specific industries where the solution works well. Other times it makes sense to talk about specific customers who have found success with the product. These examples can and should be directly related to your organization's solution."
+        Use this to build evidence that UDP is actually making headroom in web world. 
 
-    "There are some circumstances where you will need to boost your credibility to the reader to persuade him or her that the claims you are making are true. Here are a few things you can do to achieve this goal. First, you should write objectively. It is important to speak clearly and not appear too biased. If you are making claims that are clearly out in left field, your reader will question your validity. Second, you should quote reputable third- party sources when making claims that involve numbers of any kind."
+        However, SPDY is based around channels of reliable-ordered data. Each channel still has head of line blocking. No support for unreliable-unordered data.
 
-    "Keep it short: Try to keep your white paper to 12 pages or less. If you cannot do that, then consider splitting your topic into multiple papers."
+        So while this alleviates head of line blocking for unrelated content, but is not suitable for time series data, because head of line blocking still exists.
 
-    "Break content into small digestible chunks: Try to keep each major thought to no more than a few paragraphs before breaking it down further into sub- thoughts. It is helpful to use bullets and many creative subheads. Remember your audience and their unique attention span."
+        (one option would be to set up 256 channels, and rotate the data across channels, so that a dropped packet would be unlikely to delay subsequence packets)
 
-    "Add sidebars and callouts: Think of those great textbooks you read in school. They were the ones that had little summary sentences next to major sections so you knew if you should read it. Sidebars and callouts are very effective tools to help your reader get through the entire white paper."
+    Straw solution #3 should be WebRTC:
 
-    "Have an editor review your work: Having an objective set of eyes look over your document is critical. You don't want a grammatical oversight to ruin your reputation with your reader. In addition to syntax and grammar evaluation, an editor can suggest slight changes that make your words more powerful."
+        NAT punch, stun. Focus on browser <-> browser communication and peer-to-peer. Data channel.
 
-    -----------------------
+        Dedicated server trend in FPS (citation).
 
-    Title — You'll want an attention-grabbing title that clearly communicate the problem you are solving and is appropriate for your target audience. Even for Product Knowledge white papers, it's not a good idea to include the product name in the title. Your title should be benefit, not feature, oriented.
+        NAT punch/stun are not required for dedicated servers.
 
-    The abstract or executive summary — You may be tempted to put your conclusion at the end, but a white paper needs to grab the reader immediately. Include direct, pithy statements of your position to engage the reader. Although this section provides a short summary of what the paper is about, you need to provide enough detail to satisfy a busy executive while encouraging the reader to continue on to the meat of the paper..
+        It's too much work to setup WebRTC and get it working with dedicated servers.
 
-    Introduction — Define the issue and provide background discussion while building credibility. Find common ground with your audience and hook them in.
+        Web games like agar.io are also dedicated server based games.
 
-    Problem Definition — Don't start selling yet. Thoroughly and completely identify the business problem your technology solves. This section should be entirely from the perspective of the target audience.
- 
-    High-Level Solution — Describe relevant technologies at a high level, including any competing technologies (which you will rebut later). Support your arguments with tables, charts, and graphics. Quote industry experts as needed to bolster your positions. You are educating your target audience on the current state of the art, as well as where your solution fits.
+        Citation from hacker news article about complexity of WebRTC.
 
-    Solution Details — Having thoroughly explained the problem and the general approach to solving it, it is finally time to describe your solution in more detail. You can start selling know, but avoid grandiose claims; the soft approach works better in white papers. Be sure to show how your solution is vastly superior to the competition. Remember your audience and use appropriate language and level of detail. This is the heart of your white paper and you'll probably want to use case studies or customer testimonials to support your arguments. 
-     
-    Business benefits — This section is the soul of your white paper, where you need to grab the reader where he or she lives and provide plenty of assurances that your solution will work for them. Discuss return on investment (ROI), usability, adherence to standards, and speed of implementation. Show you understand your readers' pain and can relieve it. Customer quotes again may be helpful.
-     
-    Summary — A quick summary emphasizes both the benefits of your solution as well as the risks to readers who decide not to use your product or service. Many readers may skip the entire document and read this section only, so write this section as if it were an entirely standalone document summarizing the main selling points about your solution. Conclude with the most important point that you want the reader to remember.
+        "Too hard. Too complex".
 
-    Call to action — You'd be surprised how many white papers either leave this most important section out or fumble it at the end. Emphatically tell readers what you want them to do and how to do it. We're not talking about simply dropping in a contact person's name and telephone number as well as Website, email, and snail mail addresses. We prefer white papers that end with offers — free trial version, free assessment, free gift certificate if you call today, that sort of thing. 
+    What are the three major concerns?        
 
-    -----------------
+        (This should be framed in terms of, so... why don't they just let you send UDP packets from a browser?, then turn around frame this in terms of 'what would a solution look like?')
 
+        DDOS
 
+            => DDOS attacks, spend packet to any address. To fix this solution should be: connection based.
 
+        Encryption
 
+            => UDP packets are not encrypted. MITM attacks. spoofing attacks, imitate another client or server.
 
+        Authentication
 
+            => UDP packets are not authenticated. How do you know the sender is a real client and not a bot or an attacker? Zombie clients. Taking up dedicated resources that you pay for etc.
 
+    How the real solution works
 
+        Frame this in terms of how it solves the primary concerns that would stop web browsers from letting you send UDP packets.
 
+        Describe the protocol but in a high level.
 
+        This is the real meat of the white paper.
 
+    What are the three advantages?
 
+        Simplicity.
 
+            This solution is the simplest possible solution to the problem.
 
+        Expandable.
 
+            ^--- Once it becomes possible to send UDP packets, additional libraries can be built on this to provided higher level functionality, like reliabile/ordered for a subset of data. Packet fragmentation and reassembly, etc.
 
+            With just this one foundation, everything else can be built that dedicated server-based games need in browsers.
 
+        Authentication.
 
+            The biggest advantage. Only clients granted connect tokens can actually connect to servers. Benefits against DDOS, zombie clients etc.
 
-
-
-
-
-
-
-
-
-
-
-
-
-    -----------------
-
-    Make sure I didn't mess up the challenge/response packet diagrams in the article, because if the client index is only assigned after the challenge response is received, the keepalive packet in yojimbo is used to communicate client index back to the client, it cannot be passed to client before the challenge response is processed.
-
-    -----------------
-
-    Middle of converting "Snapshot Compression".
-
-    It's written quickly and I think the flow is bad. It needs cutting down. 
-
-    It would benefit a lot from having more diagrams and cut down text. Especially, in the smallest 3 section.
-
-    Spent a lot of time today trying to improve the intro. More work is required before this article is ready. It's not a great article right now.
-
-    Also need to convert videos over from gafferongames.com for this article to the new videos.
-
-    -----------------
-
-    Also need to work out what to do with draft articles at the end of this series!
-
-    -----------------
-
-    Write next article "Securing Dedicated Servers"
-
-    -----------------
-
-    Definitely need to dredge up the source code for "Game Networking" and "Game Physics" as example source code to give to supporters.
-
-    Also, need a bunch of linking across articles to the next, as well as linking to source code and a footer for support on Patreon.
-
-    -----------------
-
-    Get nice syntax highlighting working:
-
-    https://gohugo.io/extras/highlighting/
-
-    Definitely want to do this on page generation rather than javascript, so it works well inside an RSS feed.
-
-    Having some problem getting this work with my CSS. The code background is not getting set to black. Something in my theme CSS fucking it up?
-
-    Would be nice if a javascript library could do code highlighting (and scrolling!), especially for mobile, where code samples just don't fit, as long as I can fall back to something static HTML for RSS
-
-    Whatever I do, I always have to make sure the RSS is readable.
-
-    -----------------
-
-    Research a good way to get a sitemap and discoverability on gafferongames.com, eg. menus, local search, sidebar with sitemap... something equivalent to what I currently have on gafferongames.com is essential for discoverability and driving people towards the patreon for articles they want to read.
-
-    People fundamentally need to be see the structure of articles planned, and want the next one in the series... this is key. Cannot lose this.
-
-    https://npf.io/2014/08/making-it-a-series/
-
-    -----------------
-
-    Need to setup up http permanent redirects from old gafferongames URLs to the new hugo URLs
-
-    I should be able to just go over each article and find its URL on the old gafferongames and setup nginx config for this redirection I think.
-
-    -----------------
-
-    Need to remember to properly link up next/previous in "Game Networking" article series.
-
-    Also some conclusions need padding out, and the example source code needs to be updated and downloadable.
-
-    -----------------
-
-    Need to remember to update links in "Deterministic Lockstep" to old gafferongames.com to the new articles as written.
-
-    Probably want to grep through all my MD files to look for any links to gafferongames
-
-    -----------------
-
-    Need to do a lot of linking from the end of articles to the next in the series. Many articles tend to just peter out, especially old ones.
-
-    -----------------
-
-    Need a solution for bringing across the math. Bunch of research below. Critically, it needs to work both in HTML and in RSS.
-
-    This guy has a solution, but it's a lot of work that requires post-processing the generated RSS, I could do this, no problem:
-
-        http://latkin.org/blog/2016/08/07/better-tex-math-typesetting-in-hugo/
-
-    Basically, it uses Javascript Latex for web, and then falls back to image generated latex for RSS. Not particularly great.
-
-    Starting option is probably just to use the image generating service, then optimize the web javascript version to get better text quality.
-
-    Katex is here:
-
-        https://khan.github.io/KaTeX/
-
-    Need to hook something up like this. I should be able to do it.
-
-    -----------------
-
-    It's bad that there is not a lot of visibility right now for articles in a series back *to* that series as a whole.
-
-    Also, within a series I would like to display article summaries automatically, not just lists of articles with their tags -- of course their tags will all be the same, they're all in the same article series!
-
-    I probably need some professional help to get this website into the form I am looking for.
-
-    I have good content, but the presentation needs to improve. Pulling the trigger on a blank website without final polish, especially if it is backwards in terms of discoverability of new articles could be a mistake.
-
-    But I do need to get this finished by the end of the year.
-
-    So I have to do my best, and then work on visual improvements in parallel once the website conversion is completed.
-
-    -----------------
-
-    Search for "gafferongames.com" for any stale links before going live
-
-    In fact, why not write a script to parse my markdown for stale links? This could be fun.
-
-    -----------------
-
-    Impulse j general response equation in "Collision Response and Coulomb Friction" would be nice to convert from an image to an actual equation. The image is low resolution.
-
-    -----------------
-
-    Concept of "adjacent selectors" should let me fine tune the CSS of my document.
-
-    Specifically, if a H2 comes after a code sample or video or whatever, I can make sure it puts a bit of extra spacing in.
-
-    http://stackoverflow.com/questions/10309408/how-to-add-vertical-spacing-between-block-elements-but-not-top-and-bottom
-
-    -----------------
-
-    What Every Programmer Needs to Know About Game Networking
-
-    Is a bit rough. It could use a good pass over for accuracy and tone.
-
-    -----------------
+    

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Networked Physics (2004) | Gaffer On Games</title>
+
+    
+
+    
+    <link href="http://173.255.195.190/gafferongames//css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://173.255.195.190/gafferongames//css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://173.255.195.190/gafferongames/">Gaffer On Games</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://173.255.195.190/gafferongames/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://173.255.195.190/gafferongames/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://173.255.195.190/gafferongames/post/">Archives</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://173.255.195.190/gafferongames/contact/">Contact</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://www.patreon.com/gafferongames">Support gafferongames.com</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://173.255.195.190/gafferongames//img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Networked Physics (2004)</h1>
+               <h2 class="subheading">Network a physics simulation using the same techniques as first person shooters</h2>
+               <span class="meta">Posted by <a href="http://173.255.195.190/gafferongames//about">Glenn Fiedler</a> on Saturday, September 4, 2004
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Hi, I&rsquo;m Glenn Fiedler and welcome to the final article in in <strong><a href="http://173.255.195.190/gafferongames/categories/game-physics/">Game Physics</a></strong>.</p>
+
+<p>In the <a href="http://www.gafferongames.com/game-physics/spring-physics">previous article</a> we discussed how to use spring-like forces to model basic collision response, joints and motors.</p>
+
+<p>Now we&rsquo;re going to discuss how to network a physics simulation.</p>
+
+<p>Networking a physics simulation is the holy grail of multiplayer gaming and the massive popularity of first person shooters on the PC is a testament to the just how immersive a networked physics simulation can be.</p>
+
+<p>In this article I will show you how apply the key networking techniques from first person shooters to network your own physics simulation.</p>
+
+<h2 id="first-person-shooters">First Person Shooters</h2>
+
+<p>First person shooter physics are usually very simple. The world is static and players are limited to running around and jumping and shooting. Because of cheating, first person shooters typically operate on a client-server model where the server is authoritative over physics. This means that the true physics simulation runs on the server and the clients display an approximation of the server physics to the player.</p>
+
+<p>The problem then is how to allow each client to control his own character while displaying a reasonable approximation of the motion of the other players.</p>
+
+<p>In order to do this elegantly and simply, we structure the physics simulation as follows:</p>
+
+<ol>
+<li>Character physics are completely driven from input data</li>
+<li>Physics state is known and can be fully encapsulated in a state structure</li>
+<li>The physics simulation is reasonably deterministic given the same initial state and inputs</li>
+</ol>
+
+<p>To do this we need to gather all the user input that drives the physics simulation into a single structure and the state representing each player character into another. Here is an example from a simple run and jump shooter:</p>
+
+<pre>
+    struct Input
+    {
+         bool left;
+         bool right;
+         bool forward;
+         bool back;
+         bool jump;
+    };
+
+    struct State
+    {
+         Vector position;
+         Vector velocity;
+    };
+</pre>
+
+<p>Next we need to make sure that the simulation gives the same result given the same initial state and inputs over time. Or at least, that the results are as close as possible. I&rsquo;m not talking about determinism to the level of floating point accuracy and rounding modes, just a reasonable, 1-2 second prediction giving basically the same result.</p>
+
+<h2 id="network-fundamentals">Network Fundamentals</h2>
+
+<p>I will briefly discuss actually networking issues in this section before moving on to the important information of what to send over the pipe. It is after all just a pipe after all, networking is nothing special right? Beware! Ignorance of how the pipe works will really bite you. Here are the two networking fundamentals that you absolutely need to know:</p>
+
+<p>Number one. If your network programmer is any good at all he will use UDP, which is an unreliable data protocol, and build some sort of application specific networking layer on top of this. The important thing that you as the physics programmer need to know is that you absolutely must design your physics communication over the network so that you can receive the most recent input and state without waiting for lost packets to be resent. This is important because otherwise your physics simulation will stall out under bad networking conditions.</p>
+
+<p>Two. You will be very limited in what can be sent across the network due to bandwidth limitations. Compression is a fact of life when sending data across the network. As physics programmer you need to be very careful what data is compressed and how it is done. For the sake of determinism, some data must not be compressed, while other data is safe. Any data that is compressed in a lossy fashion should have the same quantization applied locally where possible, so that the result is the same on both machines. Bottom line you&rsquo;ll need to be involved in this compression in order to make it as efficient as possible without breaking your simulation.</p>
+
+<h2 id="physics-runs-on-the-server">Physics Runs On The Server</h2>
+
+<p>The fundamental primitive we will use when sending data between the client and the server is an unreliable data block, or if you prefer, an unreliable non-blocking remote procedure call (rpc). Non-blocking means that the client sends the rpc to the server then continues immediately executing other code, it does not wait for the rpc to execute on the server! Unreliable means that if you call the rpc is continuously on the the server from a client, some of these calls will not reach the server, and others will arrive in a different order than they were called. We design our communications around this primitive because it suits the transport layer (UDP).</p>
+
+<p>The communication between the client and the server is then structured as what I call a &ldquo;stream of input&rdquo; sent via repeated rpc calls. The key to making this input stream tolerant of packet loss and out of order delivery is the inclusion of a floating point time in seconds value with every input rpc sent. The server keeps track of the current time on the server and ignores any input received with a time value less than the current time. This effectively drops any input that is received out of order. Lost packets are ignored.</p>
+
+<p>Thinking in terms of our standard first person shooter, the input we send from client to server is the input structure that we defined earlier:</p>
+
+<pre>
+    struct Input
+    {
+         bool left;
+         bool right;
+         bool forward;
+         bool back;
+         bool jump;
+    };
+
+    class Character
+    {
+    public:
+
+         void processInput( double time,
+                            Input input );
+    };
+</pre>
+
+<p>Thats the bare minimum data required for sending a simple ground based movement plus jumping across the network. If you are going to allow your clients to shoot you&rsquo;ll need to add mouse input as part of the input structure as well because weapon firing needs to be done server side.</p>
+
+<p>Notice how I define the rpc as a method inside an object? I assume your network programmer has a channel structure built on top of UDP, eg. some way to indicate that a certain rpc call is directed as a specific object instance on the remote machine.</p>
+
+<p>So how does the server process these rpc calls? It basically sits in a loop waiting for input from each of the clients. Each character object has its physics advanced ahead in time individually as input rpcs are received from the client that owns it. This means that the physics state of different client characters are slightly out of phase on the server, some clients being a little bit ahead and others a little bit behind in time. Overall however, the different client characters advance ahead roughly in sync with each other.</p>
+
+<p>Lets see how this rpc call is implemented in code on the server:</p>
+
+<pre>    void processInput( double time, Input input )
+    {
+        if ( time &lt; currentTime )
+            return;
+
+        float deltaTime = currentTime - time;
+
+        updatePhysics( currentTime, deltaTime, input );
+    }</pre>
+
+<p>The key to the code above is that by advancing the server physics simulation for the client character is performed only as we receive input from that client. This makes sure that the simulation is tolerant of random delays and jitter when sending the input rpc across the network.</p>
+
+<h2 id="clients-approximate-physics-locally">Clients Approximate Physics Locally</h2>
+
+<p>Now for the communication from the server back to the clients. This is where the bulk of the server bandwidth kicks in because the information needs to be broadcast to all the clients.</p>
+
+<p>What happens now is that after every physics update on the server that occurs in response to an input rpc from a client, the server broadcasts out the physics state at the end of that physics update and the current input just received from the rpc.</p>
+
+<p>This is sent to all clients in the form of an unreliable rpc:</p>
+
+<pre>   void clientUpdate( float time, Input input, State state )
+    {
+        Vector difference = state.position - 
+                            current.position;
+
+        float distance = difference.length();
+
+        if ( distance &gt; 2.0f )
+            current.position = state.position;
+        else if ( distance &gt; 0.1 )
+            current.position += difference * 0.1f;
+
+        current.velocity = velocity;
+
+        current.input = input;
+    }</pre>
+
+<p>What is being done here is this: if the two positions are significantly different (&gt;2m apart) just snap to the corrected position, otherwise if the distance between the server position and the current position on the client is more than 10cms, move 10% of the distance between the current position and the correct position. Otherwise do nothing.</p>
+
+<p>Since server update rpcs are being broadcast continually from the server to the the clients, moving only a fraction towards the snap position has the effect of smoothing the correction out with what is called an exponentially smoothed moving average.</p>
+
+<p>This trades a bit of extra latency for smoothness because only moving some percent towards the snapped position means that the position will be a bit behind where it should really be. You don&rsquo;t get anything for free. I recommend that you perform this smoothing for immediate quantities such as position and orientation, while directly snapping derivative quantities such as velocity, angular velocity because the effect of abruptly changing derivative quantities is not as noticeable.</p>
+
+<p>Of course, these are just rules of thumb. Make sure you experiment to find out what works best for your simulation.</p>
+
+<h2 id="client-side-prediction">Client-Side Prediction</h2>
+
+<p>So far we have a developed a solution for driving the physics on the server from client input, then broadcasting the physics to each of the clients so they can maintain a local approximation of the physics on the server. This works perfectly however it has one major disadvantage. Latency!</p>
+
+<p>When the user holds down the forward input it is only when that input makes a round trip to the server and back to the client that the client&rsquo;s character starts moving forward locally. Those who remember the original Quake netcode would be familiar with this effect. The solution to this problem was discovered and first applied in the followup QuakeWorld and is called client side prediction. This technique completely eliminates movement lag for the client and has since become a standard technique used in first person shooter netcode.</p>
+
+<p>Client side prediction works by predicting physics ahead locally using the player&rsquo;s input, simulating ahead without waiting for the server round trip. The server periodically sends corrections to the client which are required to ensure that the client stays in sync with the server physics. At all times the server is authoritative over the physics of the character so even if the client attempts to cheat all they are doing is fooling themselves locally while the server physics remains unaffected. Seeing as all game logic runs on the server according to server physics state, client side movement cheating is basically eliminated.</p>
+
+<p>The most complicated part of client side prediction is handling the correction from the server. This is difficult, because the corrections from the server arrive <i>in the past</i> due to client/server communication latency. We need to apply this correction in the past, then calculate the resulting corrected position at present time on the client.</p>
+
+<p>The standard technique to do this is to store a circular buffer of saved moves on the client where each move in the buffer corresponds to an input rpc call sent from the client to the server:</p>
+
+<pre>   struct Move
+    {
+        double time;
+        Input input;
+        State state;
+    };</pre>
+
+<p>When the client receives a correction it looks through the saved move buffer to compare its physics state at that time with the corrected physics state sent from the server. If the two physics states differ above some threshold then the client rewinds to the corrected physics state and time and replays the stored moves starting from the corrected state in the past, the result of this re-simulation being the corrected physics state at the current time on the client.</p>
+
+<p>Sometimes packet loss or out of order delivery occurs and the server input differs from that stored on the client. In this case the server snaps the client to the correct position automatically via rewind and replay. This snapping is quite noticeable to the player, so we reduce it with the same smoothing technique we used above for the other player characters. This smoothing is done <i>after</i> recalculating the corrected position via rewind and replay.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>We can easily apply the client side prediction techniques used in first person shooters to network a physics simulation, but only if there is a clear ownership of objects by clients and these object interact mostly with a static world.</p>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="http://173.255.195.190/gafferongames//contact/">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://twitter.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://www.facebook.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted">© The Network Protocol Company, Inc.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://173.255.195.190/gafferongames//js/jquery.min.js"></script>
+
+    
+    <script src="http://173.255.195.190/gafferongames//js/bootstrap.min.js"></script>
+
+    
+    <script src="http://173.255.195.190/gafferongames//js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

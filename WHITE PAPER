@@ -1,0 +1,244 @@
+    "Why can't I send UDP packets from a browser?"
+
+    White paper style.
+
+    Good guideline articles for writing white papers:
+
+        http://www.idemployee.id.tue.nl/g.w.m.rauterberg/lecturenotes/Eight-Rules-for-Writing-Great-White-Papers.pdf
+        http://www.writerswrite.com/journal/sep02/effective-business-writing-the-white-paper-9027
+        http://www.wikihow.com/Write-White-Papers
+        http://www.calpoly.edu/~jgphelan/_Media%20Assets/ch3_white_paper_outlines.pdf
+
+    3-7 pages
+
+    3 graphs/diagrams
+
+    3 interview quotes within white paper.
+
+    'When writing a white paper you should mainly concentrate on the problems your customers may have and only later provide them with solutions. This is when your audience is likely to read the white paper. If you give solutions first, the audience is prone to turn away from the very beginning. Thus, it is vital to emphasize on the reader's interests and desires above your own.'
+
+    Outline the problem first, before solving it.
+
+    "- A White Paper offers solutions to your prospects' problems;
+     - It doesn't try to praise your company or products;
+     - It makes the reader curious when reading it;
+     - It urges the reader to take action and search more for the problem solving product."
+
+    ------------------
+
+    1. Introduction - gives you an insight of the paper without stating the whole conclusion. It should be not longer than one paragraph. Sometimes customers read only the introductory part and the conclusion, so better provide material that gives them a reason to keep on reading.
+
+    2. Problem - provide readers with general information that helps them understand facts about certain issues and to identify themselves with the problem described.
+
+    3. Solution - propose your solution to the problems in question, explain how the software works in general. Given enough details, readers can make their own decisions about the usefulness of the proposed solution.
+
+    4. Advertisement - tell the readers about your product or services but ONLY after you have convinced them of the truths of your argument. Explain them why your solution is the best available. Talk about the benefits and provide supporting evidence.
+
+    5. Conclusion - write a one paragraph summary of why your solution is the best. Emphasize the advantage of using this product as well as the disadvantage of not using it. Also, don't forget to mention the works cited and the hyperlink sources you used. Give the reader details about how you can be contacted. Visit your site? Contact your company?
+
+    -----------------
+
+    1. Use graphics, charts, diagrams, tables and photos. They make a white paper more appealing and convincing and they are likely to increase its credibility.
+
+    2. Give examples and study cases, they are much sought after. Readers want to see facts, real cases, inspiring stories.
+
+    3. Use casual, easy-understandable language.
+
+    4. Stick to no more than 25 pages. The length of a white paper usually varies between 4 and 25 pages. Writing more than that becomes risky, as you may lose the audience.
+
+    4. Cite third-party sources (analyst research or industry reports) whenever is possible.
+
+    5. Avoid direct selling. People hate the idea of knowing that they are offered something for money. Write in a positive "non-salesy" style.
+    Focus on benefits more than features. This is how they'll know that you are not trying to sell them something they don't want. They have the opportunity to see what the service is for. Just as simple.
+
+    6. Use new and practical information. It would be a pity to pass on information that is maybe out-of-date. So, a deep research on the topic is more than recommended before starting writing a white paper.
+
+    7. Use concrete hints or "How tos"
+
+    8. Avoid such as "revolutionary", "cutting edge" etc. If your product is any of these things, buyers will definitely recognize that.
+
+    -----------------
+
+    "Before you get to the heart of the paper, outline the relevant background materials, such as industry research figures, that support your arguments. In the opening section, highlight why your solution exists; in other words, what specific problem does it solve?
+
+    Don’t meander from topic to topic or you will lose the reader. Each paragraph should only discuss one idea. Don’t mix ideas in the same sentence or paragraph.
+
+    For example, before you begin, assume that the reader is completely new to the subject matter. Then outline the most significant issues and progressively walk through the solution; begin with the larger issues first and sequentially move though the other points."
+
+    -----------------
+
+    "Many white papers discuss the theoretical application on the solution, e.g. Product X will do Y in situation Z. That’s fine up to a point as it helps paint a picture for the reader. However, you need to underline your ‘theory’ with real world examples.
+
+    Case studies and customers quotes are a very effective way of demonstrating how your solution performs in a working environment. Case studies reinforce the theoretical concepts. They help the reader see how the solution could work for them.
+
+    If the reader can’t relate to your solution in a practical sense, they will search elsewhere for another product."
+
+    -----------------
+
+    "Oddly enough, many of us read the summary first. Because of this, it should capture the essence of the white paper and identify the most interesting points."
+
+    -----------------
+
+    "Focus on the needs of your readers. This can be effectively accomplished by leading with the problems your solution overcomes, rather than the actual solution itself".
+
+    "By focusing on the pain points experienced by the reader and talking about the problems caused by those pains, you are establishing credibility with the reader, and simultaneously filtering out unqualified customers".
+
+    "The goal of most white papers is to gracefully lead the reader toward the conclusion that your product or service will best meet his or her needs. To accomplish this, you must substantially make your case".
+
+    "The goal of discussing challenges is to build affinity with your readers"
+
+    "Market driver or trends section. Wherever possible, market trends should reference 3rd party resource". <--- eg. FPS trend to client/server, dedicated servers.
+
+    "Background section". Discuss web technologies, WebRTC, QUIC, etc.
+
+    Really the goal here has to be to *fuse* these two areas together, web and FPS game networking techniques. That's the whole point!
+
+    "How it works section". This is the meat of the white paper. I think this white paper will need this section obviously.
+
+
+
+    -----------------
+
+    Bought some good ebooks to read about writing a white paper. Read them tonight!
+
+    -----------------
+
+    I need to come up with a strategy that will allow me to continue to convert the old articles on gafferongames.com over to the new format, piece by piece, while still having some old articles unconverted.
+
+    This is important because I'm not going to have time to completely pass over all articles before GDC, but I do need to switch to the new format for the front page.
+
+    -----------------
+
+    1. Introduction
+
+        Introduce the high level problem and the high level solution in the first few paragraphs.
+
+    2. Market Drivers
+
+        Discuss what is driving the market towards your solution.
+
+    3. Problems
+
+        Identify the top 3-5 issues related to the high level problem.
+
+    4. Generic Solution
+
+        Introduce the solution in a generic way.
+
+        * Define: Clearly define the solution
+
+        * Benefits: Explain how it overcomes the problems listed earlier.
+
+        * What to look for: List of top 10 considerations when looking for a solution.
+
+    5. Specific Solution
+
+        Discuss the specific advantages of your product, service or solution.
+
+    6. Call to action
+
+        Provide a logical next step and include company contact information.
+
+    -----------------
+
+    Longer form:
+
+        1. Introduction
+
+        2. Market Drivers
+
+        3. Problems
+
+        4. Historical Approach
+
+        5. Generic Solution
+
+            * Define
+            * Benefits
+            * What to look for
+            * >>> How it works <<<
+            * Examples: case studies
+
+        6. Specific Solution
+
+        7. Call to action
+
+    ------------------
+
+    Technical white paper form:
+
+    1. Introduction. 
+
+        Introduce the technology
+
+    2. Market Drivers
+
+        Discuss the challenges that are driving the need for your technology.
+
+    3. Historical Approach
+
+    4. Specific solution
+
+        * Define
+        * Benefits
+        * How It Works
+        * Applications
+        * Key Features
+        * Comparison with alternatives
+    
+    5. Conclusion / Call to action
+
+    --------------------
+
+    "A white paper typically argues a
+    specific position or solution to a problem. Although white papers take their roots in governmental policy, they have become a common tool used to introduce technology innovations and products. A typical search engine query on "white paper" will return millions of results, with many focused on technology-related issues."
+
+    "A white paper must quickly identify problems or concerns faced by its readers and lead them down the path to a solution provided by your product or service."
+
+    "The alternative approach, and the one I strongly recommend, is to focus on the needs of your readers. This can be effectively accomplished by leading with the problems your solution overcomes, rather than the actual solution itself."
+
+    "You can take it a step further by looking at issues such as historical precedents, describing new classes of solutions that address the problems and even identifying what to look for in a solution, while never once mentioning your product name or company (at least not yet). This altruistic approach will score major points with the reader and greatly increase the likelihood he or she will actually read the entire paper."
+
+    "A white paper must contain informative and persuasive information. The goal of a white paper is to lead the reader toward the conclusion that your product or service will best meet his or her needs. To accomplish this, you must substantially make your case."
+
+    "Provide a historical overview: A historical overview can be a powerful addition to your white paper. In the world of technology, it's useful to discuss what has led to the modern-day dilemma solved by your solution."
+
+    ^--- IMPORTANT
+
+    "Offer the "what to look for" pitch: Providing an overview of the key considerations to look for when seeking a solution can be very useful and persuasive. This section of your paper can be "the buyer's guide" that helps your readers set a standard by which all of your competitors will be judged. This is a great opportunity for you to toot your own horn and get away with it. For example, you might state that it is important to work with a company that has an established client base and a global support team. You could explain the benefits and ultimately knock your smaller competitors out of the equation for the reader. This should all be done at a high level without getting into the specifics regarding your company or product."
+
+    ^---- I like this in terms of 'what would a solution look like?'. But this is more in the generic solution area.
+
+    "Provide examples: It is always useful to explain situations where your solution would be particularly effective. You can be as specific or as generic as you like. Sometimes it is useful to talk about specific industries where the solution works well. Other times it makes sense to talk about specific customers who have found success with the product. These examples can and should be directly related to your organization's solution."
+
+    "There are some circumstances where you will need to boost your credibility to the reader to persuade him or her that the claims you are making are true. Here are a few things you can do to achieve this goal. First, you should write objectively. It is important to speak clearly and not appear too biased. If you are making claims that are clearly out in left field, your reader will question your validity. Second, you should quote reputable third- party sources when making claims that involve numbers of any kind."
+
+    "Keep it short: Try to keep your white paper to 12 pages or less. If you cannot do that, then consider splitting your topic into multiple papers."
+
+    "Break content into small digestible chunks: Try to keep each major thought to no more than a few paragraphs before breaking it down further into sub- thoughts. It is helpful to use bullets and many creative subheads. Remember your audience and their unique attention span."
+
+    "Add sidebars and callouts: Think of those great textbooks you read in school. They were the ones that had little summary sentences next to major sections so you knew if you should read it. Sidebars and callouts are very effective tools to help your reader get through the entire white paper."
+
+    "Have an editor review your work: Having an objective set of eyes look over your document is critical. You don't want a grammatical oversight to ruin your reputation with your reader. In addition to syntax and grammar evaluation, an editor can suggest slight changes that make your words more powerful."
+
+    -----------------------
+
+    Title — You'll want an attention-grabbing title that clearly communicate the problem you are solving and is appropriate for your target audience. Even for Product Knowledge white papers, it's not a good idea to include the product name in the title. Your title should be benefit, not feature, oriented.
+
+    The abstract or executive summary — You may be tempted to put your conclusion at the end, but a white paper needs to grab the reader immediately. Include direct, pithy statements of your position to engage the reader. Although this section provides a short summary of what the paper is about, you need to provide enough detail to satisfy a busy executive while encouraging the reader to continue on to the meat of the paper..
+
+    Introduction — Define the issue and provide background discussion while building credibility. Find common ground with your audience and hook them in.
+
+    Problem Definition — Don't start selling yet. Thoroughly and completely identify the business problem your technology solves. This section should be entirely from the perspective of the target audience.
+ 
+    High-Level Solution — Describe relevant technologies at a high level, including any competing technologies (which you will rebut later). Support your arguments with tables, charts, and graphics. Quote industry experts as needed to bolster your positions. You are educating your target audience on the current state of the art, as well as where your solution fits.
+
+    Solution Details — Having thoroughly explained the problem and the general approach to solving it, it is finally time to describe your solution in more detail. You can start selling know, but avoid grandiose claims; the soft approach works better in white papers. Be sure to show how your solution is vastly superior to the competition. Remember your audience and use appropriate language and level of detail. This is the heart of your white paper and you'll probably want to use case studies or customer testimonials to support your arguments. 
+     
+    Business benefits — This section is the soul of your white paper, where you need to grab the reader where he or she lives and provide plenty of assurances that your solution will work for them. Discuss return on investment (ROI), usability, adherence to standards, and speed of implementation. Show you understand your readers' pain and can relieve it. Customer quotes again may be helpful.
+     
+    Summary — A quick summary emphasizes both the benefits of your solution as well as the risks to readers who decide not to use your product or service. Many readers may skip the entire document and read this section only, so write this section as if it were an entirely standalone document summarizing the main selling points about your solution. Conclude with the most important point that you want the reader to remember.
+
+    Call to action — You'd be surprised how many white papers either leave this most important section out or fumble it at the end. Emphatically tell readers what you want them to do and how to do it. We're not talking about simply dropping in a contact person's name and telephone number as well as Website, email, and snail mail addresses. We prefer white papers that end with offers — free trial version, free assessment, free gift certificate if you call today, that sort of thing. 
+
+    -----------------

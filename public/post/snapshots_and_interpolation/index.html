@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Snapshots and Interpolation | Gaffer On Games</title>
+
+    
+
+    
+    <link href="http://173.255.195.190/gafferongames//css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://173.255.195.190/gafferongames//css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://173.255.195.190/gafferongames/">Gaffer On Games</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://173.255.195.190/gafferongames/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://173.255.195.190/gafferongames/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://173.255.195.190/gafferongames/post/">Archives</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://173.255.195.190/gafferongames/contact/">Contact</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://www.patreon.com/gafferongames">Support gafferongames.com</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://173.255.195.190/gafferongames//img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Snapshots and Interpolation</h1>
+               <h2 class="subheading">How to reconstruct a visual approximation of a physics simulation</h2>
+               <span class="meta">Posted by <a href="http://173.255.195.190/gafferongames//about">Glenn Fiedler</a> on Sunday, November 30, 2014
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Hi, I&rsquo;m <a href="http://173.255.195.190/gafferongames/about">Glenn Fiedler</a> and welcome to <strong><a href="http://173.255.195.190/gafferongames/categories/networked-physics/">Networked Physics</a></strong>.</p>
+
+<p>In the <a href="http://gafferongames.com/networked-physics/deterministic-lockstep/">previous article</a> we networked a physics simulation using deterministic lockstep. Now, in this article we&rsquo;re going to network the same simulation with a completely different technique: <strong>snapshot interpolation</strong>.</p>
+
+<p>Why a different technique? While deterministic lockstep is very efficient in terms of bandwidth, it&rsquo;s not always possible to make your simulation deterministic. Also, as the player count increases, deterministic lockstep becomes problematic: you can&rsquo;t simulate frame n until you receive input from <em>all</em> players for that frame, so players end up waiting for the most lagged player. Because of this, I recommend deterministic lockstep for 2-4 players at most.</p>
+
+<p>If your simulation is not deterministic or you want higher player counts then you need a different technique. Snapshot interpolation fits the bill nicely. It is in many ways the polar opposite of deterministic lockstep: instead of running two simulations, one on the left and one on the right, and using synchronized inputs and perfect determinism to make sure they stay in perfectly in sync&hellip; <em>with snapshot interpolation we don&rsquo;t run any simulation on the right side at all!</em></p>
+
+<h2 id="snapshots">Snapshots</h2>
+
+<p>Instead, we capture a <strong>snapshot</strong> of all relevant state from the simulation on the left and transmit it to the right, and on the right side, use those snapshots to reconstruct a visual approximation of the simulation, all without running the simulation itself.</p>
+
+<p>As a first pass, let&rsquo;s send across the state required to render each cube:</p>
+
+<pre><code>    struct CubeState
+    {
+        bool interacting;
+        vec3f position;
+        quat4f orientation;
+    };
+</code></pre>
+
+<p>I&rsquo;m sure you&rsquo;ve worked out by now that the cost of this technique is increased bandwidth usage. Greatly increased bandwidth usage. Hold on to your neckbeards, because a snapshot contains the visual state for the entire simulation. With a bit of math we can see that each cube serializes down to 225 bits or 28.1 bytes. Since there are 900 cubes in our simulation that means each snapshot is roughly 25 kilobytes. That&rsquo;s pretty big!</p>
+
+<p>At this point I would like everybody to relax, take a deep breath, and imagine we live in a world where I can actually send a packet this large 60 times per-second over the internet and not have everything explode. Imagine I have FIOS <em>(I do)</em>, or I&rsquo;m sitting over a backbone link to another computer that is also on the backbone. Imagine I live in South Korea. Do whatever you need to do to suspend disbelief, but most of all, don&rsquo;t worry, because I&rsquo;m going to spend the entire next article showing you how to optimize snapshot bandwidth.</p>
+
+<p>When we send snapshot data in packets, we include at the top a 16 bit sequence number. This sequence number starts at zero and increases with each packet sent. We use this sequence number on receive to determine if the snapshot in a packet is newer or older than the most recent snapshot received. If it&rsquo;s older then it&rsquo;s thrown away.</p>
+
+<p>Each frame we just render the most recent snapshot received on the right:</p>
+
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+  <source src="http://173.255.195.190/gafferongames/video/networked_physics/snapshot_interpolation_60pps_jitter.mp4" type="video/mp4"/>
+  <source src="http://173.255.195.190/gafferongames/video/networked_physics/snapshot_interpolation_60pps_jitter.webm" type="video/webm"/>
+</video>
+
+<p>Look closely though, and even though we&rsquo;re sending the data as rapidly as possible (one packet per-frame) you can still see hitches on the right side. This is because the internet makes no guarantee that packets sent 60 times per-second nicely spaced 1/60th of a second apart. Packets are jittered. Some frames you receive two snapshot packets. Other frames you receive none.</p>
+
+<h1 id="jitter-and-hitches">Jitter and Hitches</h1>
+
+<p>This is actually a really common thing when you first start networking. You start out playing your game over LAN and notice you can just slam out packets really fast (60pps) and most of the time your game looks great because over the LAN those packets actually do tend to arrive at the same rate they were sent&hellip; and then you start trying to play your game over wireless or the internet and you start seeing hitches. Don&rsquo;t worry. There are ways to handle this!</p>
+
+<p>First, let&rsquo;s look at how much bandwidth we&rsquo;re sending with this naive approach. Each packet is 25312.5 bytes plus 28 bytes for IP + UDP header and 2 bytes for sequence number. That&rsquo;s 25342.5 bytes per-packet and at 60 packets per-second this gives a total of 1520550 bytes per-second or 11.6 megabit/sec. Now there are certainly internet connections out there that can support that amount of traffic&hellip; but since, let&rsquo;s be honest, we&rsquo;re not really getting a lot of benefit blasting packets out 60 times per-second with all the jitter, let&rsquo;s pull it back a bit and send only 10 snapshots per-second:</p>
+
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+  <source src="http://173.255.195.190/gafferongames/video/networked_physics/snapshot_interpolation_10pps_no_interpolation.mp4" type="video/mp4"/>
+  <source src="http://173.255.195.190/gafferongames/video/networked_physics/snapshot_interpolation_10pps_no_interpolation.webm" type="video/webm"/>
+</video>
+
+<p>You can see how this looks above. Not so great on the right side but at least we&rsquo;ve reduced bandwidth by a factor of six to around 2 megabit/sec. We&rsquo;re definitely headed in the right direction.</p>
+
+<h2 id="linear-interpolation">Linear Interpolation</h2>
+
+<p>Now for the trick with snapshots. What we do is instead of immediately rendering snapshot data received is that we buffer snapshots for a short amount of time in an interpolation buffer. This interpolation buffer holds on to snapshots for a period of time such that you have not only the snapshot you want to render but also, statistically speaking, you are very likely to have the next snapshot as well. Then as the right side moves forward in time we interpolate between the position and orientation for the two slightly delayed snapshots providing the illusion of smooth movement. In effect, we&rsquo;ve traded a small amount of added latency for smoothness.</p>
+
+<p>You may be surprised at just how good it looks with linear interpolation @ 10pps:</p>
+
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+  <source src="http://173.255.195.190/gafferongames/video/networked_physics/snapshot_interpolation_10pps_linear_interpolation.mp4" type="video/mp4"/>
+  <source src="http://173.255.195.190/gafferongames/video/networked_physics/snapshot_interpolation_10pps_linear_interpolation.webm" type="video/webm"/>
+</video>
+
+<p>Look closely though and you can see some artifacts on the right side. The first is a subtle position jitter when the player cube is hovering in the air. This is your brain detecting 1st order discontinuity at the sample points of position interpolation. The other artifact occurs when a bunch of cubes are in a katamari ball, you can see a sort of &ldquo;pulsing&rdquo; as the speed of rotation increases and decreases. This occurs because attached cubes interpolate linearly between two sample points rotating around the player cube, effectively interpolating <em>through</em> the player cube as they take the shortest linear path between two points on a circle.</p>
+
+<h2 id="hermite-interpolation">Hermite Interpolation</h2>
+
+<p>I find these artifacts unacceptable but I don&rsquo;t want to increase the packet send rate to fix them. Let&rsquo;s see what we can do to make it look better at the same send rate instead. One thing we can try is upgrading to a more accurate interpolation scheme for position, one that interpolates between position samples while considering the linear velocity at each sample point.</p>
+
+<p>A spline that can be used to perform this interpolation is the <a href="http://en.wikipedia.org/wiki/Hermite_interpolation">hermite spline</a>.</p>
+
+<p>Unlike other splines with control points that affect the curve indirectly, the hermite spline is guaranteed to pass through the start and end points while matching the start and end velocities. This means that velocity is smooth across sample points and cubes in the katamari ball tend to rotate around the cube rather than interpolate through it at speed.</p>
+
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+  <source src="http://173.255.195.190/gafferongames/video/networked_physics/snapshot_interpolation_10pps_hermite_interpolation.mp4" type="video/mp4"/>
+  <source src="http://173.255.195.190/gafferongames/video/networked_physics/snapshot_interpolation_10pps_hermite_interpolation.webm" type="video/webm"/>
+</video>
+
+<p>Above you can see hermite interpolation for position @ 10pps. Bandwidth has increased slightly because we need to include linear velocity with each cube in the snapshot, but we&rsquo;re able to significantly increase the quality at the same send rate. I can no longer see any artifacts. Go back and compare this with the raw, non-interpolated 10pps version. It really is amazing that we&rsquo;re able to reconstruct the simulation with this level of quality at such a low send rate.</p>
+
+<p>As an aside, I found it was not necessary to perform higher order interpolation for orientation quaternions to get smooth interpolation. This is great because I did a lot of research into exactly interpolating between orientation quaternions with a specified angular velocity at sample points and it seemed difficult. All that was needed to achieve an acceptable result was to switch from linear interpolation + normalize (nlerp) to spherical linear interpolation (slerp) to ensure constant angular speed for orientation interpolation.</p>
+
+<p>I believe this is because cubes in the simulation tend to have mostly constant angular velocity while in the air and large angular velocity changes occur only discontinuously when collisions occur. It could also be because orientation tends to change slowly while in the air vs. position which changes rapidly relative to the number of pixels affected on screen. Either way, it seems that slerp is good enough and that&rsquo;s great because it means we don&rsquo;t need to send angular velocity in the snapshot.</p>
+
+<h2 id="handling-real-world-conditions">Handling Real World Conditions</h2>
+
+<p>Now we have to deal with packet loss. After the discussion of UDP vs. TCP in the previous article I&rsquo;m sure you can see why we would never consider sending snapshots over TCP. Snapshots are time critical but unlike inputs in deterministic lockstep snapshots don&rsquo;t need to be reliable. If a snapshot is lost we can just skip past it and interpolate towards a more recent snapshot in the interpolation buffer. We don&rsquo;t ever want to stop and wait for a lost snapshot packet to be resent. This is why you should always use UDP for sending snapshots.</p>
+
+<p>I&rsquo;ll let you in on a secret. Not only were the linear and hermite interpolation videos above recorded at a send rate of 10 packets per-second, they were also recorded at 5% packet loss with +/- 2 frames of jitter @ 60fps. How I handled packet loss and jitter for those videos is by simply ensuring that snapshots are held in the interpolation buffer for an appropriate amount of time before interpolation.</p>
+
+<p>My rule of thumb is that the interpolation buffer should have enough delay so that I can lose two packets in a row and still have something to interpolate towards. Experimentally I&rsquo;ve found that the amount of delay that works best at 2-5% packet loss is 3X the packet send rate. At 10 packets per-second this is 300ms. I also need some extra delay to handle jitter, which in my experience is typically only one or two frames @ 60fps, so the interpolation videos above were recorded with a delay of 350ms.</p>
+
+<p>Adding 350 milliseconds delay seems like a lot. And it is. But, if you try to skimp you end up hitching for 1/10th of a second each time a packet is lost. One technique that people often use to hide the delay added by the interpolation buffer in other areas (such as FPS, flight simulator, racing games and so on) is to use extrapolation. But in my experience, extrapolation doesn&rsquo;t work very well for rigid bodies because their motion is non-linear and unpredictable. Here you can see an extrapolation of 200ms, reducing overall delay from 350 ms to just 150ms:</p>
+
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+  <source src="http://173.255.195.190/gafferongames/video/networked_physics/snapshot_interpolation_10pps_extrapolation.mp4" type="video/mp4"/>
+  <source src="http://173.255.195.190/gafferongames/video/networked_physics/snapshot_interpolation_10pps_extrapolation.webm" type="video/webm"/>
+</video>
+
+<p>Problem is it&rsquo;s just not very good. The reason is that the extrapolation doesn&rsquo;t know anything about the physics simulation. Extrapolation doesn&rsquo;t know about collision with the floor so cubes extrapolate down through the floor and then spring back up to correct. Prediction doesn&rsquo;t know about the spring force holding the player cube up in the air so it the cube moves slower initially upwards than it should and has to snap to catch up. It also doesn&rsquo;t know anything about collision and how collision response works, so the cube rolling across the floor and other cubes are also mispredicted. Finally, if you watch the katamari ball you&rsquo;ll see that the extrapolation predicts the attached cubes as continuing to move along their tangent velocity when they should rotate with the player cube.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>You could conceivably spend a great deal of time to improve the quality of this extrapolation and make it aware of various movement modes for the cubes. You could take each cube and make sure that at minimum the cube doesn&rsquo;t go through the floor. You could add some approximate collision detection or response using bounding spheres between cubes. You could even take the cubes in the katamari ball and make them predict motion to rotate around with the player cube.</p>
+
+<p>But even if you do all this there will still be misprediction because you simply can&rsquo;t accurately match a physics simulation with an approximation. If your simulation is mostly linear motion, eg. fast moving planes, boats, space ships &ndash; you may find that a simple extrapolation works well for short time periods (50-250ms or so), but in my experience as soon as objects start colliding with other non-stationary objects, extrapolation starts to break down.</p>
+
+<p>How can we reduce the amount of delay added for interpolation? 350ms still seems unacceptable and we can&rsquo;t use extrapolation to reduce this delay without adding a lot of inaccuracy. The solution is simple: <em>increase the send rate!</em> If we send 30 snapshots per-second we can get the same amount of packet loss protection with a delay of 150ms. 60 packets per-second needs only 85ms.</p>
+
+<p>In order to increase the send rate we&rsquo;re going to need some pretty good bandwidth optimizations. But don&rsquo;t worry, there&rsquo;s a <em>lot</em> we can do to optimize bandwidth. So much so that there was too much stuff to fit in this article and I had to insert an extra unplanned article just to cover all of it!</p>
+
+<p><strong>NEXT ARTICLE</strong>: <a href="http://gafferongames.com/networked-physics/snapshot-compression/">Snapshot Compression</a></p>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="http://173.255.195.190/gafferongames//contact/">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://twitter.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://www.facebook.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted">© The Network Protocol Company, Inc.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://173.255.195.190/gafferongames//js/jquery.min.js"></script>
+
+    
+    <script src="http://173.255.195.190/gafferongames//js/bootstrap.min.js"></script>
+
+    
+    <script src="http://173.255.195.190/gafferongames//js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

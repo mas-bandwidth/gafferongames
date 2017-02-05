@@ -1,0 +1,133 @@
+PLANNING
+
+    -----------------
+
+    Make sure I didn't mess up the challenge/response packet diagrams in the article, because if the client index is only assigned after the challenge response is received, the keepalive packet in yojimbo is used to communicate client index back to the client, it cannot be passed to client before the challenge response is processed.
+
+    -----------------
+
+    Middle of converting "Snapshot Compression".
+
+    It's written quickly and I think the flow is bad. It needs cutting down. 
+
+    It would benefit a lot from having more diagrams and cut down text. Especially, in the smallest 3 section.
+
+    Spent a lot of time today trying to improve the intro. More work is required before this article is ready. It's not a great article right now.
+
+    Also need to convert videos over from gafferongames.com for this article to the new videos.
+
+    -----------------
+
+    Also need to work out what to do with draft articles at the end of this series!
+
+    -----------------
+
+    Write next article "Securing Dedicated Servers"
+
+    -----------------
+
+    Definitely need to dredge up the source code for "Game Networking" and "Game Physics" as example source code to give to supporters.
+
+    Also, need a bunch of linking across articles to the next, as well as linking to source code and a footer for support on Patreon.
+
+    -----------------
+
+    Get nice syntax highlighting working:
+
+    https://gohugo.io/extras/highlighting/
+
+    Definitely want to do this on page generation rather than javascript, so it works well inside an RSS feed.
+
+    Having some problem getting this work with my CSS. The code background is not getting set to black. Something in my theme CSS fucking it up?
+
+    Would be nice if a javascript library could do code highlighting (and scrolling!), especially for mobile, where code samples just don't fit, as long as I can fall back to something static HTML for RSS
+
+    Whatever I do, I always have to make sure the RSS is readable.
+
+    -----------------
+
+    Research a good way to get a sitemap and discoverability on gafferongames.com, eg. menus, local search, sidebar with sitemap... something equivalent to what I currently have on gafferongames.com is essential for discoverability and driving people towards the patreon for articles they want to read.
+
+    People fundamentally need to be see the structure of articles planned, and want the next one in the series... this is key. Cannot lose this.
+
+    https://npf.io/2014/08/making-it-a-series/
+
+    -----------------
+
+    Need to setup up http permanent redirects from old gafferongames URLs to the new hugo URLs
+
+    I should be able to just go over each article and find its URL on the old gafferongames and setup nginx config for this redirection I think.
+
+    -----------------
+
+    Need to remember to properly link up next/previous in "Game Networking" article series.
+
+    Also some conclusions need padding out, and the example source code needs to be updated and downloadable.
+
+    -----------------
+
+    Need to remember to update links in "Deterministic Lockstep" to old gafferongames.com to the new articles as written.
+
+    Probably want to grep through all my MD files to look for any links to gafferongames
+
+    -----------------
+
+    Need to do a lot of linking from the end of articles to the next in the series. Many articles tend to just peter out, especially old ones.
+
+    -----------------
+
+    Need a solution for bringing across the math. Bunch of research below. Critically, it needs to work both in HTML and in RSS.
+
+    This guy has a solution, but it's a lot of work that requires post-processing the generated RSS, I could do this, no problem:
+
+        http://latkin.org/blog/2016/08/07/better-tex-math-typesetting-in-hugo/
+
+    Basically, it uses Javascript Latex for web, and then falls back to image generated latex for RSS. Not particularly great.
+
+    Starting option is probably just to use the image generating service, then optimize the web javascript version to get better text quality.
+
+    Katex is here:
+
+        https://khan.github.io/KaTeX/
+
+    Need to hook something up like this. I should be able to do it.
+
+    -----------------
+
+    It's bad that there is not a lot of visibility right now for articles in a series back *to* that series as a whole.
+
+    Also, within a series I would like to display article summaries automatically, not just lists of articles with their tags -- of course their tags will all be the same, they're all in the same article series!
+
+    I probably need some professional help to get this website into the form I am looking for.
+
+    I have good content, but the presentation needs to improve. Pulling the trigger on a blank website without final polish, especially if it is backwards in terms of discoverability of new articles could be a mistake.
+
+    But I do need to get this finished by the end of the year.
+
+    So I have to do my best, and then work on visual improvements in parallel once the website conversion is completed.
+
+    -----------------
+
+    Search for "gafferongames.com" for any stale links before going live
+
+    In fact, why not write a script to parse my markdown for stale links? This could be fun.
+
+    -----------------
+
+    Impulse j general response equation in "Collision Response and Coulomb Friction" would be nice to convert from an image to an actual equation. The image is low resolution.
+
+    -----------------
+
+    Concept of "adjacent selectors" should let me fine tune the CSS of my document.
+
+    Specifically, if a H2 comes after a code sample or video or whatever, I can make sure it puts a bit of extra spacing in.
+
+    http://stackoverflow.com/questions/10309408/how-to-add-vertical-spacing-between-block-elements-but-not-top-and-bottom
+
+    -----------------
+
+    What Every Programmer Needs to Know About Game Networking
+
+    Is a bit rough. It could use a good pass over for accuracy and tone.
+
+    -----------------
