@@ -3,23 +3,25 @@ categories = ["White papers"]
 tags = ["networking"]
 date = "2017-02-05"
 title = "Why can't I send UDP packets from a web browser?"
-description = "A secure solution for sending and receiving UDP packets in a browser"
+description = "A solution for enabling UDP in a browser"
 draft = false
 +++
 
-1. Your title in the form of a reader's problem / solution
+# Introduction
 
-2. One sentence summary of the problem/solution (30 words)
+In 2017, the most popular web games like [agar.io](http://agar.io) are effectively limited to networking with WebSockets over TCP. If a UDP equivalent of WebSockets could be standardized and incorporated into browsers, it would greatly improve the networking of these games.
 
-3. Overview of the white paper's premise
+# Background
 
-a) The current situation (40 words)
+Web browsers are built on top of HTTP, which is a stateless request/response protocol initially designed for serving static web pages. HTTP is built on top of TCP, which is a low-level protocol that guarantees that all data sent arrives reliably, and in the same order it was sent. 
 
-b) Has let through these steps (60 words)
+This worked well for many years, but recently websites are becoming more interactive and recent developments like WebSockets, WebRTC, HTTP 2.0 and SPDY hold the potential to greatly improve the quality and interactivity of the web. 
 
-c) To this major problem for the reader (80 words)
+Unfortunately, the current set of standards for web development either don't provide what games need, or provide it in a form that is too complicated for game developers to integrate.
 
-(insert headline here)
+This leads to frustration from game developers, who just want to be able to send UDP packets from the browser.
+
+# 
 
 4. Evidence of the problem
 
