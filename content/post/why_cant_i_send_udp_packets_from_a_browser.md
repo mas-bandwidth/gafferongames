@@ -2,32 +2,56 @@
 categories = ["White papers"]
 tags = ["networking"]
 date = "2017-02-05"
-title = "Why can't I send UDP packets from a web browser?"
-description = "A solution for enabling UDP in a browser"
+title = "Why can't I send UDP packets from a browser?"
+description = "A solution for enabling UDP in the web"
 draft = false
 +++
 
-# Introduction
+# Premise
 
-In 2017 the most popular web games like [agar.io](http://agar.io) are effectively limited to networking with WebSockets over TCP. If a UDP equivalent of WebSockets could be standardized and incorporated into browsers, it would greatly improve the networking of these games.
+In 2017 the most popular web games like [agar.io](http://agar.io) are effectively limited to networking via WebSockets over TCP. If a UDP equivalent of WebSockets could be standardized and incorporated into browsers, it would greatly improve the networking of these games.
 
 # Background
 
-Web browsers are built on top of HTTP, which is a stateless request/response protocol initially designed for serving static web pages. HTTP is built on top of TCP, which is a low-level protocol that guarantees that all data arrives reliably, and in the same order it was sent. 
+Web browsers are built on top of HTTP, which is a stateless request/response protocol initially designed for serving static web pages. HTTP is built on top of TCP, which is a low-level protocol that guarantees all data arrives reliably, and in the same order it was sent. 
 
-This worked well for many years, but recently websites are becoming more interactive and recent developments like WebSockets, WebRTC, HTTP 2.0 and SPDY hold the potential to greatly improve the quality and interactivity of the web. 
+This has worked well for many years, but recently websites have become more interactive and poorly suited to the HTTP request/response paradigm. Rising to this challenge are modern web protocols like WebSockets, WebRTC, HTTP 2.0 and SPDY, which hold the potential greatly improve the interactivity of the web. 
 
-Unfortunately, the current set of standards for web development either don't provide what games need, or provide it in a form that is too complicated for game developers to integrate.
+Unfortunately, this new set of standards for web development don't provide what games need, or, provide it in a form that is too complicated for game developers to use.
 
 This leads to frustration from game developers, who just want to be able to send UDP packets from the browser.
 
 # The Problem
 
-4. Evidence of the problem
+TCP is a reliable ordered protocol. 
 
-a) Example 1 with citations (140 words)
+To deliver packets reliably and in order under packet loss, it is necessary to hold more recent packet in a queue, while waiting for dropped packets to be resent. Otherwise, data would be delivered out of order.
 
-b) Example 2 with citations (140 words)
+This is called head of line blocking and it causes problems for multiplayer games, because games are networked not by request/response or by exchanging events, but by sending time series data like player input and the state of objects in the world.
+
+This creates a frustrating and almost comedically tragic problem for game developers. The most recent data they want is delayed while waiting for old data to be resent, data that by the time it arrives, is too old to be used.
+
+Unfortunately, there is no way to fix this behavior under TCP. All data must be received reliably and in-order. Therefore, the standard solution in the game industry for the past 20 years has been to send game data over UDP instead. 
+
+How this works in practice is that each game develops their own custom protocol on top of UDP, implementing basic reliability as required, while sending the majority of data as unreliable unordered. This ensures that time series data arrives as quickly as possible without waiting for dropped packets to be resent.
+
+So what does this have to do with web games?
+
+The key problem for web games today is that game developers have no way to do this best practice in the browser. Web games are forced to send their game data over TCP. Therefore, when packet loss and latency exist, web games have hitches and non-responsiveness because their game data is subject to head of line blocking.
+
+This is completely unnecessary and could be fixed overnight if web games had some way to send and receive UDP packets.
+
+# What about WebSockets?
+
+...
+
+# What about SPDY?
+
+...
+
+# What about WebRTC?
+
+...
 
 (insert headline here)
 
