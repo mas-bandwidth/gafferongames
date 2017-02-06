@@ -1,5 +1,277 @@
 PLANNING
 
+    Setup template for white paper.
+
+    Now I need to do research.
+
+    First thing I need is evidence of a problem.
+
+    This can come from the hacker news thread, plus stack overflow questions "why can't i send udp packets" over the years.
+
+    https://news.ycombinator.com/item?id=13264952
+
+    "I'm the guy that made Agar.io, Diep.io and a few smaller games. I analyzed the possibility of using WebRTC in my games several times so far, but it seems that right now, it's still hard to use in a server-client architecture. You need to bring this [1] behemoth and all of its dependencies to your project dependencies on the server side, even though you only care about a tiny bit of it (unreliable data channels). It's unlikely that people will start using it until there is an easy stripped-down version that only deals with data channels."
+
+    "But yeah, I really hope it becomes easier to integrate, as right now that's the biggest barrier into putting it into my custom written C++ server that I use for all my games. They already support UDP-only communication for desktop and mobile builds and bringing it to web would make the experience a lot better. Thank you!"
+
+    "I feel what is needed is an UDP version of WebSockets. That's all I wish we had."
+
+    ^--- The key one.
+
+    Example 1 with citation can be agar.io, with a quote from the author complaining about WebRTC being too complicated, and using web sockets, getting bad performance from this.
+
+    Example 2 can be a discussion about UDP being "well known" to provide better performance in the game industry, and people searching for ways to send UDP packets from the browser. Or something better, if I can find it.
+
+    Straw solution #1 should be web sockets:
+
+        Web sockets are bad because they are built on TCP not UDP.
+
+        Explain why this is bad (head of line blocking)
+
+        Packet loss and latency still exist (most bad behavior is at the edges of the network, *citation*)
+
+        Therefore TCP is not a good choice for time series data that is typically sent for games.
+
+    Straw solution #2 should be SPDY:
+
+        Use this to build evidence that UDP is actually making headroom in web world. 
+
+        However, SPDY is based around channels of reliable-ordered data. Each channel still has head of line blocking. No support for unreliable-unordered data channels.
+
+        So while this alleviates head of line blocking for unrelated content, it is not suitable for time series data, because head of line blocking still exists.
+
+        (one option would be to set up 256 channels, and rotate the data across channels, so that a dropped packet would be unlikely to delay subsequence packets?)
+
+    Straw solution #3 should be WebRTC:
+
+        NAT punch, stun. Focus on browser <-> browser communication and peer-to-peer. Data channel.
+
+        Dedicated server trend in FPS (citation).
+
+        NAT punch/stun are not required for dedicated servers.
+
+        It's too much work to setup WebRTC and get it working with dedicated servers.
+
+        Web games like agar.io are also dedicated server based games.
+
+        Citation from hacker news article about complexity of WebRTC.
+
+        "Too hard. Too complex".
+
+    What are the three major concerns?        
+
+        (This should be framed in terms of, so... why don't they just let you send UDP packets from a browser?)
+
+        DDOS
+
+            => DDOS attacks, spend packet to any address. To fix this solution should be: connection based.
+
+        Encryption
+
+            => UDP packets are not encrypted. MITM attacks. spoofing attacks, imitate another client or server.
+
+        Authentication
+
+            => UDP packets are not authenticated. How do you know the sender is a real client and not a bot or an attacker if anybody can send a packet to your server? Zombie clients taking up dedicated resources that you pay for!
+
+    What would a solution look like?
+
+        1. Connection based
+
+        2. Encrypted and signed packet data
+
+        3. Authenticated.
+
+        Only when all these requirements are met, would a solution possibly be considered for use in browsers.
+
+    How the real solution works
+
+        Frame this in terms of how it solves the primary concerns that would stop web browsers from letting you send UDP packets.
+
+        Describe the protocol but in a high level.
+
+        *** This is the real meat of the white paper ***
+
+    What are the three advantages?
+
+        Simplicity.
+
+            This solution is the simplest possible solution to the problem.
+
+        Expandable.
+
+            ^--- Once it becomes possible to send UDP packets, additional libraries can be built on this to provided higher level functionality, like reliabile/ordered for a subset of data. Packet fragmentation and reassembly, etc.
+
+            With just this one foundation, everything else can be built that dedicated server-based games need in browsers.
+
+        Native UDP packets.
+
+            Once connection is established the client is able to exchange unreliable-unordered packets.
+
+            Head of line blocking is no longer a concern. Browser games can now exchange UDP-based packets.
+
+            Games play better in browsers.
+
+            ^--- Sort of the whole damn point!
+
+    ------------------------------------
+
+    I need to do research on:
+
+        WebSockets
+
+        SPDY
+
+        WebRTC
+
+    Might as well get this out of the way, before I go for a nice bike ride to think it all through.
+
+    ------------------------------------
+
+    Web sockets:
+
+        https://developer.mozilla.org/en-US/docs/Web/API/WebSockets_API
+        https://en.wikipedia.org/wiki/WebSocket
+        https://pusher.com/websockets
+        https://www.html5rocks.com/en/tutorials/websockets/basics/
+        https://www.websocket.org
+        https://www.sitepoint.com/websockets-in-the-ruby-ecosystem/
+        https://www.gamesparks.com/blog/why-the-rest-dont-use-websockets/
+        https://scotch.io/bar-talk/build-a-realtime-chat-server-with-go-and-websockets
+        https://www.infoq.com/articles/Web-Sockets-Proxy-Servers
+        https://www.cloudsigma.com/web-evolution-from-cgi-to-websockets-and-how-it-will-help-you-better-monitor-your-cloud-infrastructure/
+        https://html.spec.whatwg.org/multipage/comms.html
+        https://code.tutsplus.com/tutorials/start-using-html5-websockets-today--net-13270
+
+    *Excellent* overview of current state of all web technologies:
+
+        http://stackoverflow.com/questions/14703627/websockets-protocol-vs-http
+
+    Good overview of problems with websockets, and relation to HTTP/@
+
+        https://samsaffron.com/archive/2015/12/29/websockets-caution-required
+
+    Good introduction and critque of web sockets by Armin:
+
+        http://lucumr.pocoo.org/2012/9/24/websockets-101/
+
+    ^--- This would be good for expert quotes.
+
+    Breakdown of websocket support by browser:
+
+        http://caniuse.com/#feat=websockets
+
+    Cloudflare article on websockets:
+
+        https://blog.cloudflare.com/everybody-gets-websockets/
+
+    Socket.io is a nice wrapper on top of all the different bidirectional communication options:
+
+        http://socket.io
+
+    Seems that to get support across a wide range of browsers, a wrapper is required because everything is in flux.
+
+    Introduction to web sockets:
+
+        http://blog.teamtreehouse.com/an-introduction-to-websockets
+
+    ------------------------------------
+
+    It's possible that vanilla HTTP should be considered as option #1
+
+    Request/response.
+
+    -> web sockets.
+
+    ------------------------------------
+
+    What about SPDY? HTTP/2?
+
+    Need to research these.
+
+    ------------------------------------
+
+    Interesting new competitor for my company.
+
+    https://www.gamesparks.com/
+
+    But they are based around websockets (TCP), not UDP.
+
+    ------------------------------------
+
+    Need to continue research:
+
+    1. SPDY
+
+    "SPDY: a Google initiated proposal to extend HTTP using a more efficient wire protocol but maintaining all HTTP semantics (request/response, cookies, encoding). SPDY introduces a new framing format (with length-prefixed frames) and specifies a way to layering HTTP request/response pairs onto the new framing layer. Headers can be compressed and new headers can be sent after the connection has been established. There are real world implementations of SPDY in browsers and servers."
+
+    2. HTTP/2
+
+    "HTTP 2.0: has similar goals to SPDY: reduce HTTP latency and overhead while preserving HTTP semantics. The current draft is derived from SPDY and defines an upgrade handshake and data framing that is very similar the the WebSocket standard for handshake and framing. An alternate HTTP 2.0 draft proposal (httpbis-speed-mobility) actually uses WebSockets for the transport layer and adds the SPDY multiplexing and HTTP mapping as an WebSocket extension (WebSocket extensions are negotiated during the handshake)."
+
+    3. WebRTC
+
+    "WebRTC/CU-WebRTC: proposals to allow peer-to-peer connectivity between browsers. This may enable lower average and maximum latency communication because as the underlying transport is SDP/datagram rather than TCP. This allows out-of-order delivery of packets/messages which avoids the TCP issue of latency spikes caused by dropped packets which delay delivery of all subsequent packets (to guarantee in-order delivery)."
+
+    ^--- what is "SDP". Secure datagram protocol?
+
+    4. QUIC
+
+    "QUIC: is an experimental protocol aimed at reducing web latency over that of TCP. On the surface, QUIC is very similar to TCP+TLS+SPDY implemented on UDP. QUIC provides multiplexing and flow control equivalent to HTTP/2, security equivalent to TLS, and connection semantics, reliability, and congestion control equivalentto TCP. Because TCP is implemented in operating system kernels, and middlebox firmware, making significant changes to TCP is next to impossible. However, since QUIC is built on top of UDP, it suffers from no such limitations. QUIC is designed and optimised for HTTP/2 semantics."
+
+    -----------------------------------
+
+    WebSockets RFC
+
+    https://tools.ietf.org/html/rfc6455
+
+    -----------------------------------
+
+    SPDY protocol RFC
+
+    https://tools.ietf.org/html/draft-mbelshe-httpbis-spdy-00
+
+    -----------------------------------
+
+    HTTP 2.0 RFC
+
+    https://tools.ietf.org/html/draft-ietf-httpbis-http2-01
+
+    -----------------------------------
+
+    WebRTC data channels
+
+    https://tools.ietf.org/html/draft-ietf-rtcweb-data-channel-13
+
+    -----------------------------------
+
+    More on WebRTC
+
+    http://w3c.github.io/webrtc-pc/
+
+    -----------------------------------
+
+    QUIC information
+
+    https://www.chromium.org/quic
+
+    QUIC is built on top of UDP.
+
+    It's a secure and reliable transport for HTTP/2
+
+    "QUIC has four packet types: Version Negotiation Packets, Frame
+     Packets, FEC Packets, and Public Reset Packets.  All QUIC packets
+     should be sized to fit within the path's MTU to avoid IP
+     fragmentation.  Path MTU discovery is a work in progress, and the
+     current QUIC implementation uses a 1350-byte maximum QUIC packet size
+     for IPv6, 1370 for IPv4."
+
+    -----------------------------------
+
+    More on WebRTC (top level)
+
+    https://tools.ietf.org/html/draft-ietf-rtcweb-overview-16
+
     -----------------
 
     Make sure I didn't mess up the challenge/response packet diagrams in the article, because if the client index is only assigned after the challenge response is received, the keepalive packet in yojimbo is used to communicate client index back to the client, it cannot be passed to client before the challenge response is processed.
