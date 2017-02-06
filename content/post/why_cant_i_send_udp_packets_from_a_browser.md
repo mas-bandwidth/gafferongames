@@ -9,11 +9,11 @@ draft = false
 
 # Introduction
 
-In 2017, the most popular web games like [agar.io](http://agar.io) are effectively limited to networking with WebSockets over TCP. If a UDP equivalent of WebSockets could be standardized and incorporated into browsers, it would greatly improve the networking of these games.
+In 2017 the most popular web games like [agar.io](http://agar.io) are effectively limited to networking with WebSockets over TCP. If a UDP equivalent of WebSockets could be standardized and incorporated into browsers, it would greatly improve the networking of these games.
 
 # Background
 
-Web browsers are built on top of HTTP, which is a stateless request/response protocol initially designed for serving static web pages. HTTP is built on top of TCP, which is a low-level protocol that guarantees that all data sent arrives reliably, and in the same order it was sent. 
+Web browsers are built on top of HTTP, which is a stateless request/response protocol initially designed for serving static web pages. HTTP is built on top of TCP, which is a low-level protocol that guarantees that all data arrives reliably, and in the same order it was sent. 
 
 This worked well for many years, but recently websites are becoming more interactive and recent developments like WebSockets, WebRTC, HTTP 2.0 and SPDY hold the potential to greatly improve the quality and interactivity of the web. 
 
@@ -21,7 +21,7 @@ Unfortunately, the current set of standards for web development either don't pro
 
 This leads to frustration from game developers, who just want to be able to send UDP packets from the browser.
 
-# 
+# The Problem
 
 4. Evidence of the problem
 
