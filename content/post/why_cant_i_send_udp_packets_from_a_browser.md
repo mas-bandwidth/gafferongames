@@ -123,15 +123,15 @@ Hopefully the result will be multiplayer games playing better in a browser in th
 
 The solution I came up with is called [netcode.io](http://netcode.io)
 
-It's a simple binary network protocol that lets clients security connect to dedicated servers and communicate over UDP. It's connection oriented and it encrypts and signs packets to foil main in the middle attacks. It also uses the concept of a short lived connect tokens to transfer authentication on the web backend to clients connecting to dedicated servers instances. This way dedicated servers only accept connections from clients who have authenticated with the web backend.
+It's a simple network protocol that lets clients security connect to dedicated servers and communicate over UDP. It's connection oriented and it encrypts and signs packets to foil main in the middle attacks. It also uses short lived connect tokens to transfer authentication on the web backend to clients connecting to dedicated servers instances. This way dedicated servers only accept connections from clients which have authenticated with the web backend.
 
 It's designed for games like [agar.io](http://agar.io) that need to shunt players off from the main website to a number of dedicated server instances, each with some maximum number of players (up to 256 players per-instance in the reference implementation). 
 
-The basic idea is that the existing website performs authentication and then on some REST call from the client requesting to play, provides a connect token to a client over HTTPS, which is passed to the dedicated server instance over UDP as part of the connection handshake. Connect tokens are short lived and rely on a shared private key between the web backend and the dedicated server instances.
+The basic idea is that the existing website performs authentication and then on some REST call from the client requesting to play, provides a connect token to that client over HTTPS, which is passed to the dedicated server instance over UDP as part of the connection handshake. Connect tokens are short lived and rely on a shared private key between the web backend and the dedicated server instances.
 
 Where netcode.io wins out over WebRTC is simplicity. By focusing only on the dedicated server case, it removes the need for ICE, STUN and TURN. By implementing its encryption, signing and authentication with [libsodium](http://libsodium.org) it avoids the complexity of a full implementation of DTLS, while still providing the same level of security.
 
-Over the past month I've created a [reference implementation](http://netcode.io) of netcode.io in C. It's licenced under the BSD 3-Clause. Over the next few months, I hope to continue refining this implementation, spend time writing a spec, and work with people to port netcode.io to different languages. Your feedback on the reference implementation is appreciated.
+Over the past month I've created a [reference implementation](http://netcode.io) of netcode.io in C. It's open source and licenced under BSD 3-Clause. Over the next few months, I hope to continue refining this implementation, spend time writing a spec, and work with people to port netcode.io to different languages. Your feedback on the reference implementation is appreciated.
 
 # How it works
 
