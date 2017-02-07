@@ -103,7 +103,7 @@ A bit over a month ago, I read this thread on Hacker News:
 
 Wherein the creator of [agar.io](http://agar.io) explained that WebRTC was too complex for him to use, and he's still using WebSockets for his games.
 
-I got to thinking, surely for the case of client/server game a solution must exist that is much simpler than WebRTC? 
+I got to thinking, surely for the case of client/server game a solution must exist that is simpler than WebRTC? 
 
 I wondered what exactly this solution would look like?
 
@@ -115,7 +115,7 @@ My conclusion was that any solution must have these properties:
 
 3. **Authenticated** because dedicated servers would only ever want to accept connections from clients who were already authenticated on the web backend.
 
-I would now like to present the solution. I'm not holding my breath that this would be accepted as a standard in browsers as-is, I'm a game guy, not a web guy. But I do hope at least it will help browser creators see what client/server games actually need, and maybe, in some small way, this do its part to help bridge the gap.
+I would now like to present the solution. I'm not holding my breath that this would be accepted as a standard in browsers as-is, I'm a game guy, not a web guy. But I do hope at least it will help browser creators see what client/server games actually need, and maybe, in some small way, do its part to help bridge the gap.
 
 Hopefully the result will be multiplayer games playing better in a browser in the near future.
 
