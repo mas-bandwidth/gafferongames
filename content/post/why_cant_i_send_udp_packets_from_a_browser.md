@@ -31,13 +31,13 @@ This is called **head of line blocking** and it causes problems for multiplayer 
 
 This creates a frustrating and almost comedically tragic problem for game developers. The most recent data they want is delayed while waiting for old data to be resent, but by the time the resent data arrives, it is too old to be used!
 
-Unfortunately, there is no way to fix this behavior under TCP. All data must be received reliably and in-order. Therefore, the standard solution in the game industry for the past 20 years has been to send game data over UDP instead. 
+Unfortunately, there is no way to fix this behavior under TCP. All data must be received reliably and in order. Therefore, the standard solution in the game industry for the past 20 years has been to send game data over UDP instead. 
 
 How this works in practice is that each game develops their own custom protocol on top of UDP, implementing basic reliability as required, while sending the majority of data as unreliable-unordered. This ensures that time series data arrives as quickly as possible without waiting for dropped packets to be resent.
 
 So, what does this have to do with web games?
 
-The key problem for web games today is that game developers have no way to follow this best practice in the browser. Instead, web games are forced to send their game data over TCP, causing hitches and non-responsiveness due to head of line blocking.
+The main problem for web games today is that game developers have no way to follow this best practice in the browser. Instead, web games are forced to send their game data over TCP, causing hitches and non-responsiveness due to head of line blocking.
 
 This is completely unnecessary and could be fixed overnight if web games had some way to send and receive UDP packets.
 
@@ -53,9 +53,9 @@ Unfortunately, since WebSockets are implemented on top of TCP, data is still sub
 
 QUIC is an experimental protocol built on top of UDP that is designed as replacement transport layer for HTTP. It's currently supported in Google Chrome only.
 
-A key feature provided by QUIC is support for multiple data streams. New data streams can be created implicitly by the client or server by increasing the channel id. Server initiated channels ids are even, client channel ids are odd.
+A key feature provided by QUIC is support for multiple data streams. New data streams can be created implicitly by the client or server by increasing the channel id. Server initiated channels are even, client channels are odd.
 
-This channel concept provide two key benefits: 
+The channel concept provide two key benefits: 
 
 1) It avoids a connection handshake each time a new request is made. 
 
@@ -73,16 +73,29 @@ So why are games still stuck using WebSockets in 2017?
 
 There are two key factors:
 
-The first is that WebRTC is extremely complex. This of course understandable, being designed primarily to support peer-to-peer communication between browsers, it is necessary for WebRTC to include STUN, ICE and TURN support for NAT traversal and packet forwarding in the worst case.
+The first is that WebRTC is extremely complex. This of course understandable, being designed primarily to support peer-to-peer communication between browsers, it is necessary to include STUN, ICE and TURN support for NAT traversal and packet forwarding in the worst case.
 
 The second is that while WebRTC is designed primarily for peer-to-peer communication, there is a trend away from peer-to-peer and towards client/server for multiplayer games. In this context, game developers see support for NAT traversal and packet forwarding as unnecessary baggage.
 
-So while WebRTC provides a way to send unreliable-unordered data easily from one browser to another, it falls down in complexity when data needs to be sent between a browser and a dedicated server.
+So while WebRTC succeeds in providing a way to send unreliable-unordered data from one browser to another, it falls down when data needs to be sent between a browser and a dedicated server.
 
 # Why not just let people send UDP?
 
-(insert headline here)
+The final option to consider is to just let users send and receive UDP packets directly from the browser. Of course, this is an _absolutely terrible idea_ and there are good reasons why it should never be allowed.
 
+1. Websites would be able to launch DDoS attacks by coordinating UDP packet floods from browsers.
+
+2. New security holes would be created as JavaScript could now craft malicious UDP packets to probe the internals of corporate networks and report back over HTTPS.
+
+3. UDP packets are not encrypted, so any data sent over these packets could be sniffed and read by an attacker, or even modified in transmit. It would be a massive step back for web security to create a new way for browsers to send unencrypted packets.
+
+4. There is no authentication, so a dedicated server reading packets sent from a browser would have to implement its own method to ensure that only valid clients are allowed to connect to it, which is well outside the amount of effort most game developers would be willing to apply to this problem.
+
+# What could a solution look like?
+
+As an exercise, lets start from the ground up and think about what a solution could look like.
+
+...
 
 
 
