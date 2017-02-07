@@ -13,11 +13,11 @@ In 2017 the most popular web games like [agar.io](http://agar.io) are effectivel
 
 # Background
 
-Web browsers are built on top of HTTP, which is a stateless request/response protocol initially designed for serving static web pages. HTTP is built on top of TCP, which is a low-level protocol which guarantees that all data arrives reliably, and in the same order it was sent. 
+Web browsers are built on top of HTTP, which is a stateless request/response protocol initially designed for serving static web pages. HTTP is built on top of TCP, which is a low-level protocol that guarantees that all data arrives reliably, and in the same order it was sent. 
 
 This has worked well for many years, but recently websites have become more interactive and poorly suited to the HTTP request/response paradigm. Rising to this challenge are modern web protocols like WebSockets, WebRTC, HTTP 2.0 and QUIC, which hold the potential to greatly improve the interactivity of the web. 
 
-Unfortunately, this new set of standards for web development don't provide what games need, or, provide it in a form that is too complicated for game developers to use.
+Unfortunately, this new set of standards for web development don't provide what multiplayer games need, or, provide it in a form that is too complicated for game developers to use.
 
 This leads to frustration from game developers, who just want to be able to send UDP packets from the browser.
 
@@ -25,15 +25,15 @@ This leads to frustration from game developers, who just want to be able to send
 
 TCP is a reliable-ordered protocol.
 
-To deliver packets reliably and in order under packet loss, it is necessary to hold more recent packet in a queue, while waiting for dropped packets to be resent. Otherwise, data would be delivered out of order.
+To deliver data reliably and in order under packet loss, it is necessary to hold more recent packet data in a queue while waiting for dropped packets to be resent. Otherwise, data would be delivered out of order.
 
-This is called head of line blocking and it causes problems for multiplayer games, because games are networked not by request/response or by exchanging events, but by rapidly sending time series data like player input and the state of objects in the world.
+This is called **head of line blocking** and it causes problems for multiplayer games, because games are networked not by request/response or by exchanging events, but by rapidly sending time series data like player input and the state of objects in the world.
 
-This creates a frustrating and almost comedically tragic problem for game developers. The most recent data they want is delayed while waiting for old data to be resent, data that by the time it arrives, is too old to be used.
+This creates a frustrating and almost comedically tragic problem for game developers. The most recent data they want is delayed while waiting for old data to be resent. By the time the resent data finally arrives, it is too old to be used!
 
 Unfortunately, there is no way to fix this behavior under TCP. All data must be received reliably and in-order. Therefore, the standard solution in the game industry for the past 20 years has been to send game data over UDP instead. 
 
-How this works in practice is that each game develops their own custom protocol on top of UDP, implementing basic reliability as required, while sending the majority of data as unreliable unordered. This ensures that time series data arrives as quickly as possible without waiting for dropped packets to be resent.
+How this works in practice is that each game develops their own custom protocol on top of UDP, implementing basic reliability as required, while sending the majority of data as unreliable-unordered. This ensures that time series data arrives as quickly as possible without waiting for dropped packets to be resent.
 
 So, what does this have to do with web games?
 
@@ -43,7 +43,7 @@ This is completely unnecessary and could be fixed overnight if web games had som
 
 # What about WebSockets?
 
-WebSockets are an extension to the HTTP protocol which upgrade a HTTP connection so that data can be exchanged bidirectionally, rather than in the traditional request/response pattern.
+WebSockets are an extension to the HTTP protocol which upgrade a HTTP connection so that data can be exchanged bidirectionally, rather than in the traditional request/response pattern. As of 2017, it's well supported across multiple browsers.
 
 This elegantly solves the problem of websites that need to display dynamically changing content, because once a web socket connection is established, the server can push data to the browser without a corresponding request.
 
@@ -53,7 +53,7 @@ Unfortunately, since WebSockets are implemented on top of TCP, data is still sub
 
 QUIC is an experimental protocol built on top of UDP that is designed as replacement transport layer for HTTP. It's currently supported in Google Chrome only.
 
-A key feature provided by QUIC is support for multiple data streams. New channel ids for data can be created implicitly by the client or server. 
+A key feature provided by QUIC is support for multiple data streams. New data streams can be created implicitly by the client or server by increasing the channel id. Server channels ids are even, client channel ids are odd.
 
 This channel concept provide two key benefits: 
 
@@ -61,21 +61,31 @@ This channel concept provide two key benefits:
 
 2) It eliminates head of line blocking between unrelated streams of data.
 
-Unfortunately, while head of line blocking is solved across unrelated data streams, head of line blocking still exists within each stream.
+Unfortunately, while head of line blocking is eliminated across unrelated data streams, head of line blocking still exists within each stream.
 
 # What about WebRTC?
 
-WebRTC is a collection of protocols that enable peer-to-peer communication between browsers for applications like video and video streaming. 
+WebRTC is a collection of protocols that enable peer-to-peer communication between browsers for applications like audio and video streaming. 
 
-It is vastly complex and contains video and voice codecs, TURN, STUN and DTLS implementations.
+Almost as a footnote, WebRTC supports a data channel which can be configured in unreliable mode, providing a way to send unreliable-unordered data from the browser.
 
-Almost as a footnote, WebRTC supports a data channel, which can be configured in an unreliable mode, providing a way to send unreliable unordered data that is not subject to head of line blocking.
+So why are games still stuck using WebSockets in 2017?
 
-So why are games still using 
+There are two key factors:
 
-Embedded deep within the complexity of a It also supports a data channel, which provides a way to exchange UDP-like packets.
+The first is that WebRTC is extremely complex. This of course makes sense, being designed primarily to support peer-to-peer communication between browsers, it is necessary for WebRTC to include STUN, ICE and TURN support for NAT traversal and packet forwarding in the worst case.
 
-However, WebRTC is extremely complex, and 
+The second is that while WebRTC is designed primarily for peer-to-peer communication, there is a trend away from peer-to-peer and towards client/server for games. This can be seen in the move by modern first person shooter games moving away from player hosted servers to dedicated servers in the past 5 years for titles like Call of Duty and Titanfall, and in modern web games like [agar.io](http://agar.io) which is built and a client/server architecture. Given this trend, support for peer-to-peer is seen as unwanted baggage, since dedicated servers have public IPs by design.
+
+So while WebRTC on paper provides a way to send unreliable-unordered data from the browser, in practice it falls down in complexity when data needs to be sent between a browser and a dedicated server in C++.
+
+In the words of the author of [agar.io](http://agar.io), Matheus Valadares:
+
+> I really hope it becomes easier to integrate, as right now that's the biggest barrier into putting it into my custom written C++ server that I use for all my games. They already support UDP-only communication for desktop and mobile builds and bringing it to web would make the experience a lot better.
+
+Perhaps this can be solved in the future, but for the moment, the sheer complexity of WebRTC makes it a hard sell for game developers.
+
+# Why not just let people send UDP?
 
 (insert headline here)
 
