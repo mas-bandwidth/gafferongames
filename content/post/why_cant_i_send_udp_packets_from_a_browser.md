@@ -83,7 +83,7 @@ The final option to consider is to just let users send and receive UDP packets d
 
 1. Websites would be able to launch DDoS attacks by coordinating UDP packet floods from browsers.
 
-2. New security holes would be created as JavaScript running in web pages would be able to craft malicious UDP packets to probe the internals of corporate networks and report back over HTTPS.
+2. New security holes would be created as JavaScript running in web pages crafted malicious UDP packets to probe the internals of corporate networks and report back over HTTPS.
 
 3. UDP packets are not encrypted, so any data sent over these packets could be sniffed and read by an attacker, or even modified in transmit. It would be a massive step back for web security to create a new way for browsers to send unencrypted packets.
 
@@ -109,7 +109,7 @@ I wondered what exactly this solution would look like?
 
 My conclusion was that any solution must have these properties:
 
-1. **Connection based** to so it could not be used in DDoS attacks or to probe security holes.
+1. **Connection based** so it could not be used in DDoS attacks or to probe security holes.
 
 2. **Encrypted** because no game or web application should ever want to send unencrypted packets in 2017.
 
@@ -123,7 +123,7 @@ Hopefully the result will be multiplayer games playing better in a browser in th
 
 The solution I came up with is called [netcode.io](http://netcode.io)
 
-It's a simple network protocol that lets clients security connect to dedicated servers and communicate over UDP. It's connection oriented and it encrypts and signs packets to foil main in the middle attacks. It also uses short lived connect tokens to transfer authentication on the web backend to clients connecting to dedicated servers instances. This way dedicated servers only accept connections from clients which have authenticated with the web backend.
+It's a simple network protocol that lets clients securely connect to dedicated servers and communicate over UDP. It's connection oriented and it encrypts and signs packets to foil main in the middle attacks. It also uses short lived connect tokens to transfer authentication from the web backend to clients connecting to dedicated servers instances. This way dedicated servers only accept connections from clients which have authenticated with the web backend.
 
 It's designed for games like [agar.io](http://agar.io) that need to shunt players off from the main website to a number of dedicated server instances, each with some maximum number of players (up to 256 players per-instance in the reference implementation). 
 
@@ -137,60 +137,8 @@ Over the past month I've created a [reference implementation](http://netcode.io)
 
 ...
 
-By designing 
 
 
-
-
-
-
-7. Introduce real solution
-
-a) Explain what it is (70 words)
-
-b) Explain why it is better than straw solution 1 and straw solution 2 (90 words)
-
-c) Expert quote on why it's better.
-
-(insert headline here)
-
-8. Real solution addresses first major concern
-
-a) introduce concern 1 (30 words)
-
-b) how the real solution addresses it (90 words)
-
-c) citation to support this (not possible...). replace with "how it works" section.
-
-9. Real solution addresses second major concern 
-
-a) introduce concern 2 (30 words)
-
-b) how the real solution addresses it (90 words)
-
-c) citation to support this (not possible!). replace with "how it works" section?
-
-10. Real solution addresss third major concern 
-
-a) introduce concern 3 (30 words)
-
-b) how the real solution addresses it (90 words)
-
-(insert headline here)
-
-11. One example of a company or individual succeeding with the real solution (125 words). (not possible, this is a new thing. what to replace this with?)
-
-(insert headline here)
-
-12. 3 more advantages of real solution
-
-a) advantage 1 (125 words)
-
-b) advantage 2 (125 words)
-
-c) advantage 3 (175 words) <--- make this the best advantage
-
-Include a citation for the last advantage (25 words). (will this be possible? probably not)
 
 13. Recap the problem / real solution argument (50 words)
 
@@ -205,8 +153,3 @@ c) Bob is also _____ (another current thing you're doing).
 d) (Name of company) provides ____ (whatever your company does)
 
 e) Phone and email contact.
-
-
-
-
-
