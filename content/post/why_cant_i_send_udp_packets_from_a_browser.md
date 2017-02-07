@@ -9,7 +9,7 @@ draft = false
 
 # Premise
 
-In 2017 the most popular web games like [agar.io](http://agar.io) are effectively limited to networking via WebSockets over TCP. If a UDP equivalent of WebSockets could be standardized and incorporated into browsers, it would greatly improve the networking of these games.
+In 2017 the most popular web games like [agar.io](http://agar.io) are effectively limited to networking via WebSockets over TCP. If a UDP equivalent of  WebSockets could be standardized and incorporated into browsers, it would greatly improve the networking of these games.
 
 # Background
 
@@ -23,7 +23,7 @@ This leads to frustration from game developers, who just want to be able to send
 
 # The Problem
 
-TCP is a reliable-ordered protocol.
+The web is built on top of TCP, which is a reliable-ordered protocol.
 
 To deliver data reliably and in order under packet loss, it is necessary to hold more recent packet data in a queue while waiting for dropped packets to be resent. Otherwise, data would be delivered out of order.
 
@@ -53,7 +53,7 @@ Unfortunately, since WebSockets are implemented on top of TCP, data is still sub
 
 QUIC is an experimental protocol built on top of UDP that is designed as replacement transport layer for HTTP. It's currently supported in Google Chrome only.
 
-A key feature provided by QUIC is support for multiple data streams. New data streams can be created implicitly by the client or server by increasing the channel id. Server initiated channels are even, client channels are odd.
+A key feature of QUIC is support for multiple data streams. New data streams can be created implicitly by the client or server by increasing the channel id. Server initiated channels are even numbers, client channels are odd.
 
 The channel concept provide two key benefits: 
 
@@ -61,7 +61,7 @@ The channel concept provide two key benefits:
 
 2) It eliminates head of line blocking between unrelated streams of data.
 
-Unfortunately, while head of line blocking is eliminated across unrelated data streams, head of line blocking still exists within each stream.
+Unfortunately, while head of line blocking is eliminated across unrelated data streams, it still exists within each stream.
 
 # What about WebRTC?
 
@@ -71,13 +71,11 @@ Almost as a footnote, WebRTC supports a data channel which can be configured in 
 
 So why are games still stuck using WebSockets in 2017? 
 
-There are two key factors:
+The first reason is that WebRTC is extremely complex. This of course understandable, being designed primarily to support peer-to-peer communication between browsers, it is necessary to include STUN, ICE and TURN support for NAT traversal and packet forwarding in the worst case.
 
-The first is that WebRTC is extremely complex. This of course understandable, being designed primarily to support peer-to-peer communication between browsers, it is necessary to include STUN, ICE and TURN support for NAT traversal and packet forwarding in the worst case.
+The second reason is that WebRTC is designed primarily for peer-to-peer communication, but there is a trend away from peer-to-peer towards client/server for multiplayer games. In this context, game developers see support for NAT traversal and packet forwarding as unnecessary baggage.
 
-The second is that while WebRTC is designed primarily for peer-to-peer communication, there is a trend away from peer-to-peer and towards client/server for multiplayer games. In this context, game developers see support for NAT traversal and packet forwarding as unnecessary baggage.
-
-So while WebRTC succeeds in providing a way to send unreliable-unordered data from one browser to another, it falls down when data needs to be sent between a browser and a dedicated server.
+In short, while WebRTC make it easy to send unreliable-unordered data from one browser to another, it falls down when data needs to be sent between a browser and a dedicated server.
 
 # Why not just let people send UDP?
 
@@ -85,17 +83,61 @@ The final option to consider is to just let users send and receive UDP packets d
 
 1. Websites would be able to launch DDoS attacks by coordinating UDP packet floods from browsers.
 
-2. New security holes would be created as JavaScript could now craft malicious UDP packets to probe the internals of corporate networks and report back over HTTPS.
+2. New security holes would be created as JavaScript running in web pages would be able to craft malicious UDP packets to probe the internals of corporate networks and report back over HTTPS.
 
 3. UDP packets are not encrypted, so any data sent over these packets could be sniffed and read by an attacker, or even modified in transmit. It would be a massive step back for web security to create a new way for browsers to send unencrypted packets.
 
 4. There is no authentication, so a dedicated server reading packets sent from a browser would have to implement its own method to ensure that only valid clients are allowed to connect to it, which is well outside the amount of effort most game developers would be willing to apply to this problem.
 
+Clearly just letting JavaScript create UDP sockets in the browser is a no go.
+
 # What could a solution look like?
 
-As an exercise, lets start from the ground up and think about what a solution could look like.
+But what if we approach it from the other side. What if, instead of trying to bridge from the web world to games, if we started with what games need and worked back to something that could work well in the web?
+
+I'm [Glenn Fiedler](https://www.linkedin.com/in/glennfiedler) and I've been a game developer for the last 15 years. For most of this time I've specialized as a network programmer. I've got a lot of experience working on fast-paced action games. The last game I worked on was [Titanfall 2](https://www.titanfall.com/)
+
+A bit over a month ago, I read this thread on Hacker News: 
+
+[WebRTC: the future of web games](https://news.ycombinator.com/item?id=13264952)
+
+Wherein the creator of [agar.io](http://agar.io) explained that WebRTC was too complex for him to use, and he's still using WebSockets for his games.
+
+I got to thinking, surely for the case of client/server game a solution must exist that is much simpler than WebRTC? 
+
+I wondered what exactly this solution would look like?
+
+My conclusion was that any solution must have these properties:
+
+1. **Connection based** to so it could not be used in DDoS attacks or to probe security holes.
+
+2. **Encrypted** because no game or web application should ever want to send unencrypted packets in 2017.
+
+3. **Authenticated** because dedicated servers would only ever want to accept connections from clients who were already authenticated on the web backend.
+
+I would now like to present the solution. I'm not holding my breath that this would be accepted as a standard in browsers as-is, I'm a game guy, not a web guy. But I do hope at least it will help browser creators see what client/server games actually need, and maybe, in some small way, this do its part to help bridge the gap.
+
+Hopefully the result will be multiplayer games playing better in a browser in the near future.
+
+# netcode.io
+
+The solution I came up with is called [netcode.io](http://netcode.io)
+
+It's a simple binary network protocol that lets clients security connect to dedicated servers and communicate over UDP. It's connection oriented and it encrypts and signs packets to foil main in the middle attacks. It also uses the concept of a short lived connect tokens to transfer authentication on the web backend to clients connecting to dedicated servers instances. This way dedicated servers only accept connections from clients who have authenticated with the web backend.
+
+It's designed for games like [agar.io](http://agar.io) that need to shunt players off from the main website to a number of dedicated server instances, each with some maximum number of players (up to 256 players per-instance in the reference implementation). 
+
+The basic idea is that the existing website performs authentication and then on some REST call from the client requesting to play, provides a connect token to a client over HTTPS, which is passed to the dedicated server instance over UDP as part of the connection handshake. Connect tokens are short lived and rely on a shared private key between the web backend and the dedicated server instances.
+
+Where netcode.io wins out over WebRTC is simplicity. By focusing only on the dedicated server case, it removes the need for ICE, STUN and TURN. By implementing its encryption, signing and authentication with [libsodium](http://libsodium.org) it avoids the complexity of a full implementation of DTLS, while still providing the same level of security.
+
+Over the past month I've created a [reference implementation](http://netcode.io) of netcode.io in C. It's licenced under the BSD 3-Clause. Over the next few months, I hope to continue refining this implementation, spend time writing a spec, and work with people to port netcode.io to different languages. Your feedback on the reference implementation is appreciated.
+
+# How it works
 
 ...
+
+By designing 
 
 
 
