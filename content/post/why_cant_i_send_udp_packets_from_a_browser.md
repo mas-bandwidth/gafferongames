@@ -27,7 +27,7 @@ The web is built on top of TCP, which is a reliable-ordered protocol.
 
 To deliver data reliably and in order under packet loss, it is necessary for TCP to hold more recent data in a queue while waiting for dropped packets to be resent. Otherwise, data would be delivered out of order.
 
-This is called **head of line blocking** and it creates a frustrating and almost comedically tragic problem for game developers: The most recent data they want is delayed while waiting for old data to be resent, and by the time the resent data arrives, it's too old to be used.
+This is called **head of line blocking** and it creates a frustrating and almost comedically tragic problem for game developers: the most recent data they want is delayed while waiting for old data to be resent, but by the time the resent data arrives, it's too old to be used.
 
 Unfortunately, there is no way to fix this behavior under TCP. All data must be received reliably and in order. Therefore, the standard solution in the game industry for the past 20 years has been to send game data over UDP instead. 
 
@@ -111,7 +111,7 @@ My conclusion was that any solution must have these properties:
 
 3. **Authenticated** because dedicated servers only want to accept connections from clients who are authenticated on the web backend.
 
-I would now like to present the solution. I'm not holding my breath that this would be accepted as a standard in browsers as-is, I'm a game guy, not a web guy. But I do hope at least it will help browser creators and web developers see what client/server games actually need, and in some small way, do its part to help bridge the gap.
+I would now like to present the solution. I'm not holding my breath that this would be accepted as a standard in browsers as-is, I'm a game guy, not a web guy. But I do hope at least that it will help browser creators and web developers see what client/server games actually need, and in some small way, do its part to help bridge the gap.
 
 Hopefully the result will be multiplayer games playing better in a browser in the near future.
 
@@ -123,11 +123,11 @@ netcode.io is a simple network protocol that lets clients securely connect to de
 
 It's designed for games like [agar.io](http://agar.io) that need to shunt players off from the main website to a number of dedicated server instances, each with some maximum number of players (up to 256 players per-instance in the reference implementation). 
 
-The basic idea is that the web backend performs authentication and when a client wants to play, some REST call provides a connect token to the client over HTTPS, which is passed to the dedicated server as part of the connection handshake over UDP. 
+The basic idea is that the web backend performs authentication and when a client wants to play, some REST call that client with a connect over HTTPS, which is passed to the dedicated server as part of the connection handshake over UDP. 
 
 Connect tokens are short lived and rely on a shared private key between the web backend and the dedicated server instances. The benefit of this approach is that only authenticated clients are able to connect to the dedicated servers.
 
-Where netcode.io wins out over WebRTC is simplicity. By focusing only on the dedicated server case, it removes the need for ICE, STUN and TURN. By implementing its encryption, signing and authentication with [libsodium](http://libsodium.org) it avoids the complexity of a full implementation of DTLS, while still providing the same level of security.
+Where netcode.io wins out over WebRTC is simplicity. By focusing only on the dedicated server case, it removes the need for ICE, STUN and TURN. By implementing encryption, signing and authentication with [libsodium](http://libsodium.org) it avoids the complexity of a full implementation of DTLS, while still providing the same level of security.
 
 Over the past month I've created a [reference implementation](http://netcode.io) of netcode.io in C. It's licenced under the BSD 3-Clause open source licence. Over the next few months, I hope to continue refining this implementation, spend time writing a spec, and work with people to port netcode.io to different languages.
 
@@ -157,21 +157,21 @@ All packets exchanged between the client and server from this point forward are 
 
 Next, the server checks if there is room for the client on the server. Each server supports some maximum number of clients, for example a 64 player game has 64 slots for clients to connect to. If the server is full, it responds with a _connection request denied packet_. This lets clients quickly know to move on to the next server in the list when a server is full.
 
-If there _is_ room for the client, the server doesn't yet assign the client to that slot, but instead stores the address + HMAC for the connect token for that client as a _potential client_. The server responds with a _connection challenge packet_, which contains a _challenge token_ which is a block of data encrypted with a random key rolled when the server is started. This key randomization ensures there is not a security problem when the same sequence number is used to encrypt challenge tokens across multiple servers (the servers do not coordinate).
+If there _is_ room for the client, the server doesn't yet assign the client to that slot, but instead stores the address + HMAC for the connect token for that client as a _potential client_. The server then responds with a _connection challenge packet_, which contains a _challenge token_ which is a block of data encrypted with a random key rolled when the server is started. This key randomization ensures there is not a security problem when the same sequence number is used to encrypt challenge tokens across multiple servers (the servers do not coordinate).
 
-The client receives the _connection challenge packet_ over UDP and switches to a state where it starts sending _connection response packets_. Connection responds packets simply reflect the challenge packet back to the dedicated server, establishing that the client is actually able to receive packets on the source IP address they say they sending packets from. This stops clients with spoofed packet source IP address from connecting.
+The client receives the _connection challenge packet_ over UDP and switches to a state where it sends _connection response packets_ to the server. Connection response packets simply reflect the _challenge token_ back to the dedicated server, establishing that the client is actually able to receive packets on the source IP address they claim they are sending packets from. This stops clients with spoofed packet source IP address from connecting.
 
-When the server receives a _connection response packet_ it looks for a matching pending client entry, and if one exists, it searches once again for a free slot for the client to connect to. If there isn't one, it replies with a _connection request denied_ since there may have been a slot free when the connection request was first received, that is no longer available.
+When the server receives a _connection response packet_ it looks for a matching pending client entry, and if one exists, it searches once again for a free slot for the client to connect to. If there isn't one, it replies with a _connection request denied packet_ since there may have been a slot free when the connection request was first received that is no longer available.
 
-Alternatively, the server assigns that client to the slot and replies back with a _connection keep-alive_ packet, which tells the client which slot it was assigned on the server. This is known as a _client index_. In multiplayer games, this is typically used to identify clients connected to a server, eg. clients 0,1,2,3 in a 4 player game correspond to players 1,2,3 and 4.
+Alternatively, the server assigns the client to a free slot and replies back with a _connection keep-alive_ packet, which tells the client which slot it was assigned on the server. This is known as a _client index_. In multiplayer games, this is typically used to identify clients connected to a server. For example, clients 0,1,2,3 in a 4 player game correspond to players 1,2,3 and 4.
 
-The server now considers the client connected and is able to send _connection payload_ packets down to that client. These packets wrap game specific data and are delivered unreliable-ordered. The only caveat is that since the client needs to first receive a _connection keep-alive_ before it knows its client index before it considers itself to be fully connected, the server tracks on a per-client slot whether that client is _confirmed_. 
+The server now considers the client connected and is able to send _connection payload packets_ down to that client. These packets wrap game specific data and are delivered unreliable-ordered. The only caveat is that since the client needs to first receive a _connection keep-alive_ before it knows its client index and considers itself to be fully connected, the server tracks on a per-client slot whether that client is _confirmed_. 
 
-The confirmed flag per-client is initially set to false, and flips true once the server has received a keep-alive or payload packet from that client. Until a client is confirmed, each time a payload packet is sent to the client, it is prefixed with a keep-alive packet, so the client is statistically likely to know its client index and be connected prior to receiving the first payload packet sent from the server, minimizing the number of connection establishment round-trips.
+The confirmed flag per-client is initially set to false, and flips true once the server has received a keep-alive or payload packet from that client. Until a client is confirmed, each time a payload packet is sent from server to that client, it is prefixed with a keep-alive packet, so the client is statistically likely to know its client index and be fully connected prior to receiving the first payload packet sent from the server, minimizing the number of connection establishment round-trips.
 
-Now that the client and server are fully connected they can exchange UDP bidirectional packets. Typically game protocols sent player inputs from client to server at a high rate like 60 times per-second, and world state from the server to client at a lower rate, like 20 times per-second, however more recent games are increasing this server update rate.
+Now that the client and server are fully connected they can exchange UDP packets bidirectionally. Typical game protocols sent player inputs from client to server at a high rate like 60 times per-second, and world state from the server to client at a lower rate, like 20 times per-second. However more recent games are increasing the server update rate.
 
-If the server or client don't exchange a steady stream of packets, keep-alive packets are automatically generated so the connection doesn't time out. If no packets are received from either side of the connection for a short amount of time like 5 seconds, the connection times out. If either side of the connection wishes to cleanly disconnect, they fire across some number of _connection disconnect packets_ redundantly, so that statistically these packets are likely to get through even under packet loss. This ensures that clean disconnects happen quickly, without the other side having to wait for time out.
+If the server or client don't exchange a steady stream of packets, keep-alive packets are automatically generated so the connection doesn't time out. If no packets are received from either side of the connection for a short amount of time like 5 seconds, the connection times out. If either side of the connection wishes to cleanly disconnect, a number of _connection disconnect packets_ are fired across redundantly, so that statistically these packets are likely to get through even under packet loss. This ensures that clean disconnects happen quickly, without the other side having to wait for time out.
 
 # Conclusion
 
