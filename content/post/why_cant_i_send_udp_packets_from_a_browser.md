@@ -27,9 +27,7 @@ The web is built on top of TCP, which is a reliable-ordered protocol.
 
 To deliver data reliably and in order under packet loss, it is necessary for TCP to hold more recent data in a queue while waiting for dropped packets to be resent. Otherwise, data would be delivered out of order.
 
-This is called **head of line blocking** and it causes problems for multiplayer games, because games are networked not by request/response or by exchanging events, but by rapidly sending time series data like player input and the state of objects in the world.
-
-This creates a frustrating and almost comedically tragic problem for game developers. The most recent data they want is delayed while waiting for old data to be resent, but by the time the resent data arrives, it's too old to be used!
+This is called **head of line blocking** and it creates a frustrating and almost comedically tragic problem for game developers: The most recent data they want is delayed while waiting for old data to be resent, and by the time the resent data arrives, it's too old to be used.
 
 Unfortunately, there is no way to fix this behavior under TCP. All data must be received reliably and in order. Therefore, the standard solution in the game industry for the past 20 years has been to send game data over UDP instead. 
 
@@ -173,11 +171,11 @@ The confirmed flag per-client is initially set to false, and flips true once the
 
 Now that the client and server are fully connected they can exchange UDP bidirectional packets. Typically game protocols sent player inputs from client to server at a high rate like 60 times per-second, and world state from the server to client at a lower rate, like 20 times per-second, however more recent games are increasing this server update rate.
 
-If the server or client don't exchange a steady stream of packets, keep-alive packets are automatically generated so the connection doesn't time out. If no packets were received from either side of the connection for a short amount of time like 5 seconds, the connection times out. If either side of the connection wishes to cleanly disconnect, they fire across some number of _connection disconnect packets_ redundantly, so that statistically these packets are likely to get through even under packet loss. This ensures that clean disconnects happen faster, without the other side having to wait for time out.
+If the server or client don't exchange a steady stream of packets, keep-alive packets are automatically generated so the connection doesn't time out. If no packets are received from either side of the connection for a short amount of time like 5 seconds, the connection times out. If either side of the connection wishes to cleanly disconnect, they fire across some number of _connection disconnect packets_ redundantly, so that statistically these packets are likely to get through even under packet loss. This ensures that clean disconnects happen quickly, without the other side having to wait for time out.
 
 # Conclusion
 
-Popular web games like [agar.io](http://agar.io) are effectively limited to networking via WebSockets over TCP, because WebRTC is difficult to use in a client/server context. 
+Popular web games like [agar.io](http://agar.io) are effectively limited to networking via WebSockets over TCP, because WebRTC is difficult to use in a client/server context.
 
 If these games were provided with some way to send unreliable-unordered packets over UDP, they would play better because their game data is no longer subject to head of line blocking.
 
