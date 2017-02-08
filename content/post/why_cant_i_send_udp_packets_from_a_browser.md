@@ -173,18 +173,22 @@ The confirmed flag per-client is initially set to false, and flips true once the
 
 Now that the client and server are fully connected they can exchange UDP bidirectional packets. Typically game protocols sent player inputs from client to server at a high rate like 60 times per-second, and world state from the server to client at a lower rate, like 20 times per-second, however more recent games are increasing this server update rate.
 
-If the server or client don't exchange a steady stream of packets, keep-alive packets are automatically generated so the connection doesn't time out. If no packets were received from either side of the connection for a short amount of time like 5 seconds, the connection times out. If either side of the connection wishes to cleanly disconnect, they fire across some number of _connection disconnect packets_ redundantly, so that statistically these packets are likely to get through even under packet loss. This ensures that clean disconnects happen faster, without the other side having to wait 5 seconds to time out.
+If the server or client don't exchange a steady stream of packets, keep-alive packets are automatically generated so the connection doesn't time out. If no packets were received from either side of the connection for a short amount of time like 5 seconds, the connection times out. If either side of the connection wishes to cleanly disconnect, they fire across some number of _connection disconnect packets_ redundantly, so that statistically these packets are likely to get through even under packet loss. This ensures that clean disconnects happen faster, without the other side having to wait for time out.
 
-13. Recap the problem / real solution argument (50 words)
+# Conclusion
 
-14. About the author section (70 words)
+Popular web games like [agar.io](http://agar.io) are effectively limited to networking via WebSockets over TCP, because WebRTC is difficult to use in a client/server context. 
 
-a) Bob Smith in ____ (current title) at _____ (name of company) where here _____ (does something)
+If these games were provided with some way to send unreliable-unordered packets over UDP, they would play better because their game data is no longer subject to head of line blocking.
 
-b) Prior to that he ___ (did something)
+One solution would be for google to make it _significantly_ easier for game developers to integrate WebRTC data channel support in to their dedicated servers. 
 
-c) Bob is also _____ (another current thing you're doing).
+Alternatively, [netcode.io](http://netcode.io) provides a much simpler 'WebSockets for UDP'-like approach, which would also solve the problem, if it were standardized and incorporated into browsers.
 
-d) (Name of company) provides ____ (whatever your company does)
+----- 
 
-e) Phone and email contact.
+<i>**Glenn Fiedler** is the founder and president of [The Network Protocol Company](http://thenetworkprotocolcompany.com) where he helps clients network their games. Prior to starting his own company he was a senior programmer at Respawn Entertainment working on Titanfall 1 and 2.
+
+Glenn is also the author of several popular series of articles on game networking and physics at [gafferongames.com](http://www.gafferongames.com), and is the author of the open source network libraries [libyojimbo](http://www.libyojimbo.com) and [netcode.io](http://netcode.io)</i>
+
+If you would like to support Glenn's work, you can do that on [patreon.com](http://www.patreon.com/gafferongames)
