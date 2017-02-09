@@ -19,7 +19,7 @@ This has worked well for many years, but recently websites have become more inte
 
 Unfortunately, this new set of standards for web development don't provide what multiplayer games need, or, provide it in a form that is too complicated for game developers to use.
 
-This leads to frustration from game developers, who just want to be able to send and receive UDP packets from the browser.
+This leads to frustration from game developers, who just want to be able to send and receive UDP packets in the browser.
 
 # The Problem
 
