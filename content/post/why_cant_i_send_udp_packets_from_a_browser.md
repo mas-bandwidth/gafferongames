@@ -165,7 +165,7 @@ When the server receives a _connection response packet_ it looks for a matching 
 
 Alternatively, the server assigns the client to a free slot and replies back with a _connection keep-alive_ packet, which tells the client which slot it was assigned on the server. This is known as a _client index_. In multiplayer games, this is typically used to identify clients connected to a server. For example, clients 0,1,2,3 in a 4 player game correspond to players 1,2,3 and 4.
 
-The server now considers the client connected and is able to send _connection payload packets_ down to that client. These packets wrap game specific data and are delivered unreliable-ordered. The only caveat is that since the client needs to first receive a _connection keep-alive_ before it knows its client index and considers itself to be fully connected, the server tracks on a per-client slot whether that client is _confirmed_. 
+The server now considers the client connected and is able to send _connection payload packets_ down to that client. These packets wrap game specific data and are delivered unreliable-ordered. The only caveat is that since the client needs to first receive a _connection keep-alive_ before it knows its client index and considers itself to be fully connected, the server tracks on a per-client slot basis whether that client is _confirmed_. 
 
 The confirmed flag per-client is initially set to false, and flips true once the server has received a keep-alive or payload packet from that client. Until a client is confirmed, each time a payload packet is sent from the server to that client, it is prefixed with a keep-alive packet. This ensures the client is statistically likely to know its client index and be fully connected prior to receiving the first payload packet sent from the server, minimizing the number of connection establishment round-trips.
 
@@ -177,9 +177,7 @@ If the server or client don't exchange a steady stream of packets, keep-alive pa
 
 Popular web games like [agar.io](http://agar.io) are effectively limited to networking via WebSockets over TCP, because WebRTC is difficult to use in a client/server context.
 
-If these games were provided with some way to send unreliable-unordered packets over UDP, they would play better because their game data is no longer subject to head of line blocking.
-
-One solution would be for google to make it _significantly_ easier for game developers to integrate WebRTC data channel support in to their dedicated servers. 
+One solution would be for google to make it _significantly_ easier for game developers to integrate WebRTC data channel support in their dedicated servers.
 
 Alternatively, [netcode.io](http://netcode.io) provides a much simpler 'WebSockets for UDP'-like approach, which would also solve the problem, if it were standardized and incorporated into browsers.
 
