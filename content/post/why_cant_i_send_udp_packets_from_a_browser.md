@@ -123,7 +123,7 @@ netcode.io is a simple network protocol that lets clients securely connect to de
 
 It's designed for games like [agar.io](http://agar.io) that need to shunt players off from the main website to a number of dedicated server instances, each with some maximum number of players (up to 256 players per-instance in the reference implementation). 
 
-The basic idea is that the web backend performs authentication and when a client wants to play, it makes a REST call which returns a _connect token_ to the client over HTTPS, which is passed to the dedicated server as part of the connection handshake over UDP. 
+The basic idea is that the web backend performs authentication and when a client wants to play, it makes a REST call to obtain a _connect token_ which is passed to the dedicated server as part of the connection handshake over UDP. 
 
 Connect tokens are short lived and rely on a shared private key between the web backend and the dedicated server instances. The benefit of this approach is that only authenticated clients are able to connect to the dedicated servers.
 
