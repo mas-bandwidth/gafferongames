@@ -67,13 +67,13 @@ WebRTC is a collection of protocols that enable peer-to-peer communication betwe
 
 Almost as a footnote, WebRTC supports a data channel which can be configured in unreliable mode, providing a way to send and receive unreliable-unordered data from the browser.
 
-So why are games still stuck using WebSockets in 2017? 
+So why are browser games still using WebSockets in 2017? 
 
 The reason is that there trend away from peer-to-peer towards client/server for multiplayer games and, in short, while WebRTC make it easy to send unreliable-unordered data from one browser to another, it falls down when data needs to be sent between a browser and a dedicated server.
 
 The reason for this that WebRTC is extremely complex. This is understandable, being designed primarily to support peer-to-peer communication between browsers, it is necessary for WebRTC to include STUN, ICE and TURN support for NAT traversal and packet forwarding in the worst case.
 
-But from a game developer point of view, all this complexity seems like dead weight, when STUN, ICE and TURN are completely completely unnecessary when communicating with dedicated servers, which have public IPs.
+But from a game developer point of view, all this complexity seems like dead weight, when STUN, ICE and TURN are completely completely unnecessary to communicate with dedicated servers, which have public IPs.
 
 > <b>"I feel what is needed is an UDP version of WebSockets. That's all I wish we had."</b>
 > Matheus Valadares, creator of agar.io
@@ -96,7 +96,7 @@ So clearly, just letting JavaScript create UDP sockets in the browser is a no go
 
 # What could a solution look like?
 
-But what if we approach it from the other side. What if, instead of trying to bridge from the web world to games, if we started with what games need and worked back to something that could work well in the web?
+But what if we approach it from the other side. What if, instead of trying to bridge from the web world to games, if we started with what games need and worked back to something that could work well on the web?
 
 I'm [Glenn Fiedler](https://www.linkedin.com/in/glennfiedler) and I've been a game developer for the last 15 years. For most of this time I've specialized as a network programmer. I've got a lot of experience working on fast-paced action games. The last game I worked on was [Titanfall 2](https://www.titanfall.com/)
 
@@ -164,9 +164,11 @@ All packets exchanged between the client and server from this point forward are 
 
 Next, the server checks if there is room for the client on the server. Each server supports some maximum number of clients, for example a 64 player game has 64 slots for clients to connect to. If the server is full, it responds with a _connection request denied packet_. This lets clients quickly know to move on to the next server in the list when a server is full.
 
-If there _is_ room for the client, the server doesn't yet assign the client to that slot, but instead stores the address + HMAC for the connect token for that client as a _potential client_. The server then responds with a _connection challenge packet_, which contains a _challenge token_ which is a block of data encrypted with a random key rolled when the server is started. This key randomization ensures there is not a security problem when the same sequence number is used to encrypt challenge tokens across multiple servers (the servers do not coordinate).
+If there _is_ room for the client, the server doesn't yet assign the client to that slot, but instead stores the address + HMAC for the connect token for that client as a _potential client_. The server then responds with a _connection challenge packet_, which contains a _challenge token_ which is a block of data encrypted with a random key rolled when the server is started. 
 
-The client receives the _connection challenge packet_ over UDP and switches to a state where it sends _connection response packets_ to the server. Connection response packets simply reflect the _challenge token_ back to the dedicated server, establishing that the client is actually able to receive packets on the source IP address they claim they are sending packets from. This stops clients with spoofed packet source IP address from connecting.
+This key randomization ensures there is not a security problem when the same sequence number is used to encrypt challenge tokens across multiple servers (the servers do not coordinate). Also, the connection challenge packet is significantly smaller than the connection request packet by design, to eliminate connection request packets being used as part of a DDoS amplification attack.
+
+The client receives the _connection challenge packet_ over UDP and switches to a state where it sends _connection response packets_ to the server. Connection response packets simply reflect the _challenge token_ back to the dedicated server, establishing that the client is actually able to receive packets on the source IP address they claim they are sending packets from. This stops clients with spoofed packet source IP addresses from connecting.
 
 When the server receives a _connection response packet_ it looks for a matching pending client entry, and if one exists, it searches once again for a free slot for the client to connect to. If there isn't one, it replies with a _connection request denied packet_ since there may have been a slot free when the connection request was first received that is no longer available.
 
