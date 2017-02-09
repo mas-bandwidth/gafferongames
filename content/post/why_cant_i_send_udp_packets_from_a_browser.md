@@ -69,9 +69,9 @@ Almost as a footnote, WebRTC supports a data channel which can be configured in 
 
 So why are games still stuck using WebSockets in 2017? 
 
-The first reason is that WebRTC is extremely complex. This understandable, being designed primarily to support peer-to-peer communication between browsers, it is necessary for WebRTC to include STUN, ICE and TURN support for NAT traversal and packet forwarding in the worst case.
+The reason is that WebRTC is extremely complex to use in a client/server context. This is understandable, being designed primarily to support peer-to-peer communication between browsers, it is necessary for WebRTC to include STUN, ICE and TURN support for NAT traversal and packet forwarding in the worst case.
 
-The second reason is that there is a trend away from peer-to-peer towards client/server for multiplayer games and, in short, while WebRTC make it easy to send unreliable-unordered data from one browser to another, it falls down when data needs to be sent between a browser and a dedicated server.
+But there is a trend away from peer-to-peer towards client/server for multiplayer games and, in short, while WebRTC make it easy to send unreliable-unordered data from one browser to another, it falls down when data needs to be sent between a browser and a dedicated server.
 
 # Why not just let people send UDP?
 
@@ -123,7 +123,7 @@ netcode.io is a simple network protocol that lets clients securely connect to de
 
 It's designed for games like [agar.io](http://agar.io) that need to shunt players off from the main website to a number of dedicated server instances, each with some maximum number of players (up to 256 players per-instance in the reference implementation). 
 
-The basic idea is that the web backend performs authentication and when a client wants to play, some REST call that client with a connect over HTTPS, which is passed to the dedicated server as part of the connection handshake over UDP. 
+The basic idea is that the web backend performs authentication and when a client wants to play, it makes a REST call which returns a _connect token_ to the client over HTTPS, which is passed to the dedicated server as part of the connection handshake over UDP. 
 
 Connect tokens are short lived and rely on a shared private key between the web backend and the dedicated server instances. The benefit of this approach is that only authenticated clients are able to connect to the dedicated servers.
 
@@ -185,8 +185,10 @@ Alternatively, [netcode.io](http://netcode.io) provides a much simpler 'WebSocke
 
 ----- 
 
-<i>**Glenn Fiedler** is the founder and president of [The Network Protocol Company](http://thenetworkprotocolcompany.com) where he helps clients network their games. Prior to starting his own company he was a senior programmer at Respawn Entertainment working on Titanfall 1 and 2.
+<i>
+**Glenn Fiedler** is the founder and president of [The Network Protocol Company](http://thenetworkprotocolcompany.com) where he helps clients network their games. Prior to starting his own company he was a senior programmer at Respawn Entertainment working on Titanfall 1 and 2.
 
-Glenn is also the author of several popular series of articles on game networking and physics at [gafferongames.com](http://www.gafferongames.com), and is the author of the open source network libraries [libyojimbo](http://www.libyojimbo.com) and [netcode.io](http://netcode.io)</i>
+Glenn is also the author of several popular series of articles on game networking and physics at [gafferongames.com](http://www.gafferongames.com), and is the author of the open source network libraries [libyojimbo](http://www.libyojimbo.com) and [netcode.io](http://netcode.io)
 
 If you would like to support Glenn's work, you can do that on [patreon.com](http://www.patreon.com/gafferongames)
+</i>

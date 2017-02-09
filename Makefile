@@ -21,18 +21,18 @@ upload: clean
 	hugo
 	mv public gafferongames_upload
 	zip -9r gafferongames_upload.zip gafferongames_upload
-	scp gafferongames_upload.zip root@linux:/var/www/html
+	scp gafferongames_upload.zip gaffer@linux:~/
 	rm gafferongames_upload.zip
 	rm -rf gafferongames_upload
-	ssh gaffer@linux "cd /var/www/html && rm -rf gafferongames_upload && unzip gafferongames_upload.zip && rm -rf video && mv gafferongames/video video && rm -rf gafferongames && mv gafferongames_upload gafferongames && mv video gafferongames/video"
+	ssh -t gaffer@linux "sudo mv ~/gafferongames_upload.zip /var/www/html && cd /var/www/html && sudo rm -rf gafferongames_upload && sudo unzip gafferongames_upload.zip && sudo rm -rf video && sudo mv gafferongames/video video && sudo rm -rf gafferongames && sudo mv gafferongames_upload gafferongames && sudo mv video gafferongames/video"
 	open http://linux/gafferongames
 	rm -f config.toml
 
 upload_video: clean
 	zip -9r video.zip video
-	scp video.zip root@linux:/var/www/html
+	scp video.zip gaffer@linux:~/
 	rm video.zip
-	ssh gaffer@linux "cd /var/www/html && rm -rf video && unzip video.zip && rm -rf gafferongames/video && mv video gafferongames/video"
+	ssh -t gaffer@linux "sudo mv ~/video.zip /var/www/html && cd /var/www/html && sudo rm -rf video && sudo unzip video.zip && sudo rm -rf gafferongames/video && sudo mv video gafferongames/video"
 
 commit: clean
 	git add .
