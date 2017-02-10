@@ -730,11 +730,19 @@
 	],
 	"file_history":
 	[
+		"/Users/gaffer/git/gafferongames/IDEAS",
 		"/Users/gaffer/git/gafferongames/Makefile",
 		"/Users/gaffer/git/gafferongames/TODO",
+		"/Users/gaffer/git/gafferongames/CHANGES",
+		"/Users/gaffer/git/gafferongames/PLANNING",
+		"/Users/gaffer/git/gafferongames/WHITE PAPER",
+		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
+		"/Users/gaffer/git/gafferongames/make",
+		"/Users/gaffer/netcode.io/Yojimbo usage",
+		"/Users/gaffer/git/gafferongames/content/post/untitled",
+		"/Users/gaffer/git/gafferongames/.gitignore",
 		"/Users/gaffer/git/gafferongames/content/post/snapshots_and_interpolation.md",
 		"/Users/gaffer/git/gafferongames/content/post/snapshot_compression.md",
-		"/Users/gaffer/git/gafferongames/CHANGES",
 		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
 		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
 		"/Users/gaffer/git/gafferongames/config_local.toml",
@@ -766,7 +774,6 @@
 		"/Users/gaffer/git/gafferongames/content/post/the_go_stone.md",
 		"/Users/gaffer/Desktop/TODO",
 		"/Users/gaffer/git/gafferongames/content/post/sending_and_receiving_packets.md",
-		"/Users/gaffer/git/gafferongames/IDEAS",
 		"/Users/gaffer/git/gafferongames/RESEARCH",
 		"/Users/gaffer/git/gafferongames/content/post/udp_vs_tcp.md",
 		"/Users/gaffer/git/gafferongames/layouts/_default/list.html",
@@ -850,14 +857,7 @@
 		"/Users/gaffer/Documents/KARAOKI",
 		"/Users/gaffer/git/protocol2/premake5.lua",
 		"/Users/gaffer/git/protocol2/005_packet_aggregation.cpp",
-		"/Users/gaffer/git/protocol2/004_sending_large_blocks_of_data.cpp",
-		"/Users/gaffer/git/protocol2/003_packet_fragmentation_and_reassembly.cpp",
-		"/Users/gaffer/git/protocol2/002_serialization_strategies.cpp",
-		"/Users/gaffer/git/protocol2/001_reading_and_writing_packets.make",
-		"/Users/gaffer/git/protocol2/001_reading_and_writing_packets.cpp",
-		"/Users/gaffer/git/protocol2/008_packet_encryption.cpp",
-		"/Users/gaffer/git/protocol2/CHANGES",
-		"/Users/gaffer/git/protocol2/009_client_server.cpp"
+		"/Users/gaffer/git/protocol2/004_sending_large_blocks_of_data.cpp"
 	],
 	"find":
 	{
@@ -908,6 +908,16 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"DDoS",
+			"no room",
+			"player ga",
+			"that the",
+			"it it",
+			"netcode_server_process_connection_request_packet",
+			"security",
+			"reliable ordered",
+			"WebSockets",
+			"hacker news",
 			" we know",
 			"large range",
 			"at all.",
@@ -1025,17 +1035,7 @@
 			"SendingBlockMessage",
 			"HasMessagesToSend",
 			"SendBlockData",
-			"todo",
-			"SOAK_TEST",
-			"vectorial",
-			"= 256",
-			"= 250",
-			"ReceiveQueueSize",
-			"CONNECTION_ERROR_MESSAGE_DESYNC",
-			"connection error",
-			"ReceiveQueueSize",
-			"ReceiveMessage",
-			"1290"
+			"todo"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1140,12 +1140,32 @@
 		"selected_items":
 		[
 			[
-				"makefile",
+				"todo",
+				"TODO"
+			],
+			[
+				"make",
 				"Makefile"
 			],
 			[
-				"todo",
-				"TODO"
+				"",
+				"PLANNING"
+			],
+			[
+				"cha",
+				"CHANGES"
+			],
+			[
+				"client",
+				"content/post/client_server_connection.md"
+			],
+			[
+				"id",
+				"IDEAS"
+			],
+			[
+				"makefile",
+				"Makefile"
 			],
 			[
 				"changes",
@@ -1168,16 +1188,8 @@
 				"content/post/snapshots_and_interpolation.md"
 			],
 			[
-				"client",
-				"content/post/client_server_connection.md"
-			],
-			[
 				"conf",
 				"config_local.toml"
-			],
-			[
-				"make",
-				"Makefile"
 			],
 			[
 				"the",
@@ -1320,10 +1332,6 @@
 				"content/post/sending_and_receiving_packets.md"
 			],
 			[
-				"",
-				"RESEARCH"
-			],
-			[
 				"v",
 				"content/post/introduction_to_virtual_go.md"
 			],
@@ -1398,10 +1406,6 @@
 			[
 				"conta",
 				"content/contact.md"
-			],
-			[
-				"cha",
-				"CHANGES"
 			],
 			[
 				"hours",
@@ -1646,10 +1650,6 @@
 			[
 				"types",
 				"yojimbo_types.h"
-			],
-			[
-				"memory.h",
-				"yojimbo_memory.h"
 			]
 		],
 		"width": 0.0

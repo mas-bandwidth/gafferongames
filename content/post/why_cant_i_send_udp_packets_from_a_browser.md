@@ -150,17 +150,17 @@ A connect token has two parts:
 
 2. A public portion, which provides information the client needs to connect, like encryption keys for UDP packets and the list of server addresses to connect to, along with some other information corresponding to the 'associated data' portion of the AEAD.
 
-The client reads the connect token and has a list of n IP addresses to connect to in order. While n can be 1, it's best to give the client multiple servers in case the first server is filled by the time the client attempts to connect to it.
+The client reads the connect token and has a list of n IP addresses to connect to in order. While n can be 1, it's best to give the client multiple servers in case the first server is full by the time the client attempts to connect to it.
 
 When connecting to a dedicated server the client sends a _connection request packet_ repeatedly over UDP. This packet contains the private connect token data, plus some additional data for the AEAD such as the netcode.io version info, protocol id (a 64bit number unique to this particular game), expiry timestamp for the connnect token and the sequence number for the AEAD primitive.
 
-When the dedicated server receives a connection request over UDP it first checks that the contents of the packet are valid with the AEAD primitive. If any of the public data in the connection request packet is modified, the signature check will fail. This stops clients from modifying the expiry timestamp for a connect token, while also making rejection of expired tokens very fast.
+When the dedicated server receives a connection request over UDP it first checks that the contents of the packet are valid using the AEAD primitive. If any of the public data in the connection request packet is modified, the signature check will fail. This stops clients from modifying the expiry timestamp for a connect token, while also making rejection of expired tokens very fast.
 
 Provided the connect token is valid, it is decrypted. Internally it contains a list of dedicated server addresses that the connect token is valid for, stopping malicious clients going wide with one connect token and using it to connect to all available dedicated servers.
 
 Provided the connect token has not expired, it decrypts successfully, and the dedicated server's public IP is in the list of server addresses, the dedicated server sets up a mapping between the client IP address and the encryption keys contained in the private connect token data. 
 
-All packets exchanged between the client and server from this point forward are encrypted with these keys. This encryption mapping expires if no UDP packets are received from the address for a short amount of time like 5 seconds.
+All packets exchanged between the client and server from this point are encrypted using these keys. This encryption mapping expires if no UDP packets are received from the address for a short amount of time like 5 seconds.
 
 Next, the server checks if there is room for the client on the server. Each server supports some maximum number of clients, for example a 64 player game has 64 slots for clients to connect to. If the server is full, it responds with a _connection request denied packet_. This lets clients quickly know to move on to the next server in the list when a server is full.
 
@@ -168,7 +168,7 @@ If there _is_ room for the client, the server doesn't yet assign the client to t
 
 This key randomization ensures there is not a security problem when the same sequence number is used to encrypt challenge tokens across multiple servers (the servers do not coordinate). Also, the connection challenge packet is significantly smaller than the connection request packet by design, to eliminate the possibility of the protocol being used as part of a DDoS amplification attack.
 
-The client receives the _connection challenge packet_ over UDP and switches to a state where it sends _connection response packets_ to the server. Connection response packets simply reflect the _challenge token_ back to the dedicated server, establishing that the client is actually able to receive packets on the source IP address they claim they are sending packets from. This stops clients with spoofed packet source IP addresses from connecting.
+The client receives the _connection challenge packet_ over UDP and switches to a state where it sends _connection response packets_ to the server. Connection response packets simply reflect the _challenge token_ back to the dedicated server, establishing that the client is actually able to receive packets on the source IP address they claim they are sending packets from. This stops clients with spoofed packet source addresses from connecting.
 
 When the server receives a _connection response packet_ it looks for a matching pending client entry, and if one exists, it searches once again for a free slot for the client to connect to. If there isn't one, it replies with a _connection request denied packet_ since there may have been a slot free when the connection request was first received that is no longer available.
 
@@ -180,13 +180,15 @@ The confirmed flag per-client is initially set to false, and flips true once the
 
 Now that the client and server are fully connected they can exchange UDP packets bidirectionally. Typical game protocols sent player inputs from client to server at a high rate like 60 times per-second, and world state from the server to client at a slightly lower rate, like 20 times per-second. However more recent AAA games are increasing the server update rate.
 
-If the server or client don't exchange a steady stream of packets, keep-alive packets are automatically generated so the connection doesn't time out. If no packets are received from either side of the connection for a short amount of time like 5 seconds, the connection times out. If either side of the connection wishes to cleanly disconnect, a number of _connection disconnect packets_ are fired across redundantly, so that statistically these packets are likely to get through even under packet loss. This ensures that clean disconnects happen quickly, without the other side having to wait for time out.
+If the server or client don't exchange a steady stream of packets, keep-alive packets are automatically generated so the connection doesn't time out. If no packets are received from either side of the connection for a short amount of time like 5 seconds, the connection times out. 
+
+If either side of the connection wishes to cleanly disconnect, a number of _connection disconnect packets_ are fired across redundantly, so that statistically these packets are likely to get through even under packet loss. This ensures that clean disconnects happen quickly, without the other side having to wait for time out.
 
 # Conclusion
 
 Popular web games like [agar.io](http://agar.io) are effectively limited to networking via WebSockets over TCP, because WebRTC is difficult to use in a client/server context.
 
-One solution would be for google to make it _significantly_ easier for game developers to integrate WebRTC data channel support in their dedicated servers.
+One solution would be for Google to make it _significantly_ easier for game developers to integrate WebRTC data channel support in their dedicated servers.
 
 Alternatively, [netcode.io](http://netcode.io) provides a much simpler 'WebSockets for UDP'-like approach, which would also solve the problem, if it were standardized and incorporated into browsers.
 
