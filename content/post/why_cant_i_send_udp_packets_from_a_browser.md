@@ -166,7 +166,7 @@ Next, the server checks if there is room for the client on the server. Each serv
 
 If there _is_ room for the client, the server doesn't yet assign the client to that slot, but instead stores the address + HMAC for the connect token for that client as a _potential client_. The server then responds with a _connection challenge packet_, which contains a _challenge token_ which is a block of data encrypted with a random key rolled when the server is started. 
 
-This key randomization ensures there is not a security problem when the same sequence number is used to encrypt challenge tokens across multiple servers (the servers do not coordinate). Also, the connection challenge packet is significantly smaller than the connection request packet by design, to eliminate connection request packets being used as part of a DDoS amplification attack.
+This key randomization ensures there is not a security problem when the same sequence number is used to encrypt challenge tokens across multiple servers (the servers do not coordinate). Also, the connection challenge packet is significantly smaller than the connection request packet by design, to eliminate the possibility of the protocol being used as part of a DDoS amplification attack.
 
 The client receives the _connection challenge packet_ over UDP and switches to a state where it sends _connection response packets_ to the server. Connection response packets simply reflect the _challenge token_ back to the dedicated server, establishing that the client is actually able to receive packets on the source IP address they claim they are sending packets from. This stops clients with spoofed packet source IP addresses from connecting.
 
@@ -186,7 +186,7 @@ If the server or client don't exchange a steady stream of packets, keep-alive pa
 
 Popular web games like [agar.io](http://agar.io) are effectively limited to networking via WebSockets over TCP, because WebRTC is difficult to use in a client/server context.
 
-One solution would be for google to make it _significantly_ easier for game developers to integrate WebRTC data channel support in their dedicated servers.
+One solution would be for google to make it _significantly easier_ for game developers to integrate WebRTC data channel support in their dedicated servers.
 
 Alternatively, [netcode.io](http://netcode.io) provides a much simpler 'WebSockets for UDP'-like approach, which would also solve the problem, if it were standardized and incorporated into browsers.
 
