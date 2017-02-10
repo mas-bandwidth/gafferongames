@@ -182,7 +182,7 @@ Now that the client and server are fully connected they can exchange UDP packets
 
 If the server or client don't exchange a steady stream of packets, keep-alive packets are automatically generated so the connection doesn't time out. If no packets are received from either side of the connection for a short amount of time like 5 seconds, the connection times out. 
 
-If either side of the connection wishes to cleanly disconnect, a number of _connection disconnect packets_ are fired across redundantly, so that statistically these packets are likely to get through even under packet loss. This ensures that clean disconnects happen quickly, without the other side having to wait for time out.
+If either side of the connection wishes to cleanly disconnect, a number of _connection disconnect packets_ are fired across redundantly, so that statistically these packets are likely to get through even under packet loss. This ensures that clean disconnects happen quickly, without the other side waiting for time out.
 
 # Conclusion
 
