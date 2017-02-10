@@ -186,7 +186,7 @@ If either side of the connection wishes to cleanly disconnect, a number of _conn
 
 # Conclusion
 
-Popular web games like [agar.io](http://agar.io) are effectively limited to networking via WebSockets over TCP, because WebRTC is difficult to use in a client/server context.
+Popular web games like [agar.io](http://agar.io) are networked via WebSockets over TCP, because WebRTC is difficult to use in a client/server context.
 
 One solution would be for Google to make it _significantly_ easier for game developers to integrate WebRTC data channel support in their dedicated servers.
 
