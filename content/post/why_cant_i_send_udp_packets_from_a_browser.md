@@ -9,7 +9,7 @@ draft = false
 
 # Premise
 
-In 2017 the most popular web games like [agar.io](http://agar.io) are effectively limited to networking via WebSockets over TCP. If a UDP equivalent of  WebSockets could be incorporated into browsers, it would greatly improve the networking of these games.
+In 2017 the most popular web games like [agar.io](http://agar.io) are networked via WebSockets over TCP. If a UDP equivalent of WebSockets could be incorporated into browsers, it would greatly improve the networking of these games.
 
 # Background
 
