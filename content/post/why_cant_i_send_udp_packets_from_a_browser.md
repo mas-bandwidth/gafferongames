@@ -35,7 +35,7 @@ How this works in practice is that each game develops their own custom protocol 
 
 So, what does this have to do with web games?
 
-The main problem for web games today is that game developers have no way to follow this industry best practice in the browser. Instead, web games are forced to send their game data over TCP, causing hitches and non-responsiveness due to head of line blocking.
+The main problem for web games today is that game developers have no way to follow this industry best practice in the browser. Instead, web games send their game data over TCP, causing hitches and non-responsiveness due to head of line blocking.
 
 This is completely unnecessary and could be fixed overnight if web games had some way to send and receive UDP packets.
 
