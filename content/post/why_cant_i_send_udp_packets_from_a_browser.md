@@ -96,7 +96,7 @@ So clearly, just letting JavaScript create UDP sockets in the browser is a no go
 
 # What could a solution look like?
 
-But what if we approach it from the other side. What if, instead of trying to bridge from the web world to games, if we started with what games need and worked back to something that could work well on the web?
+But what if we approach it from the other side. What if, instead of trying to bridge from the web world to games, we started with what games need and worked back to something that could work well on the web?
 
 I'm [Glenn Fiedler](https://www.linkedin.com/in/glennfiedler) and I've been a game developer for the last 15 years. For most of this time I've specialized as a network programmer. I've got a lot of experience working on fast-paced action games. The last game I worked on was [Titanfall 2](https://www.titanfall.com/)
 
