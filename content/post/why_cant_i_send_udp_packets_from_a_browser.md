@@ -160,7 +160,7 @@ Provided the connect token is valid, it is decrypted. Internally it contains a l
 
 The server also checks if the connect token has already been used by searching a short history of connect token HMACs, and ignores the connection request if a match is found. This prevents one connect token from being used to connect multiple clients. 
 
-In addition, the server enforces that only one client with a given IP address may be connected at any time, and only one client by unique _client id_ may be connected at any time, where _client id_ is a 64 bit integer that uniquely identifies a user who has been authenticated by the web backend.
+Additionally, the server enforces that only one client with a given IP address may be connected at any time, and only one client by unique _client id_ may be connected at any time, where _client id_ is a 64 bit integer that uniquely identifies a user who has been authenticated by the web backend.
 
 Provided the connect token has not expired, it decrypts successfully, and the dedicated server's public IP is in the list of server addresses, and all other checks pass, the dedicated server sets up a mapping between the client IP address and the encryption keys contained in the private connect token data. 
 
