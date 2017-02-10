@@ -186,7 +186,7 @@ If the server or client don't exchange a steady stream of packets, keep-alive pa
 
 Popular web games like [agar.io](http://agar.io) are effectively limited to networking via WebSockets over TCP, because WebRTC is difficult to use in a client/server context.
 
-One solution would be for google to make it _significantly easier_ for game developers to integrate WebRTC data channel support in their dedicated servers.
+One solution would be for google to make it _significantly_ easier for game developers to integrate WebRTC data channel support in their dedicated servers.
 
 Alternatively, [netcode.io](http://netcode.io) provides a much simpler 'WebSockets for UDP'-like approach, which would also solve the problem, if it were standardized and incorporated into browsers.
 
