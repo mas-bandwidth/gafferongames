@@ -75,7 +75,7 @@ The reason for this that WebRTC is extremely complex. This is understandable, be
 
 But from a game developer point of view, all this complexity seems like dead weight, when STUN, ICE and TURN are completely completely unnecessary to communicate with dedicated servers, which have public IPs.
 
-> <b>"I feel what is needed is an UDP version of WebSockets. That's all I wish we had."</b>
+> <b>"I feel what is needed is a UDP version of WebSockets. That's all I wish we had."</b>
 > Matheus Valadares, creator of agar.io
 
 In short, game developers appreciate simplicity and desire a "WebSockets for UDP"-like approach over the complexity of WebRTC.
