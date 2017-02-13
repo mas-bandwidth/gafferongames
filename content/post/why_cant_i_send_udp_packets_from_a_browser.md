@@ -69,9 +69,9 @@ Almost as a footnote, WebRTC supports a data channel which can be configured in 
 
 So why are browser games still using WebSockets in 2017? 
 
-The reason is that there trend away from peer-to-peer towards client/server for multiplayer games and while WebRTC makes it easy to send unreliable-unordered data from one browser to another, it falls down when data needs to be sent between a browser and a dedicated server.
+The reason is that there is a trend away from peer-to-peer towards client/server for multiplayer games and while WebRTC makes it easy to send unreliable-unordered data from one browser to another, it falls down when data needs to be sent between a browser and a dedicated server.
 
-It falls down because it is extremely complex. This is understandable, being designed primarily to support peer-to-peer communication between browsers, it is necessary for WebRTC to include STUN, ICE and TURN support for NAT traversal and packet forwarding in the worst case.
+It falls down because WebRTC is _extremely complex_. This complexity is understandable, being designed primarily to support peer-to-peer communication between browsers, it is necessary for WebRTC to include STUN, ICE and TURN support for NAT traversal and packet forwarding in the worst case.
 
 But from a game developer point of view, all this complexity seems like dead weight, when STUN, ICE and TURN are completely completely unnecessary to communicate with dedicated servers, which have public IPs.
 
