@@ -1,3 +1,11 @@
 DONE
 
+    First I just need to get the new gafferongames setup on some URL, eg. new.gafferongames.com
+
+    I'm having trouble setting this up right now because cloudflare is coming through a CGI default url file, which is weird.
+        
 TODO
+
+    Fix new.gafferongames.com showing without stylesheet. Why?!
+
+    Fix video links for old gafferongames website to point to new video locations.
