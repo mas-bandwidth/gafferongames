@@ -25,7 +25,7 @@ upload: clean
 	rm gafferongames_upload.zip
 	rm -rf gafferongames_upload
 	ssh -t gaffer@linux "sudo mv ~/gafferongames_upload.zip /var/www/html && cd /var/www/html && sudo rm -rf gafferongames_upload && sudo unzip gafferongames_upload.zip && sudo rm -rf video && sudo mv gafferongames/video video && sudo rm -rf gafferongames && sudo mv gafferongames_upload gafferongames && sudo mv video gafferongames/video"
-	open http://linux/gafferongames
+	open http://new.gafferongames.com
 	rm -f config.toml
 
 upload_video: clean

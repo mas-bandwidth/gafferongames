@@ -4,7 +4,7 @@ tags = ["physics","networking","go/baduk/weiqi"]
 date = "2013-02-24"
 title = "Collision Response and Coulomb Friction"
 description = "Making a go stone bounce and spin realistically"
-draft = false
+draft = true
 +++
 
 ## Introduction

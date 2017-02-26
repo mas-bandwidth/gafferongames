@@ -6,31 +6,19 @@ type = "about"
 weight = -190
 +++
 
-Hi, I’m [Glenn Fiedler](https://www.linkedin.com/in/glennfiedler) the author of **gafferongames.com**. I'm a professional network programmer with 15 years experience in the game industry.
+Hi, I’m [Glenn Fiedler](https://www.linkedin.com/in/glennfiedler) the author of **gafferongames.com**.
 
-These days I run [The Network Protocol Company](http://www.thenetworkprotocolcompany.com) which is dedicated to helping people network their games by sharing information, consulting with teams, and of course, writing articles and open source code for this website.
+These days I run [The Network Protocol Company](http://www.thenetworkprotocolcompany.com) where I help people network their games.
 
-Before I started my own company I worked as a senior and lead programmer on many different areas of code. I started out as a graphics programmer in my first industry job way back in 1998, but very quickly became more interested in game physics and networking. In 2006 I specialized in game networking and moved to the United States. The rest, as they say, is history.
+Before this I was a network programmer in the AAA game industry. I lead the team that networked God of War, helped out with the networking on Journey, and worked as a network programmer on Titanfall 1 and 2.
 
-During my career I’ve been fortunate enough to work on some great games:
+And throughout my AAA career, I've always believed strongly in sharing information. Paying it forward. Writing articles, doing GDC talks and sharing example source code so people encounting the same problems I did don't have to learn everything through trial and error. You can see this from the long list of articles I've been able to publish over the last 10 years.
 
-* [Titanfall 2](http://www.metacritic.com/game/playstation-4/titanfall-2)
-* [Titanfall](http://www.metacritic.com/game/xbox-360/titanfall)
-* [God of War: Ascension](http://www.metacritic.com/game/playstation-3/god-of-war-ascension)
-* [Playstation: All-Stars](http://www.metacritic.com/game/playstation-3/playstation-all-stars-battle-royale)
-* [Journey](http://www.metacritic.com/game/playstation-3/journey)
-* [L.A. Noire](http://www.metacritic.com/game/playstation-3/la-noire)
-* [God of War 3](http://www.metacritic.com/game/playstation-3/god-of-war-iii)
-* [Mercenaries 2](http://www.metacritic.com/game/xbox-360/mercenaries-2-world-in-flames)
-* [Tribes: Vengeance](http://www.metacritic.com/game/pc/tribes-vengeance)
-* [SWAT 4](http://www.metacritic.com/game/pc/swat-4)
-* [Freedom Force](http://www.metacritic.com/game/pc/freedom-force)
+I can tell you that it's super gratifying to see 10 years later a new generation of network programmers who grew up reading my stuff. They come up and tell me "I read your articles 10 years ago and decided to become a network programmer!". Wow!
 
-And throughout all this I've always believed strongly in sharing information. Giving back. Writing articles and example source code so people encounting the same problems I did don't have to learn everything through trial and error. 
+I'd like to continue writing. There is plenty more networking knowledge I have left to write about, but taking time away from consulting (which pays the bills) is difficult, so I rely on donations carve out time from consulting and sponsorship to write new articles and open source code.
 
-I've been writing articles for over 10 years now and people tell me all the time how much the articles have helped them. But writing articles and open source code is just so much work. I rely on donations to pay for hosting costs and to carve out time from consulting to write new articles and open source code.
-
-So if you enjoy the articles on this website, please support my work on [Patreon](https://www.patreon.com/gafferongames).
+If you enjoy the articles on this website, and you'd like to read more, please support my work on [Patreon](https://www.patreon.com/gafferongames).
 
 Thanks for your support!
 
