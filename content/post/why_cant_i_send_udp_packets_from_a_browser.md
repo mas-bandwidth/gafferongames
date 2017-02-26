@@ -1,7 +1,7 @@
 +++
 categories = ["White papers"]
 tags = ["networking"]
-date = "2017-02-05"
+date = "2017-02-26"
 title = "Why can't I send UDP packets from a browser?"
 description = "A solution for enabling UDP in the web"
 draft = false
