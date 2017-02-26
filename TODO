@@ -14,16 +14,22 @@ DONE
 
     Pass over and improve the about section.
 
-TODO
+    Improve netcode.io README.md
 
     Fix old gafferongames.com video links
 
-    Improve netcode.io README.md
+    Mostly done, but now getting some weird stuff again with the cloudflare -> linode.
 
+    Maybe cloudflare needs to be whitelisted?
 
-    Make sure all published articles have footers.
+    Yes. Some code needs to be setup to periodically get cloudflare IPs and whitelist them, and mark them as "get real IP behind this" if I'm going to do any whitelisting behind them.
 
-    1. Link to next article
+    For now, since everything on new.gafferongames.com is behind cloudflare, I'm going to turn off all my fail2ban and bans and see what happens.
 
-    2. bio + call to action -> patreon.
+TODO
+
+    Testing videos now... work fine on old gafferongames.com
+
+    There are some broken videos in the ported across code. Fixing those now.
+
 
