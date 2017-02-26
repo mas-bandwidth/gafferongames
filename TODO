@@ -8,16 +8,22 @@ DONE
 
     Fixed, I had the incorrect location for the URL in the upload toml config, so it couldn't find supporting resources.
 
-TODO
-
     Mark "client/server connection" article as draft. Will need to rework it before it can be turned on again.
 
     Mark the virtual go articles as drafts. They need a solution for equations that work well in browser and in RSS feed before I can turn them on again.
 
-    Make sure all published articles have footers, eg. call to action -> patreon.
-
     Pass over and improve the about section.
+
+TODO
 
     Fix old gafferongames.com video links
 
     Improve netcode.io README.md
+
+
+    Make sure all published articles have footers.
+
+    1. Link to next article
+
+    2. bio + call to action -> patreon.
+
