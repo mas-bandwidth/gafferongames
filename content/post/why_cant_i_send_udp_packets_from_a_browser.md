@@ -27,7 +27,7 @@ The web is built on top of TCP, which is a reliable-ordered protocol.
 
 To deliver data reliably and in order under packet loss, it is necessary for TCP to hold more recent data in a queue while waiting for dropped packets to be resent. Otherwise, data would be delivered out of order.
 
-This is called **head of line blocking** and it creates a frustrating and almost comedically tragic problem for game developers. The most recent data that they want is delayed while waiting for old data to be resent, but by the time the resent data arrives, it's too old to be used.
+This is called **head of line blocking** and it creates a frustrating and almost comedically tragic problem for game developers. The most recent data they want is delayed while waiting for old data to be resent, but by the time the resent data arrives, it's too old to be used.
 
 Unfortunately, there is no way to fix this behavior under TCP. All data must be received reliably and in order. Therefore, the standard solution in the game industry for the past 20 years has been to send game data over UDP instead. 
 
