@@ -3,7 +3,7 @@ categories = ["Networked Physics"]
 tags = ["physics","networking"]
 date = "2014-11-29"
 title = "Deterministic Lockstep"
-description = "How to network a physics simulation with deterministic lockstep"
+description = "Networking a physics simulation with deterministic lockstep"
 draft = false
 +++
 

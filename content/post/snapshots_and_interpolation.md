@@ -3,7 +3,7 @@ categories = ["Networked Physics"]
 tags = ["physics","networking"]
 date = "2014-11-30"
 title = "Snapshots and Interpolation"
-description = "Reconstructing a physics simulation"
+description = "Reconstructing a visual approximation of a physics simulation"
 draft = false
 +++
 
