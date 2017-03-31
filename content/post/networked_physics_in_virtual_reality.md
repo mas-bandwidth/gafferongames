@@ -1,6 +1,6 @@
 +++
 categories = ["White papers"]
-tags = ["networking", "vr"]
+tags = ["physics", "networking", "vr"]
 date = "2017-03-31"
 title = "Networked Physics in Virtual Reality"
 description = "Networking a stack of cubes in virtual reality with Unity and PhysX"
@@ -65,6 +65,8 @@ Idea of distributing the world to hide. One player takes ownership of objects, s
 
 # State Synchronization
 
+<<Falling Stack of Cubes.>>
+
 Flow in one direction.
 
 Loopback scene. Blue -> red (mirror).
@@ -73,10 +75,51 @@ Loopback scene. Blue -> red (mirror).
 
 ...
 
-# ...
+# Coming to Rest
 
 ...
 
+# Priority Accumulator
+
+...
+
+# Reliability
+
+...
+
+# Delta Encoding
+
+...
+
+# Delta Prediction
+
+...
+
+# Interactivity
+
+Grab, throw, stacking etc.
+
+Rotate, zoom, snap to hand.
+
+Concept of ownership vs. authority.
+
+# Conflict Resolution
+
+...
+
+# Real World Networking
+
+(What to expect over the real world, eg. why is it so jittery!)
+
+...
+
+# Smoothing
+
+...
+
+# Jitter Buffer
+
+...
 
 # Conclusion
 
@@ -84,7 +127,7 @@ Loopback scene. Blue -> red (mirror).
 
 ----- 
 
-g<i>
+<i>
 **Glenn Fiedler** is the founder and president of [The Network Protocol Company](http://thenetworkprotocolcompany.com) where he helps clients network their games. Prior to starting his own company he was a senior programmer at Respawn Entertainment working on Titanfall 1 and 2.
 
 Glenn is also the author of several popular series of articles on game networking and physics at [gafferongames.com](http://www.gafferongames.com), and is the author of the open source network libraries [libyojimbo](http://www.libyojimbo.com) and [netcode.io](http://netcode.io)
