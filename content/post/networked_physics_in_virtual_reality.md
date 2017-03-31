@@ -9,11 +9,15 @@ draft = false
 
 # Introduction
 
-Something about Oculus. Research etc.
+Link to my previous GDC talks on the subject
+
+Virtual reality being interesting, but lonely. You can't move, why not have somebody else in there with you? Why not interact with a shared space?
+
+Something about Oculus. Research etc. Thanks for sponsoring my work.
 
 ...
 
-# Background
+# The Goal
 
 Stable stacks. Describe the goal and why it's hard.
 
@@ -91,21 +95,50 @@ Loopback scene. Blue -> red (mirror).
 
 ...
 
-# Not Changed
+
+# Delta Not Changed
 
 ...
 
 # Delta Encoding
 
+Need to encode relative to previous state.
+
+Delta buffer concept. 
+
 ...
 
 # Delta Prediction
 
+linear prediction worked great.
+
+(gave up predicting rotation, smallest 3 linear instability).
+
 ...
+
+# Limits of Delta Compression
+
+Graph of bandwidth savings.
+
+Common case great. Initial drop of all the cubes at the start, so random, not much I can do to improve, no matter how hard I try to delta encode.
+
+Show some cool graphs.
+
+...
+
+------
+
+(Kindof almost feels like a part 2 here... at least there needs to be a turn...)
 
 # Interactivity
 
 Grab, throw, stacking etc.
+
+    - layers, making cube not physical while held, big part of believability of interactions, counterintuitive.
+
+Throwing vs. placing.
+
+    - inheriting velocity for throwing vs. stacking.
 
 Rotate, zoom, snap to hand.
 
@@ -113,7 +146,7 @@ Concept of ownership vs. authority.
 
 Thrown objects, hitting objects, stacking.
 
-# Walking Interactions
+Walking Interactions
 
 (Recursive walk interacting objects, transmit authority).
 
@@ -137,7 +170,11 @@ Introduce client/server topology and how it works. Not peer-to-peer.
 
 ...
 
-Boy this will be a complicated section. Might need to be broken down into sub-parts. Majority of the meat here.
+Boy this will be a complicated section. Might need to be broken down into sub-parts. Majority of the meat here. Holy shit.
+
+I'm going to have to get this all back in my head. Might be tricky to do so. It's really complicated
+
+(interaction override, eg. throwing a cube at a stack from another player, while it's their color, take over authority, key to design).
 
 ...
 
