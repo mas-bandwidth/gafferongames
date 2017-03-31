@@ -730,26 +730,38 @@
 	],
 	"file_history":
 	[
-		"/Users/gaffer/git/gafferongames/IDEAS",
-		"/Users/gaffer/git/gafferongames/Makefile",
+		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
+		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
+		"/Users/gaffer/git/gafferongames/content/post/snapshots_and_interpolation.md",
 		"/Users/gaffer/git/gafferongames/TODO",
+		"/Users/gaffer/Desktop/CANCEL SURGERY",
+		"/Users/gaffer/Desktop/cloudflare.txt",
+		"/Users/gaffer/git/gafferongames/content/post/snapshot_compression.md",
+		"/Users/gaffer/git/gafferongames/static/css/clean-blog.min.css",
+		"/Users/gaffer/git/gafferongames/static/css/bootstrap.min.css",
+		"/Users/gaffer/git/gafferongames/config_upload.toml",
+		"/Users/gaffer/git/gafferongames/Makefile",
+		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
+		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
+		"/Users/gaffer/git/gafferongames/content/post/go_stone_vs_go_board.md",
+		"/Users/gaffer/git/gafferongames/content/post/collision_response_and_coulomb_friction.md",
+		"/Users/gaffer/git/gafferongames/content/post/shape_of_the_go_stone.md",
+		"/Users/gaffer/git/gafferongames/content/post/rotation_and_inertia_tensors.md",
+		"/Users/gaffer/git/gafferongames/content/post/how_the_go_stone_moves.md",
+		"/Users/gaffer/git/gafferongames/content/post/tessellating_the_go_stone.md",
+		"/Users/gaffer/git/gafferongames/content/about.md",
+		"/Users/gaffer/git/gafferongames/IDEAS",
 		"/Users/gaffer/git/gafferongames/CHANGES",
 		"/Users/gaffer/git/gafferongames/PLANNING",
 		"/Users/gaffer/git/gafferongames/WHITE PAPER",
-		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
 		"/Users/gaffer/git/gafferongames/make",
 		"/Users/gaffer/netcode.io/Yojimbo usage",
 		"/Users/gaffer/git/gafferongames/content/post/untitled",
 		"/Users/gaffer/git/gafferongames/.gitignore",
-		"/Users/gaffer/git/gafferongames/content/post/snapshots_and_interpolation.md",
-		"/Users/gaffer/git/gafferongames/content/post/snapshot_compression.md",
-		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
-		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
 		"/Users/gaffer/git/gafferongames/config_local.toml",
 		"/Users/gaffer/Desktop/ROBLOX",
 		"/Users/gaffer/git/gafferongames/scratch.md",
 		"/Users/gaffer/git/gafferongames/content/post/the_physics_simulation.md",
-		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/Desktop/devon.txt",
 		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
 		"/Users/gaffer/git/gafferongames/archetypes/post.md",
@@ -759,18 +771,9 @@
 		"/Users/gaffer/git/gafferongames/content/post/spring_physics.md",
 		"/Users/gaffer/git/gafferongames/content/post/what_every_programmer_needs_to_know_about_game_networking.md",
 		"/Users/gaffer/git/gafferongames/content/post/reliability_ordering_and_congestion_avoidance_over_udp.md",
-		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
 		"/Users/gaffer/git/gafferongames/content/post/virtual_connection_over_udp",
-		"/Users/gaffer/git/gafferongames/content/post/rotation_and_inertia_tensors.md",
-		"/Users/gaffer/git/gafferongames/content/post/go_stone_vs_go_board.md",
-		"/Users/gaffer/git/gafferongames/content/post/collision_response_and_coulomb_friction.md",
 		"/Users/gaffer/git/gafferongames/content/post/collision_response_and_friction.md",
-		"/Users/gaffer/git/gafferongames/content/post/how_the_go_stone_moves.md",
-		"/Users/gaffer/git/gafferongames/static/css/clean-blog.min.css",
-		"/Users/gaffer/git/gafferongames/static/css/bootstrap.min.css",
-		"/Users/gaffer/git/gafferongames/content/post/tessellating_the_go_stone.md",
 		"/Users/gaffer/git/gafferongames/content/post/tesselating_the_go_stone.md",
-		"/Users/gaffer/git/gafferongames/content/post/shape_of_the_go_stone.md",
 		"/Users/gaffer/git/gafferongames/content/post/the_go_stone.md",
 		"/Users/gaffer/Desktop/TODO",
 		"/Users/gaffer/git/gafferongames/content/post/sending_and_receiving_packets.md",
@@ -781,7 +784,6 @@
 		"/Users/gaffer/git/gafferongames/bin/rk4_spring_damper.csv",
 		"/Users/gaffer/git/gafferongames/source/game_physics/integration_basics.cpp",
 		"/Users/gaffer/git/gafferongames/bin/implicit_euler_spring_damper.csv",
-		"/Users/gaffer/git/gafferongames/config_upload.toml",
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_constant_acceleration_dt_1.0.txt",
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_constant_acceleration_dt_0.01.txt",
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_spring_damper.csv",
@@ -855,9 +857,7 @@
 		"/Users/gaffer/git/protocol2/007_messages_and_blocks.cpp",
 		"/Users/gaffer/git/protocol2/TODO",
 		"/Users/gaffer/Documents/KARAOKI",
-		"/Users/gaffer/git/protocol2/premake5.lua",
-		"/Users/gaffer/git/protocol2/005_packet_aggregation.cpp",
-		"/Users/gaffer/git/protocol2/004_sending_large_blocks_of_data.cpp"
+		"/Users/gaffer/git/protocol2/premake5.lua"
 	],
 	"find":
 	{
@@ -908,6 +908,11 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"web backend",
+			"server checks",
+			"statistically ",
+			"quote",
+			"with the ",
 			"DDoS",
 			"no room",
 			"player ga",
@@ -1030,12 +1035,7 @@
 			"ProcessAcks",
 			"ReadPacket",
 			"ProcessPacketFragment",
-			"TEST_MESSAGE",
-			"< 1",
-			"SendingBlockMessage",
-			"HasMessagesToSend",
-			"SendBlockData",
-			"todo"
+			"TEST_MESSAGE"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1089,7 +1089,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 22.0
+		"height": 25.0
 	},
 	"input":
 	{
@@ -1130,7 +1130,7 @@
 	"project": "gafferongames.sublime-project",
 	"replace":
 	{
-		"height": 40.0
+		"height": 46.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1140,12 +1140,76 @@
 		"selected_items":
 		[
 			[
+				"whyca",
+				"content/post/why_cant_i_send_udp_packets_from_a_browser.md"
+			],
+			[
+				"dete",
+				"content/post/deterministic_lockstep.md"
+			],
+			[
+				"snapshot",
+				"content/post/snapshots_and_interpolation.md"
+			],
+			[
 				"todo",
 				"TODO"
 			],
 			[
+				"why",
+				"content/post/why_cant_i_send_udp_packets_from_a_browser.md"
+			],
+			[
+				"abot.md",
+				"content/about.md"
+			],
+			[
+				"tess",
+				"content/post/tessellating_the_go_stone.md"
+			],
+			[
+				"howthe",
+				"content/post/how_the_go_stone_moves.md"
+			],
+			[
+				"rotation",
+				"content/post/rotation_and_inertia_tensors.md"
+			],
+			[
+				"shap",
+				"content/post/shape_of_the_go_stone.md"
+			],
+			[
+				"coll",
+				"content/post/collision_response_and_coulomb_friction.md"
+			],
+			[
+				"gosto",
+				"content/post/go_stone_vs_go_board.md"
+			],
+			[
+				"vir",
+				"content/post/introduction_to_virtual_go.md"
+			],
+			[
+				"client",
+				"content/post/client_server_connection.md"
+			],
+			[
 				"make",
 				"Makefile"
+			],
+			[
+				"con",
+				"config_upload.toml"
+			],
+			[
+				"css",
+				"static/css/clean-blog.min.css"
+			],
+			[
+				"snap",
+				"content/post/snapshots_and_interpolation.md"
 			],
 			[
 				"",
@@ -1154,10 +1218,6 @@
 			[
 				"cha",
 				"CHANGES"
-			],
-			[
-				"client",
-				"content/post/client_server_connection.md"
 			],
 			[
 				"id",
@@ -1268,10 +1328,6 @@
 				"content/post/go_stone_vs_go_board.md"
 			],
 			[
-				"coll",
-				"content/post/collision_response_and_coulomb_friction.md"
-			],
-			[
 				"iner",
 				"content/post/rotation_and_inertia_tensors.md"
 			],
@@ -1290,14 +1346,6 @@
 			[
 				"moves",
 				"content/post/how_the_go_stone_moves.md"
-			],
-			[
-				"tess",
-				"content/post/tessellating_the_go_stone.md"
-			],
-			[
-				"css",
-				"static/css/clean-blog.min.css"
 			],
 			[
 				"boot",
@@ -1336,10 +1384,6 @@
 				"content/post/introduction_to_virtual_go.md"
 			],
 			[
-				"vir",
-				"content/post/introduction_to_virtual_go.md"
-			],
-			[
 				"rk",
 				"bin/rk4_spring_damper.csv"
 			],
@@ -1350,10 +1394,6 @@
 			[
 				"im",
 				"bin/implicit_euler_spring_damper.csv"
-			],
-			[
-				"con",
-				"config_upload.toml"
 			],
 			[
 				"config",
@@ -1610,46 +1650,6 @@
 			[
 				"yojimbo_socket",
 				"yojimbo_socket_interface.cpp"
-			],
-			[
-				"crypto.h",
-				"yojimbo_crypto.h"
-			],
-			[
-				"packet_process",
-				"yojimbo_packet_processor.cpp"
-			],
-			[
-				"canges",
-				"CHANGES"
-			],
-			[
-				"bsdsocket.",
-				"~/git/protocol/src/Network/BSDSocket.cpp"
-			],
-			[
-				"yo",
-				"yojimbo.cpp"
-			],
-			[
-				"hash",
-				"yojimbo_hash.h"
-			],
-			[
-				"q",
-				"yojimbo_queue.h"
-			],
-			[
-				"yojimbo_queue.h",
-				"yojimbo_queue.h"
-			],
-			[
-				"array",
-				"yojimbo_array.h"
-			],
-			[
-				"types",
-				"yojimbo_types.h"
 			]
 		],
 		"width": 0.0
