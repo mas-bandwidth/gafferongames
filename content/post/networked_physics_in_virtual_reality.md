@@ -17,6 +17,8 @@ Something about Oculus. Research etc.
 
 Stable stacks. Describe the goal and why it's hard.
 
+(Link ahead to try out the demo, read on to understand how it was implemented).
+
 ...
 
 # The Problem
@@ -33,9 +35,11 @@ Resolving conflicts.
 
 Seemingly attractive. Low bandwidth. Send inputs only.
 
+(Something about my discovery that the scene tends to play back the same way though, at least on my machine...)
+
 But PhysX is not guaranteed deterministic...
 
-(Something about my discovery that the scene tends to play back the same way though, at least on my machine...)
+When the creator of a physics library says it isn't guaranteed to be deterministic, listen to them.
 
 ...
 
@@ -55,7 +59,7 @@ Why it's not a good idea here:
 
 (restriction to coop only)
 
-Idea of distributing the world to hide. One player takes ownership of objects, se
+Idea of distributing the world to hide. One player takes ownership of objects they interact with, sends state of those objects to other players.
 
 ...
 
@@ -87,6 +91,10 @@ Loopback scene. Blue -> red (mirror).
 
 ...
 
+# Not Changed
+
+...
+
 # Delta Encoding
 
 ...
@@ -103,7 +111,33 @@ Rotate, zoom, snap to hand.
 
 Concept of ownership vs. authority.
 
+Thrown objects, hitting objects, stacking.
+
+# Walking Interactions
+
+(Recursive walk interacting objects, transmit authority).
+
+(Return to color at rest for a period of time).
+
+(Interesting notes, pulling objects from under stacks, requires manually waking objects above, manual walk for objects with height above threshold of object removed. Otherwise they hang there!)
+
+...
+
+# Client/Server
+
+Introduce client/server topology and how it works. Not peer-to-peer.
+
+(Necessary to buy into concept of host/guest, because host is arbiter of authority).
+
+(Note that host could be a separate machine, eg. dedicated server, and in fact would be a lot cleaner in this case).
+
+...
+
 # Conflict Resolution
+
+...
+
+Boy this will be a complicated section. Might need to be broken down into sub-parts. Majority of the meat here.
 
 ...
 
@@ -122,6 +156,8 @@ Concept of ownership vs. authority.
 ...
 
 # Conclusion
+
+(Link to demo. Try it out yourself.)
 
 ...
 
