@@ -154,13 +154,15 @@ video: stable at rest.
 
 (reader should understand that sending all objects every frame may not fit into bandwidth budget, even with quantized state, especially when a lot of objects are changing. the way to solve this is to send only a subset of cube states in each packet, and use a priority accumulator to work out which updates to send each frame. this way updates are distributed fairly across 
 
-Recent high velocity impact boost.
+Recent high velocity impact boost. Check over priority function for anything more interesting. perhaps mention -1 priority accumulator value meaning, don't send this object.
 
 ...
 
 # Reliability
 
-...
+(reader should understand the sort of reliability we are looking for is, "which packets did the other side receive?" and that the basic packet header lets us transmit acks back to the server for a steading stream of packets, eg. 60HZ, 90HZ over UDP, even when packet loss exists, by sending each ack redundantly.)
+
+(reader should understand that this is quite different to how TCP implements reliability, because we're not trying to resend lost packets, we're just trying to work out which packets got through and which didn't. this allows us to intellently construct packets with data that we know got through, and avoid resending data that we know did get through).
 
 # Delta Not Changed
 
@@ -178,11 +180,15 @@ Delta buffer concept.
 
 linear prediction worked great.
 
-(gave up predicting rotation, smallest 3 linear instability).
+fixed point math required.
+
+(gave up predicting rotation, smallest 3 linear instability, would not compress and reconstruct to the same values reliabily, if it doesn't decompress to same values, then it's not a good representation for encoding delta).
 
 ...
 
 # Limits of Delta Compression
+
+(reader should understand that entropy exists, and there is a limit to how much compression can be applied. no matter what I did, the big stack when they all fell was expensive, because it had a lot of very random collisions and interactions at high speed, so it was a worst case. however, the majority of common cases were extremely efficient past that point, eg. thrown objects predicted ballistic trajectory and almost zero cost, stationary cubes almost zero cost, slowly moving objects almost zero cost etc.)
 
 Graph of bandwidth savings.
 
@@ -222,7 +228,15 @@ Walking Interactions
 
 ...
 
+# Synchronizing Avatars
+
+(reader should understand that we synchronize avatars by sending local position and rotation for head, hands, and while a cube is held by an avatar, it is synchronized as part of the avatar state, and is not sent via the regular priority accumulator state, eg. -1 priority accumulator update for that object).
+
+...
+
 # Client/Server
+
+(reader should understand that the player who starts the game is the "host" and they are different to "guests" who join the game. the host arbitrates authority for all guests, the guests only care about objects they are interacting with, and other objects are sent from the host to guests).
 
 Introduce client/server topology and how it works. Not peer-to-peer.
 
@@ -234,7 +248,7 @@ Introduce client/server topology and how it works. Not peer-to-peer.
 
 # Conflict Resolution
 
-...
+(jesus this section is going to be complicated)
 
 Boy this will be a complicated section. Might need to be broken down into sub-parts. Majority of the meat here. Holy shit.
 
@@ -272,7 +286,7 @@ good opportunity to show some videos.
 
 # Future Work
 
-(interpolation in remote view, simulation rewind and rollback, possibly a subset of simulation could be rolled back only, having basically the same properties as this authority scheme, but having server authoritative physics. gain: security, loss: in cases where players interact with the same stack, or both throw an object at a stack. dedicated servers for physcis simulation).
+(interpolation in remote view, simulation rewind and rollback, possibly a subset of simulation could be rolled back only, having basically the same properties as this authority scheme, but having server authoritative physics. gain: security, loss: in cases where players interact with the same stack, or both throw an object at a stack. dedicated servers for physcis simulation, quantizing rotation to a different representation than smallest 3, eg. quantized 4, prediction of PhysX simulation including rotation)
 
 # Conclusion
 
