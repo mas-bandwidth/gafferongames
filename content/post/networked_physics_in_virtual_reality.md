@@ -75,11 +75,9 @@ Why it's not a good idea here:
 
 Idea of distributing the world to hide. One player takes ownership of objects they interact with, sends state of those objects to other players.
 
-...
+Authority scheme.
 
-# Authority scheme
-
-(is this section still required?)
+(reader should understand this comes at the cost of security. coop only.)
 
 ...
 
@@ -91,7 +89,7 @@ Idea of distributing the world to hide. One player takes ownership of objects th
 
 Flow in one direction: host -> guest.
 
-Loopback scene. Benefits of 
+Loopback scene. Benefits of working this way. Fast iteration time.
 
 # Quantized State
 
@@ -132,14 +130,17 @@ Describe how it works.
 
 Stacks, slight penetration. Errors due to linear quantization, but especially due to quantization of angle.
 
-
 No guarantee that a smallest 3 representation is able to exactly represent for example a cube at every angle around the y axis, while still being perfectly flat, eg. one edge or vertex slightly penetrating.
 
-Breaks the built in at rest 
+(good opportunity for a diagram here, show cube resting on another cube, and then slight penetration, with arrow for being pushed out)
+
+Breaks the built in at rest.
 
 video: slight jitter
 
 Problem, because we need stable stacks. Can't have jitter like this. Objects must come to rest and stick to be stable.
+
+(possible video showing sloppy at rest causig sliding of objects vs. sticking in stacks when they fall?)
 
 Solution: disable built in at rest calculation, implement custom at rest calculation.
 
@@ -150,6 +151,10 @@ video: stable at rest.
 ...
 
 # Priority Accumulator
+
+(reader should understand that sending all objects every frame may not fit into bandwidth budget, even with quantized state, especially when a lot of objects are changing. the way to solve this is to send only a subset of cube states in each packet, and use a priority accumulator to work out which updates to send each frame. this way updates are distributed fairly across 
+
+Recent high velocity impact boost.
 
 ...
 
@@ -247,9 +252,21 @@ I'm going to have to get this all back in my head. Might be tricky to do so. It'
 
 # Smoothing
 
-...
+(reader should understand that we can apply basic smoothing by making the physical object invisible, and having a smoothed cube follow the physical object, but *not* smoothing in world space (eg. lowpass), instead, tracking the position and rotation error offsets when a network update arrives that is at a different place to the current logical position, such that this error is reduced over time, instead of visibly popping.)
+
+good opportunity to show some videos.
+
+(ideally, diagrams showing how I implemented it with a parented object, and then unparent in unity, and manually in LateUpdate force its position relative to parent, this is because i want the error offsets in world space, not local space. otherwise, the position error would spin around a rotating object and look non-physical).
 
 # Jitter Buffer
+
+(reader should understand that we can do better than just smoothing, if we implement a jitter buffer. because we don't use smoothing to fix temporaly differences, +/- 1-2 frames, but only when there is an actual difference between the two simulations, eg. a pop).
+
+(reader should understand that the network dosen't deliver packets sent n times per-second nicely spaced apart exactly 1/n seconds, they are jittered, a bit early, a bit late. to solve this we can trade some added latency for smoothness, eg. 100ms, and store packets in a buffer, recovering them at the nice 1/n interval we want. we can also use the jitter buffer to recover avatar state at render time, which is not necessarily lined up with physics time, by storing the sample time on the sender side of the avatar state, and interpolating between the two nearest sample states in the remote view to reconstruct the avatar pose at remote view render time exactly).
+
+(good opportunity to show videos without jitter buffer, with jitter buffer, remote avatar etc.)
+
+(future work: jitter buffer should adapt to handle drift.)
 
 ...
 
