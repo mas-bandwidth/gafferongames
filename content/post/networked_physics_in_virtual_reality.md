@@ -23,6 +23,8 @@ Stable stacks. Describe the goal and why it's hard.
 
 (Link ahead to try out the demo, read on to understand how it was implemented).
 
+Something about interaction and throwing, making tall stable stacks of cubes, players picking up objects and throwing them at stacks of cubes, throwing objects from one player to another, catching objects thrown by another player.
+
 ...
 
 # The Problem
@@ -35,7 +37,9 @@ Resolving conflicts.
 
 ...
 
-# What about determinism?
+# What about deterministic lockstep?
+
+(goal of this section is to explain how deterministic lockstep could be used, and have the user understand it's not a viable approach for networking in unity w. PhysX, and perhaps in general, due to low player count).
 
 Seemingly attractive. Low bandwidth. Send inputs only.
 
@@ -43,25 +47,31 @@ Seemingly attractive. Low bandwidth. Send inputs only.
 
 But PhysX is not guaranteed deterministic...
 
-When the creator of a physics library says it isn't guaranteed to be deterministic, listen to them.
+When the creator of a physics library says it isn't guaranteed to be deterministic, you should listen to them.
+
+(Also, if latency hiding is required, requires a full copy of the simulation, GGPO style, and resimulating frames.)
 
 ...
 
 # What about client-side prediction?
 
+(explain to the reader at a basic level how client-side prediction works, and have them understand how it breaks down when networking a physics simulation due to high cost of rollback)
+
 FPS games. Overview of how it works.
 
 Why it's not a good idea here:
 
-1. CPU bound. Non-starter with physics sim.
+0. Designed for players moving around a static world, interacting at a distanec (eg. FPS). => breaks down when objects interact.
 
-2. Rollback would potentially jarring in VR
+1. CPU bound. Rollback non-starter with physics sim, high CPU cost.
+
+2. Rollback would be potentially extremely jarring in VR
 
 ...
 
 # What could a solution look like?
 
-(restriction to coop only)
+(reader should understand the restriction to coop only provides a way to solve this problem without the high CPU cost of rollback, at the cost of security.)
 
 Idea of distributing the world to hide. One player takes ownership of objects they interact with, sends state of those objects to other players.
 
@@ -69,21 +79,73 @@ Idea of distributing the world to hide. One player takes ownership of objects th
 
 # Authority scheme
 
+(is this section still required?)
+
 ...
 
 # State Synchronization
 
-<<Falling Stack of Cubes.>>
+(reader should understand concept of running simulation on both sides, and synchronizing state from left -> right to keep the scene in sync, even though it is not perfectly deterministic).
 
-Flow in one direction.
+(Start with stack of cubes that fall from an initial configuration, create two instances of the world "host" and "guest").
 
-Loopback scene. Blue -> red (mirror).
+Flow in one direction: host -> guest.
+
+Loopback scene. Benefits of 
 
 # Quantized State
+
+(reader should understand that sending uncompressed physics data is too expensive, that compression for physics data over the network is *lossy*, and that if we want the extrapolation to match the original simulation as closely as possible (and we do for stable stacks), then it is necessary to quantize on both sides. This is a *key* technique that makes stable stacks possible).
+
+Bandwidth used so far. With floating point it's a lot.
+
+Want to reduced bandwidth.
+
+Basic compression options:
+
+ - at rest flag
+ - bound and quantize position
+ - bound and quantize linear and angular velocity
+ - smallest 3 quaternion
+
+But also want good extrapolation on the other side, ideally, extrapolate the same way as the local sim it was sent from.
+
+But the quantization slightly affects the simulation...
+
+What's the solution?
+
+Quantize on _both sides_.
+
+Describe how it works.
+
+(reader should understand that the quantization is actually quite expensive, PhysX doesn't particularly like the state being quantized and fed back in like this. If physics engine creators could change how their engines work to work better with this concept of state being quantized each frame, or if a custom physics engine was designed around quantizing it's probably possible to reduce this cost)
+
+(however, it's necessary for truly stable stacks in the remote view)
 
 ...
 
 # Coming to Rest
+
+(reader should understand that quantizing the simulation at the start of each frame creates error, )
+
+(important point: PhysX minimum depenetration velocity set on rigid body, eases objects out of penetration over time, rather than immediately. without this, objects jitter due to penetration induced by quantization).
+
+Stacks, slight penetration. Errors due to linear quantization, but especially due to quantization of angle.
+
+
+No guarantee that a smallest 3 representation is able to exactly represent for example a cube at every angle around the y axis, while still being perfectly flat, eg. one edge or vertex slightly penetrating.
+
+Breaks the built in at rest 
+
+video: slight jitter
+
+Problem, because we need stable stacks. Can't have jitter like this. Objects must come to rest and stick to be stable.
+
+Solution: disable built in at rest calculation, implement custom at rest calculation.
+
+Ring buffer. Based around quantized state. If position or rotation don't change significantly (within quantization resolution), over a number of frames, force object to rest.
+
+video: stable at rest.
 
 ...
 
@@ -94,7 +156,6 @@ Loopback scene. Blue -> red (mirror).
 # Reliability
 
 ...
-
 
 # Delta Not Changed
 
@@ -192,11 +253,15 @@ I'm going to have to get this all back in my head. Might be tricky to do so. It'
 
 ...
 
+# Future Work
+
+(interpolation in remote view, simulation rewind and rollback, possibly a subset of simulation could be rolled back only, having basically the same properties as this authority scheme, but having server authoritative physics. gain: security, loss: in cases where players interact with the same stack, or both throw an object at a stack. dedicated servers for physcis simulation).
+
 # Conclusion
 
-(Link to demo. Try it out yourself.)
+....
 
-...
+(Link once again to demo. Try it out yourself.)
 
 ----- 
 
