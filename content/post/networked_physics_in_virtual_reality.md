@@ -69,6 +69,12 @@ Why it's not a good idea here:
 
 ...
 
+...
+
+# What about somehow sending forces or applying forces to keep the simulation in sync?
+
+(this is something that pisses me off, I want to explain how it breaks down for stacks, and how it doesn't work well when objects don't receive an update every frame).
+
 # What could a solution look like?
 
 (reader should understand the restriction to coop only provides a way to solve this problem without the high CPU cost of rollback, at the cost of security.)
@@ -164,15 +170,27 @@ Recent high velocity impact boost. Check over priority function for anything mor
 
 (reader should understand that this is quite different to how TCP implements reliability, because we're not trying to resend lost packets, we're just trying to work out which packets got through and which didn't. this allows us to intellently construct packets with data that we know got through, and avoid resending data that we know did get through).
 
-# Delta Not Changed
-
-...
-
 # Delta Encoding
+
+(reader should understand two different ways to do delta encoding, the first is frame based, where the entire frame is encoded relative to a previous frame, which is reasonably simple, the other is the method we use here, where the sender needs to track per-object what the most recent update it received was, if any, so future updates can be encoded relative to the most recent update the other side received for each object. this has to work even under packet loss, and has to work on join, where the other side hasn't received any state for objects yet).
 
 Need to encode relative to previous state.
 
 Delta buffer concept. 
+
+Describe delta buffer data structure and how it works.
+
+...
+
+# Delta Not Changed
+
+(reader should understand that sending cubes at rest over and over is wasteful, because the state value is the same. if we are able to encode simply, this object has not changed relative to the previous state, we can encode that common case with just one bit, 'not changed').
+
+interesting aside, we can't just stop sending at rest objects, because the simulation runs on both sides, so an at rest cube may be pushed by another cube and need to have the state sent again, otherwise it desyncs. in fact we can't eve send at rest cubes less frequently, all we can really do is encode them efficiently when they are sent.)
+
+...
+
+# Delta Difference
 
 ...
 
