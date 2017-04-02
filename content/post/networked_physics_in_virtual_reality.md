@@ -72,29 +72,32 @@ While this could _theoretically_ work, it's easy to see that the worst case for 
 
 # What could a solution look like?
 
-At this point both techiques above can be ruled out:
+At this point both techniques above can be ruled out:
 
 1. PhysX is not deterministic, so we can't use deterministic lockstep.
 
 2. Rolling back the entire simulation is too expensive, so we can't hide latency with client-side prediction.
 
-Any solution would need to work with a physics engine engine that is not completely deterministic, and provide some way to hide latency without rollback.
+Any solution we come up would need to work with a physics engine engine that is not completely deterministic, and provide some way to hide latency without the cost of rolling back the entire simulation.
 
 # Authority Scheme
 
 The number one rule of networking is _never trust the client_. 
 
-As with all good rules, this one is made to be broken, but of course, never in a competitive game like an FPS, but in a _cooperative experience_, only then it is something that can be considered.
+As with all good rules, this one is made to be broken. But of course, never break it in a competitive game like an FPS, but in a _cooperative experience_, it is something that can be considered when there are no other options.
 
-The basic idea is that instead of having the server be authoritative over the whole simulation, we can _distribute_ authority across player machines, such that players take authority over objects they interact with, in effect _becoming the server_ for those objects. From that player's point of view, they get to interact with objects lag free, because we are synchronizing state perfect determinism is not required, and because we never have to rollback and resimulate to apply corrections from the server, this is a technique that is uniquely suited to networking something expensive like a physics simulation.
+The basic idea is that instead of having the server be authoritative over the whole simulation, we can _distribute_ authority across player machines, such that players take authority over objects they interact with, in effect _becoming the server_ for those objects. If we do this correctly, from each player's point of view, they get to interact with objects lag free, and they never have to rollback and apply corrections. Also, because we are continuously synchronizing state, determinism is not required.
 
-The trick of course is to work out rules that keep this distributed simulation in sync while players can predictively take authority over objects without obtaining consensus, and arbitering which players wins when two objects grab the same object under latency.
+The trick is to work out _rules_ that keep this distributed simulation in sync while letting players predictively take authority over objects, deciding after the fact which player wins when two players grab the same object, or throw objects at the same stack.
 
-When I was designing this scheme I came up with two concepts: authority and ownership.
+I came up with two concepts: 
 
-Authority is transmissive. Any object under the authority of another player transmits authority to other objects it collides with, so you can throw an object at a stack of objects and have both your throw, and the result of your object hitting a stack of objects appear lag free. For bonus points, if a stack was recently under authoriy of one player, but another player throws an object at it, that player thrown object should take priority and turn the stack of cubes the color of the thrown object.
+1. Authority
+2. Ownership
 
-Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server acknowledges this ownership), they retainer ownership until they release it or disconnect from the game.
+Authority is transmissive. Any object under the authority of a player transmits authority to other objects it collides with, and those objects in turn transmit authority to any objects they interact with. When objects come to rest, they return to default authority (server). For bonus points, if a stack is under authority of one player and has not yet returned to default authority when another player throws an object at it, the more recently thrown object should take authority over the stack.
+
+Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server acknowledges this ownership) that player retains ownership until they release it or disconnect from the game. Of course the server needs to arbiter after the fact when two players grab the same object to decide who loses it and who gets to keeps it.
 
 (may need a turn here, we're basically transitioning from 'what if' to solid implementation...)
 
