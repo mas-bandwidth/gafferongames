@@ -99,9 +99,9 @@ Authority is transmissive. Any object under the authority of a player transmits 
 
 Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server acknowledges this ownership) that player retains ownership until they release it or disconnect from the game. Of course the server needs to act as arbiter when two players grab the same object to decide who loses it and who gets to keeps it.
 
-Now that we have a technique that satisfies our constraints, we can get started on implementation.
-
 # State Synchronization
+
+(in progress here...)
 
 (reader should understand basic concept of state synchronization, running simulation on both sides, and synchronizing state from left -> right to keep the scene in sync, even though it is not perfectly deterministic, that we are hard snapping state, and not applying forces to try to move the remote simulation towards the update that comes in over the network, and that we do this because we need an extrapolation that matches as closely as possible to what actualyl happened, vs. an approximation, in order to obtain stable stacks).
 
