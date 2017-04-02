@@ -44,37 +44,22 @@ Deterministic lockstep is a technique where simulations are kept in sync by send
 
 Most people know this technique from old school real-time strategy games like Command and Conquer, Age of Empires and StarCraft. It's a smart way to network these games because sending across the state for thousands of units is impractical.
 
-Deterministic lockstep is also used in the networking of low player count fighting games like Street Fighter, and physics-based platformers like Little Big Planet. These games have even implemented latency hiding techniques so the local player doesn't feel lag on their own actions, by predicting ahead a copy of the simulation with the local player's inputs. If you'd like to know more about how this works, 
+Deterministic lockstep is also used in the networking of low player count fighting games like Street Fighter, and physics-based platformers like Little Big Planet. These games implement latency hiding techniques so the local player doesn't feel lag on their own actions by predicting ahead a copy of the simulation with the local player's inputs.
 
-What all these games have in common is that they're built on top of an engine that is _deterministic_.
+What all these games have in common is that they're built on top of an engine that is _deterministic_. 
 
 Deterministic in this context means exactly the same result given the same inputs. Not near enough. Exact. Exact down to the bit-level so you could checksum the state at the end of each frame on all machines and it would be the same. In fact, deterministic lockstep games do this checksum all the time and disconnect any player who desyncs. 
 
-So deterministic lockstep is an elegant technique but it has its limitations. The first is that the game must be deterministic, the second is that it's best used for small player counts like 2-4 players, perhaps 8 at most, and third, if latency hiding is required it needs to make a full deep copy of the simulation and step that forward with local inputs, and this can be very CPU intensive.
+So deterministic lockstep is an elegant technique but it has limitations. The first is that the game being networked must be deterministic, the second is that it's best used for small player counts like 2-4 players because you have to wait for input from the most lagged player, and third, if latency hiding is required it needs to make a full deep copy of the simulation and step that simulation forward with local inputs, which can be very CPU intensive.
 
-So will deterministic lockstep work for the our demo? Unfortunately no. The physics engine in Unity is PhysX and that engine is not guaranteed to be deterministic. Short of replacing PhysX in Unity with our own physics engine that is perfectly 
+So will deterministic lockstep work for the our demo? Unfortunately the answer is _no_. 
+
+The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic.
 
 
 
 
 
-Unfortunately, the physics engine 
-
-(reader should understand how deterministic lockstep works, but that PhysX simulation does not guarantee determinism, so we can't use it. don't tilt at windmills. even if it was deterministic, readers should understand it's not the best approach, because latency hiding GGPO would require two copies of the simulation and a lot of resimulation of physics state in order to hide latency for local player interactions, this would be prohibitively expensive in terms of CPU).
-
-(goal of this section is to explain how deterministic lockstep could be used, and have the user understand it's not a viable approach for networking in unity w. PhysX, and perhaps in general, due to low player count).
-
-Seemingly attractive. Low bandwidth. Send inputs only.
-
-(Something about my discovery that the scene tends to play back the same way though, at least on my machine...)
-
-But PhysX is not guaranteed deterministic...
-
-When the creator of a physics library says it isn't guaranteed to be deterministic, you should listen to them.
-
-(Also, if latency hiding is required, requires a full copy of the simulation, GGPO style, and resimulating frames.)
-
-...
 
 # What about client-side prediction?
 
