@@ -46,15 +46,11 @@ Most people know this technique from old school real-time strategy games like Co
 
 Deterministic lockstep is also used in the networking of low player count fighting games like Street Fighter, and physics-based platformers like Little Big Planet. These games implement latency hiding techniques so the local player doesn't feel lag on their own actions by predicting ahead a copy of the simulation with the local player's inputs.
 
-What all these games have in common is that they're built on top of an engine that is _deterministic_. 
+What all these games have in common is that they're built on top of an engine that is _deterministic_. Deterministic in this context means exactly the same result given the same inputs. Not near enough. Exact. Exact down to the bit-level so you could checksum the state at the end of each frame on all machines and it would be the same. In fact, deterministic lockstep games do this checksum all the time and disconnect any player who desyncs. 
 
-Deterministic in this context means exactly the same result given the same inputs. Not near enough. Exact. Exact down to the bit-level so you could checksum the state at the end of each frame on all machines and it would be the same. In fact, deterministic lockstep games do this checksum all the time and disconnect any player who desyncs. 
+So deterministic lockstep is an elegant technique but it has limitations. The first is that the game being networked must be deterministic, the second is that it's best used for small player counts like 2-4 players because you have to wait for input from the most lagged player, and third, if latency hiding is required it needs to make a full copy of the simulation and step it forward with local inputs, which can be very CPU intensive.
 
-So deterministic lockstep is an elegant technique but it has limitations. The first is that the game being networked must be deterministic, the second is that it's best used for small player counts like 2-4 players because you have to wait for input from the most lagged player, and third, if latency hiding is required it needs to make a full deep copy of the simulation and step that simulation forward with local inputs, which can be very CPU intensive.
-
-So will deterministic lockstep work for the our demo? Unfortunately the answer is _no_. 
-
-The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic.
+So will deterministic lockstep work for the our demo? Unfortunately the answer is _no_. The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic.
 
 
 
@@ -62,6 +58,18 @@ The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be det
 
 
 # What about client-side prediction?
+
+Another technique people are familiar with is client-side prediction. This technique is used by first person shooters like Counterstrike, Call of Duty, Titanfall and Overwatch.
+
+This technique works by treating the local player as separate from the rest of the world. The local player is predicted forward (client-side prediction), including movement, shooting and reloading, so they feel no latency, while the rest of the world is synchronized back from the server to the client and typically rendered as an interpolation between keyframes.
+
+They key aspect of client-side prediction is that the server remains authoritative over the simulation and continuously sends corrections back to the client, but the client can't just apply those corrections because by the time they arrive they are effectively _in the past_. So the client rolls back to the corrected state and (invisibly) replays local inputs to bring that state back up to the present time. 
+
+This rollback happens all the time in first person shooters, but you rarely notice, because your local player state and the corrected server state almost always agree. When they don't agree, it's usually because you've experienced a patch of really bad network conditions and the server didn't receive all your inputs, or, because you were cheating :)
+
+This technique works great for first person shooters and doesn't require determinism, so is it a suitable technique for networking our demo?
+
+Unfortun
 
 (reader should basically understand how first person shooters do client side prediction to hide local player actions, and understand that this works well in these sort of games because players move around a static world and don't tend to interact with each other, not how when players collide and bump against each other in FPS it is jittery and poorly defined. reader should understand that rolling back and rewinding a physcis simulation state is potentially extremely complex, and probably, if the whole simulation were to be rewound and resimulated, prohibitively expensive in terms of CPU).
 
