@@ -21,7 +21,7 @@ I'm happy to report that this work was a success, and thanks to the generosity o
 
 # How to network physics in Unity?
 
-...
+(todo: open the question about how to proceed, what technique to use? why is it hard etc?)
 
 # What about deterministic lockstep?
 
@@ -82,7 +82,7 @@ To do this, I came up with two concepts:
 
 Authority is transmissive. Any object under the authority of a player transmits authority to other objects it collides with, and those objects in turn transmit authority to objects they interact with. When objects come to rest, they return to default authority. For bonus points, if a stack is under authority of one player and has not yet returned to default authority when another player throws an object at it, the more recently thrown object should take authority of the stack.
 
-Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server acknowledges this ownership) that player retains ownership until they release it or disconnect from the game. Of course the server needs to act as arbiter when two players grab the same object to decide who loses it and who gets to keeps it.
+Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server acknowledges this ownership) that player retains ownership until they release it or disconnect from the game. Of course the server needs to act as arbiter when two players grab the same object to decide who loses it and who gets to keep it.
 
 # State Synchronization
 
