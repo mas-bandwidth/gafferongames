@@ -9,10 +9,10 @@ public: video
 local:
 	rm -f config.toml
 	cp config_local.toml config.toml
-	bash -c "sleep 2.5 && open http://127.0.0.1:1313" &
+	bash -c "sleep 2.5 && /Applications/Google\ Chrome.app/Contents/MacOS/Google\ Chrome http://127.0.0.1:1313" &
 	mkdir -p public/static
 	cp -r video static/video
-	hugo server --watch --verbose -D -F
+	hugo server --watch -D -F
 	rm -f config.toml
 
 upload: clean

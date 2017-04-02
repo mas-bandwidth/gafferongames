@@ -15,8 +15,6 @@ Previously, I've presented at GDC talking about networked physics in the context
 
 My research in this area was generously sponsored by Oculus, which turned out to be a great fit because the Oculus touch controller and Avatar SDK provide a fantastic way to _interact_ with a physics simulation in virtual reality. 
 
-A pair of virtual hands that you can use to grab, place, and throw objects in VR. What's not to love?
-
 # The Goal
 
 So when Oculus approached me about sponsoring my work in this area I thought about what could be interesting to build in VR? 
@@ -27,11 +25,27 @@ What would be so technically challenging that I wasn't actually sure it could be
 
 We came up with a shared world experience in virtual reality where players can interact with a stack of cubes, pick up cubes with the touch controllers and stack them, throw cubes between each other, and the key point.  and place objects and stack them. Throw objects to each other, throw objects at stacks and all running over the internet with no visible latency.
 
-# Why is it hard?
-
-...
+(Unity, PhysX, what technique is best to network the physics simulation?)
 
 # What about deterministic lockstep?
+
+Deterministic lockstep is a technique where simulations are kept in sync by sending across just the inputs. It's attractive because the amount of bandwidth used is independent of the number of objects in the world.  
+
+Most people know this technique from old school real-time strategy games like Command and Conquer, Age of Empires and StarCraft. It's a smart way to network these games because sending across the state for thousands of units is impractical.
+
+Deterministic lockstep is also used in the networking of low player count fighting games like Street Fighter, and physics-based platformers like Little Big Planet. These games have even implemented latency hiding techniques so the local player doesn't feel lag on their own actions, by predicting ahead a copy of the simulation with the local player's inputs.
+
+What all these games have in common is that they're built on top of an engine that is _deterministic_.
+
+Deterministic in this context means exactly the same result given the same inputs. 
+
+Not near enough. Exact. Exact down to the bit-level so you could checksum the state at the end of each frame on all machines and it would be the same. In fact, this is a what is usually done in these sort of games, whenever a desync occurs, like a butterfly flapping its wings the game gets further and further out of sync, so the games detect this via checksum and disconnect any player who desyncs. Of course, it is the game programmers job to make sure that a desync never happens, and this is 
+
+Obtaining determinism is hard, floating point etc. But ... PhysX...
+
+
+
+Unfortunately, the physics engine 
 
 (reader should understand how deterministic lockstep works, but that PhysX simulation does not guarantee determinism, so we can't use it. don't tilt at windmills. even if it was deterministic, readers should understand it's not the best approach, because latency hiding GGPO would require two copies of the simulation and a lot of resimulation of physics state in order to hide latency for local player interactions, this would be prohibitively expensive in terms of CPU).
 
