@@ -9,6 +9,8 @@ draft = true
 
 # Introduction
 
+(work in progress...)
+
 Hi, I'm Glenn Fiedler and for the last six months I've been researching networked physics in virtual reality.
 
 Previously, I've presented at GDC talking about networked physics in the context of worlds of cubes, but it's entirely something different to be _inside_ that world and able to interact with it, let alone to see another player in the virtual space and to be able to interact with them.
@@ -16,6 +18,8 @@ Previously, I've presented at GDC talking about networked physics in the context
 My research in this area was generously sponsored by Oculus, which turned out to be a great fit because the Oculus touch controller and Avatar SDK provide a fantastic way to _interact_ with a physics simulation in virtual reality. 
 
 # The Goal
+
+(work in progress...)
 
 So when Oculus approached me about sponsoring my work in this area I thought about what could be interesting to build in VR? 
 
@@ -27,21 +31,30 @@ We came up with a shared world experience in virtual reality where players can i
 
 (Unity, PhysX, what technique is best to network the physics simulation?)
 
+
+
+
+
+
+
+
 # What about deterministic lockstep?
 
 Deterministic lockstep is a technique where simulations are kept in sync by sending across just the inputs. It's attractive because the amount of bandwidth used is independent of the number of objects in the world.  
 
 Most people know this technique from old school real-time strategy games like Command and Conquer, Age of Empires and StarCraft. It's a smart way to network these games because sending across the state for thousands of units is impractical.
 
-Deterministic lockstep is also used in the networking of low player count fighting games like Street Fighter, and physics-based platformers like Little Big Planet. These games have even implemented latency hiding techniques so the local player doesn't feel lag on their own actions, by predicting ahead a copy of the simulation with the local player's inputs.
+Deterministic lockstep is also used in the networking of low player count fighting games like Street Fighter, and physics-based platformers like Little Big Planet. These games have even implemented latency hiding techniques so the local player doesn't feel lag on their own actions, by predicting ahead a copy of the simulation with the local player's inputs. If you'd like to know more about how this works, 
 
 What all these games have in common is that they're built on top of an engine that is _deterministic_.
 
-Deterministic in this context means exactly the same result given the same inputs. 
+Deterministic in this context means exactly the same result given the same inputs. Not near enough. Exact. Exact down to the bit-level so you could checksum the state at the end of each frame on all machines and it would be the same. In fact, deterministic lockstep games do this checksum all the time and disconnect any player who desyncs. 
 
-Not near enough. Exact. Exact down to the bit-level so you could checksum the state at the end of each frame on all machines and it would be the same. In fact, this is a what is usually done in these sort of games, whenever a desync occurs, like a butterfly flapping its wings the game gets further and further out of sync, so the games detect this via checksum and disconnect any player who desyncs. Of course, it is the game programmers job to make sure that a desync never happens, and this is 
+So deterministic lockstep is an elegant technique but it has its limitations. The first is that the game must be deterministic, the second is that it's best used for small player counts like 2-4 players, perhaps 8 at most, and third, if latency hiding is required it needs to make a full deep copy of the simulation and step that forward with local inputs, and this can be very CPU intensive.
 
-Obtaining determinism is hard, floating point etc. But ... PhysX...
+So will deterministic lockstep work for the our demo? Unfortunately no. The physics engine in Unity is PhysX and that engine is not guaranteed to be deterministic. Short of replacing PhysX in Unity with our own physics engine that is perfectly 
+
+
 
 
 
