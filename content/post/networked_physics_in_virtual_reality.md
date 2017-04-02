@@ -52,24 +52,21 @@ So deterministic lockstep is an elegant technique but it has limitations. The fi
 
 So will deterministic lockstep work for the our demo? Unfortunately the answer is _no_. The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic.
 
-
-
-
-
-
 # What about client-side prediction?
 
 Another technique people are familiar with is client-side prediction. This technique is used by first person shooters like Counterstrike, Call of Duty, Titanfall and Overwatch.
 
-This technique works by treating the local player as separate from the rest of the world. The local player is predicted forward (client-side prediction), including movement, shooting and reloading, so they feel no latency, while the rest of the world is synchronized back from the server to the client and typically rendered as an interpolation between keyframes.
+This technique works by treating the local player as separate from the rest of the world. The local player is predicted forward with the local player inputs, including movement, shooting and reloading, so the the player feels no latency on their actions, while the rest of the world is synchronized back from the server to the client and rendered as an interpolation between keyframes.
 
-They key aspect of client-side prediction is that the server remains authoritative over the simulation and continuously sends corrections back to the client, but the client can't just apply those corrections because by the time they arrive they are effectively _in the past_. So the client rolls back to the corrected state and (invisibly) replays local inputs to bring that state back up to the present time. 
+They key aspect of client-side prediction is that the server remains authoritative over the simulation. To do this it continuously sends corrections back to the client, in effecting telling the client, at this time I think you were doing _this_. But the client can't just apply those corrections because by the time they arrive they are _in the past_, so the client rolls back to the corrected state and (invisibly) replays local inputs to bring that state back up to the present time. 
 
-This rollback happens all the time in first person shooters, but you rarely notice, because your local player state and the corrected server state almost always agree. When they don't agree, it's usually because you've experienced a patch of really bad network conditions and the server didn't receive all your inputs, or, because you were cheating :)
+Rollbacks happens all the time in first person shooters, but you rarely notice, because your local player state and the corrected state almost always agree. When they don't, it's usually because you've experienced a patch of really bad network conditions and the server didn't receive all your inputs, or, because you were cheating :)
 
-This technique works great for first person shooters and doesn't require determinism, so is it a suitable technique for networking our demo?
+What's interesting is that client-side prediction doesn't require determinism. It doesn't hurt of course, but since the client and server exchange state instead of just inputs, any non-determinism is quickly squashed by applying state to keep the simulations in sync. In effect, all client-side prediction requires is a _close enough_ extrapolation from the state state with the same inputs for a player for approximately 1/4 of a second.
 
-Unfortun
+Client side prediction works _great_ for first person shooters, but is it a good technique for networking a physics simulation?
+
+
 
 (reader should basically understand how first person shooters do client side prediction to hide local player actions, and understand that this works well in these sort of games because players move around a static world and don't tend to interact with each other, not how when players collide and bump against each other in FPS it is jittery and poorly defined. reader should understand that rolling back and rewinding a physcis simulation state is potentially extremely complex, and probably, if the whole simulation were to be rewound and resimulated, prohibitively expensive in terms of CPU).
 
