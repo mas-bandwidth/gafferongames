@@ -9,29 +9,25 @@ draft = true
 
 # Introduction
 
-(reader should understand that I've done previous work in this area, that networked physcis in VR is inherently new and interesting, that oculus is sponsoring my work, and I'm researching networked physics in VR).
+Hi, I'm Glenn Fiedler and for the last six months I've been researching networked physics in virtual reality.
 
-Link to my previous GDC talks on the subject
+Previously, I've presented at GDC talking about networked physics in the context of worlds of cubes, but it's entirely something different to be _inside_ that world and able to interact with it, let alone to see another player in the virtual space and to be able to interact with them.
 
-Virtual reality being interesting, but lonely. You can't move, why not have somebody else in there with you? Why not interact with a shared space?
+My research in this area was generously sponsored by Oculus, which turned out to be a great fit because the Oculus touch controller and Avatar SDK provide a fantastic way to _interact_ with a physics simulation in virtual reality. 
 
-Something about Oculus. Research etc. Thanks for sponsoring my work.
-
-...
+A pair of virtual hands that you can use to grab, place, and throw objects in VR. What's not to love?
 
 # The Goal
 
-(reader should understand that the goal is a shared world experience where players can interact and pick up, throw, stack cubes, that this is difficult for many reasons, and perhaps when I started, I wasn't even sure if it could be done. understand that this was definitely a research project. can this be done? can it be made to look high quality? will it work? I'm not 100% sure but I think it might be able to be done).
+So when Oculus approached me about sponsoring my work in this area I thought about what could be interesting to build in VR? 
 
-(reader should really understand that the success was, two players being able to interact with the cubes and achieve stable stacks, with no latency of interaction. if the stacks were stable in the remote view, it's a win. if it looks as good as possible even better. key goal: networked stable stacks)
+What would be a compelling technical demo built around networked physics in VR?
 
-Stable stacks. Describe the goal and why it's hard.
+What would be so technically challenging that I wasn't actually sure it could be done?
 
-(Link ahead to try out the demo, read on to understand how it was implemented).
+We came up with a shared world experience in virtual reality where players can interact with a stack of cubes, pick up cubes with the touch controllers and stack them, throw cubes between each other, and the key point.  and place objects and stack them. Throw objects to each other, throw objects at stacks and all running over the internet with no visible latency.
 
-Something about interaction and throwing, making tall stable stacks of cubes, players picking up objects and throwing them at stacks of cubes, throwing objects from one player to another, catching objects thrown by another player.
-
-(turn: so how are we going to implement this?)
+# Why is it hard?
 
 ...
 
