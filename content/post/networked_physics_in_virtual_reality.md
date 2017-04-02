@@ -58,31 +58,17 @@ Another technique people are familiar with is client-side prediction. This techn
 
 This technique works by treating the local player as separate from the rest of the world. The local player is predicted forward with the local player inputs, including movement, shooting and reloading, so the the player feels no latency on their actions, while the rest of the world is synchronized back from the server to the client and rendered as an interpolation between keyframes.
 
-They key aspect of client-side prediction is that the server remains authoritative over the simulation. To do this it continuously sends corrections back to the client, in effecting telling the client, at this time I think you were doing _this_. But the client can't just apply those corrections because by the time they arrive they are _in the past_, so the client rolls back to the corrected state and (invisibly) replays local inputs to bring that state back up to the present time. 
+They key aspect of client-side prediction is that the server remains authoritative over the simulation. To do this it continuously sends corrections back to the client, in effect telling the client, at this time I think you were _here_ and you doing _this_. But the client can't just apply those corrections because by the time they arrive they are _in the past_, so the client rolls back to the corrected state and (invisibly) replays local inputs to bring the corrected state back up to the present time. 
 
-Rollbacks happens all the time in first person shooters, but you rarely notice, because your local player state and the corrected state almost always agree. When they don't, it's usually because you've experienced a patch of really bad network conditions and the server didn't receive all your inputs, or, because you were cheating :)
+These rollbacks happen all the time in first person shooters, but you rarely notice, because your local player state and the corrected state almost always agree. When they don't, it's usually because you've experienced a patch of really bad network conditions and the server didn't receive all your inputs, because something happened on the server that can't be predicted from your inputs alone (another player shot you), or because you were cheating :)
 
-What's interesting is that client-side prediction doesn't require determinism. It doesn't hurt of course, but since the client and server exchange state instead of just inputs, any non-determinism is quickly squashed by applying state to keep the simulations in sync. In effect, all client-side prediction requires is a _close enough_ extrapolation from the state state with the same inputs for a player for approximately 1/4 of a second.
+What's interesting is that client-side prediction doesn't require determinism. It doesn't hurt of course, but since the client and server exchange state instead of just inputs, any non-determinism is quickly squashed by applying state to keep the simulations in sync. In effect, all client-side prediction requires is a _close enough_ extrapolation from the state state with the same inputs for a player for approximately a quarter of a second.
 
 Client side prediction works _great_ for first person shooters, but is it a good technique for networking a physics simulation?
 
+In first person shooters the prediction is applied only to your local player character, but in a physics simulation what would need to be predicted? Not only your own character, but any objects you interact with would need to be predicted as well. This means if you picked up an object and threw it at a stack of objects, the client side prediction and rollback would need to at minimum a start to include the subset of objects you have interacted with and the objects that they in turn interact with via collision.
 
-
-(reader should basically understand how first person shooters do client side prediction to hide local player actions, and understand that this works well in these sort of games because players move around a static world and don't tend to interact with each other, not how when players collide and bump against each other in FPS it is jittery and poorly defined. reader should understand that rolling back and rewinding a physcis simulation state is potentially extremely complex, and probably, if the whole simulation were to be rewound and resimulated, prohibitively expensive in terms of CPU).
-
-(explain to the reader at a basic level how client-side prediction works, and have them understand how it breaks down when networking a physics simulation due to high cost of rollback)
-
-FPS games. Overview of how it works.
-
-Why it's not a good idea here:
-
-0. Designed for players moving around a static world, interacting at a distanec (eg. FPS). => breaks down when objects interact.
-
-1. CPU bound. Rollback non-starter with physics sim, high CPU cost.
-
-2. Rollback could be potentially extremely jarring in VR
-
-...
+While this _could_ theoretically work, it's easy to see that the worst case for one player throwing a cube at a large pile of cubes is the player predicting the _entire simulation_. Over typical internet conditions it can be expected that players will need to predict up to 250ms to hide latency and at 60HZ this means a client-side prediction of 15 frames. Physics simulation is usually pretty expensive, so any solution that requires 15 extra simulation frames for each frame of real simulation is probably not practical.
 
 # What could a solution look like?
 
