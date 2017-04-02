@@ -46,9 +46,9 @@ Most people know this technique from old school real-time strategy games like Co
 
 Deterministic lockstep is also used in the networking of low player count fighting games like Street Fighter, and physics-based platformers like Little Big Planet. These games implement latency hiding techniques so the local player doesn't feel lag on their own actions by predicting ahead a copy of the simulation with the local player's inputs.
 
-What all these games have in common is that they're built on top of an engine that is _deterministic_. Deterministic in this context means exactly the same result given the same inputs. Not near enough. Exact. Exact down to the bit-level so you could checksum the state at the end of each frame on all machines and it would be the same. In fact, deterministic lockstep games do this checksum all the time and disconnect any player who desyncs. 
+What all these games have in common is that they're built on top of an engine that is _deterministic_. Determinism in this context means exactly the same result given the same inputs. Not near enough. Exact. Exact down to the bit-level so you could checksum the state at the end of each frame on all machines and it would be the same. In fact, deterministic lockstep games do this checksum all the time and disconnect any player who desyncs. 
 
-So deterministic lockstep is an elegant technique but it has limitations. The first is that the game being networked must be deterministic, the second is that it's best used for small player counts like 2-4 players because you have to wait for input from the most lagged player, and third, if latency hiding is required it needs to make a full copy of the simulation and step it forward with local inputs, which can be very CPU intensive.
+When it works, deterministic lockstep is an elegant technique, but it has its limitations. The first is that the game being networked must be deterministic, the second is that it's best used for small player counts like 2-4 players because you have to wait for input from the most lagged player, and third, if latency hiding is required, you need to make a full copy of the simulation and step it forward with local inputs, which can be very CPU intensive.
 
 So will deterministic lockstep work for the our demo? Unfortunately the answer is _no_. The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic.
 
@@ -56,45 +56,45 @@ So will deterministic lockstep work for the our demo? Unfortunately the answer i
 
 Another technique people are familiar with is client-side prediction. This technique is used by first person shooters like Counterstrike, Call of Duty, Titanfall and Overwatch.
 
-This technique works by treating the local player as separate from the rest of the world. The local player is predicted forward with the local player inputs, including movement, shooting and reloading, so the the player feels no latency on their actions, while the rest of the world is synchronized back from the server to the client and rendered as an interpolation between keyframes.
+This technique works by treating the local player as separate from the rest of the world. The local player is predicted forward with local inputs, including movement, shooting, reloading and item usage, so the player feels no latency on their actions, while the rest of the world is synchronized back from the server to the client and rendered as an interpolation between keyframes.
 
-They key aspect of client-side prediction is that the server remains authoritative over the simulation. To do this it continuously sends corrections back to the client, in effect telling the client, at this time I think you were _here_ and you doing _this_. But the client can't just apply those corrections because by the time they arrive they are _in the past_, so the client rolls back to the corrected state and (invisibly) replays local inputs to bring the corrected state back up to the present time. 
+They key benefit of client-side prediction is that the server remains authoritative over the simulation. To do this the server continuously sends corrections back to the client, in effect telling the client, at this time I think you were _here_ and doing _this_. But the client can't just apply these corrections because by the time they arrive they are _in the past_, so the client rolls back to the corrected state and (invisibly) replays local inputs to bring the corrected state up to present time. 
 
-These rollbacks happen all the time in first person shooters, but you rarely notice, because your local player state and the corrected state almost always agree. When they don't, it's usually because you've experienced a patch of really bad network conditions and the server didn't receive all your inputs, because something happened on the server that can't be predicted from your inputs alone (another player shot you), or because you were cheating :)
+These rollbacks happen all the time in first person shooters but you rarely notice, because your local player state and the corrected state almost always agree. When they don't, it's usually because you've experienced a patch of really bad network conditions and the server didn't receive all your inputs, something happened on the server that can't be predicted from your inputs alone (another player shot you), or, because you were cheating :)
 
 What's interesting is that client-side prediction doesn't require determinism. It doesn't hurt of course, but since the client and server exchange state instead of just inputs, any non-determinism is quickly squashed by applying state to keep the simulations in sync. In effect, all client-side prediction requires is a _close enough_ extrapolation from the state state with the same inputs for a player for approximately a quarter of a second.
 
-Client side prediction works _great_ for first person shooters, but is it a good technique for networking a physics simulation?
+So client side prediction works _great_ for first person shooters, but is it a good technique for networking a physics simulation?
 
-In first person shooters the prediction is applied only to your local player character, but in a physics simulation what would need to be predicted? Not only your own character, but any objects you interact with would need to be predicted as well. This means if you picked up an object and threw it at a stack of objects, the client side prediction and rollback would need to at minimum a start to include the subset of objects you have interacted with and the objects that they in turn interact with via collision.
+In a first person shooters the prediction is applied only to your local player character and perhaps objects they are carrying like items and weapons, but in a physics simulation what would need to be predicted? Not only your own character, but any objects you interact with would need to be predicted as well. This means if you picked up an object and threw it at a stack of objects, the client side prediction and rollback would need to at minimum a start to include the subset of objects you have interacted with _and_ the objects they in turn interact with via collision.
 
-While this _could_ theoretically work, it's easy to see that the worst case for one player throwing a cube at a large pile of cubes is the player predicting the _entire simulation_. Over typical internet conditions it can be expected that players will need to predict up to 250ms to hide latency and at 60HZ this means a client-side prediction of 15 frames. Physics simulation is usually pretty expensive, so any solution that requires 15 extra simulation frames for each frame of real simulation is probably not practical.
+While this could _theoretically_ work, it's easy to see that the worst case for one player throwing a cube at a large pile of cubes is the player predicting the _entire simulation_. Over typical internet conditions it can be expected that players will need to predict up to 250ms to hide latency and at 60HZ this means a client-side prediction of 15 frames. Physics simulation is usually pretty expensive, so any solution that requires 15 invisible rollback simulation frames for each frame of real simulation is probably not practical.
 
 # What could a solution look like?
 
-(reader should understand that if the simulation is not deterministic and rollback is too expensive, then this is probably the only option available. it's probably worth mentioning that it may be possible, to implement something that only rolls back a subset of the simulation, but because we are coop we're don't need server authoritative, this could be explored in future work).
+At this point both techiques above can be ruled out:
 
-^---- this is jumping ahead, this section should describe a solution, and how we might be willing to trade something to get it. then, show how authority scheme fits the bill in next section.
+1. PhysX is not deterministic, so we can't use deterministic lockstep.
 
-(reader should also understand the cost of this decision, the restriction to coop only provides a way to solve this problem without the high CPU cost of rollback, at the cost of security, but that also, authority schemes tend to be complex, eg. distributed programming, and difficult to reason about).
+2. Rolling back the entire simulation is too expensive, so we can't hide latency with client-side prediction.
 
-Idea of distributing the world to hide. One player takes authority of objects they interact with, sends state of those objects to other players.
+Any solution would need to work with a physics engine engine that is not completely deterministic, and provide some way to hide latency without rollback.
 
-Also, concept of ownership. players take ownership over objects they grab, so the player to grab an object wins. ownership wins over authority.
+# Authority Scheme
 
-# Authority scheme.
+The number one rule of networking is _never trust the client_. 
 
-^--- need to work on the split between previous paragraph and this one. they're bleeding in to each other.
+As with all good rules, this one is made to be broken, but of course, never in a competitive game like an FPS, but in a _cooperative experience_, only then it is something that can be considered.
 
-(reader should see how the authority scheme satisfies the constraints)
+The basic idea is that instead of having the server be authoritative over the whole simulation, we can _distribute_ authority across player machines, such that players take authority over objects they interact with, in effect _becoming the server_ for those objects. From that player's point of view, they get to interact with objects lag free, because we are synchronizing state perfect determinism is not required, and because we never have to rollback and resimulate to apply corrections from the server, this is a technique that is uniquely suited to networking something expensive like a physics simulation.
 
-(reader should understand the basic concepts as I envisioned them when I started work, that there is some sort of authority where you can take authroity over objects you interact with, eg. thrown objects, and a concept of ownership which is stronger, players *own* objects they are holding in their hands, authority can be overridden, eg. a stack that is blue can be turned red if a red cube is thrown at it, but ownership is firm, if you obtain ownership of an object, and the server agrees with you, you retain ownership of an objcet until you release it).
+The trick of course is to work out rules that keep this distributed simulation in sync while players can predictively take authority over objects without obtaining consensus, and arbitering which players wins when two objects grab the same object under latency.
 
-(reader should understand the idea of flow, about how non-host players can take authority over objects they interact with, and start sending state for those objects back to the host, if the host agrees that client was the first to interact with an object, then it accepts that update from the guest. flow diagrams.)
+When I was designing this scheme I came up with two concepts: authority and ownership.
 
-(explain in context of "host" and "guest". host sends everything by default to guest, but guest can take authority over a subset of objects, and starts sending those back to host, if host agrees, host can accept those state updates, or ignore them.)
+Authority is transmissive. Any object under the authority of another player transmits authority to other objects it collides with, so you can throw an object at a stack of objects and have both your throw, and the result of your object hitting a stack of objects appear lag free. For bonus points, if a stack was recently under authoriy of one player, but another player throws an object at it, that player thrown object should take priority and turn the stack of cubes the color of the thrown object.
 
---- 
+Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server acknowledges this ownership), they retainer ownership until they release it or disconnect from the game.
 
 (may need a turn here, we're basically transitioning from 'what if' to solid implementation...)
 
