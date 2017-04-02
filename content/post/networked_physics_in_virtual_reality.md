@@ -68,11 +68,11 @@ So client side prediction works _great_ for first person shooters, but is it a g
 
 In a first person shooters the prediction is applied only to your local player character and perhaps objects they are carrying like items and weapons, but in a physics simulation what would need to be predicted? Not only your own character, but any objects you interact with would need to be predicted as well. This means if you picked up an object and threw it at a stack of objects, the client side prediction and rollback would need to at minimum a start to include the subset of objects you have interacted with _and_ the objects they in turn interact with via collision.
 
-While this could _theoretically_ work, it's easy to see that the worst case for one player throwing a cube at a large pile of cubes is the player predicting the _entire simulation_. Over typical internet conditions it can be expected that players will need to predict up to 250ms to hide latency and at 60HZ this means a client-side prediction of 15 frames. Physics simulation is usually pretty expensive, so any solution that requires 15 invisible rollback simulation frames for each frame of real simulation is probably not practical.
+While this could _theoretically_ work, it's easy to see that the worst case for one player throwing a cube at a large pile of cubes is the player predicting the _entire simulation_. Over typical internet conditions it can be expected that players will need to predict up to 250ms to hide latency and at 60HZ this means a client-side prediction of 15 frames. Physics simulation are usually pretty expensive, so anything that requires 15 invisible rollback simulation frames for each frame of real simulation is probably not practical.
 
 # What could a solution look like?
 
-At this point both techniques above can be ruled out:
+At this point I think both techniques above can be ruled out:
 
 1. PhysX is not deterministic, so we can't use deterministic lockstep.
 
@@ -84,22 +84,22 @@ Any solution we come up would need to work with a physics engine engine that is 
 
 The number one rule of networking is _never trust the client_. 
 
-As with all good rules, this one is made to be broken. But of course, never break it in a competitive game like an FPS, but in a _cooperative experience_, it is something that can be considered when there are no other options.
+As with all good rules, this one is made to be broken. Never break it in a competitive game like an FPS, but in a _cooperative experience_, it is something that can be considered when there are no other options.
 
-The basic idea is that instead of having the server be authoritative over the whole simulation, we can _distribute_ authority across player machines, such that players take authority over objects they interact with, in effect _becoming the server_ for those objects. If we do this correctly, from each player's point of view, they get to interact with objects lag free, and they never have to rollback and apply corrections. Also, because we are continuously synchronizing state, determinism is not required.
+The basic idea is that instead of having the server be authoritative over the whole simulation, we can _distribute_ authority across player machines, such that players take authority over objects they interact with, in effect _becoming the server_ for those objects. If we do this correctly, from each player's point of view, players get to interact with objects lag free, and they never have to rollback and apply corrections. Also, because we are continuously synchronizing state, determinism is not required.
 
 The trick is to work out _rules_ that keep this distributed simulation in sync while letting players predictively take authority over objects, deciding after the fact which player wins when two players grab the same object, or throw objects at the same stack.
 
-I came up with two concepts: 
+To do this, I came up with two concepts: 
 
 1. Authority
 2. Ownership
 
-Authority is transmissive. Any object under the authority of a player transmits authority to other objects it collides with, and those objects in turn transmit authority to any objects they interact with. When objects come to rest, they return to default authority (server). For bonus points, if a stack is under authority of one player and has not yet returned to default authority when another player throws an object at it, the more recently thrown object should take authority over the stack.
+Authority is transmissive. Any object under the authority of a player transmits authority to other objects it collides with, and those objects in turn transmit authority to objects they interact with. When objects come to rest, they return to default authority (server). For bonus points, if a stack is under authority of one player and has not yet returned to default authority when another player throws an object at it, the more recently thrown object should take authority over the stack.
 
-Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server acknowledges this ownership) that player retains ownership until they release it or disconnect from the game. Of course the server needs to arbiter after the fact when two players grab the same object to decide who loses it and who gets to keeps it.
+Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server acknowledges this ownership) that player retains ownership until they release it or disconnect from the game. Of course the server needs to act as arbiter when two players grab the same object to decide who loses it and who gets to keeps it.
 
-(may need a turn here, we're basically transitioning from 'what if' to solid implementation...)
+Now that we have a technique that satisfies our constraints, we can get started on implementation.
 
 # State Synchronization
 
