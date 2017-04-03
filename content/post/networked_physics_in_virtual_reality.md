@@ -21,7 +21,17 @@ I'm happy to report that this work was a success, and thanks to the generosity o
 
 # How to network physics in Unity?
 
-(todo: open the question about how to proceed, what technique to use? why is it hard etc?)
+The first question is how to network a physics simulation in Unity?
+
+It is a given of course that whatever is transmitted will be sent over UDP due to head of line blocking, TCP is simply not suitable for networking time series data like player inputs and physics state.
+
+But there are many different techniques to choose from, plus the choice of topology: client/server or peer-to-peer.
+
+Before diving in to all this, the key decision to make is, what is the network model?
+
+In other words, what are we going to choose to send over the network to keep the simulations in sync?
+
+This is in fact the most important choice that should be made up front when starting any networking project.
 
 # What about deterministic lockstep?
 
