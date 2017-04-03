@@ -4,7 +4,7 @@ tags = ["physics", "networking", "vr"]
 date = "2017-03-31"
 title = "Networked Physics in Virtual Reality"
 description = "Networking a stack of cubes in virtual reality with Unity and PhysX"
-draft = true
+draft = false
 +++
 
 # Introduction
@@ -96,11 +96,15 @@ In short, we are creating a distributed system that is eventually consistent.
 
 Trusting that I could implement the rules described above, my first task was to prove that synchronizing physics in one direction of flow could actually work with Unity and PhysX.
 
-To do this I setup a simple loopback scene in Unity with 360 simulated cubes that fell from the sky into a large pile in front of the player. The cubes in front of the player represent the authority side, and another identical set of cubes to the right act as the non-authority side they would be synchronized to. The goal: keep the simulation on the right in sync with the simulation in front of the player.
+To do this I setup a simple loopback scene in Unity with 360 simulated cubes that fell from the sky into a large pile in front of the player. The cubes in front of the player represent the authority side, and an identical set of cubes to the right act as the non-authority side they would be synchronized to. The goal: keep the simulation on the right in sync with the simulation in front of the player.
 
 _(diagram showing synchronization from left to right)_
 
-Testing network code in loopback like this is a best practice when developing AAA network code. It speeds up iteration time and makes debugging much easier. In virtual reality it makes even more sense, considering the alternative, which is running the same virtual reality scene on two machines and switching between two headsets as you work :)
+Testing network code in loopback like this is a best practice when developing AAA network code. It speeds up iteration time and makes debugging much easier. In virtual reality it makes even more sense, considering the alternative, which is running the same virtual reality scene on two machines and switching between headsets as you work :)
+
+As expected, with nothing keeping the two sets of cubes in sync, even though they start from the same initial state and run through the same number of steps, they give different results:
+
+_(screencap showing two scenes side-by-side in the editor, with different piles of objects)_
 
 (first thing. don't do anything. fall in pile, look at pile on right, and it's not in sync. --> not deterministic).
 
