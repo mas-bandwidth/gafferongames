@@ -11,23 +11,19 @@ draft = true
 
 Hi, I'm Glenn Fiedler, and for the last six months I've been researching networked physics in virtual reality.
 
-This research has been generously sponsored by Oculus, which turned out to be a great fit because the Oculus touch controller and Avatar SDK provide a fantastic way to _interact_ with a physics simulation in virtual reality.
+This research was generously sponsored by Oculus, which turned out to be a great fit because the Oculus touch controller and Avatar SDK provide a fantastic way to _interact_ with a physics simulation in virtual reality.
 
-Previously, I've [presented talks at GDC](http://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking) about networked physics in the context of networking worlds of physically cubes, but it's entirely something different to be _inside_ that world and be able to interact with it. This is something that at least to me, feels really exciting and new.
+My goal for this project was to see if it was be possible to network a large number of physically simulated cubes that players can interact with in VR. Ideally players should have no perceived latency when picking up, moving and placing cubes. The stretch goal: players should be able to construct stable stacks of cubes, stacks that network without any jitter or instability.
 
-My goal for this project was to see if it was be possible to network a large number of physically simulated cubes that players can interact with. The idea being that players should be able to interact with the simulation with no perceived latency: picking up, moving, placing and throwing and catching cubes. The stretch goal: players must be able to construct stable stacks of cubes, stacks that network without any jitter or instability.
+I'm happy to report this work was a success, and thanks to the generosity of Oculus, the full source code of my implementation in Unity is available [here](...). Please try this demo in virtual reality before continuing. While the rest of this article will explain how the demo was implemented, it's no substitute for actually getting in there in there and experiencing it.
 
-I'm happy to report this work was a success, and thanks to the generosity of Oculus, the full source code of my implementation in Unity is available [here](...). Please try this demo in virtual reality before continuing. While the rest of this article will explain how the demo was implemented, that's no substitute for actually getting in there in there and experiencing it.
+# Background
 
-# How to network a physics simulation?
+Previously, I've [presented talks at GDC](http://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking) about networked physics in the context of networking worlds of physically cubes, but it's entirely something different to be inside that world and be able to interact with it. This is something that at least to me, feels really exciting and new.
 
-The first question of course, is how are we actually going to do the networking.
+So when considering the best networking approach to use in virtual reality, I considered that the key constraint that the player is actually _in there_. Right in there. The objects being networked are literally right in front of the player's face. Any artifacts or glitches would be immediately obvious and jarring, and any delay on the players actions would be completely unacceptable. Perhaps it would even make players feel sick? 
 
-Anybody who knows me knows the answer is *UDP*. But why not just use TCP? The short answer is that head of line blocking makes TCP unsuitable for the sort of time critical, time-series data you send when networking a physics simulation.
-
-So it's decided, we're sending UDP packets. But what will we put _in_ the packets? In other words, what is our networking strategy? Exactly what are we sending over the network to keep the simulation in sync? 
-
-There are a bunch of different options, so let's get this right.
+My conclusion was that players _must_ be able interact with the world with absolutely no perception of latency. But achieving this with traditional networking techniques is actually quite difficult, so how can we do this?
 
 # What about deterministic lockstep?
 
@@ -45,7 +41,7 @@ So will deterministic lockstep work for the our demo? Unfortunately the answer i
 
 # What about client-side prediction?
 
-Another concept most people are familiar with is client-side prediction. This technique is used by first person shooters like Counterstrike, Call of Duty, Titanfall and Overwatch.
+Another networking concept most people are familiar with is client-side prediction. This technique is used by first person shooters like Counterstrike, Call of Duty, Titanfall and Overwatch.
 
 It works by treating the local player as separate from the rest of the world. The local player is predicted forward with local inputs, including movement, shooting, reloading and item usage, so the player feels no latency on their actions, while the rest of the world is synchronized back from the server to the client and rendered as an interpolation between keyframes.
 
@@ -57,9 +53,9 @@ What's interesting is that client-side prediction doesn't require determinism. I
 
 So client side prediction works _great_ for first person shooters, but is it a good technique for networking a physics simulation?
 
-In a first person shooter prediction is applied only to your local player character and perhaps objects they are carrying like items and weapons, but in a physics simulation what would need to be predicted to hide latency? Not only your own character, but any objects you interact with as well. This means if you picked up an object and threw it at a stack of objects, the client side prediction would need to include the set of objects you interact with _and_ any objects they interact with.
+In a first person shooter prediction is applied only to your local player character and perhaps objects they are carrying like items and weapons, but in a physics simulation what needs to be predicted to hide latency? Not only your own character, but any objects you interact with as well. This means if you pick up an object and throw it at a stack of objects, the client side prediction would need to include the set of objects you interact with, and in turn any objects they interact with, and so on.
 
-While this could _theoretically_ work, it's easy to see that the worst case for a player throwing a cube at a large pile of cubes is that player predicting the _entire simulation_. Under typical internet conditions it can be expected that players will need to predict up to 250ms to hide latency and at 60HZ this means a client-side prediction of 15 frames. Physics simulation are usually pretty expensive, so anything that requires 15 invisible rollback simulation frames for each frame of real simulation is probably impractical.
+While this could _theoretically_ work, it's easy to see that the worst case for a player throwing a cube at a large pile of cubes is a client predicting the _entire simulation_. Under typical internet conditions it can be expected that players will need to predict up to 250ms to hide latency and at 60HZ this means a client-side prediction of 15 frames. Physics simulations are usually pretty expensive, so anything that requires 15 invisible rollback simulation frames for each frame of real simulation is probably not practical.
 
 # What could a solution look like?
 
@@ -67,21 +63,23 @@ At this point I think both techniques above can be ruled out:
 
 1. PhysX is not deterministic, so we can't use deterministic lockstep.
 
-2. Rolling back the entire simulation is too expensive, so we can't hide latency with client-side prediction.
+2. Rolling back and resimulating the entire simulation is too expensive, so we can't hide latency with client-side prediction.
 
-Any solution we come up would need to work with a physics engine engine that is not completely deterministic, and provide some way to hide latency without the cost of rolling back the entire simulation.
+Any solution we come up would need to work with a physics engine engine that is not completely deterministic, and provide some way to hide latency without client-side prediction.
+
+Is this even possible?
 
 # Authority Scheme
 
 The number one rule of networking is _never trust the client_. 
 
-As with all good rules, this one is made to be broken. Never break it in a competitive game like an FPS, but in a _cooperative experience_, it may be something worth considering when there are no other options.
+As with all good rules, this one is made to be broken. Never in a competitive game like an FPS, but in a _cooperative experience_, it's something to consider when there are no other options.
 
 Which brings us to the concept of an authority scheme. The basic idea is that instead of having the server be authoritative over the whole simulation, we _distribute_ authority across player machines, such that players take authority over objects they interact with, in effect _becoming the server_ for those objects. If we do this correctly, from each player's point of view, players get to interact with objects lag free, and they never have to rollback and apply corrections. Also, because we are synchronizing state, determinism is not required.
 
-The trick to making this all work is to define _rules_ that keep the distributed simulation in sync while letting players predictively take authority over objects, deciding after the fact which player wins when two players grab the same object, or throw objects at the same stack.
+The trick to making this all work is to define _rules_ that keep the distributed simulation in sync while letting players predictively take authority over objects, resolving after the fact which player wins when two players grab the same object, or throw objects at the same stack.
 
-To do this, I came up with two concepts: 
+To do this, I came up with two concepts:
 
 1. Authority
 2. Ownership
@@ -89,6 +87,15 @@ To do this, I came up with two concepts:
 Authority is transmissive. Any object under the authority of a player transmits authority to other objects it collides with, and those objects in turn transmit authority to objects they interact with. When objects come to rest, they return to default authority. For bonus points, if a stack is under authority of one player and has not yet returned to default authority when another player throws an object at it, the more recently thrown object should take authority of the stack.
 
 Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server acknowledges this ownership) that player retains ownership until they release it or disconnect from the game. Of course the server needs to act as arbiter when two players grab the same object to decide who loses it and who gets to keep it.
+
+In both cases, players take authority and ownership without waiting for confirmation from the server. It's the server's job to keep the simulation consistent after the fact, which means correcting (but not rolling back and resimulating) a client who thinks they have taken authority or ownership, when another client beat them to it.
+
+In short, we are creating a distributed system that is eventually consistent.
+
+-------------------------------------------
+
+_Draft below here..._
+
 
 # State Synchronization
 
