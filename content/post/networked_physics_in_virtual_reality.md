@@ -100,23 +100,39 @@ To do this I setup a simple loopback scene in Unity with 360 simulated cubes tha
 
 _(diagram showing synchronization from left to right)_
 
-Testing network code in loopback like this is a best practice when developing AAA network code. It speeds up iteration time and makes debugging much easier. In virtual reality it makes even more sense, considering the alternative, which is running the same virtual reality scene on two machines and switching between headsets as you work :)
+Testing network code in loopback like this is a best practice when developing AAA network code. It speeds up iteration time and makes debugging much easier. In virtual reality it makes even more sense, considering the alternative, which is running the same virtual reality scene on two machines and switching headsets as you work :)
 
-As expected, with nothing keeping the two sets of cubes in sync, even though they start from the same initial state and run through the same number of steps, they give different results:
+As expected, with nothing keeping the two sets of cubes in sync, even though they both start from exactly the same initial state and run through the same number of steps, they give different end results:
 
 _(screencap showing two scenes side-by-side in the editor, with different piles of objects)_
 
-(first thing. don't do anything. fall in pile, look at pile on right, and it's not in sync. --> not deterministic).
+This is not surprising because PhysX is not deterministic. To fight this non-determinism, lets grab state from the authority side and apply it to the non-authority side 10 times per-second. 
 
-(next idea, grab state from the simulation in front of the player, and force it on to the simulation on the right. code showing state grabbed per-cube, yes it's in sync)
+The state we grab from each cube looks like this:
 
-(bandwidth estimate. it's very large...)
+    struct CubeState
+    {
+        Vector3 position;
+        Quaternion rotation;
+        Vector3 linear_velocity;
+        Vector3 angular_velocity;
+    };
+
+When we apply this state to the simulation on the right side, we apply it to the simulation directly by setting the position, rotation and velocities on each rigid body. This simple change is enough to keep the simulations in sync, and now the right simulation gives the same end result.
+
+_(screen cap showing same resulting pile of cubes from top down in unity editor)_
+
+This is actually a big step, because it confirms that a _state synchronization_ based approach for networking can work with PhysX. The only problem is, sending uncompressed physics state is too much bandwidth.
+
+_We can do much better._
 
 # Quantized State
 
 -------------------------------------------
 
 _Draft below here..._
+
+(snapshots, quantize locally *first*, then quantize over network and apply. this order is important!)
 
 (reader should understand that sending uncompressed physics data is too expensive, that compression for physics data over the network is *lossy*, and that if we want the extrapolation to match the original simulation as closely as possible (and we do for stable stacks), then it is necessary to quantize on both sides. This is a *key* technique that makes stable stacks possible).
 
