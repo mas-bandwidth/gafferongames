@@ -9,29 +9,23 @@ draft = true
 
 # Introduction
 
-Hi, I'm Glenn Fiedler and for the last six months I've been researching networked physics in virtual reality.
+Hi, I'm Glenn Fiedler, and for the last six months I've been researching networked physics in virtual reality.
 
-This research was generously sponsored by Oculus, which turned out to be a great fit because the Oculus touch controller and Avatar SDK provide a fantastic way to _interact_ with a physics simulation in virtual reality.
+This research has been generously sponsored by Oculus, which turned out to be a great fit because the Oculus touch controller and Avatar SDK provide a fantastic way to _interact_ with a physics simulation in virtual reality.
 
-Previously, I've presented at GDC talking about networked physics in the context of worlds of cubes, but it's entirely something different to be _inside_ that world and able to interact with it, let alone to see another player in the virtual space and interact with them. Thanks to the Oculus SDK, Unity and PhysX I was able to get up running quickly in VR and see the potential of networked physics in virtual reality.
+Previously, I've [presented talks at GDC](http://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking) about networked physics in the context of worlds of cubes, but it's entirely something different to be _inside_ that world and able to interact with it. This is something that at least to me, feels really exciting and new.
 
-From this point on the goal was to see if it would be possible to seamlessly network a physics simulation of a large number of cubes, so that players could interact with this simulation with no perceived latency while picking up, moving, placing and throwing and catching cubes. At the core was the most important requirement: that players must be able to construct stable stacks of cubes. Stacks that network without visible jitter or instability.
+My goal for this project was to see if it was be possible to network a large number of physically simulated cubes that players can interact with. The ideal being that players should be with no perceived latency while picking up, moving, placing and throwing and catching cubes. The core requirement given to me by oculus: players must be able to construct stable stacks of cubes, stacks that network without any jitter or instability.
 
-I'm happy to report that this work was a success, and thanks to the generosity of Oculus, the full source code of my implementation in Unity is available [here](...). Please try this demo in virtual reality before continuing, as the rest of this article will explain how the demo was implemented, but that's no substitute for actually getting in there in there and experiencing it.
+I'm happy to report that this work was a success, and thanks to the generosity of Oculus, the full source code of my implementation in Unity is available [here](...). Please try this demo in virtual reality before continuing, while the rest of this article will explain how the demo was implemented, that's no substitute for actually getting in there in there and experiencing it.
 
 # How to network physics in Unity?
 
 The first question is how to network a physics simulation in Unity?
 
-It is a given of course that whatever is transmitted will be sent over UDP due to head of line blocking, TCP is simply not suitable for networking time series data like player inputs and physics state.
+It is of course best practice that whatever data is transmitted over the network will be sent over UDP, because due to head of line blocking, TCP is simply not suitable for time-series data necessary to network a real-time simulation. So it is decided, our packets will be sent over UDP.
 
-But there are many different techniques to choose from, plus the choice of topology: client/server or peer-to-peer.
-
-Before diving in to all this, the key decision to make is, what is the network model?
-
-In other words, what are we going to choose to send over the network to keep the simulations in sync?
-
-This is in fact the most important choice that should be made up front when starting any networking project.
+But what will we put _in_ the packets? In other words, exactly what are we going to choose to send over the network to keep the simulation in sync? What is our networking strategy? Lets explore the different options and see how suitable are they for networking a physics simulation.
 
 # What about deterministic lockstep?
 
