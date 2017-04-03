@@ -88,7 +88,7 @@ Authority is transmissive. Any object under the authority of a player transmits 
 
 Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server acknowledges this ownership) that player retains ownership until they release it or disconnect from the game. Of course the server needs to act as arbiter when two players grab the same object to decide who loses it and who gets to keep it.
 
-In both cases, players take authority and ownership without waiting for confirmation from the server. It's the server's job to keep the simulation consistent after the fact, which means correcting (but not rolling back and resimulating) a client who thinks they have taken authority or ownership, when another client beat them to it.
+In both cases, players take authority and ownership without waiting for confirmation from the server. It's the server's job to keep the simulation consistent after the fact, which means correcting (but not rolling back and resimulating) a client who thinks they have taken authority or ownership over an object, when another client beat them to it.
 
 In short, we are creating a distributed system that is eventually consistent.
 
