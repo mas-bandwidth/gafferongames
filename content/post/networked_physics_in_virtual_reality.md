@@ -96,7 +96,7 @@ In short, we are creating a distributed system that is eventually consistent.
 
 Trusting that I could implement the rules described above, my first task was to prove that synchronizing physics in one direction of flow could actually work with Unity and PhysX.
 
-To do this I setup a simple loopback scene in Unity with 360 simulated cubes that fell from the sky into a large pile in front of the player. These cubes represent the authority side, and another identical set of cubes to the right act as the non-authority side they would be synchronized to. The goal: keep the simulation on the right in sync with the simulation in front of the player.
+To do this I setup a simple loopback scene in Unity with 360 simulated cubes that fell from the sky into a large pile in front of the player. The cubes in front of the player represent the authority side, and another identical set of cubes to the right act as the non-authority side they would be synchronized to. The goal: keep the simulation on the right in sync with the simulation in front of the player.
 
 _(diagram showing synchronization from left to right)_
 
