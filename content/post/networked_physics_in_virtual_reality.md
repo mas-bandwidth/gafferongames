@@ -23,7 +23,7 @@ Previously, I've [presented talks at GDC](http://www.gdcvault.com/play/1022195/P
 
 So when considering the best networking approach to use in virtual reality, I considered that the key constraint that the player is actually _in there_. Right in there. The objects being networked are literally right in front of the player's face. Any artifacts or glitches would be immediately obvious and jarring, and any delay on the players actions would be completely unacceptable. Perhaps it would even make players feel sick? 
 
-My conclusion was that players _must_ be able interact with the world with absolutely no perception of latency. But achieving this with traditional networking techniques is actually quite difficult, so how can we do this?
+My conclusion was that players _must_ be able interact with the world with absolutely no perception of latency. But achieving this with traditional networking techniques is difficult, so how can we do this?
 
 # What about deterministic lockstep?
 
@@ -86,32 +86,33 @@ To do this, I came up with two concepts:
 
 Authority is transmissive. Any object under the authority of a player transmits authority to other objects it collides with, and those objects in turn transmit authority to objects they interact with. When objects come to rest, they return to default authority. For bonus points, if a stack is under authority of one player and has not yet returned to default authority when another player throws an object at it, the more recently thrown object should take authority of the stack.
 
-Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server acknowledges this ownership) that player retains ownership until they release it or disconnect from the game. Of course the server needs to act as arbiter when two players grab the same object to decide who loses it and who gets to keep it.
+Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server acknowledges this ownership) that player retains ownership until they release it or disconnect from the game.
 
-In both cases, players take authority and ownership without waiting for confirmation from the server. It's the server's job to keep the simulation consistent after the fact, which means correcting (but not rolling back and resimulating) a client who thinks they have taken authority or ownership over an object, when another client beat them to it.
+In both cases, players take authority and ownership without waiting for confirmation from the server. It's the server's job to keep the simulation consistent after the fact, which means correcting (but not rolling back and resimulating) a client who thinks they have taken authority or ownership, when another client beat them to it.
 
 In short, we are creating a distributed system that is eventually consistent.
+
+# State Synchronization
+
+Trusting that I could implement the rules described above, my first task was to prove that synchronizing physics in one direction of flow could actually work with Unity and PhysX.
+
+To do this I setup a simple loopback scene in Unity with 360 simulated cubes that fell from the sky into a large pile in front of the player. These cubes represent the authority side, and another identical set of cubes to the right act as the non-authority side they would be synchronized to. The goal: keep the simulation on the right in sync with the simulation in front of the player.
+
+_(diagram showing synchronization from left to right)_
+
+Testing network code in loopback like this is a best practice when developing AAA network code. It speeds up iteration time and makes debugging much easier. In virtual reality it makes even more sense, considering the alternative, which is running the same virtual reality scene on two machines and switching between two headsets as you work :)
+
+(first thing. don't do anything. fall in pile, look at pile on right, and it's not in sync. --> not deterministic).
+
+(next idea, grab state from the simulation in front of the player, and force it on to the simulation on the right. code showing state grabbed per-cube, yes it's in sync)
+
+(bandwidth estimate. it's very large...)
+
+# Quantized State
 
 -------------------------------------------
 
 _Draft below here..._
-
-
-# State Synchronization
-
-(turn to implementation...)
-
-(reader should understand basic concept of state synchronization, running simulation on both sides, and synchronizing state from left -> right to keep the scene in sync, even though it is not perfectly deterministic, that we are hard snapping state, and not applying forces to try to move the remote simulation towards the update that comes in over the network, and that we do this because we need an extrapolation that matches as closely as possible to what actualyl happened, vs. an approximation, in order to obtain stable stacks).
-
-(Start with stack of cubes that fall from an initial configuration, create two instances of the world "host" and "guest").
-
-Flow in one direction: host -> guest.
-
-(What about somehow sending forces or applying forces to keep the simulation in sync. this is something that pisses me off, I want to explain how it breaks down for stacks, and how it doesn't work well when objects don't receive an update every frame. reader should understand that we are applying state hard, not fudging it to try to apply forces and torques to move objects closer towards the state coming in over the network. we do this because we need stable stacks, eg. an extrapolation that matches, v.s some bullshit half-assed shit with sloppy forces trying to hold a stack together).
-
-Loopback scene. Benefits of working this way. Fast iteration time.
-
-# Quantized State
 
 (reader should understand that sending uncompressed physics data is too expensive, that compression for physics data over the network is *lossy*, and that if we want the extrapolation to match the original simulation as closely as possible (and we do for stable stacks), then it is necessary to quantize on both sides. This is a *key* technique that makes stable stacks possible).
 
