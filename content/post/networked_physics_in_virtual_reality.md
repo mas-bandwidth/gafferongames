@@ -13,7 +13,7 @@ Hi, I'm Glenn Fiedler, and for the last six months I've been researching network
 
 This research was generously sponsored by [Oculus](https://www.oculus.com/), which turned out to be a great fit because the Oculus touch controller and Avatar SDK provide a fantastic way to _interact_ with a physics simulation in virtual reality.
 
-My goal for this project was to see if it was be possible to network a large number of physically simulated cubes that players can interact with in VR. Ideally players should have no perceived latency when picking up, moving and placing cubes. The stretch goal: players should be able to construct stable stacks of cubes, stacks that network without any jitter or instability.
+My goal for this project was to see if it was be possible to network a large number of physically simulated cubes that players can interact with in VR. Ideally players should have no latency when picking up, moving, placing and throwing cubes. The stretch goal: players should be able to construct stable stacks of cubes, stacks that network without any jitter or instability.
 
 I'm happy to report this work was a success, and thanks to the generosity of Oculus, the full source code of my implementation in Unity is available [here](...). Please try this demo in virtual reality before continuing. While the rest of this article will explain how the demo was implemented, it's no substitute for actually getting in there in there and experiencing it.
 
@@ -35,7 +35,7 @@ Deterministic lockstep is also used in the networking of low player count fighti
 
 What all these games have in common is that they're built on top of an engine that is _deterministic_. Determinism in this context means exactly the same result given the same inputs. Not near enough. Exact. Exact down to the bit-level so you could checksum the state at the end of each frame on all machines and it would be the same. In fact, deterministic lockstep games do this checksum all the time and disconnect any player who desyncs. 
 
-When it works, deterministic lockstep is an elegant technique, but it has its limitations. The first is of course that the game must be deterministic, the second is that it's best used for small player counts like 2-4 players because you have to wait for input from the most lagged player, and third, if latency hiding is required, you need to make a full copy of the simulation and step it forward with local inputs, which can be very CPU intensive.
+When it works, deterministic lockstep is an elegant technique, but it has limitations. The first is of course that the game must be deterministic, the second is that it's best used for small player counts like 2-4 players because you have to wait for input from the most lagged player, and third, if latency hiding is required, you need to make a full copy of the simulation and step it forward with local inputs, which can be very CPU intensive.
 
 So will deterministic lockstep work for the our demo? Unfortunately the answer is _no_. The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic.
 
@@ -49,13 +49,13 @@ They key benefit of client-side prediction is that the server remains authoritat
 
 These rollbacks happen all the time in first person shooters but you rarely notice, because your local player state and the corrected state almost always agree. When they don't, it's usually because you've experienced a patch of really bad network conditions and the server didn't receive all your inputs, or something happened on the server that can't be predicted from your inputs alone (another player shot you), or... because you were cheating :)
 
-What's interesting is that client-side prediction doesn't require determinism. It doesn't hurt of course, but since the client and server exchange state instead of just inputs, any non-determinism is quickly squashed by applying state to keep the simulations in sync. In effect, all client-side prediction requires is a _close enough_ extrapolation from a player state given the same inputs for approximately a quarter of a second.
+What's interesting is that client-side prediction doesn't require determinism. It doesn't hurt of course, but since the client and server exchange state as well as inputs, any non-determinism is quickly squashed by applying state to keep the simulations in sync. In effect, all client-side prediction requires is a _close enough_ extrapolation from a player state given the same inputs for approximately a quarter of a second.
 
 So client side prediction works _great_ for first person shooters, but is it a good technique for networking a physics simulation?
 
 In a first person shooter prediction is applied only to your local player character and perhaps objects you are carrying like items and weapons, but in a physics simulation what needs to be predicted to hide latency? Not only your own character, but any objects you interact with as well. This means if you pick up an object and throw it at a stack of objects, the client side prediction would need to include the set of objects you interact with, and in turn any objects they interact with, and so on.
 
-While this could _theoretically_ work, it's easy to see that the worst case for a player throwing a cube at a large stack of cubes is a client predicting the _entire simulation_. Under typical internet conditions it can be expected that players will need to predict up to 250ms to hide latency and at 60HZ this means a client-side prediction of 15 frames. Physics simulations are usually pretty expensive, so anything that requires 15 invisible rollback simulation frames for each frame of real simulation is probably not practical.
+While this could _theoretically_ work, it's easy to see that the worst case when a player throws a cube at a large stack of cubes is a client predicting the _entire simulation_. Under typical internet conditions it can be expected that players will need to predict up to 250ms to hide latency and at 60HZ this means a client-side prediction of 15 frames. Physics simulations are usually pretty expensive, so anything that requires 15 invisible rollback simulation frames for each frame of real simulation is probably not practical.
 
 # What could a solution look like?
 
@@ -75,14 +75,14 @@ As with all good rules, this one is made to be broken. Never in a competitive ga
 
 Which brings us to the concept of an authority scheme. The basic idea is that instead of having the server be authoritative over the whole simulation, we _distribute_ authority across player machines, such that players take authority over objects they interact with, in effect _becoming the server_ for those objects. If we do this correctly, from each player's point of view, players get to interact with objects lag free, and they never have to rollback and apply corrections. Also, because we are synchronizing state, determinism is not required.
 
-The trick to making this all work is to define _rules_ that keep the distributed simulation in sync while letting players predictively take authority over objects, resolving any conflicts after the fact.
+The trick to making this all work is to define _rules_ that keep the distributed simulation in sync while letting players predictively take authority over objects, resolving conflicts after the fact.
 
 To do this, I came up with two concepts:
 
 1. Authority
 2. Ownership
 
-Authority is transmissive. Any object under the authority of a player transmits authority to other objects it collides with, and those objects in turn transmit authority to objects they interact with. When objects come to rest, they return to default authority. Bonus points: if a stack is under authority of one player when another player throws an object at it, the more recently thrown object should take authority of the stack.
+Authority is transmissive. Any object under the authority of a player transmits authority to objects it collides with, and those objects in turn transmit authority to objects they interact with. When objects come to rest, they return to default authority. Bonus points: if a stack is under authority of one player when another player throws an object at it, the more recently thrown object should take authority of the stack.
 
 Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server confirms ownership) that player retains ownership until they release the object or disconnect from the game.
 
@@ -139,41 +139,37 @@ A simple way to reduce bandwidth is to recognize when objects are at rest, and i
 
 This is a straightforward optimization that saves a bunch of bandwidth in the common case. It's also _lossless_ because it doesn't change the the state sent over the network in any way.
 
-To optimize further we need to use _lossy techniques_. These techniques reduce the precision of position, rotation and linear/angular velocity when they're sent over the network. 
+To optimize further we need to use _lossy techniques_. These techniques reduce the precision of the physics state when they're sent over the network. For example, we could bound position in some min/max range, then quantize it such that it's sent at a precision of 1/1000th of a centimeter. We can do the same approach for linear and angular velocity, and for orientation we can use the _smallest three_ representation of a quaternion.
 
-For example, we could bound position in some min/max range, then quantize it such that its sent to some precision like 1/1000th of a centimeter. We can do the same for linear and angular velocity, and for orientation we can use the _smallest three_ representation of a quaternion.
-
-This saves a bunch of bandwidth, but now extrapolation after we apply the network state on the non-authority side is slightly different because it's extrapolating from quantized state. This isn't good, because we want an extrapolation that matches the authority side of the simulation as closely as possible, so we can get stable stacks.
+This saves a bunch of bandwidth, but now the extrapolation after we apply the network state on the non-authority side is slightly different because it's extrapolating from the quantized state. This isn't good because it causes jitter in stacks.
 
 _(diagram showing a stack on left, with a quantized state on the right side with slight penetration_ -> jitter)_
 
-The solution is to quantize the state on _both sides_. What this means is that before each physics simulation step is taken in **FixedUpdate**, the physics state is sampled, quantized _exactly_ is it would be sent over the network, then applied back to the local simulation.
-
-Now the quantized state in the packet exactly matches the authority state, and the extrapolation is as close as possible.
+We want an extrapolation that matches the authority side of the simulation as closely as possible. The solution is to quantize the state on _both sides_. What this means is that before each physics simulation step is taken in **FixedUpdate**, the physics state is sampled and quantized _exactly the same way_ as when it's sent over the network, then applied back to the local simulation.
 
 # Quantum Side-Effects
 
-Quantizing the state like this has side-effects. 
+Quantizing the state has some interestingide-effects. 
 
-The first is that PhysX doesn't like it very much when you set the position, rotation and lin/ang velocity on each rigid body at the start of each frame (it takes a large amount of CPU). Perhaps PhysX could work to improve this, as it's a necessary part of networking physics statefully.
+The first is that PhysX doesn't like it very much when you set the position, rotation and lin/ang velocity on each rigid body at the start of each frame (it takes a large amount of CPU). Perhaps the PhysX authors could work to improve this, as it's a necessary part of networking a physics simulation statefully.
 
-The second is that it adds some error to the simulation which PhysX tries very hard to correct for, throwing objects out of penetration with great force:
+The second is that it adds some error to the simulation which PhysX tries very hard to correct, snapping objects out of penetration and creating pops:
 
 _(diagram showing cube in a stack in penetration due to position w. arrow)_
 
-To fix this, make sure to set __(some function i forgot)__ on each rigid body, to limit the velocity that objects are pushed apart. I found that 1m/sec push apart works really well.
+To fix this, make sure to set __(some function i forgot)__ on each rigid body, limiting the velocity that objects are pushed apart with. I found that 1m/sec push apart works really well for stacks of cubes.
 
 The third side-effect, which is quite subtle, is that some orientations can't be represented exactly in smallest three representation, leading to the following situation:
 
 _(diagram showing cube rotating into penetration with the ground)_
 
-What's interesting is that at certain orientations, the orientation after PhysX tries to pushes this cube out of penetration is another orientation that can't be exactly representated, leading to the comedic effect where the cube slides across the floor!
+What's interesting is that at certain orientations, the orientation after PhysX pushes this cube out of penetration another orientation that can't be exactly representated, leading to the cube sliding across the floor!
 
 _(diagram showing cool sliding effect, three stage diagram, penetration, push out and to right, still in penetration_...)_
 
-In my research I found that no amount of tuning or increasing the precision of rotation compression would fix this. If an edge of the cube rotated into penetration, it would induces sliding along the ground. 
+In my research I found that no amount of tuning or increasing the precision of rotation compression would fix this. If an edge of the cube rotated into penetration and got stuck into this feedback loop, it would induces sliding along the ground, no matter how small the amount of penetration.
 
-From this I conclude that PhysX probably pushes objects out of penetration with a constant velocity, independent of the amount of penetration. Maybe if PhysX modified their solver so the amount of push out for small penetrations to be a function of penetration depth this would improve?
+From this I concluded that PhysX probably pushes objects out of penetration with a constant velocity, independent of the amount of penetration. Maybe if PhysX modified their solver so the amount of push out was a function of penetration depth for small penetrations, it would fix this issue?
 
 
 # Coming to Rest
