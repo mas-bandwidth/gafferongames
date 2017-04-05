@@ -145,11 +145,13 @@ For example, we could bound position in some min/max range, then quantize it suc
 
 This saves a bunch of bandwidth, but now extrapolation after we apply the network state on the non-authority side is slightly different because it's extrapolating from quantized state. This isn't good, because we want an extrapolation that matches the authority side of the simulation as closely as possible, so we can get stable stacks.
 
-The solution is to quantize the state on both sides. What this means is that on both sides, before each physics simulation step is taken in **FixedUpdate**, the physics state is sampled, quantized _exactly_ is it would be sent over the network, then applied back to the local simulation.
+_(diagram showing a stack on left, with a quantized state on the right side with slight penetration_ -> jitter)_
+
+The solution is to quantize the state on _both sides_. What this means is that before each physics simulation step is taken in **FixedUpdate**, the physics state is sampled, quantized _exactly_ is it would be sent over the network, then applied back to the local simulation.
 
 Now the quantized state in the packet exactly matches the authority state, and the extrapolation is as close as possible.
 
-# Coming to Rest
+# Quantization Side-Effects
 
 Quantizing the state like this has side-effects. 
 
@@ -161,7 +163,7 @@ _(diagram showing cube in a stack in penetration due to position w. arrow)_
 
 To fix this, make sure to set __(some function i forgot)__ on each rigid body, to limit the velocity that objects are pushed apart. I found that 1m/sec push apart works really well.
 
-The third, which is quite subtle is that some orientations can't be represented exactly in smallest three representation, leading to the following situation:
+The third side-effect, which is quite subtle is that some orientations can't be represented exactly in smallest three representation, leading to the following situation:
 
 _(diagram showing cube rotating into penetration with the ground)_
 
@@ -173,6 +175,9 @@ In my research I found that no amount of tuning or increasing the precision of r
 
 Regardless, it has to work so ...
 
+# Coming to Rest
+
+...
 
 
 
