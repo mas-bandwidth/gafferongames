@@ -169,12 +169,12 @@ _(diagram showing cool sliding effect, three stage diagram, penetration, push ou
 
 In my research I found that no amount of tuning or increasing the precision of rotation compression would fix this. If an edge of the cube rotated into penetration and got stuck into this feedback loop, it would induces sliding along the ground, no matter how small the amount of penetration.
 
-From this I concluded that PhysX probably pushes objects out of penetration with a constant velocity, independent of the amount of penetration. Maybe if PhysX modified their solver so the amount of push out was a function of penetration depth for small penetrations, it would fix this issue?
+From this I concluded that PhysX probably pushes objects out of penetration with a constant velocity, independent of the amount of penetration. Maybe if PhysX modified their solver so the amount of push out was a function of penetration depth for small penetrations, it wouldn't have this behavior?
 
+I also noticed in large stacks that even though objects seemed to be at rest, they were actually jittering by small amounts, not visible in VR but visible in the editor. Obviously this has to work, we can't have stacks of objects that never come to rest, they take up too much CPU. How can we fix the sliding and making sure stacks come to rest?
 
 # Coming to Rest
 
-I also noticed in large stacks that even though objects seemed to be at rest, they were actually jittering by small amounts, not visible in VR
 
 Regardless, it has to work so ...
 
