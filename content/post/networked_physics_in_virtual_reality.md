@@ -362,6 +362,12 @@ good opportunity to show some videos.
 
 ...
 
+# Throwing
+
+Might be cool to discuss the final pass changes to throwing necessary to get it feeling good.
+
+...
+
 # Future Work
 
 (interpolation in remote view, simulation rewind and rollback, possibly a subset of simulation could be rolled back only, having basically the same properties as this authority scheme, but having server authoritative physics. gain: security, loss: in cases where players interact with the same stack, or both throw an object at a stack. dedicated servers for physics simulation, quantizing rotation to a different representation than smallest 3, eg. quantized 4, prediction of PhysX simulation including rotation)
