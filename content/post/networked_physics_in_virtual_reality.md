@@ -151,11 +151,11 @@ The solution is to quantize the state on _both sides_. What this means is that b
 
 Now the quantized state in the packet exactly matches the authority state, and the extrapolation is as close as possible.
 
-# Quantization Side-Effects
+# Quantum Side-Effects
 
 Quantizing the state like this has side-effects. 
 
-The first is that PhysX doesn't like it very much when you set the position, rotation and lin/ang velocity on each rigid body at the start of each frame it very much (it takes a large amount of CPU). Perhaps PhysX could work to improve this, as it's a necessary part of sending physics state over the network.
+The first is that PhysX doesn't like it very much when you set the position, rotation and lin/ang velocity on each rigid body at the start of each frame (it takes a large amount of CPU). Perhaps PhysX could work to improve this, as it's a necessary part of networking physics statefully.
 
 The second is that it adds some error to the simulation which PhysX tries very hard to correct for, throwing objects out of penetration with great force:
 
@@ -163,19 +163,24 @@ _(diagram showing cube in a stack in penetration due to position w. arrow)_
 
 To fix this, make sure to set __(some function i forgot)__ on each rigid body, to limit the velocity that objects are pushed apart. I found that 1m/sec push apart works really well.
 
-The third side-effect, which is quite subtle is that some orientations can't be represented exactly in smallest three representation, leading to the following situation:
+The third side-effect, which is quite subtle, is that some orientations can't be represented exactly in smallest three representation, leading to the following situation:
 
 _(diagram showing cube rotating into penetration with the ground)_
 
-What's interesting is that at certain orientations, the orientation after PhysX tries to push this cube out of penetration is another orientation that can't be exactly representated in the smallest three representation, leading to the comedic effect where the cube pushes out, slides a small amount across the floor, and ends up in a penetrating rotation at end of frame, which continues sliding the next frame!
+What's interesting is that at certain orientations, the orientation after PhysX tries to pushes this cube out of penetration is another orientation that can't be exactly representated, leading to the comedic effect where the cube slides across the floor!
 
-_(diagram showing cool sliding effect caused by ...)_
+_(diagram showing cool sliding effect, three stage diagram, penetration, push out and to right, still in penetration_...)_
 
-In my research I found that no amount of tuning or increasing the precision of rotation compression would fix this. If an edge of the cube rotated into penetration, it would induces sliding along the ground. From this I conclude that PhysX probably pushes objects out of penetration with a constant velocity, independent of the amount of penetration. Maybe if PhysX modified their solver so the amount of push out for small penetrations was a functino of penetration depth this would improve?
+In my research I found that no amount of tuning or increasing the precision of rotation compression would fix this. If an edge of the cube rotated into penetration, it would induces sliding along the ground. 
 
-Regardless, it has to work so ...
+From this I conclude that PhysX probably pushes objects out of penetration with a constant velocity, independent of the amount of penetration. Maybe if PhysX modified their solver so the amount of push out for small penetrations to be a function of penetration depth this would improve?
+
 
 # Coming to Rest
+
+I also noticed in large stacks that even though objects seemed to be at rest, they were actually jittering by small amounts, not visible in VR
+
+Regardless, it has to work so ...
 
 ...
 
