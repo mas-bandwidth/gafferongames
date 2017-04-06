@@ -55,7 +55,7 @@ So client side prediction works _great_ for first person shooters, but is it a g
 
 In a first person shooter prediction is applied only to your local player character and perhaps objects you are carrying like items and weapons, but in a physics simulation what needs to be predicted to hide latency? Not only your own character, but any objects you interact with as well. This means if you pick up an object and throw it at a stack of objects, the client side prediction would need to include the set of objects you interact with, and in turn any objects they interact with, and so on.
 
-While this could _theoretically_ work, it's easy to see that the worst case when a player throws a cube at a large stack of cubes is a client predicting the _entire simulation_. Under typical internet conditions it can be expected that players will need to predict up to 250ms to hide latency and at 60HZ this means a client-side prediction of 15 frames. Physics simulations are usually pretty expensive, so anything that requires 15 invisible rollback simulation frames for each frame of real simulation is probably not practical.
+While this could _theoretically_ work, it's easy to see that the worst case when a player throws a cube at a large stack of cubes is a client predicting the _entire simulation_. Under typical internet conditions it can be expected that players will need to predict up to 250ms to hide latency and at 60HZ this means a client-side prediction of 15 frames. Physics simulations are usually pretty expensive, so anything that requires 15 invisible rollback frames for each frame of real simulation is probably not practical.
 
 # What could a solution look like?
 
@@ -75,7 +75,7 @@ As with all good rules, this one is made to be broken. Never in a competitive ga
 
 Which brings us to the concept of an authority scheme. The basic idea is that instead of having the server be authoritative over the whole simulation, we _distribute_ authority across player machines, such that players take authority over objects they interact with, in effect _becoming the server_ for those objects. If we do this correctly, from each player's point of view, players get to interact with objects lag free, and they never have to rollback and apply corrections. Also, because we are synchronizing state, determinism is not required.
 
-The trick to making this all work is to define _rules_ that keep the distributed simulation in sync while letting players predictively take authority over objects, resolving conflicts after the fact.
+The trick to making this all work is _clearly defined rules_ that keep the distributed simulation in sync while letting players predictively take authority over objects, resolving any conflicts between players after the fact.
 
 To do this, I came up with two concepts:
 
@@ -94,13 +94,13 @@ In short, we are creating a distributed system that is eventually consistent.
 
 Trusting that I could implement the rules described above, my first task was to prove that synchronizing physics in one direction of flow could actually work with Unity and PhysX.
 
-To do this I setup a simple loopback scene in Unity with 360 simulated cubes that fell from the sky into a large pile in front of the player. These cubes represent the authority side, and an identical set of cubes to the right act as the non-authority side they would be synchronized to. The goal: to keep the simulation on the right in sync with the simulation in front of the player.
+To do this I setup a simple loopback scene in Unity with 360 simulated cubes that fall from the sky into a large pile in front of the player. These cubes represent the authority side, and an identical set of cubes to the right act as the non-authority side they are synchronized to. The goal: to keep the simulation on the right in sync with the simulation in front of the player.
 
 _(diagram showing synchronization from left to right)_
 
 Testing network code in loopback like this is a best practice when developing AAA network code. It speeds up iteration time and makes debugging much easier. In virtual reality it makes even more sense, considering the alternative, which is running the same virtual reality scene on two machines and switching headsets as you work :)
 
-As expected, with nothing keeping the two sets of cubes in sync, even though they both start from exactly the same initial state and run through the same simulation time steps, they give different end results:
+As expected, with nothing keeping the two sets of cubes in sync, even though they both start from exactly the same initial state and run through exactly the same simulation steps, they give different end results:
 
 _(screencap showing two scenes side-by-side in the editor, with different piles of objects)_
 
@@ -116,7 +116,7 @@ The state grabbed from each cube looks like this:
         Vector3 angular_velocity;
     };
 
-When we apply this state to the simulation on the right side, we apply it by _directly_ setting the position, rotation and velocities on each rigid body. This simple change is enough to keep the simulations in sync, and PhysX doesn't diverge enough in the 1/10th of a second between updates to show any noticeable pops.
+When we apply this state to the simulation on the right side, we force the position, rotation, linear and angular velocity of each rigid body to the state grabbed from the authority simulation. This simple change is enough to keep the simulations in sync, and PhysX doesn't diverge enough in the 1/10th of a second between updates to show any noticeable pops.
 
 Now the simulation on the right gives the same end result:
 
@@ -137,44 +137,55 @@ A simple way to reduce bandwidth is to recognize when objects are at rest, and i
         [angular_velocity] (vector3)
     }
 
-This is a straightforward optimization that saves a bunch of bandwidth in the common case. It's also _lossless_ because it doesn't change the the state sent over the network in any way.
+This is a straightforward optimization that saves a bunch of bandwidth in the common case. It's also a _lossless_ technique because it doesn't change the the state sent over the network in any way.
 
-To optimize further we need to use _lossy techniques_. These techniques reduce the precision of the physics state when they're sent over the network. For example, we could bound position in some min/max range, then quantize it such that it's sent at a precision of 1/1000th of a centimeter. We can do the same approach for linear and angular velocity, and for orientation we can use the _smallest three_ representation of a quaternion.
+To optimize bandwidth further we need to use _lossy techniques_. This means we reduce the precision of the physics state when it's sent over the network to send less bandwidth. For example, we could bound position in some min/max range and quantize it so it's sent at a precision of 1/1000th of a centimeter. We can use the same approach for linear and angular velocity, and for orientation we can use the _smallest three_ representation of a quaternion.
 
-This saves a bunch of bandwidth, but now the extrapolation after we apply the network state on the non-authority side is slightly different because it's extrapolating from the quantized state. This isn't good because it causes jitter in stacks.
+This saves a bunch of bandwidth, but now the extrapolation with the simulation between network updates is slightly different, because it's extrapolating from the quantized network state. This causes jitter in stacks.
 
 _(diagram showing a stack on left, with a quantized state on the right side with slight penetration_ -> jitter)_
 
-We want an extrapolation that matches the authority side of the simulation as closely as possible. The solution is to quantize the state on _both sides_. What this means is that before each physics simulation step is taken in **FixedUpdate**, the physics state is sampled and quantized _exactly the same way_ as when it's sent over the network, then applied back to the local simulation.
+What we want is an extrapolation that matches the authority side of the simulation as closely as possible. The solution is to quantize the state on _both sides_. What this means is that before each physics simulation step is taken in **FixedUpdate**, the physics state is sampled and quantized _exactly the same way_ as when it's sent over the network, then applied back to the local simulation.
 
-# Quantum Side-Effects
+This is done on both the authority, and non-authority sides of the simulation, and it's basically _the trick_ to getting networked physics working with PhysX.
 
-Quantizing the state has some interesting side-effects. 
+# Side Effects
 
-The first is that PhysX doesn't like it very much when you set the position, rotation and linear/angular velocity on each rigid body at the start of each frame (it takes a large amount of CPU). Perhaps the PhysX authors could work to improve this, as it's a necessary part of networking a physics simulation statefully.
+Quantizing the state has some _interesting_ side-effects...
 
-The second is that it adds some error to the simulation which PhysX tries very hard to correct, snapping objects out of penetration and creating pops:
+The first side-effect is that PhysX doesn't like it very much when you set the position, rotation and linear/angular velocity on each rigid body at the start of each frame. It lets you know this by taking a reasonably large chunk of CPU. 
+
+This is most likely because PhysX invalidates certain caches that are used to speed up collision detection and solving when you set physics state. Perhaps the PhysX developers could work to improve this when the state changes only by small amounts.
+
+The second side-effect quantization adds _error_ to the simulation which PhysX tries very hard to correct, snapping objects out of penetration:
 
 _(diagram showing cube in a stack in penetration due to position w. arrow)_
 
-To fix this, make sure to set __(some function i forgot)__ on each rigid body, limiting the velocity that objects are pushed apart with. I found that 1m/sec push apart works really well for stacks of cubes.
+The solution for this is to call __(some function i forgot)__ on each rigid body, limiting the velocity that objects are pushed apart with. I found that 1m/sec push apart works well.
 
 The third side-effect, which is quite subtle, is that some orientations can't be represented exactly in smallest three representation, leading to the following situation:
 
 _(diagram showing cube rotating into penetration with the ground)_
 
-What's interesting is that at certain orientations, the orientation after PhysX pushes this cube out of penetration another orientation that can't be exactly representated, leading to the cube sliding across the floor!
+At certain orientations, the orientation after PhysX pushes this cube out of penetration is _another_ orientation that quantizes back to penetration in exactly in the same way, causing a feedback loop where the cube slides across the floor!
 
 _(diagram showing cool sliding effect, three stage diagram, penetration, push out and to right, still in penetration_...)_
 
-In my research I found that no amount of tuning or increasing the precision of rotation compression would fix this. If an edge of the cube rotated into penetration and got stuck into this feedback loop, it would induces sliding along the ground, no matter how small the amount of penetration.
+In my research I found that no amount of tuning or increasing the precision of rotation compression would fix this. If an edge of the cube rotated into penetration and got stuck in this feedback loop, the cube slid along the ground, no matter how small the amount of penetration.
 
-From this I concluded that PhysX probably pushes objects out of penetration with a constant velocity, independent of the amount of penetration. Maybe if PhysX modified their solver so the amount of push out was a function of penetration depth for small penetrations, it wouldn't have this behavior?
+From this I concluded that PhysX most likely pushes objects out of penetration with a constant velocity, independent of the amount of penetration. Perhaps if PhysX modified their push out to be a function of penetration depth for small penetrations, it wouldn't have this behavior?
 
-I also noticed in large stacks that even though objects seemed to be at rest, they were actually jittering by small amounts, not visible in VR but visible in the editor. Obviously this has to work, we can't have stacks of objects that never come to rest, they take up too much CPU. How can we fix the sliding and making sure stacks come to rest?
+The fourth side-effect I also noticed was that although objects in large stacks _seemed_ to be at rest, they were actually jittering by small amounts, visible in the editor as tiny fluctuations below quantization precision as objects tried to resolve penetration due to quantization, or were quantized just above a resting surface and fell down towards it, over and over.
 
 # Coming to Rest
 
+Had I gone down an incorrect fork in the road? 
+
+Could quantized state work with PhysX?
+
+At this point I wasn't really sure!
+
+Obviously this has to work, we can't have stacks of objects that never come to rest, they take up too much CPU. How can we fix the sliding and making sure stacks come to rest?
 
 Regardless, it has to work so ...
 
