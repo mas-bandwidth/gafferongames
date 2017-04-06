@@ -149,9 +149,9 @@ We want an extrapolation that matches the authority side of the simulation as cl
 
 # Quantum Side-Effects
 
-Quantizing the state has some interestingide-effects. 
+Quantizing the state has some interesting side-effects. 
 
-The first is that PhysX doesn't like it very much when you set the position, rotation and lin/ang velocity on each rigid body at the start of each frame (it takes a large amount of CPU). Perhaps the PhysX authors could work to improve this, as it's a necessary part of networking a physics simulation statefully.
+The first is that PhysX doesn't like it very much when you set the position, rotation and linear/angular velocity on each rigid body at the start of each frame (it takes a large amount of CPU). Perhaps the PhysX authors could work to improve this, as it's a necessary part of networking a physics simulation statefully.
 
 The second is that it adds some error to the simulation which PhysX tries very hard to correct, snapping objects out of penetration and creating pops:
 
