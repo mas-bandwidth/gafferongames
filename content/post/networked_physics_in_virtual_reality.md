@@ -98,7 +98,7 @@ To do this I setup a simple loopback scene in Unity with 360 simulated cubes tha
 
 _(diagram showing synchronization from left to right)_
 
-Testing network code in loopback like this is a best practice when developing AAA network code. It speeds up iteration time and makes debugging much easier. In virtual reality it makes even more sense, considering the alternative, which is running the same virtual reality scene on two machines and switching headsets as you work :)
+Testing network code in loopback like this is a best practice when developing AAA network code. It speeds up iteration time and makes debugging so much easier. In virtual reality it makes even more sense, considering the alternative, which is running the same virtual reality scene on two machines and switching headsets as you work :)
 
 As expected, with nothing keeping the two sets of cubes in sync, even though they both start from exactly the same initial state and run through exactly the same simulation steps, they give different end results:
 
@@ -155,7 +155,7 @@ This is done on both the authority and non-authority sides of the simulation, an
 
 # Side Effects
 
-But quantizing the state has some interesting side-effects...
+But quantizing the state has some _interesting_ side-effects...
 
 The first is that PhysX doesn't really like it very much when you set the position, rotation and linear/angular velocity on each rigid body at the start of each frame. It lets you know this by taking a reasonably large chunk of CPU. 
 
@@ -179,11 +179,17 @@ In my research I found that no amount of tuning or increasing the precision of r
 
 From this I concluded that PhysX most likely pushes objects out of penetration with a constant velocity, independent of the amount of penetration. Perhaps if PhysX modified their push out to be a function of penetration depth for small penetrations, it wouldn't have this behavior?
 
-Finally, the fourth side-effect I noticed was that although objects in large stacks _seemed_ to be at rest, they were actually jittering by small amounts, visible in the editor as tiny fluctuations below quantization precision as objects repeatedly tried to resolve penetration due to quantization, or were quantized just above a resting surface and fell down towards it.
+Finally, the fourth side-effect I noticed was that although objects in large stacks _seemed_ to be at rest, they were actually jittering by small amounts, visible only in the editor as tiny fluctuations below quantization precision as objects repeatedly tried to resolve penetration due to quantization, or were quantized just above a resting surface and fell down towards it.
 
 # Coming to Rest
 
 Had I gone down an incorrect fork in the road? At this point I was genuinely concerned. Perhaps stable networked stacks were not possible in PhysX?
+
+I was honestly about to give up when I looked at the problem again:
+
+1. Cubes are jittering, but they are only jittering by small amounts which are not visible in VR.
+
+2. The jitter seems to be proportional to the size of the 
 
 (reader should understand that we have to write our own replacement that works with the limits of our quantization, reader should understand how this works with a ring buffer, and is focused on actual motion, so it ignores small imperceptible jitter in position/rotation, and only case if the objcet is moving sigificantly over time across a number of frames. physcis at rest heisenberg principle).
 
