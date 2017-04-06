@@ -122,7 +122,7 @@ Now the simulation on the right gives the same end result:
 
 _(screen cap showing same resulting pile of cubes from top down in unity editor)_
 
-This is actually a big step, because it proves that a _state synchronization_ based approach for networking can work with PhysX. The only problem is, sending uncompressed physics state uses too much bandwidth.
+This is actually a big step, because it proves that a _state synchronization_ based approach for networking can work with PhysX. The only problem is, sending uncompressed physics state uses _too much bandwidth_.
 
 # Quantized State
 
@@ -139,35 +139,37 @@ A simple way to reduce bandwidth is to recognize when objects are at rest, and i
 
 This is a straightforward optimization that saves a bunch of bandwidth in the common case. It's also a _lossless_ technique because it doesn't change the the state sent over the network in any way.
 
-To optimize bandwidth further we need to use _lossy techniques_. This means we reduce the precision of the physics state when it's sent over the network to send less bandwidth. For example, we could bound position in some min/max range and quantize it so it's sent at a precision of 1/1000th of a centimeter. We can use the same approach for linear and angular velocity, and for orientation we can use the _smallest three_ representation of a quaternion.
+To optimize bandwidth further we need to use _lossy techniques_. This means we reduce the precision of the physics state when it's sent over the network. For example, we could bound position in some min/max range and quantize it to a precision of 1/1000th of a centimeter. We can use this same approach for linear and angular velocity, and for rotation we can use the _smallest three representation_ of a quaternion.
 
-This saves a bunch of bandwidth, but now the extrapolation with the simulation between network updates is slightly different, because it's extrapolating from the quantized network state. This causes jitter in stacks.
+This saves a bunch of bandwidth, but now the extrapolation between network updates on the non-authority side is slightly different from the authority side, because it's extrapolating from the quantized network state. 
+
+This causes jitter in stacks:
 
 _(diagram showing a stack on left, with a quantized state on the right side with slight penetration_ -> jitter)_
 
-What we want is an extrapolation that matches the authority side of the simulation as closely as possible. The solution is to quantize the state on _both sides_. What this means is that before each physics simulation step is taken in **FixedUpdate**, the physics state is sampled and quantized _exactly the same way_ as when it's sent over the network, then applied back to the local simulation.
+What we want is an extrapolation that matches the authority side of the simulation as closely as possible. The solution is to quantize the state on _both sides_. What this means is that before each physics simulation step in **FixedUpdate** the physics state is sampled and quantized _exactly the same way_ as when it's sent over the network, then applied back to the local simulation.
 
 This is done on both the authority, and non-authority sides of the simulation, and it's basically _the trick_ to getting networked physics working with PhysX.
 
 # Side Effects
 
-Quantizing the state has some _interesting_ side-effects...
+Quantizing the state has some interesting side-effects...
 
 The first side-effect is that PhysX doesn't like it very much when you set the position, rotation and linear/angular velocity on each rigid body at the start of each frame. It lets you know this by taking a reasonably large chunk of CPU. 
 
 This is most likely because PhysX invalidates certain caches that are used to speed up collision detection and solving when you set physics state. Perhaps the PhysX developers could work to improve this when the state changes only by small amounts.
 
-The second side-effect quantization adds _error_ to the simulation which PhysX tries very hard to correct, snapping objects out of penetration:
+The second side-effect is that quantization adds _error_ to the simulation which PhysX tries very hard to correct, snapping objects out of penetration:
 
 _(diagram showing cube in a stack in penetration due to position w. arrow)_
 
 The solution for this is to call __(some function i forgot)__ on each rigid body, limiting the velocity that objects are pushed apart with. I found that 1m/sec push apart works well.
 
-The third side-effect, which is quite subtle, is that some orientations can't be represented exactly in smallest three representation, leading to the following situation:
+The third side-effect, which is quite subtle, is that some rotations can't be represented exactly in smallest three representation, which leads to the following situation:
 
 _(diagram showing cube rotating into penetration with the ground)_
 
-At certain orientations, the orientation after PhysX pushes this cube out of penetration is _another_ orientation that quantizes back to penetration in exactly in the same way, causing a feedback loop where the cube slides across the floor!
+For some rotations, the quantized rotation penetrates with the ground, then after PhysX pushes this cube out of penetration, this rotation quantizes to _another_ rotation in penetration, causing a feedback loop where the cube slides across the floor!
 
 _(diagram showing cool sliding effect, three stage diagram, penetration, push out and to right, still in penetration_...)_
 
@@ -175,11 +177,11 @@ In my research I found that no amount of tuning or increasing the precision of r
 
 From this I concluded that PhysX most likely pushes objects out of penetration with a constant velocity, independent of the amount of penetration. Perhaps if PhysX modified their push out to be a function of penetration depth for small penetrations, it wouldn't have this behavior?
 
-The fourth side-effect I also noticed was that although objects in large stacks _seemed_ to be at rest, they were actually jittering by small amounts, visible in the editor as tiny fluctuations below quantization precision as objects tried to resolve penetration due to quantization, or were quantized just above a resting surface and fell down towards it, over and over.
+Finally, the fourth side-effect I noticed was that although objects in large stacks _seemed_ to be at rest, they were actually jittering by small amounts, visible in the editor as tiny fluctuations below quantization precision as objects tried to resolve penetration due to quantization, or were quantized just above a resting surface and fell down towards it, over and over.
 
 # Coming to Rest
 
-Had I gone down an incorrect fork in the road? 
+Had I gone down an incorrect fork in the road? At this point I was genuinely concerned. Perhaps stable networked stacks were not possible in PhysX?
 
 Could quantized state work with PhysX?
 
@@ -193,23 +195,7 @@ Regardless, it has to work so ...
 
 
 
-(reader should understand that quantizing the simulation at the start of each frame creates error, and this error results in objects going into slight penetration with the ground and other objects while they are in stacks, this causes jitter and destabilizes stacks, and breaks the regular PhysX at rest calculation, we have to write our own replacement that works with the limits of our quantization, reader should understand how this works with a ring buffer, and is focused on actual motion, so it ignores small imperceptible jitter in position/rotation, and only case if the objcet is moving sigificantly over time across a number of frames. physcis at rest heisenberg principle).
-
-Stacks, slight penetration. Errors due to linear quantization, but especially due to quantization of angle.
-
-No guarantee that a smallest 3 representation is able to exactly represent for example a cube at every angle around the y axis, while still being perfectly flat, eg. one edge or vertex slightly penetrating.
-
-(good opportunity for a diagram here, show cube resting on another cube, and then slight penetration, with arrow for being pushed out)
-
-Breaks the built in at rest.
-
-video: slight jitter
-
-(also, interesting phenomenon, at certain orientations, cubes would slide along the ground... I think it worked like this, ... diagram showing what I think was happening. crazy...)
-
-Problem, because we need stable stacks. Can't have jitter like this. Objects must come to rest and stick to be stable.
-
-(possible video showing sloppy at rest causig sliding of objects vs. sticking in stacks when they fall?)
+(reader should understand that we have to write our own replacement that works with the limits of our quantization, reader should understand how this works with a ring buffer, and is focused on actual motion, so it ignores small imperceptible jitter in position/rotation, and only case if the objcet is moving sigificantly over time across a number of frames. physcis at rest heisenberg principle).
 
 Solution: disable built in at rest calculation, implement custom at rest calculation.
 
@@ -405,7 +391,7 @@ Sum up everything done, in order. Key points required to get it working.
 ----- 
 
 <i>
-**Glenn Fiedler** is the founder and president of [The Network Protocol Company](http://thenetworkprotocolcompany.com) where he helps clients network their games. Prior to starting his own company he was a senior programmer at Respawn Entertainment working on Titanfall 1 and 2.
+**Glenn Fiedler** is the founder and president of [The Network Protocol Company](http://thenetworkprotocolcompany.com) where he helps clients network their games. Prior to starting his own company he worked at Respawn Entertainment on Titanfall 1 and 2.
 
 Glenn is also the author of several popular series of articles on game networking and physics at [gafferongames.com](http://www.gafferongames.com), and is the author of the open source network libraries [libyojimbo](http://www.libyojimbo.com) and [netcode.io](http://netcode.io)
 
