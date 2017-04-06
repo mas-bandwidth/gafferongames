@@ -183,19 +183,15 @@ Finally, the fourth side-effect I noticed was that although objects in large sta
 
 # Coming to Rest
 
-Had I gone down an incorrect fork in the road? At this point I was genuinely concerned. Perhaps stable networked stacks were not possible in PhysX?
+My theory was that the tiny amounts of penetration caused by quantization were the cause of both the sliding cubes and the stacks never coming to rest. This was confirmed when disabling quantization made both problems go away.
 
-I was honestly about to give up when I looked at the problem again:
+Had I gone down an incorrect fork in the road? At this point I was genuinely concerned. Perhaps stable networked stacks were not possible in PhysX? Maybe getting them to work would require changes to how PhysX worked?
 
-1. Cubes are jittering, but they are only jittering by small amounts which are not visible in VR.
+As a last resort, I disabled the PhysX at rest calculation and wrote my own.
 
-2. The jitter seems to be proportional to the size of the 
+Instead of considering small motion in the last frame to indicate an object is still moving, I kept a ring buffer of historical positions and orientations, and each frame, compared all positions and orientations to see if an object had moved significantly in the last 16 frames. If not, I forced the object to rest.
 
-(reader should understand that we have to write our own replacement that works with the limits of our quantization, reader should understand how this works with a ring buffer, and is focused on actual motion, so it ignores small imperceptible jitter in position/rotation, and only case if the objcet is moving sigificantly over time across a number of frames. physcis at rest heisenberg principle).
-
-Solution: disable built in at rest calculation, implement custom at rest calculation.
-
-Ring buffer. Based around quantized state. If position or rotation don't change significantly (within quantization resolution), over a number of frames, force object to rest.
+This aggressive at rest calculation worked. Large stacks of cubes came to rest even with quantization. Sliding cubes went away. It even added what felt like a poor man's _static friction_, where sliding below a certain speed would stick and come to rest. 
 
 # Priority Accumulator
 
