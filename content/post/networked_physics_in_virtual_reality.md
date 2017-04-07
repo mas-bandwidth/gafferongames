@@ -137,7 +137,7 @@ A simple way to reduce bandwidth is to recognize when objects are at rest, and i
         [angular_velocity] (vector3)
     }
 
-This is a straightforward optimization that saves a bandwidth in the common case because at any time most objects are at rest. It's also a _lossless_ technique because it doesn't change the the state sent over the network in any way.
+This is a straightforward optimization that saves bandwidth in the common case because at any time most objects are at rest. It's also a _lossless_ technique because it doesn't change the the state sent over the network in any way.
 
 To optimize bandwidth further we need to use _lossy techniques_. This means we reduce the precision of the physics state when it's sent over the network. For example, we could bound position in some min/max range and quantize it to a precision of 1/1000th of a centimeter. We can use the same approach for linear and angular velocity, and for rotation we can use the _smallest three representation_ of a quaternion.
 
@@ -145,55 +145,31 @@ While this saves a bunch of bandwidth, the extrapolation on the non-authority si
 
 The solution is to quantize the state on _both sides_. What this means in practice is that before each physics simulation step, the physics state is sampled and quantized _exactly the same way_ as when it's sent over the network, then applied back to the local simulation. 
 
-This is done on both the authority and non-authority sides of the simulation. Now the extrapolation from quantized state on the non-authority side matches the authority side, since both simulations and network packets are quantized exactly the same way.
+This is done on both the authority and non-authority sides. Now the extrapolation from quantized state on the non-authority side matches the authority side as closely as possible, because both simulations and network packets are quantized exactly the same way.
 
-# Quantum Side Effects
+# Coming To Rest
 
-But quantizing the state has some _interesting_ side-effects...
+But quantizing the state has some _very interesting_ side-effects...
 
-The first is that PhysX doesn't really like it very much when you set the position, rotation and linear/angular velocity on each rigid body at the start of each frame. It lets you know this by taking a reasonably large chunk of CPU. 
+1. PhysX doesn't really like you forcing the state of each rigid body at the start of every frame and it makes sure you know by taking up a bunch of CPU.
 
-This is most likely because PhysX invalidates caches it uses speed up collision detection when you set physics state. Perhaps the PhysX developers could work to improve this when the rigid body state changes by only a small amount.
+2. Quantization adds error to position which PhysX tries very hard to correct, snapping objects immediately out of penetration.
 
-The second side-effect is that quantization adds _error_ to the simulation which PhysX tries very hard to correct, snapping objects out of penetration:
+3. Rotations can't be represented exactly either, again causing penetration. Interestingly in this case, objects can get stuck in a feedback loop where they slide across the floor.
 
-_(diagram showing cube in a stack in penetration due to position w. arrow)_
+4. Although objects in large stacks _seem_ to be at rest, they are actually jittering by small amounts, visible only in the editor as tiny fluctuations below quantization precision as objects repeatedly try to resolve penetration due to quantization, or are quantized just above a resting surface and fall towards it.
 
-The solution for this is to call __(some function i forgot)__ on each rigid body, limiting the velocity that objects are pushed apart with. I found that 1m/sec push apart works well.
+While we can't do much about PhysX CPU usage, the solution for penetration is to call (some function i forgot) on each rigid body, limiting the velocity that objects are pushed apart with.
 
-Rotations can't be represented exactly in smallest three representation either:
-
-_(diagram showing cube rotating into penetration with the ground)_
-
-This leads to the third side effect: for a small set of rotations, after PhysX pushes a cube out of penetration, the resulting rotation quantizes to _another_ rotation in penetration, causing a feedback loop where the cube slides across the floor!
-
-_(diagram showing cool sliding effect, three stage diagram, penetration, push out and to right, still in penetration_...)_
-
-In my research I found that no amount of tuning or increasing the precision of rotation compression would fix this. If an edge of the cube rotated into penetration and got stuck in this feedback loop, the cube slid along the ground, no matter how small the amount of penetration. 
-
-From this I concluded that PhysX most likely pushes objects out of penetration with a constant velocity, independent of the amount of penetration. Perhaps if PhysX modified their push out to be a function of penetration depth for small penetrations, it wouldn't have this behavior?
-
-Finally, the fourth side-effect I noticed was that although objects in large stacks _seemed_ to be at rest, they were actually jittering by small amounts, visible only in the editor as tiny fluctuations below quantization precision as objects repeatedly tried to resolve penetration due to quantization, or were quantized just above a resting surface and fell down towards it.
-
-# Coming to Rest
-
-Had I gone down an incorrect fork in the road? At this point I was genuinely concerned. Perhaps stable networked stacks were not possible in PhysX? Maybe getting them to work would require changes to PhysX itself?
-
-As a last resort, I disabled the PhysX at rest calculation and wrote my own.
-
-Instead of considering small motion in the last frame to indicate an object is still moving, I kept a ring buffer of historical positions and orientations, and each frame, compared all positions and orientations to see if an object had moved or rotated significantly in the last 16 frames. If not, I forced the object to rest.
-
-This aggressive at rest calculation worked. Large stacks of cubes came to rest even with quantization. Sliding cubes went away. It even added what felt like a poor man's _static friction_, where cubes sliding below a certain speed would stick and come to rest.
-
----------------
+Now to get objects to property come to rest, disable the PhysX at rest calculation and replace it with a ring-buffer of positions and orientations for each object. If an object has not moved or rotated significantly in the last 16 frames, force it to rest. Problem solved.
 
 # Priority Accumulator
+
+Moving forward with bandwidth optimization ...
 
 (reader should understand that sending all objects every frame may not fit into bandwidth budget, even with quantized state, especially when a lot of objects are changing. the way to solve this is to send only a subset of cube states in each packet, and use a priority accumulator to work out which updates to send each frame. this way updates are distributed fairly across all objects in the scene).
 
 Recent high velocity impact boost. Check over priority function for anything more interesting. perhaps mention -1 priority accumulator value meaning, don't send this object. we'll use this later.
-
-(reader should understand that even though we are only sending a subset of objects, when all objects are falling in a big stack it's very chaotic, so there is a limit as to how infrequently we can send each cube state, and at the bandwidth target, we're not able to send each cube state frequently enough to avoid pops and jitter when the big stack falls, therefore we have to do more aggressive optimizations...)
 
 # Reliability
 
