@@ -189,7 +189,7 @@ Somewhat counter-intuitively, I found that reducing priority for at rest objects
 
 The next bandwidth reduction technique is _delta compression_.
 
-First person shooters often implement this by compressing the entire state of the world relative to a previous state. In this technique, a previous world state or 'snapshot' acts as the _baseline_, and a set of differences, or _delta_, between the _baseline_ and _current_ snapshots are sent to the client.
+First person shooters often implement this by compressing the entire state of the world relative to a previous state. In this technique, a previous world state or 'snapshot' acts as the _baseline_, and a set of differences, or _delta_, between the _baseline_ and _current_ snapshots are sent down to the client.
 
 This technique is relatively easy to implement because all the server needs to do is track the most recent snapshot received by each client, and generate deltas from that snapshot to the current. Similarly, all the client needs to do is keep a buffer of the last n snapshots received, so it can reconstruct snapshots by applying deltas on top of its cached copy of the baseline.
 
@@ -201,11 +201,15 @@ The supporting systems and data structures are also much more complicated:
 
 1. A reliability system is required that can report back to the sender which packets were received, not just the most recently received snapshot #.
 
-2. The sender needs to track a ring-buffer of states sent per-object, so it can map packet level acks to sent states and update the most recently acked state per-object.
+2. The sender needs to track the states included in each packet sent, so it can map packet level acks to sent states and update the most recently acked state per-object.
 
-3. The receiver needs to track a ring-buffer of received states per-object, so it can reconstruct object state from the delta.
+3. The receiver needs to store a ring-buffer of received states per-object, so it can reconstruct the current object state from the delta.
 
-But ultimately it's worth the extra complexity, because this system combines the flexibility of being able to specify a dynamic maximum packet size, and the bandwidth savings  of delta compression, which we can be several orders of magnitude improvement.
+But ultimately it's worth the extra complexity, because this system combines the flexibility of being able to specify a dynamic maximum packet size, and the bandwidth savings  of delta compression, which is a potent combination.
+
+----------------------------
+
+(Should I combine these sections? Should they be paragraphs?)
 
 # Delta Not Changed
 
@@ -220,8 +224,6 @@ To do this we compare quantized state with most recent state in delta buffer. if
 (reader should understand that we can send the linear difference between baseline position and current position as an offset, and the same for linear and angular velocity. reader should understand that we can encode this with the 0, -1, +1, -2, +2 mapping to make compression easier, but that compressing variable sized deltas is pretty inefficient with bitpacking, and would be better compressed with arithmetic or range encoding, but it's still a win, the trick is to use the least bits for the most statistically common differences).
 
 (reader should also understand that orientation is not delta compressed. smallest 3 representation is a poor choice of rotation representation for delta encoding, because as an object rotates you can have a different set of smallest 3 components in the quaternion, hence they're not guaranteed to always be close to each other. a different representation of rotation would be better.)
-
-...
 
 # Delta Prediction
 
