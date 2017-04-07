@@ -205,7 +205,7 @@ The supporting systems and data structures are also much more complicated:
 
 3. The receiver needs to track a ring-buffer of received states per-object, so it can reconstruct object state from the delta.
 
-But ultimately it's worth the extra complexity, because this system combines the flexibility of being able to specify a dynamic maximum packet size, and the bandwidth savings of delta compression, which we can be an order of magnitude improvement.
+But ultimately it's worth the extra complexity, because this system combines the flexibility of being able to specify a dynamic maximum packet size, and the bandwidth savings  of delta compression, which we can be several orders of magnitude improvement.
 
 # Delta Not Changed
 
