@@ -157,9 +157,9 @@ But quantizing the state has some _very interesting_ side-effects...
 
 3. Rotations can't be represented exactly either, again causing penetration. Interestingly in this case, objects can get stuck in a feedback loop where they slide across the floor.
 
-4. Although objects in large stacks _seem_ to be at rest, they are actually jittering by small amounts, visible only in the editor as tiny fluctuations below quantization precision as objects repeatedly try to resolve penetration due to quantization, or are quantized just above a resting surface and fall towards it.
+4. Although objects in large stacks _seem_ to be at rest, they are actually jittering by small amounts, visible only in the editor as tiny fluctuations as objects repeatedly try to resolve penetration due to quantization, or are quantized just above a resting surface and fall towards it.
 
-While we can't do much about PhysX CPU usage, the solution for penetration is to set **Rigidbody.maxDepenetrationVelocity** on each rigid body, limiting the velocity that objects are pushed apart with.
+While we can't do much about PhysX CPU usage, the solution for penetration is to set _maxDepenetrationVelocity_ on each rigid body, limiting the velocity that objects are pushed apart with.
 
 Now to get objects to property come to rest, disable the PhysX at rest calculation and replace it with a ring-buffer of positions and orientations for each object. If an object has not moved or rotated significantly in the last 16 frames, force it to rest. Problem solved.
 
