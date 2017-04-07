@@ -205,21 +205,22 @@ The supporting systems and data structures are also much more complicated:
 
 3. The receiver needs to store a ring-buffer of received states per-object, so it can reconstruct the current object state from the delta.
 
-But ultimately it's worth the extra complexity, because this system combines the flexibility of being able to specify a dynamic maximum packet size, and the bandwidth savings  of delta compression, which is a potent combination.
+But ultimately it's worth the extra complexity, because this system combines the flexibility of being able to specify a dynamic maximum packet size, and the bandwidth savings of delta compression, which is a potent combination.
+
+# Delta Encoding
+
+The simplest form of delta encoding is to send objects that haven't changed from the baseline value as just one bit: _not changed_. This is also the easiest gain you'll ever see, because most of the time, the majority of objects are at rest.
+
+A more advanced strategy is to encode the _difference_ between the current and baseline values, aiming to encode small differences with fewer bits. For example, delta position could be (-1,+23,+4) from baseline. This works well for differences in linear values, but breaks down somewhat for deltas of the smallest three quaternion representation, as the largest component of a quaternion is often different between the baseline and current rotation.
+
+Encoding the difference gives some gains, but it's not an order of magnitude win like not changed. This is because in many cases falling objects move quickly, so the difference in their values becomes large enough to negate most gains. This is especially true in the case where all objects falling from the sky into a big pile, which is arguably where we need bandwidth reductions the most.
+
+The final strategy is that of predicting the future state and then encoding the error relative to it. This is complicated somewhat by the fact that the predictor must be written in fixed point, because floating point calculations are not necessarily guaranteed to be deterministic, especially between different platforms and hardware. But it's definitely achievable. In a few days of tweaking and experimentation, I was able to write an accurate predictor for position, linear and angular velocity that matched the future result to quantization resolution more than 90% of the time as objects fell. Encoding these objects was therefore easy, another bit _perfect prediction_.
+
+When the prediction was less than perfect a small error offset encodes the difference between the values predicted from the baseline and their true values. In the case of collision, 
+
 
 ----------------------------
-
-(Should I combine these sections? Should they be paragraphs?)
-
-# Delta Not Changed
-
-(reader should understand that sending cubes at rest over and over is wasteful, because the state value is exactly the same. if we are able to encode simply, 'this object has not changed relative to the previous state', we can encode that common case with just one bit, 'not changed').
-
-interesting aside, we can't just stop sending at rest objects, because the simulation runs on both sides, so an at rest cube may be pushed by another cube and need to have the state sent again, otherwise it desyncs. in fact we can't eve send at rest cubes less frequently, all we can really do is encode them efficiently when they are sent.)
-
-To do this we compare quantized state with most recent state in delta buffer. if the state is the same, then we send one bit, not changed.
-
-# Delta Difference
 
 (reader should understand that we can send the linear difference between baseline position and current position as an offset, and the same for linear and angular velocity. reader should understand that we can encode this with the 0, -1, +1, -2, +2 mapping to make compression easier, but that compressing variable sized deltas is pretty inefficient with bitpacking, and would be better compressed with arithmetic or range encoding, but it's still a win, the trick is to use the least bits for the most statistically common differences).
 
