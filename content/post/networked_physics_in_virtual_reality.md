@@ -122,7 +122,7 @@ Now the simulation on the right gives the same end result:
 
 _(screen cap showing same resulting pile of cubes from top down in unity editor)_
 
-This is actually a big step, because it proves that a _state synchronization_ based approach for networking can work with PhysX. The only problem is, sending uncompressed physics state uses _too much bandwidth_.
+This is actually a big step, because it proves that a _state synchronization_ based approach for networking can work with PhysX. The only problem is, sending uncompressed physics state uses too much bandwidth.
 
 # Quantized State
 
@@ -137,45 +137,39 @@ A simple way to reduce bandwidth is to recognize when objects are at rest, and i
         [angular_velocity] (vector3)
     }
 
-This is a straightforward optimization that saves a bunch of bandwidth in the common case. It's also a _lossless_ technique because it doesn't change the the state sent over the network in any way.
+This is a straightforward optimization that saves a bandwidth in the common case because at any time most objects are at rest. It's also a _lossless_ technique because it doesn't change the the state sent over the network in any way.
 
 To optimize bandwidth further we need to use _lossy techniques_. This means we reduce the precision of the physics state when it's sent over the network. For example, we could bound position in some min/max range and quantize it to a precision of 1/1000th of a centimeter. We can use the same approach for linear and angular velocity, and for rotation we can use the _smallest three representation_ of a quaternion.
 
-This saves a bunch of bandwidth, but now the extrapolation between network updates on the non-authority side is slightly different from the simulation on the authority side, because it's extrapolating from quantized network state.
+While this saves a bunch of bandwidth, the extrapolation on the non-authority side is now slightly different. What we want is an extrapolation that matches the authority side of the simulation as closely as possible. But how can we do this, and still use lossy compression? 
 
-This causes jitter in stacks:
+The solution is to quantize the state on _both sides_. What this means in practice is that before each physics simulation step, the physics state is sampled and quantized _exactly the same way_ as when it's sent over the network, then applied back to the local simulation. 
 
-_(diagram showing a stack on left, with a quantized state on the right side with slight penetration_ -> jitter)_
+This is done on both the authority and non-authority sides of the simulation. Now the extrapolation from quantized state on the non-authority side matches the authority side, since both simulations and network packets are quantized exactly the same way.
 
-What we want is an extrapolation that matches the authority side of the simulation as closely as possible. But how can we do this, and still use lossy compression? The solution is to quantize the state on _both sides_. 
-
-What this means is that before each physics simulation step, the physics state is sampled and quantized _exactly the same way_ as when it's sent over the network, then applied back to the local simulation. 
-
-This is done on both the authority and non-authority sides of the simulation, and it's basically _the trick_ to getting networked physics working with PhysX.
-
-# Side Effects
+# Quantum Side Effects
 
 But quantizing the state has some _interesting_ side-effects...
 
 The first is that PhysX doesn't really like it very much when you set the position, rotation and linear/angular velocity on each rigid body at the start of each frame. It lets you know this by taking a reasonably large chunk of CPU. 
 
-This is most likely because PhysX invalidates certain caches that are used to speed up collision detection and solving when you set physics state. Perhaps the PhysX developers could work to improve this when rigid body state changes only by small amounts.
+This is most likely because PhysX invalidates caches it uses speed up collision detection when you set physics state. Perhaps the PhysX developers could work to improve this when the rigid body state changes by only a small amount.
 
 The second side-effect is that quantization adds _error_ to the simulation which PhysX tries very hard to correct, snapping objects out of penetration:
 
 _(diagram showing cube in a stack in penetration due to position w. arrow)_
 
-The solution for this one is to call __(some function i forgot)__ on each rigid body, limiting the velocity that objects are pushed apart with. I found that 1m/sec push apart works well.
+The solution for this is to call __(some function i forgot)__ on each rigid body, limiting the velocity that objects are pushed apart with. I found that 1m/sec push apart works well.
 
-The third side-effect, which is quite subtle, is that some rotations can't be represented exactly in smallest three representation, leading to this:
+Rotations can't be represented exactly in smallest three representation either:
 
 _(diagram showing cube rotating into penetration with the ground)_
 
-For a small set of rotations, after PhysX pushes the cube out of penetration, the rotation quantizes to _another_ rotation in penetration, causing a feedback loop where the cube slides across the floor!
+This leads to the third side effect: for a small set of rotations, after PhysX pushes a cube out of penetration, the resulting rotation quantizes to _another_ rotation in penetration, causing a feedback loop where the cube slides across the floor!
 
 _(diagram showing cool sliding effect, three stage diagram, penetration, push out and to right, still in penetration_...)_
 
-In my research I found that no amount of tuning or increasing the precision of rotation compression would fix this. If an edge of the cube rotated into penetration and got stuck in this feedback loop, the cube slid along the ground, no matter how small the amount of penetration.
+In my research I found that no amount of tuning or increasing the precision of rotation compression would fix this. If an edge of the cube rotated into penetration and got stuck in this feedback loop, the cube slid along the ground, no matter how small the amount of penetration. 
 
 From this I concluded that PhysX most likely pushes objects out of penetration with a constant velocity, independent of the amount of penetration. Perhaps if PhysX modified their push out to be a function of penetration depth for small penetrations, it wouldn't have this behavior?
 
@@ -183,15 +177,15 @@ Finally, the fourth side-effect I noticed was that although objects in large sta
 
 # Coming to Rest
 
-My theory was that the tiny amounts of penetration caused by quantization were the cause of both the sliding cubes and the stacks never coming to rest. This was confirmed when disabling quantization made both problems go away.
-
-Had I gone down an incorrect fork in the road? At this point I was genuinely concerned. Perhaps stable networked stacks were not possible in PhysX? Maybe getting them to work would require changes to how PhysX worked?
+Had I gone down an incorrect fork in the road? At this point I was genuinely concerned. Perhaps stable networked stacks were not possible in PhysX? Maybe getting them to work would require changes to PhysX itself?
 
 As a last resort, I disabled the PhysX at rest calculation and wrote my own.
 
-Instead of considering small motion in the last frame to indicate an object is still moving, I kept a ring buffer of historical positions and orientations, and each frame, compared all positions and orientations to see if an object had moved significantly in the last 16 frames. If not, I forced the object to rest.
+Instead of considering small motion in the last frame to indicate an object is still moving, I kept a ring buffer of historical positions and orientations, and each frame, compared all positions and orientations to see if an object had moved or rotated significantly in the last 16 frames. If not, I forced the object to rest.
 
-This aggressive at rest calculation worked. Large stacks of cubes came to rest even with quantization. Sliding cubes went away. It even added what felt like a poor man's _static friction_, where sliding below a certain speed would stick and come to rest. 
+This aggressive at rest calculation worked. Large stacks of cubes came to rest even with quantization. Sliding cubes went away. It even added what felt like a poor man's _static friction_, where cubes sliding below a certain speed would stick and come to rest.
+
+---------------
 
 # Priority Accumulator
 
