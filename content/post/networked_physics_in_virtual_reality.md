@@ -183,27 +183,29 @@ How it works in practice:
 
 For this demo I found some value in boosting priority for cubes recently involved in high energy collisions, since high energy collision was the largest source of divergence due to non-deterministic results.
 
-Somewhat counter-intuitively, I found that reducing priority for at rest objects gave bad results. My theory is that since the simulation runs on both sides, at rest objects would get nudged slightly out of sync and not be corrected quickly enough, leading to divergence when other cubes collide with the at rest objects.
+Somewhat counter-intuitively, I found that reducing priority for at rest objects gave bad results. My theory is that since the simulation runs on both sides, at rest objects would get nudged slightly out of sync and not be corrected quickly enough, leading to divergence when other cubes collide with them.
 
-# Reliability
+# Delta Compression
 
-(reader should understand that some sort of reliability is the first step towards these bandwidth optimizations, that UDP has packet loss, so if we want to do any advanced compression, we need to know which packets get through to the other side).
+The next bandwidth reduction technique is _delta compression_.
 
-(reader should understand the sort of reliability we are looking for is, "which packets did the other side receive?" and that the basic packet header lets us transmit acks back to the server for a steading stream of packets, eg. 60HZ, 90HZ over UDP, even when packet loss exists, by sending each ack redundantly.)
+First person shooters often implement this by compressing the entire state of the world relative to a previous state. In this technique, a previous world state or 'snapshot' acts as the _baseline_, and a set of differences, or _delta_, between the _baseline_ and _current_ snapshots are sent to the client.
 
-(reader should understand that this is quite different to how TCP implements reliability, because we're not trying to resend lost packets, we're just trying to work out which packets got through and which didn't. this allows us to intellently construct packets with data that we know got through, and avoid resending data that we know did get through).
+This technique is relatively easy to implement because all the server needs to do is track the most recent snapshot received by each client, and generate deltas from that snapshot to the current. Similarly, all the client needs to do is keep a buffer of the last n snapshots received, so it can reconstruct snapshots by applying deltas on top of its cached copy of the baseline.
 
-# Delta Encoding
+When a priority accumulator is used delta encoding becomes more complicated.
 
-(reader should understand two different ways to do delta encoding, the first is frame based, where the entire frame is encoded relative to a previous frame, which is reasonably simple, the other is the method we use here, where the sender needs to track per-object what the most recent update it received was, if any, so future updates can be encoded relative to the most recent update the other side received for each object. this has to work even under packet loss, and has to work on join, where the other side hasn't received any state for objects yet).
+Now the server (or authority-side) can't simply encode objects relative to a previous snapshot number, because not all objects are included in each packet. Instead,  the baseline must be specified _per-object_, so the receiver knows which state the object was encoded relative to.
 
-Need to encode relative to previous state.
+The supporting systems and data structures are also much more complicated:
 
-Delta buffer concept. Two sides, store most recent state received, but also store history of n states that it might be encoded relative to, up to some maximum history. on the sender side, if the baseline state is too old, don't bother encoding relative and send absolute, that way it self corrects if the baseline ever gets too far behind, and we don't have to waste memory storing multiple seconds worth of history per-object).
+1. A reliability system is required that can report back to the sender which packets were received, not just the most recently received snapshot #.
 
-Describe delta buffer data structure and how it works.
+2. The sender needs to track a ring-buffer of states sent per-object, so it can map packet level acks to sent states and update the most recently acked state per-object.
 
-...
+3. The receiver needs to track a ring-buffer of received states per-object, so it can reconstruct object state from the delta.
+
+But ultimately it's worth the extra complexity, because this system combines the flexibility of being able to specify a dynamic maximum packet size, and the bandwidth savings of delta compression, which we can be an order of magnitude improvement.
 
 # Delta Not Changed
 
