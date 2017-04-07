@@ -165,11 +165,25 @@ Now to get objects to property come to rest, disable the PhysX at rest calculati
 
 # Priority Accumulator
 
-Moving forward with bandwidth optimization ...
+The next biggest optimization is to add the ability to send only a subset of objects per-packet. This gives us fine control over the amount of bandwidth we send, by setting a maximum packet size and sending only the set of state updates that fit in each packet.
 
-(reader should understand that sending all objects every frame may not fit into bandwidth budget, even with quantized state, especially when a lot of objects are changing. the way to solve this is to send only a subset of cube states in each packet, and use a priority accumulator to work out which updates to send each frame. this way updates are distributed fairly across all objects in the scene).
+How it works in practice:
 
-Recent high velocity impact boost. Check over priority function for anything more interesting. perhaps mention -1 priority accumulator value meaning, don't send this object. we'll use this later.
+1. Each object has a _priority factor_ which is calculated each frame. Higher values are more likely to be sent. Negative values mean _"don't send this object"_.
+
+2. If the priority factor is positive, it's added to the _priority accumulator_ value for that object. This value persists between simulation updates such that the priority accumulator increases each frame, such that objects with higher priority rise faster than objects with low priority.
+
+3. Negative priority factors clear the priority accumulator to -1.0.
+
+4. When a packet is sent, the set of objects are sorted in order of highest priority accumulator to lowest. The first n objects are selected from the set to become the set of objects to potentially include in the packet. Objects with negative priority accumulator values are excluded from this set.
+
+5. The packet is written and objects are serialized to the packet in order of importance. Not all state updates may fit in the packet, since object updates have a variable encoding depending on their current state (at rest vs. not at rest). Therefore the packet serialization returns to the caller a flag per-object indicating whether it was included in the packet.
+
+6. Priority accumulator values for objects sent in the packet are cleared to 0.0, giving other objects fair a chance to be included in the next packet.
+
+For this demo I found some value in boosting priority for cubes recently involved in high energy collisions, since high energy collision was the largest source of divergence due to non-deterministic results.
+
+Somewhat counter-intuitively, I found that reducing priority for at rest objects gave bad results. My theory is that since the simulation runs on both sides, at rest objects would get nudged slightly out of sync and not be corrected quickly enough, leading to divergence when other cubes collide with the at rest objects.
 
 # Reliability
 
