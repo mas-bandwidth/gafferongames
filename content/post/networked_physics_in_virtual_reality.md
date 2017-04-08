@@ -151,7 +151,7 @@ This is done on both the authority and non-authority sides. Now the extrapolatio
 
 But quantizing the state has some _very interesting_ side-effects...
 
-1. PhysX doesn't really like you forcing the state of each rigid body at the start of every frame and it makes sure you know by taking up a bunch of CPU.
+1. PhysX doesn't really like you forcing the state of each rigid body at the start of every frame and it lets you know by taking up a bunch of CPU.
 
 2. Quantization adds error to position which PhysX tries very hard to correct, snapping objects immediately out of penetration.
 
@@ -159,15 +159,15 @@ But quantizing the state has some _very interesting_ side-effects...
 
 4. Although objects in large stacks _seem_ to be at rest, they are actually jittering by small amounts, visible only in the editor as tiny fluctuations as objects repeatedly try to resolve penetration due to quantization, or are quantized just above a resting surface and fall towards it.
 
-While we can't do much about PhysX CPU usage, the solution for penetration is to set _maxDepenetrationVelocity_ on each rigid body, limiting the velocity that objects are pushed apart with.
+While we can't do much about PhysX CPU usage, the solution for penetration is to set _maxDepenetrationVelocity_ on each rigid body, limiting the velocity that objects are pushed apart with. 1 meter per-second seems to work well.
 
 Now to get objects to property come to rest, disable the PhysX at rest calculation and replace it with a ring-buffer of positions and orientations for each object. If an object has not moved or rotated significantly in the last 16 frames, force it to rest. Problem solved.
 
 # Priority Accumulator
 
-The next biggest optimization is to add the ability to send only a subset of objects per-packet. This gives us fine control over the amount of bandwidth we send, by setting a maximum packet size and sending only the set of state updates that fit in each packet.
+The next biggest optimization is to add the ability to send only a subset of objects per-packet. This gives us fine control over the amount of bandwidth we send, by setting a maximum packet size and sending only the set of updates that fit in each packet.
 
-How it works in practice:
+Here's how it works in practice:
 
 1. Each object has a _priority factor_ which is calculated each frame. Higher values are more likely to be sent. Negative values mean _"don't send this object"_.
 
