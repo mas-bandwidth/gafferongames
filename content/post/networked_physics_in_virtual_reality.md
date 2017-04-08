@@ -222,39 +222,19 @@ When the prediction was less than perfect a small error offset encodes the diffe
 
 ----------------------------
 
-(reader should understand that we can send the linear difference between baseline position and current position as an offset, and the same for linear and angular velocity. reader should understand that we can encode this with the 0, -1, +1, -2, +2 mapping to make compression easier, but that compressing variable sized deltas is pretty inefficient with bitpacking, and would be better compressed with arithmetic or range encoding, but it's still a win, the trick is to use the least bits for the most statistically common differences).
-
-(reader should also understand that orientation is not delta compressed. smallest 3 representation is a poor choice of rotation representation for delta encoding, because as an object rotates you can have a different set of smallest 3 components in the quaternion, hence they're not guaranteed to always be close to each other. a different representation of rotation would be better.)
-
-# Delta Prediction
-
 (reader should understand that while a cube is moving ballistically in the air, we can predict roughly where it will be, and encode a small error relative to where its predicted future position, linear and angular velocity values would be. if the prediction is good, the difference will be smaller on average than the actual difference in the values, especially when objects are moving or rotating quickly. obviously the prediction is not going to be good if the object actually collides with something (another cube, or the ground) between the baseline and current state).
 
 linear prediction worked great. was able to match physX calculation very closely. in many cases, the prediction was perfect.
 
-fixed point math required for reproducibility. otherwise, the calculation could come out with a sligthly different value on the other side, and destabilize stacks. so all prediction math written in high precision fixed point math.
+(fixed point math required for reproducibility. otherwise, the calculation could come out with a sligthly different value on the other side, and destabilize stacks. so all prediction math written in high precision fixed point math.)
 
 (gave up predicting rotation, smallest 3 linear instability, would not compress and reconstruct to the same values reliabily, if it doesn't decompress to same values, then it's not a good representation for doing a delta prediction).
 
-...
-
-# Limits of Delta Compression
-
-(reader should understand that entropy exists, and there is a limit to how much compression can be applied. no matter what I did, the big stack when they all fell was expensive, because it had a lot of very random collisions and interactions at high speed, so it was a worst case. however, the majority of common cases were extremely efficient past that point, eg. thrown objects predicted ballistic trajectory and almost zero cost, stationary cubes almost zero cost, slowly moving objects almost zero cost etc.)
-
-Graph of bandwidth savings.
-
-Common case great. Initial drop of all the cubes at the start, so random, not much I can do to improve, no matter how hard I try to delta encode.
-
-Show some cool graphs.
-
-...
-
-------
-
-(Kindof almost feels like a part 2 here... at least there needs to be a turn...)
+-------------------------------
 
 # Interactivity
+
+(this section is too detailed, and will break the flow, and lead to a lot of "I" talk... show don't tell. this section is best explained by trying the demo, and writing something for players to know the controls).
 
 (reader should understand the design constraints and what we are aiming at, and how the user can grab, throw, place and interact with cubes. would be good for the user to understand why making cubes non-physical why being held was a slam dunk, and some of the cool stuff like the recursive walk to transmit authority, having to detect support objects when you pull an object out from the bottom of a stack, so objects above it wake up, and so on..., also the calculations for throwing an object, including spin would be good to explain, plus the competing requirements for placing objects at a distance vs. throwing them and the zoom to hand and how that solves the movement problem in VR, eg. stops you punching through walls and your monitor in VR, eg. bring the world to you, vs. you going to the world).
 
@@ -289,6 +269,8 @@ Walking Interactions
 ...
 
 # Client/Server
+
+^--- perhaps combine or remove this section, or combine with conflict resolution. sounds like it's going to break the flow.
 
 (reader should understand that when we go above two players, we need to decide on a topology, client/server or peer-to-peer, and we need to decide between dedicated servers, player hosted server as well. pros and cons of each and why we went with client/server.)
 
