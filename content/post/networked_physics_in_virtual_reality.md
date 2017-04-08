@@ -221,45 +221,43 @@ In a few days of tweaking and experimentation, I was able to write a ballistic p
 
 In the time I had to spend on this, I not able to get a good predictor for rotation. I blame this on the smallest three representation, which is numerically unstable, especially in fixed point. In the future, I would not use the smallest three representation for quantized rotations.
 
-It was also painfully obvious while encoding deltas and error offsets for predictions that a bit-packer is not the best representation for these quantities. Something like a range coder or arithmetic compressor that was able to encode fractional bits, and dynamically adjust to the average size of differences in the scene would give much better results.
+It was also painfully obvious while encoding differences and error offsets that a bit-packer is not the best representation for these quantities. Something like a range coder or arithmetic compressor that can encode fractional bits, and dynamically adjust to the average size of differences in the scene would give much better results.
 
 # Synchronizing Avatars
 
-(something to indicate client/server topology, with one player acting as host, 3 players acting as guests).
+Now that bandwidth is under control, how can we synchronize player avatars?
 
-(reader should understand that we synchronize avatars by sending local position and rotation for head, hands, and while a cube is held by an avatar, it is synchronized as part of the avatar state, and is not sent via the regular priority accumulator state, eg. -1 priority accumulator update for that object).
+(avatar state is sent per-packet, with the position and rotation for the avatar head, and each hand).
+
+(something about how the avatar grabbing and throwing cubes basically works)
+
+(while a cube is parented to a player hand, it has its priority factor set to -1, so it's not sent as part of the regular state update)
+
+(instead, cube id sent with avatar state per-hand, plus relative position/rotation of cube from hand).
+
+(in remote view, cube is attached to hand if an avatar update comes in with that cube attached to a hand, and is detached when it comes in from a regular state update with the rest of the cubes).
 
 # Conflict Resolution
 
-_(jesus this section is going to be complicated, but this is really the payload for the whole article. make it count)_
+(need to establish topology: host/guest)
 
-# Loose Ends
+(establish direction of flow, how cubes are sent, avatar state is sent, diagrams)
 
-...
+(refine down to guests only sending objects they think they have authority over, own, and rejecting updates over objects they think they own).
 
-### 60HZ vs. 90HZ
+(server corrections, authority sequence numbers, ownership sequence numbers.)
 
-_(reader should understand concept of unity FixedUpdate vs. Update, interpolation of state for render, and why this is a good thing, but adds jitter)_
+(break it down into server rules, point form).
 
-### Jitter Buffer
+(break it down into guest rules, point form).
 
-_(reader should understand that we can do better than just smoothing, if we implement a jitter buffer. because we don't use smoothing to fix temporaly differences, +/- 1-2 frames, but only when there is an actual difference between the two simulations, eg. a pop).
-
-(reader should understand that the network dosen't deliver packets sent n times per-second nicely spaced apart exactly 1/n seconds, they are jittered, a bit early, a bit late. to solve this we can trade some added latency for smoothness, eg. 100ms, and store packets in a buffer, recovering them at the nice 1/n interval we want. we can also use the jitter buffer to recover avatar state at render time, which is not necessarily lined up with physics time, by storing the sample time on the sender side of the avatar state, and interpolating between the two nearest sample states in the remote view to reconstruct the avatar pose at remote view render time exactly).
-
-(good opportunity to show videos without jitter buffer, with jitter buffer, remote avatar etc.)
-
-(future work: jitter buffer should adapt to handle drift.)_
-
-...
-
-### Smoothing
-
-_(reader should understand that we can apply basic smoothing by making the physical object invisible, and having a smoothed cube follow the physical object, but *not* smoothing in world space (eg. lowpass), instead, tracking the position and rotation error offsets when a network update arrives that is at a different place to the current logical position, such that this error is reduced over time, instead of visibly popping.)_
+sum it up.
 
 # Conclusion
 
-Sum up everything done, in order. Key points required to get it working.
+Sum up everything done.
+
+Conclusion: It's possible to network stable stacks with PhysX and Unity.
 
 (call to action: Link once again to demo. Try it out yourself.)
 
