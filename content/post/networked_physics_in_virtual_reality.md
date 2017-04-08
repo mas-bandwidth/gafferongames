@@ -227,13 +227,13 @@ It was also painfully obvious while encoding differences and error offsets that 
 
 Now that bandwidth is under control, how can we synchronize player avatars?
 
-Avatars are represented by a head and two hands driven by the tracked players headset and touch controllers. We capture the position and rotations of the avatar components in _FixedUpdate_ along the rest of the physics state, but avatar state is sampled from the hardware at render framerate in _Update_. 
+Avatars are represented by a head and two hands driven by the tracked headset and touch controllers. We capture the position and rotations of the avatar components in _FixedUpdate_ along the rest of the physics state, but avatar state is actually sampled from the hardware at render framerate in _Update_.
 
-This causes jitter when the avatar state is applied on the other side, because it doesn't line up with _FixedUpdate_ or _Update_ time on that machine. To solve this, we store the difference between the physics time and last render time when we sample avatar state, so we can reconstruct the time of the avatar sample on the other side. 
+This causes jitter when the avatar state is applied on the other side, because the avatar state doesn't line up with _FixedUpdate_ on that machine. To solve this, we store the difference between physics and render time when we sample avatar state, so we can reconstruct the time of the avatar sample on the other side. 
 
-Next a jitter buffer with 100ms delay is used, which solves both network jitter from time variance in delivery of state update packets, and enables interpolation between avatar states. Physics state is applied in _FixedUpdate_ time, while avatar state is applied at render time in _Update_ by interpolating between the two nearest samples in the jitter buffer, considering their actual sample time.
+Next, a jitter buffer with 100ms delay is applied to received packets, solving network jitter from time variance in delivery of packets and enabling interpolation between avatar states. Physics state is applied to the simulation in _FixedUpdate_, while avatar state is applied at render time in _Update_ by interpolating between the two nearest samples in the jitter buffer.
 
-While a cube is parented in an avatar hand, its _priority factor_ is set to -1, stopping it from being sent with regular physics state updates. Instead, while a cube is held by a player, its cube id and relative position and rotation are sent as part of the avatar state. Cubes are attached to the avatar hand in the remote view when the first avatar state arrives for a cube, and detached when regular physics state updates resume.
+While a cube is parented in an avatar hand, its _priority factor_ is set to -1, stopping it from being sent with regular physics state updates. Instead, while a cube is held by a player, its cube id and relative position and rotation are sent as part of the avatar state. Cubes are attached to the avatar hands in the remote view when the first avatar state arrives with that cube parented to a hand, and detached when regular physics state updates resume.
 
 # Conflict Resolution
 
