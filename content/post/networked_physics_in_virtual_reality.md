@@ -211,135 +211,51 @@ But ultimately it's worth the extra complexity, because this system combines the
 
 The simplest form of delta encoding is to send objects that haven't changed from the baseline value as just one bit: _not changed_. This is also the easiest gain you'll ever see, because most of the time, the majority of objects are at rest.
 
-A more advanced strategy is to encode the _difference_ between the current and baseline values, aiming to encode small differences with fewer bits. For example, delta position could be (-1,+23,+4) from baseline. This works well for differences in linear values, but breaks down somewhat for deltas of the smallest three quaternion representation, as the largest component of a quaternion is often different between the baseline and current rotation.
+A more advanced strategy is to encode the _difference_ between the current and baseline values, aiming to encode small differences with fewer bits. For example, delta position could be (-1,+23,+4) from baseline. This works well for linear values, but breaks down somewhat for deltas of the smallest three quaternion representation, as the largest component of a quaternion is often different between the baseline and current rotation.
 
-Encoding the difference gives some gains, but it's not an order of magnitude win like not changed. This is because in many cases falling objects move quickly, so the difference in their values becomes large enough to negate most gains. This is especially true in the case where all objects falling from the sky into a big pile, which is arguably where we need bandwidth reductions the most.
+So while encoding the difference gives some gains, it's not an order of magnitude like _not changed_. This is because in many cases objects move quickly, so the difference in their values becomes large enough to negate most gains. This is especially true in the case where objects are falling from the sky, which is arguably where bandwidth reductions are needed the most.
 
-The final strategy is that of predicting the future state and then encoding the error relative to it. This is complicated somewhat by the fact that the predictor must be written in fixed point, because floating point calculations are not necessarily guaranteed to be deterministic, especially between different platforms and hardware. But it's definitely achievable. In a few days of tweaking and experimentation, I was able to write an accurate predictor for position, linear and angular velocity that matched the future result to quantization resolution more than 90% of the time as objects fell. Encoding these objects was therefore easy, another bit _perfect prediction_.
+The most advanced strategy is to use prediction. In this approach, the current state is predicted from the baseline state, assuming that the object is moving ballistically under acceleration due to gravity. This is complicated somewhat by the fact that the predictor must be written in fixed point, because floating point calculations are not necessarily guaranteed to be deterministic, but it's definitely achievable.
 
-When the prediction was less than perfect a small error offset encodes the difference between the values predicted from the baseline and their true values. In the case of collision, 
+In a few days of tweaking and experimentation, I was able to write a ballistic predictor for position, linear and angular velocity that matched the PhysX integrator within quantize resolution about 90% of the time. These lucky objects are encoded with another bit: _perfect prediction_. For the cases where the prediction doesn't match, a small error offset is sent.
 
+In the time I had to spend on this, I not able to get a good predictor for rotation. I blame this on the smallest three representation, which is numerically unstable, especially in fixed point. In the future, I would not use the smallest three representation for quantized rotations.
 
-----------------------------
-
-(reader should understand that while a cube is moving ballistically in the air, we can predict roughly where it will be, and encode a small error relative to where its predicted future position, linear and angular velocity values would be. if the prediction is good, the difference will be smaller on average than the actual difference in the values, especially when objects are moving or rotating quickly. obviously the prediction is not going to be good if the object actually collides with something (another cube, or the ground) between the baseline and current state).
-
-linear prediction worked great. was able to match physX calculation very closely. in many cases, the prediction was perfect.
-
-(fixed point math required for reproducibility. otherwise, the calculation could come out with a sligthly different value on the other side, and destabilize stacks. so all prediction math written in high precision fixed point math.)
-
-(gave up predicting rotation, smallest 3 linear instability, would not compress and reconstruct to the same values reliabily, if it doesn't decompress to same values, then it's not a good representation for doing a delta prediction).
-
--------------------------------
-
-# Interactivity
-
-(this section is too detailed, and will break the flow, and lead to a lot of "I" talk... show don't tell. this section is best explained by trying the demo, and writing something for players to know the controls).
-
-(reader should understand the design constraints and what we are aiming at, and how the user can grab, throw, place and interact with cubes. would be good for the user to understand why making cubes non-physical why being held was a slam dunk, and some of the cool stuff like the recursive walk to transmit authority, having to detect support objects when you pull an object out from the bottom of a stack, so objects above it wake up, and so on..., also the calculations for throwing an object, including spin would be good to explain, plus the competing requirements for placing objects at a distance vs. throwing them and the zoom to hand and how that solves the movement problem in VR, eg. stops you punching through walls and your monitor in VR, eg. bring the world to you, vs. you going to the world).
-
-Grab, throw, stacking etc.
-
-    - layers, making cube not physical while held, big part of believability of interactions, counterintuitive.
-
-Throwing vs. placing.
-
-    - inheriting velocity for throwing vs. stacking.
-
-Rotate, zoom, snap to hand.
-
-Concept of ownership vs. authority.
-
-Thrown objects, hitting objects, stacking.
-
-Walking Interactions
-
-(Recursive walk interacting objects, transmit authority).
-
-(Return to color at rest for a period of time).
-
-(Interesting notes, pulling objects from under stacks, requires manually waking objects above, manual walk for objects with height above threshold of object removed. Otherwise they hang there!)
-
-...
+It was also painfully obvious while encoding deltas and error offsets for predictions that a bit-packer is not the best representation for these quantities. Something like a range coder or arithmetic compressor that was able to encode fractional bits, and dynamically adjust to the average size of differences in the scene would give much better results.
 
 # Synchronizing Avatars
 
+(something to indicate client/server topology, with one player acting as host, 3 players acting as guests).
+
 (reader should understand that we synchronize avatars by sending local position and rotation for head, hands, and while a cube is held by an avatar, it is synchronized as part of the avatar state, and is not sent via the regular priority accumulator state, eg. -1 priority accumulator update for that object).
-
-...
-
-# Client/Server
-
-^--- perhaps combine or remove this section, or combine with conflict resolution. sounds like it's going to break the flow.
-
-(reader should understand that when we go above two players, we need to decide on a topology, client/server or peer-to-peer, and we need to decide between dedicated servers, player hosted server as well. pros and cons of each and why we went with client/server.)
-
-(reader should understand that the player who starts the game is the "host" and they are different to "guests" who join the game. the host arbitrates authority for all guests, the guests only care about objects they are interacting with, and other objects are sent from the host to guests).
-
-Introduce client/server topology and how it works. Not peer-to-peer.
-
-(Necessary to buy into concept of host/guest, because host is arbiter of authority).
-
-(Note that host could be a separate machine, eg. dedicated server, and in fact would be a lot cleaner in this case).
-
-...
 
 # Conflict Resolution
 
-(jesus this section is going to be complicated)
+_(jesus this section is going to be complicated, but this is really the payload for the whole article. make it count)_
 
-Boy this will be a complicated section. Might need to be broken down into sub-parts. Majority of the meat here. Holy shit.
-
-I'm going to have to get this all back in my head. Might be tricky to do so. It's really complicated
-
-(interaction override, eg. throwing a cube at a stack from another player, while it's their color, take over authority, key to design).
-
-
----------
-
-(kindof like a turn to part three here? not sure yet).
+# Loose Ends
 
 ...
 
-# 60HZ vs. 90HZ
+### 60HZ vs. 90HZ
 
-(reader should understand concept of unity FixedUpdate vs. Update, interpolation of state for render, and why this is a good thing, but adds jitter)
+_(reader should understand concept of unity FixedUpdate vs. Update, interpolation of state for render, and why this is a good thing, but adds jitter)_
 
-# Real World Networking
+### Jitter Buffer
 
-(What to expect over the real world, eg. why is it so jittery! best effort delivery. no guarantee of nicely spaced packets etc. what this means for smoothness, eg. time shift of physics state and when its applied. also, the 60/90HZ render and physcis update separation is also a source of jitter in Unity).
-
-...
-
-# Smoothing
-
-(reader should understand that we can apply basic smoothing by making the physical object invisible, and having a smoothed cube follow the physical object, but *not* smoothing in world space (eg. lowpass), instead, tracking the position and rotation error offsets when a network update arrives that is at a different place to the current logical position, such that this error is reduced over time, instead of visibly popping.)
-
-good opportunity to show some videos.
-
-(ideally, diagrams showing how I implemented it with a parented object, and then unparent in unity, and manually in LateUpdate force its position relative to parent, this is because i want the error offsets in world space, not local space. otherwise, the position error would spin around a rotating object and look non-physical).
-
-# Jitter Buffer
-
-(reader should understand that we can do better than just smoothing, if we implement a jitter buffer. because we don't use smoothing to fix temporaly differences, +/- 1-2 frames, but only when there is an actual difference between the two simulations, eg. a pop).
+_(reader should understand that we can do better than just smoothing, if we implement a jitter buffer. because we don't use smoothing to fix temporaly differences, +/- 1-2 frames, but only when there is an actual difference between the two simulations, eg. a pop).
 
 (reader should understand that the network dosen't deliver packets sent n times per-second nicely spaced apart exactly 1/n seconds, they are jittered, a bit early, a bit late. to solve this we can trade some added latency for smoothness, eg. 100ms, and store packets in a buffer, recovering them at the nice 1/n interval we want. we can also use the jitter buffer to recover avatar state at render time, which is not necessarily lined up with physics time, by storing the sample time on the sender side of the avatar state, and interpolating between the two nearest sample states in the remote view to reconstruct the avatar pose at remote view render time exactly).
 
 (good opportunity to show videos without jitter buffer, with jitter buffer, remote avatar etc.)
 
-(future work: jitter buffer should adapt to handle drift.)
+(future work: jitter buffer should adapt to handle drift.)_
 
 ...
 
-# Throwing
+### Smoothing
 
-Might be cool to discuss the final pass changes to throwing necessary to get it feeling good.
-
-...
-
-# Future Work
-
-(interpolation in remote view, simulation rewind and rollback, possibly a subset of simulation could be rolled back only, having basically the same properties as this authority scheme, but having server authoritative physics. gain: security, loss: in cases where players interact with the same stack, or both throw an object at a stack. dedicated servers for physics simulation, quantizing rotation to a different representation than smallest 3, eg. quantized 4, prediction of PhysX simulation including rotation)
+_(reader should understand that we can apply basic smoothing by making the physical object invisible, and having a smoothed cube follow the physical object, but *not* smoothing in world space (eg. lowpass), instead, tracking the position and rotation error offsets when a network update arrives that is at a different place to the current logical position, such that this error is reduced over time, instead of visibly popping.)_
 
 # Conclusion
 
