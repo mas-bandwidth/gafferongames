@@ -227,15 +227,13 @@ It was also painfully obvious while encoding differences and error offsets that 
 
 Now that bandwidth is under control, how can we synchronize player avatars?
 
-(avatar state is sent per-packet, with the position and rotation for the avatar head, and each hand).
+Avatars are represented by a head and two hands driven by the tracked players headset and touch controllers. We capture the position and rotations of the avatar components in _FixedUpdate_ along the rest of the physics state, but avatar state is sampled from the hardware at render framerate in _Update_. 
 
-(something about how the avatar grabbing and throwing cubes basically works)
+This causes jitter when the avatar state is applied on the other side, because it doesn't line up with _FixedUpdate_ or _Update_ time on that machine. To solve this, we store the difference between the physics time and last render time when we sample avatar state, so we can reconstruct the time of the avatar sample on the other side. 
 
-(while a cube is parented to a player hand, it has its priority factor set to -1, so it's not sent as part of the regular state update)
+Next a jitter buffer with 100ms delay is used, which solves both network jitter from time variance in delivery of state update packets, and enables interpolation between avatar states. Physics state is applied in _FixedUpdate_ time, while avatar state is applied at render time in _Update_ by interpolating between the two nearest samples in the jitter buffer, considering their actual sample time.
 
-(instead, cube id sent with avatar state per-hand, plus relative position/rotation of cube from hand).
-
-(in remote view, cube is attached to hand if an avatar update comes in with that cube attached to a hand, and is detached when it comes in from a regular state update with the rest of the cubes).
+While a cube is parented in an avatar hand, its _priority factor_ is set to -1, stopping it from being sent with regular physics state updates. Instead, while a cube is held by a player, its cube id and relative position and rotation are sent as part of the avatar state. Cubes are attached to the avatar hand in the remote view when the first avatar state arrives for a cube, and detached when regular physics state updates resume.
 
 # Conflict Resolution
 
