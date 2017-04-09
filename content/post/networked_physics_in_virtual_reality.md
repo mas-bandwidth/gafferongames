@@ -261,23 +261,23 @@ Now consider the case of a host and three guests:
 
 _(diagram showing host and three guests in client/server topology)_
 
-As you can see, this is a client/server topology rather than peer-to-peer. The host acts as the server, making the host the _arbiter_. In other words, since all state updates flow through the host, it decides which state updates to accept, and which to ignore and subsequently correct.
+As you can see, this is a client/server topology rather than peer-to-peer. In this topology, all packets flow through the host, making the host the _arbiter_. In other words, the host decides which state updates to accept, and which to ignore and subsequently correct.
 
-But to do this, the host needs a way to actually correct the client. Unlike client-side prediction, where guests continuously accept corrections from the server, guests _ignore_ updates from the server for objects they have authority or ownership over. So we need some way to 
+To apply these corrections we need some way for the host to override guests and say, no, you don't have authority or ownership, and you should accept this update. We also need some way for the host to determine _ordering_ for guest interactions with the world, so if one client experiences a burst of lag and delivers a bunch of packets late, these packets won't take precedence over more recent actions from other guests.
 
-...
+This is done with two sequence numbers:
 
-(server corrections, authority sequence numbers, ownership sequence numbers.)
+1. Authority sequence
 
-(break it down into rules for host and guest...)
+2. Ownership sequence
 
-(confirming at rest logic...)
+These sequence numbers are sent along with each state update and included in avatar state when cubes are held by players. They are used by the host to determine if it should accept an update from guests, and by guests to determine if the state update from the server is more recent and should be accepted, even when that guest thinks it already has authority or ownership over that object.
 
-(something about per-guest sequence number, ideally)
+Authority sequence increments each time a player takes authority over an object and when any object under authority of a player comes to rest. When an object has authority on a guest machine, it hold authority on that machine until it receive _confirmation_ from the host before returning to default authority. This ensures that the final at rest state for objects under guest authority are committed back to the host, even under significant packet loss.
 
-# End Result
+Ownership sequence increments each time a player grabs an object, and once again  again when that object is released. Ownership sequence is stronger that authority, such that an increase in ownership wins out over an increase in sequence number. Fqr example, if a player interacts with an object, just before another player grabs it, the player who grabbed it wins. This makes sense, because grabbing an object and subsequently losing it is disruptive.
 
-...
+These rules are sufficient resolve conflicts, while letting host and guest players can interact with the world lag free. Corrections are rare in practice, and when they occur, the simulation quickly converges to a consistent state.
 
 # Conclusion
 
