@@ -227,7 +227,7 @@ It was also painfully obvious while encoding differences and error offsets that 
 
 # Synchronizing Avatars
 
-Now that bandwidth is well under control, how can we synchronize avatars?
+Now that bandwidth is under control, how can we synchronize avatars?
 
 Avatars are represented by a head and two hands driven by the tracked headset and touch controllers. We capture the position and rotations of the avatar components in _FixedUpdate_ along the rest of the physics state, but avatar state is actually sampled from the hardware at render framerate in _Update_.
 
@@ -257,11 +257,27 @@ Despite this, it's possible for two players to predictively take authority or ow
 
 # Resolving Conflicts
 
+Now consider the case of a host and three guests:
+
+_(diagram showing host and three guests in client/server topology)_
+
+As you can see, this is a client/server topology rather than peer-to-peer. The host acting as the server, making the host the _arbiter_. In other words, since all state updates flow through the host, it decides which state updates to accept, and which to ignore and subsequently correct.
+
+But to do this, the host needs a way to actually correct the client. Unlike client-side prediction, where guests continuously accept corrections from the server, guests _ignore_ updates from the server for objects they have authority or ownership over. So we need some way to 
+
+...
+
 (server corrections, authority sequence numbers, ownership sequence numbers.)
 
 (break it down into rules for host and guest...)
 
 (confirming at rest logic...)
+
+(something about per-guest sequence number, ideally)
+
+# End Result
+
+...
 
 # Conclusion
 
