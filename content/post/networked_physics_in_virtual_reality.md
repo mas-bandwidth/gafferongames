@@ -82,7 +82,7 @@ To do this, I came up with two concepts:
 1. Authority
 2. Ownership
 
-Authority is transmissive. Any object under the authority of a player transmits authority to objects it collides with, and those objects in turn transmit authority to objects they interact with. When objects come to rest, they return to default authority. Bonus points: if a stack is under authority of one player when another player throws an object at it, the more recently thrown object should take authority of the stack.
+Authority is transmissive. Any object under the authority of a player transmits authority to objects it collides with, and those objects in turn transmit authority to objects they interact with. When objects come to rest, they return to default authority.
 
 Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server confirms ownership) that player retains ownership until they release the object or disconnect from the game.
 
@@ -151,17 +151,17 @@ This is done on both the authority and non-authority sides. Now the extrapolatio
 
 But quantizing the state has some _very interesting_ side-effects...
 
-1. PhysX doesn't really like you forcing the state of each rigid body at the start of every frame and it lets you know by taking up a bunch of CPU.
+1. PhysX doesn't really like you forcing the state of each rigid body at the start of every frame and lets you know by taking up a bunch of CPU.
 
 2. Quantization adds error to position which PhysX tries very hard to correct, snapping objects immediately out of penetration.
 
 3. Rotations can't be represented exactly either, again causing penetration. Interestingly in this case, objects can get stuck in a feedback loop where they slide across the floor.
 
-4. Although objects in large stacks _seem_ to be at rest, they are actually jittering by small amounts, visible only in the editor as tiny fluctuations as objects repeatedly try to resolve penetration due to quantization, or are quantized just above a resting surface and fall towards it.
+4. Although objects in large stacks _seem_ to be at rest, they are actually jittering by small amounts, visible only in the editor as tiny fluctuations in state values as objects repeatedly try to resolve penetration due to quantization, or are quantized just above a resting surface and fall towards it.
 
 While we can't do much about PhysX CPU usage, the solution for penetration is to set _maxDepenetrationVelocity_ on each rigid body, limiting the velocity that objects are pushed apart with. 1 meter per-second seems to work well.
 
-Now to get objects to property come to rest, disable the PhysX at rest calculation and replace it with a ring-buffer of positions and orientations for each object. If an object has not moved or rotated significantly in the last 16 frames, force it to rest. Problem solved.
+To get objects to come to rest, disable the PhysX at rest calculation and replace it with a ring-buffer of positions and orientations for each object. If an object has not moved or rotated significantly in the last 16 frames, force it to rest.
 
 # Priority Accumulator
 
@@ -175,27 +175,27 @@ Here's how it works in practice:
 
 3. Negative priority factors clear the priority accumulator to -1.0.
 
-4. When a packet is sent, the set of objects are sorted in order of highest priority accumulator to lowest. The first n objects are selected from the set to become the set of objects to potentially include in the packet. Objects with negative priority accumulator values are excluded from this set.
+4. When a packet is sent, objects are sorted in order of highest priority accumulator to lowest. The first n objects are selected from the set to become the set of objects to potentially include in the packet. Objects with negative priority accumulator values are excluded.
 
-5. The packet is written and objects are serialized to the packet in order of importance. Not all state updates may fit in the packet, since object updates have a variable encoding depending on their current state (at rest vs. not at rest). Therefore the packet serialization returns to the caller a flag per-object indicating whether it was included in the packet.
+5. The packet is written and objects are serialized to the packet in order of importance. Not all state updates may fit in the packet, since object updates have a variable encoding depending on their current state (at rest vs. not at rest). Therefore the packet serialization returns to the caller a flag per-object indicating whether it was included.
 
 6. Priority accumulator values for objects sent in the packet are cleared to 0.0, giving other objects fair a chance to be included in the next packet.
 
-For this demo I found some value in boosting priority for cubes recently involved in high energy collisions, since high energy collision was the largest source of divergence due to non-deterministic results.
+For this demo I found some value in boosting priority for cubes recently involved in high energy collisions, since high energy collision was the largest source of divergence due to non-deterministic results. I also boosting priority for cubes recently thrown by players.
 
-Somewhat counter-intuitively, I found that reducing priority for at rest objects gave bad results. My theory is that since the simulation runs on both sides, at rest objects would get nudged slightly out of sync and not be corrected quickly enough, leading to divergence when other cubes collide with them.
+Somewhat counter-intuitively, reducing priority for at rest objects gave bad results. My theory is that since the simulation runs on both sides, at rest objects would get nudged slightly out of sync and not be corrected quickly enough, causing divergence when other cubes collide with them.
 
 # Delta Compression
 
 The next bandwidth reduction technique is _delta compression_.
 
-First person shooters often implement this by compressing the entire state of the world relative to a previous state. In this technique, a previous world state or 'snapshot' acts as the _baseline_, and a set of differences, or _delta_, between the _baseline_ and _current_ snapshots are sent down to the client.
+First person shooters often implement this by compressing the entire state of the world relative to a previous state. In this technique, a previous world state or 'snapshot' acts as the _baseline_, and a set of differences, or _delta_, between the _baseline_ and _current_ snapshots is generated and sent down to the client.
 
-This technique is relatively easy to implement because all the server needs to do is track the most recent snapshot received by each client, and generate deltas from that snapshot to the current. Similarly, all the client needs to do is keep a buffer of the last n snapshots received, so it can reconstruct snapshots by applying deltas on top of its cached copy of the baseline.
+This technique is relatively easy to implement because all the server needs to do is track the most recent snapshot received by each client, and generate deltas from that snapshot to the current. Similarly, all the client needs to do is keep a buffer of the last n snapshots received, so it can reconstruct snapshots by applying deltas on top of its copy of the baseline snapshot.
 
 When a priority accumulator is used delta encoding becomes more complicated.
 
-Now the server (or authority-side) can't simply encode objects relative to a previous snapshot number, because not all objects are included in each packet. Instead,  the baseline must be specified _per-object_, so the receiver knows which state the object was encoded relative to.
+Now the server (or authority-side) can't simply encode objects relative to a previous snapshot number, because not all objects are included in each packet. Instead,  the baseline must be specified _per-object_, so the receiver knows which state each object is encoded relative to.
 
 The supporting systems and data structures are also much more complicated:
 
@@ -205,51 +205,63 @@ The supporting systems and data structures are also much more complicated:
 
 3. The receiver needs to store a ring-buffer of received states per-object, so it can reconstruct the current object state from the delta.
 
-But ultimately it's worth the extra complexity, because this system combines the flexibility of being able to specify a dynamic maximum packet size, and the bandwidth savings of delta compression, which is a potent combination.
+But ultimately it's worth the extra complexity, because this system combines the flexibility of being able dynamically adjust bandwidth usage, with the orders of magnitude bandwidth improvements you get from delta encoding.
 
 # Delta Encoding
 
-The simplest form of delta encoding is to send objects that haven't changed from the baseline value as just one bit: _not changed_. This is also the easiest gain you'll ever see, because most of the time, the majority of objects are at rest.
+How do we actually encode the delta between object states?
+
+The simplest form of delta encoding is to encode objects that haven't changed from the baseline value as just one bit: _not changed_. This is also the easiest gain you'll ever see, because at any time most objects are at rest.
 
 A more advanced strategy is to encode the _difference_ between the current and baseline values, aiming to encode small differences with fewer bits. For example, delta position could be (-1,+23,+4) from baseline. This works well for linear values, but breaks down somewhat for deltas of the smallest three quaternion representation, as the largest component of a quaternion is often different between the baseline and current rotation.
 
-So while encoding the difference gives some gains, it's not an order of magnitude like _not changed_. This is because in many cases objects move quickly, so the difference in their values becomes large enough to negate most gains. This is especially true in the case where objects are falling from the sky, which is arguably where bandwidth reductions are needed the most.
+So while encoding the difference gives some gains, it's not an order of magnitude improvement like _not changed_. This is because in many cases objects move quickly, so the difference in their values becomes large enough to negate most gains. This is especially true in the case where objects are falling from the sky, which is arguably where bandwidth reductions are needed the most.
 
-The most advanced strategy is to use prediction. In this approach, the current state is predicted from the baseline state, assuming that the object is moving ballistically under acceleration due to gravity. This is complicated somewhat by the fact that the predictor must be written in fixed point, because floating point calculations are not necessarily guaranteed to be deterministic, but it's definitely achievable.
+The most advanced strategy is to use prediction. In this approach, the current state is predicted from the baseline state assuming that the object is moving ballistically under acceleration due to gravity. This is complicated somewhat by the fact that the predictor must be written in fixed point, because floating point calculations are not necessarily guaranteed to be deterministic, but it's definitely achievable.
 
-In a few days of tweaking and experimentation, I was able to write a ballistic predictor for position, linear and angular velocity that matched the PhysX integrator within quantize resolution about 90% of the time. These lucky objects are encoded with another bit: _perfect prediction_. For the cases where the prediction doesn't match, a small error offset is sent.
+In a few days of tweaking and experimentation, I was able to write a ballistic predictor for position, linear and angular velocity that matched the PhysX integrator within quantize resolution about 90% of the time. These lucky objects are encoded with another bit: _perfect prediction_. Another order of magnitude improvement. For cases where the prediction doesn't match exactly, a small error offset is sent.
 
-In the time I had to spend on this, I not able to get a good predictor for rotation. I blame this on the smallest three representation, which is numerically unstable, especially in fixed point. In the future, I would not use the smallest three representation for quantized rotations.
+In the time I had to spend, I not able to get a good predictor for rotation. I blame this on the smallest three representation, which is numerically unstable, especially in fixed point. In the future, I would not use the smallest three representation for quantized rotations.
 
-It was also painfully obvious while encoding differences and error offsets that a bit-packer is not the best representation for these quantities. Something like a range coder or arithmetic compressor that can encode fractional bits, and dynamically adjust to the average size of differences in the scene would give much better results.
+It was also painfully obvious while encoding differences and error offsets that a bitpacker was not the best way to read and write these quantities. Something like a range coder or arithmetic compressor that can represent fractional bits, and dynamically adjust to the average size of differences in the scene would give much better results.
 
 # Synchronizing Avatars
 
-Now that bandwidth is under control, how can we synchronize player avatars?
+Now that bandwidth is well under control, how can we synchronize avatars?
 
 Avatars are represented by a head and two hands driven by the tracked headset and touch controllers. We capture the position and rotations of the avatar components in _FixedUpdate_ along the rest of the physics state, but avatar state is actually sampled from the hardware at render framerate in _Update_.
 
-This causes jitter when the avatar state is applied on the other side, because the avatar state doesn't line up with _FixedUpdate_ on that machine. To solve this, we store the difference between physics and render time when we sample avatar state, so we can reconstruct the time of the avatar sample on the other side. 
+This causes jitter when the avatar state is applied on the other side, because the sample time doesn't line up with _FixedUpdate_ on that machine. To fix this, we store the difference between physics and render time when we sample avatar state, so we can reconstruct the time of the avatar sample on the other side. 
 
 Next, a jitter buffer with 100ms delay is applied to received packets, solving network jitter from time variance in delivery of packets and enabling interpolation between avatar states. Physics state is applied to the simulation in _FixedUpdate_, while avatar state is applied at render time in _Update_ by interpolating between the two nearest samples in the jitter buffer.
 
-While a cube is parented in an avatar hand, its _priority factor_ is set to -1, stopping it from being sent with regular physics state updates. Instead, while a cube is held by a player, its cube id and relative position and rotation are sent as part of the avatar state. Cubes are attached to the avatar hands in the remote view when the first avatar state arrives with that cube parented to a hand, and detached when regular physics state updates resume.
+While a cube is parented to an avatar hand, its _priority factor_ is set to -1, stopping it from being sent with regular physics state updates. Instead, its cube id and relative position and rotation are sent as part of the avatar state. Cubes are attached to the avatar hands in the remote view when the first avatar state arrives with that cube parented to a hand, and detached when regular physics state updates resume, corresponding to the cube being thrown or released.
 
-# Conflict Resolution
+# Bidirectional Flow
 
-(need to establish topology: host/guest)
+Now lets add another player on the right:
 
-(establish direction of flow, how cubes are sent, avatar state is sent, diagrams)
+_(diagram showing loopback scene with player on right)_
 
-(refine down to guests only sending objects they think they have authority over, own, and rejecting updates over objects they think they own).
+We'll call the this player the _guest_, and the original player the _host_.
+
+The guest takes authority and ownership of objects without waiting for acknowledgement from the host, which allows the guest to interact with the simulation with no latency. 
+
+Of course the host needs to see what the guest does, so the guest sends state for cubes it interacts with (has authority over) back to the host, plus the state for its avatar, which implicitly includes state for cubes held by the guest.
+
+_(diagram showing flow from guest -> host)_
+
+The host and guest both check the local state of cubes before taking authority and ownership. For example, the host won't take authority over an object already under authority of the guest and vice-versa, and players can't grab cubes already held by another player.
+
+Despite this, it's possible for two players to predictively take authority or ownership over the same object, because due to latency, each player aquires the object before seeing the action of the other player. Because of this, we need a way to resolve conflicts after the fact.
+
+# Resolving Conflicts
 
 (server corrections, authority sequence numbers, ownership sequence numbers.)
 
-(break it down into server rules, point form).
+(break it down into rules for host and guest...)
 
-(break it down into guest rules, point form).
-
-sum it up.
+(confirming at rest logic...)
 
 # Conclusion
 
