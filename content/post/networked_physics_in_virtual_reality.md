@@ -261,7 +261,7 @@ Now consider the case of a host and three guests:
 
 _(diagram showing host and three guests in client/server topology)_
 
-As you can see, this is a client/server topology rather than peer-to-peer. The host acting as the server, making the host the _arbiter_. In other words, since all state updates flow through the host, it decides which state updates to accept, and which to ignore and subsequently correct.
+As you can see, this is a client/server topology rather than peer-to-peer. The host acts as the server, making the host the _arbiter_. In other words, since all state updates flow through the host, it decides which state updates to accept, and which to ignore and subsequently correct.
 
 But to do this, the host needs a way to actually correct the client. Unlike client-side prediction, where guests continuously accept corrections from the server, guests _ignore_ updates from the server for objects they have authority or ownership over. So we need some way to 
 
