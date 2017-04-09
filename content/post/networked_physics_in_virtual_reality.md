@@ -281,13 +281,9 @@ These rules are sufficient resolve conflicts, while letting host and guest playe
 
 # Conclusion
 
-High quality networking can be achieved for networked physics simulations using an authority scheme.
+High quality networking with stable stacks of objects is possible with Unity and PhysX using an authority-based network model. This approach is best used for _cooperative experiences only_, as it does not provide the security of a server authoritative network model.
 
-Such an authority scheme is best used for _cooperative experiences_ only, as it does not provide the security of a server authoritative model.
-
-Such server side models may exist for VR, but they are most likely prohibitively expensive for rollbacks.
-
-Please try out the demo in VR [here](...), and if you have any questions, feel free to [contact me](/contact).
+Please check out the full source code for the demo [here](...) and feel free to [contact me](/contact) if you have any questions.
 
 ----- 
 
