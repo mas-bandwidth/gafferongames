@@ -137,7 +137,7 @@ A simple way to reduce bandwidth is to recognize when objects are at rest, and i
         [angular_velocity] (vector3)
     }
 
-This is a straightforward optimization that saves bandwidth in the common case because at any time most objects are at rest. It's also a _lossless_ technique because it doesn't change the the state sent over the network in any way.
+This is a straightforward optimization that saves bandwidth in the common case because at any time most objects are at rest. It's also a _lossless_ technique because it doesn't change the state sent over the network in any way.
 
 To optimize bandwidth further we need to use _lossy techniques_. This means we reduce the precision of the physics state when it's sent over the network. For example, we could bound position in some min/max range and quantize it to a precision of 1/1000th of a centimeter. We can use the same approach for linear and angular velocity, and for rotation we can use the _smallest three representation_ of a quaternion.
 
@@ -195,7 +195,7 @@ This technique is relatively easy to implement because all the server needs to d
 
 When a priority accumulator is used delta encoding becomes more complicated.
 
-Now the server (or authority-side) can't simply encode objects relative to a previous snapshot number, because not all objects are included in each packet. Instead,  the baseline must be specified _per-object_, so the receiver knows which state each object is encoded relative to.
+Now the server (or authority-side) can't simply encode objects relative to a previous snapshot number, because not all objects are included in each packet. Instead, the baseline must be specified _per-object_, so the receiver knows which state each object is encoded relative to.
 
 The supporting systems and data structures are also much more complicated:
 
@@ -211,7 +211,7 @@ But ultimately it's worth the extra complexity, because this system combines the
 
 How do we actually encode the delta between object states?
 
-The simplest form of delta encoding is to encode objects that haven't changed from the baseline value as just one bit: _not changed_. This is also the easiest gain you'll ever see, because at any time most objects are at rest.
+The simplest way is to encode objects that haven't changed from the baseline value as just one bit: _not changed_. This is also the easiest gain you'll ever see, because at any time most objects are at rest.
 
 A more advanced strategy is to encode the _difference_ between the current and baseline values, aiming to encode small differences with fewer bits. For example, delta position could be (-1,+23,+4) from baseline. This works well for linear values, but breaks down somewhat for deltas of the smallest three quaternion representation, as the largest component of a quaternion is often different between the baseline and current rotation.
 
@@ -253,7 +253,7 @@ _(diagram showing flow from guest -> host)_
 
 The host and guest both check the local state of cubes before taking authority and ownership. For example, the host won't take authority over an object already under authority of the guest and vice-versa, and players can't grab cubes already held by another player.
 
-Despite this, it's possible for two players to predictively take authority or ownership over the same object, because due to latency, each player aquires the object before seeing the action of the other player. Because of this, we need a way to resolve conflicts after the fact.
+Despite this, it's possible for two players to predictively take authority or ownership over the same object, because due to latency, each player acquires the object before seeing the action of the other player. Because of this, we need a way to resolve conflicts after the fact.
 
 # Resolving Conflicts
 
@@ -265,23 +265,23 @@ As you can see, this is a client/server topology rather than peer-to-peer. In th
 
 To apply these corrections we need some way for the host to override guests and say, no, you don't have authority or ownership, and you should accept this update. We also need some way for the host to determine _ordering_ for guest interactions with the world, so if one client experiences a burst of lag and delivers a bunch of packets late, these packets won't take precedence over more recent actions from other guests.
 
-This is done with two sequence numbers:
+This is achieved with two sequence numbers:
 
 1. Authority sequence
 
 2. Ownership sequence
 
-These sequence numbers are sent along with each state update and included in avatar state when cubes are held by players. They are used by the host to determine if it should accept an update from guests, and by guests to determine if the state update from the server is more recent and should be accepted, even when that guest thinks it already has authority or ownership over that object.
+These sequence numbers are sent along with each state update and included in avatar state when cubes are held by players. They are used by the host to determine if it should accept an update from guests, and by guests to determine if the state update from the server is more recent and should be accepted, even when that guest thinks it already has authority or ownership over an object.
 
-Authority sequence increments each time a player takes authority over an object and when any object under authority of a player comes to rest. When an object has authority on a guest machine, it hold authority on that machine until it receive _confirmation_ from the host before returning to default authority. This ensures that the final at rest state for objects under guest authority are committed back to the host, even under significant packet loss.
+Authority sequence increments each time a player takes authority over an object and when an object under authority of a player comes to rest. When an object has authority on a guest machine, it holds authority on that machine until it receives _confirmation_ from the host before returning to default authority. This ensures that the final at rest state for objects under guest authority are committed back to the host, even under significant packet loss.
 
-Ownership sequence increments each time a player grabs an object, and once again  again when that object is released. Ownership sequence is stronger that authority, such that an increase in ownership wins out over an increase in sequence number. Fqr example, if a player interacts with an object, just before another player grabs it, the player who grabbed it wins. This makes sense, because grabbing an object and subsequently losing it is disruptive.
+Ownership sequence increments each time a player grabs an object, and again when that object is released. Ownership sequence is stronger that authority, such that an increase in ownership sequence wins over an increase in sequence number. For example, if a player interacts with an object just before another player grabs it, the player who grabbed it wins.
 
-These rules are sufficient resolve conflicts, while letting host and guest players can interact with the world lag free. Corrections are rare in practice, and when they occur, the simulation quickly converges to a consistent state.
+These rules are sufficient to resolve conflicts, while letting host and guest players can interact with the world lag free. Corrections are rare in practice, and when they do occur, the simulation quickly converges to a consistent state.
 
 # Conclusion
 
-High quality networking with stable stacks of objects is possible with Unity and PhysX using an authority-based network model. This approach is best used for _cooperative experiences only_, as it does not provide the security of a server authoritative network model.
+High quality networked physics with stable stacks of objects is possible with Unity and PhysX using an authority-based network model. This approach is best used for _cooperative experiences only_, as it does not provide the security of a server authoritative network model.
 
 ----- 
 
