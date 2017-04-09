@@ -283,8 +283,6 @@ These rules are sufficient resolve conflicts, while letting host and guest playe
 
 High quality networking with stable stacks of objects is possible with Unity and PhysX using an authority-based network model. This approach is best used for _cooperative experiences only_, as it does not provide the security of a server authoritative network model.
 
-Please check out the full source code for the demo [here](...) and feel free to [contact me](/contact) if you have any questions.
-
 ----- 
 
 <i>
