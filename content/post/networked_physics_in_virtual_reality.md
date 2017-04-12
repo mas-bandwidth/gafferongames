@@ -275,7 +275,7 @@ These sequence numbers are sent along with each state update and included in ava
 
 Authority sequence increments each time a player takes authority over an object and when an object under authority of a player comes to rest. When an object has authority on a guest machine, it holds authority on that machine until it receives _confirmation_ from the host before returning to default authority. This ensures that the final at rest state for objects under guest authority are committed back to the host, even under significant packet loss.
 
-Ownership sequence increments each time a player grabs an object. Ownership is stronger that authority, such that an increase in ownership sequence wins over an increase in sequence number. For example, if a player interacts with an object just before another player grabs it, the player who grabbed it wins.
+Ownership sequence increments each time a player grabs an object. Ownership is stronger that authority, such that an increase in ownership sequence wins over an increase in authority sequence number. For example, if a player interacts with an object just before another player grabs it, the player who grabbed it wins.
 
 These rules are sufficient to resolve conflicts, while letting host and guest players can interact with the world lag free. Corrections are rare in practice, and when they do occur, the simulation quickly converges to a consistent state.
 
