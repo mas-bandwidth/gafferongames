@@ -730,17 +730,28 @@
 	],
 	"file_history":
 	[
+		"/Users/gaffer/golang/webserver.go",
+		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/STUFF",
+		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/CHORES",
+		"/Users/gaffer/git/gafferongames/TODO",
+		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/HEALTH",
+		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
+		"/Users/gaffer/Desktop/Networked Physics/Assets/Scripts/Context.cs",
+		"/Users/gaffer/Desktop/Networked Physics/Assets/Scripts/Constants.cs",
+		"/Users/gaffer/git/gafferongames/config_local.toml",
+		"/Users/gaffer/git/gafferongames/config.toml",
+		"/Users/gaffer/libyojimbo/premake5.lua",
+		"/Users/gaffer/git/gafferongames/Makefile",
+		"/Users/gaffer/git/gafferongames/.git/MERGE_MSG",
 		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
 		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
 		"/Users/gaffer/git/gafferongames/content/post/snapshots_and_interpolation.md",
-		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/Desktop/CANCEL SURGERY",
 		"/Users/gaffer/Desktop/cloudflare.txt",
 		"/Users/gaffer/git/gafferongames/content/post/snapshot_compression.md",
 		"/Users/gaffer/git/gafferongames/static/css/clean-blog.min.css",
 		"/Users/gaffer/git/gafferongames/static/css/bootstrap.min.css",
 		"/Users/gaffer/git/gafferongames/config_upload.toml",
-		"/Users/gaffer/git/gafferongames/Makefile",
 		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
 		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
 		"/Users/gaffer/git/gafferongames/content/post/go_stone_vs_go_board.md",
@@ -758,7 +769,6 @@
 		"/Users/gaffer/netcode.io/Yojimbo usage",
 		"/Users/gaffer/git/gafferongames/content/post/untitled",
 		"/Users/gaffer/git/gafferongames/.gitignore",
-		"/Users/gaffer/git/gafferongames/config_local.toml",
 		"/Users/gaffer/Desktop/ROBLOX",
 		"/Users/gaffer/git/gafferongames/scratch.md",
 		"/Users/gaffer/git/gafferongames/content/post/the_physics_simulation.md",
@@ -787,7 +797,6 @@
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_constant_acceleration_dt_1.0.txt",
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_constant_acceleration_dt_0.01.txt",
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_spring_damper.csv",
-		"/Users/gaffer/git/gafferongames/config.toml",
 		"/Users/gaffer/git/gafferongames/layouts/_default/terms.html",
 		"/Users/gaffer/git/gafferongames/layouts/_default/single.html",
 		"/Users/gaffer/git/gafferongames/layouts/_default/archive.html",
@@ -848,16 +857,7 @@
 		"/Users/gaffer/moon/LOG",
 		"/Users/gaffer/Documents/WISHLIST",
 		"/Users/gaffer/oculus/GDC 2015 Example Source Code/external/ode/tests/UnitTest++/src/Test.cpp",
-		"/Users/gaffer/oculus/developer/Platform/UnrealEngine4/OculusPlatformPlugin/Source/ThirdParty/Oculus/LibOVRPlatform/LibOVRPlatform/include/OVR_Packet.h",
-		"/Users/gaffer/oculus/RISKS",
-		"/Users/gaffer/oculus/GOALS",
-		"/Users/gaffer/oculus/CHANGES",
-		"/Users/gaffer/oculus/QUESTIONS",
-		"/Users/gaffer/git/protocol2/006_reliable_ordered_messages.cpp",
-		"/Users/gaffer/git/protocol2/007_messages_and_blocks.cpp",
-		"/Users/gaffer/git/protocol2/TODO",
-		"/Users/gaffer/Documents/KARAOKI",
-		"/Users/gaffer/git/protocol2/premake5.lua"
+		"/Users/gaffer/oculus/developer/Platform/UnrealEngine4/OculusPlatformPlugin/Source/ThirdParty/Oculus/LibOVRPlatform/LibOVRPlatform/include/OVR_Packet.h"
 	],
 	"find":
 	{
@@ -908,6 +908,35 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"orientation",
+			"the the",
+			"receive",
+			"latency.",
+			"the set of",
+			"avatar state",
+			"I found",
+			"was able",
+			"to quant",
+			"the the",
+			"to the client",
+			"reconst",
+			"Now the",
+			"certain ",
+			"orientation",
+			"sent over the net",
+			"ated",
+			"simulation frames",
+			"very much",
+			"their own ",
+			"release",
+			"7zip",
+			"_rules",
+			"actually quit",
+			"rolling back ",
+			"would",
+			"_rules",
+			"Deterministic",
+			"i18n",
 			"web backend",
 			"server checks",
 			"statistically ",
@@ -1006,36 +1035,7 @@
 			"passed",
 			"is is quite",
 			".jpg",
-			"10.0",
-			"< 10.0f",
-			"this. Hey",
-			"lets",
-			"Lets",
-			"that the",
-			"float t",
-			"read on",
-			"intuitiv",
-			"equations of motion",
-			"\"",
-			"theme",
-			".Site.Params.Author",
-			" In ",
-			"mailto:",
-			".Summary",
-			"simply",
-			"disableRSS",
-			"Site.Title",
-			"Site",
-			"electric gays",
-			"angular vel",
-			"layer",
-			"Adaptive",
-			"MessagesToSend",
-			"Message",
-			"ProcessAcks",
-			"ReadPacket",
-			"ProcessPacketFragment",
-			"TEST_MESSAGE"
+			"10.0"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1089,7 +1089,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 25.0
+		"height": 23.0
 	},
 	"input":
 	{
@@ -1130,7 +1130,7 @@
 	"project": "gafferongames.sublime-project",
 	"replace":
 	{
-		"height": 46.0
+		"height": 42.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1139,6 +1139,26 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"todo",
+				"TODO"
+			],
+			[
+				"networkedphysisc",
+				"content/post/networked_physics_in_virtual_reality.md"
+			],
+			[
+				"con",
+				"config.toml"
+			],
+			[
+				"make",
+				"Makefile"
+			],
+			[
+				"toml",
+				"config_local.toml"
+			],
 			[
 				"whyca",
 				"content/post/why_cant_i_send_udp_packets_from_a_browser.md"
@@ -1150,10 +1170,6 @@
 			[
 				"snapshot",
 				"content/post/snapshots_and_interpolation.md"
-			],
-			[
-				"todo",
-				"TODO"
 			],
 			[
 				"why",
@@ -1194,14 +1210,6 @@
 			[
 				"client",
 				"content/post/client_server_connection.md"
-			],
-			[
-				"make",
-				"Makefile"
-			],
-			[
-				"con",
-				"config_upload.toml"
 			],
 			[
 				"css",
@@ -1406,10 +1414,6 @@
 			[
 				"upload",
 				"config_upload.toml"
-			],
-			[
-				"toml",
-				"config_local.toml"
 			],
 			[
 				"local",
@@ -1646,10 +1650,6 @@
 			[
 				"socket_interfac",
 				"yojimbo_socket_interface.h"
-			],
-			[
-				"yojimbo_socket",
-				"yojimbo_socket_interface.cpp"
 			]
 		],
 		"width": 0.0

@@ -39,8 +39,8 @@ When we send snapshot data in packets, we include at the top a 16 bit sequence n
 Each frame we just render the most recent snapshot received on the right:
 
 <video preload="auto" autoplay="autoplay" loop="loop" width="100%">
-  <source src="/video/networked_physics/snapshot_interpolation_60pps_jitter.mp4" type="video/mp4"/>
-  <source src="/video/networked_physics/snapshot_interpolation_60pps_jitter.webm" type="video/webm"/>
+  <source src="http://new.gafferongames.com/videos/snapshot_interpolation_60pps_jitter.mp4" type="video/mp4"/>
+  <source src="http://new.gafferongames.com/videos/snapshot_interpolation_60pps_jitter.webm" type="video/webm"/>
 </video>
 
 Look closely though, and even though we're sending the data as rapidly as possible (one packet per-frame) you can still see hitches on the right side. This is because the internet makes no guarantee that packets sent 60 times per-second nicely spaced 1/60th of a second apart. Packets are jittered. Some frames you receive two snapshot packets. Other frames you receive none.
@@ -52,8 +52,8 @@ This is actually a really common thing when you first start networking. You star
 First, let's look at how much bandwidth we're sending with this naive approach. Each packet is 25312.5 bytes plus 28 bytes for IP + UDP header and 2 bytes for sequence number. That's 25342.5 bytes per-packet and at 60 packets per-second this gives a total of 1520550 bytes per-second or 11.6 megabit/sec. Now there are certainly internet connections out there that can support that amount of traffic... but since, let's be honest, we're not really getting a lot of benefit blasting packets out 60 times per-second with all the jitter, let's pull it back a bit and send only 10 snapshots per-second:
 
 <video preload="auto" autoplay="autoplay" loop="loop" width="100%">
-  <source src="/video/networked_physics/snapshot_interpolation_10pps_no_interpolation.mp4" type="video/mp4"/>
-  <source src="/video/networked_physics/snapshot_interpolation_10pps_no_interpolation.webm" type="video/webm"/>
+  <source src="http://new.gafferongames.com/videos/snapshot_interpolation_10pps_no_interpolation.mp4" type="video/mp4"/>
+  <source src="http://new.gafferongames.com/videos/snapshot_interpolation_10pps_no_interpolation.webm" type="video/webm"/>
 </video>
 
 You can see how this looks above. Not so great on the right side but at least we've reduced bandwidth by a factor of six to around 2 megabit/sec. We're definitely headed in the right direction.
@@ -65,8 +65,8 @@ Now for the trick with snapshots. What we do is instead of immediately rendering
 You may be surprised at just how good it looks with linear interpolation @ 10pps:
 
 <video preload="auto" autoplay="autoplay" loop="loop" width="100%">
-  <source src="/video/networked_physics/snapshot_interpolation_10pps_linear_interpolation.mp4" type="video/mp4"/>
-  <source src="/video/networked_physics/snapshot_interpolation_10pps_linear_interpolation.webm" type="video/webm"/>
+  <source src="http://new.gafferongames.com/videos/snapshot_interpolation_10pps_linear_interpolation.mp4" type="video/mp4"/>
+  <source src="http://new.gafferongames.com/videos/snapshot_interpolation_10pps_linear_interpolation.webm" type="video/webm"/>
 </video>
 
 Look closely though and you can see some artifacts on the right side. The first is a subtle position jitter when the player cube is hovering in the air. This is your brain detecting 1st order discontinuity at the sample points of position interpolation. The other artifact occurs when a bunch of cubes are in a katamari ball, you can see a sort of "pulsing" as the speed of rotation increases and decreases. This occurs because attached cubes interpolate linearly between two sample points rotating around the player cube, effectively interpolating <em>through</em> the player cube as they take the shortest linear path between two points on a circle.
@@ -80,8 +80,8 @@ A spline that can be used to perform this interpolation is the <a href="http://e
 Unlike other splines with control points that affect the curve indirectly, the hermite spline is guaranteed to pass through the start and end points while matching the start and end velocities. This means that velocity is smooth across sample points and cubes in the katamari ball tend to rotate around the cube rather than interpolate through it at speed.
 
 <video preload="auto" autoplay="autoplay" loop="loop" width="100%">
-  <source src="/video/networked_physics/snapshot_interpolation_10pps_hermite_interpolation.mp4" type="video/mp4"/>
-  <source src="/video/networked_physics/snapshot_interpolation_10pps_hermite_interpolation.webm" type="video/webm"/>
+  <source src="http://new.gafferongames.com/videos/snapshot_interpolation_10pps_hermite_interpolation.mp4" type="video/mp4"/>
+  <source src="http://new.gafferongames.com/videos/snapshot_interpolation_10pps_hermite_interpolation.webm" type="video/webm"/>
 </video>
 
 Above you can see hermite interpolation for position @ 10pps. Bandwidth has increased slightly because we need to include linear velocity with each cube in the snapshot, but we're able to significantly increase the quality at the same send rate. I can no longer see any artifacts. Go back and compare this with the raw, non-interpolated 10pps version. It really is amazing that we're able to reconstruct the simulation with this level of quality at such a low send rate.
@@ -101,8 +101,8 @@ My rule of thumb is that the interpolation buffer should have enough delay so th
 Adding 350 milliseconds delay seems like a lot. And it is. But, if you try to skimp you end up hitching for 1/10th of a second each time a packet is lost. One technique that people often use to hide the delay added by the interpolation buffer in other areas (such as FPS, flight simulator, racing games and so on) is to use extrapolation. But in my experience, extrapolation doesn't work very well for rigid bodies because their motion is non-linear and unpredictable. Here you can see an extrapolation of 200ms, reducing overall delay from 350 ms to just 150ms:
 
 <video preload="auto" autoplay="autoplay" loop="loop" width="100%">
-  <source src="/video/networked_physics/snapshot_interpolation_10pps_extrapolation.mp4" type="video/mp4"/>
-  <source src="/video/networked_physics/snapshot_interpolation_10pps_extrapolation.webm" type="video/webm"/>
+  <source src="http://new.gafferongames.com/videos/snapshot_interpolation_10pps_extrapolation.mp4" type="video/mp4"/>
+  <source src="http://new.gafferongames.com/videos/snapshot_interpolation_10pps_extrapolation.webm" type="video/webm"/>
 </video>
 
 Problem is it's just not very good. The reason is that the extrapolation doesn't know anything about the physics simulation. Extrapolation doesn't know about collision with the floor so cubes extrapolate down through the floor and then spring back up to correct. Prediction doesn't know about the spring force holding the player cube up in the air so it the cube moves slower initially upwards than it should and has to snap to catch up. It also doesn't know anything about collision and how collision response works, so the cube rolling across the floor and other cubes are also mispredicted. Finally, if you watch the katamari ball you'll see that the extrapolation predicts the attached cubes as continuing to move along their tangent velocity when they should rotate with the player cube.
