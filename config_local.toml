@@ -4,8 +4,6 @@ canonifyurls = true
 paginate = 10
 languageCode = "en-us"
 copyright = "© The Network Protocol Company, Inc."
-pygmentsstyle = "monokai"
-pygmentuseclasses = "false"
 
 [author]
     name = "Glenn Fiedler"
