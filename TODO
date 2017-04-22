@@ -15,4 +15,13 @@ TODO
         2. When run manually, the network link from nginx to webserver doesn't appear to work (videos don't show up)
 
         3. It's annoying to not be able to test the whole system end-to-end on mac, because of the base url.
-        
+
+    Fixed #1 by cleaning and building. I think there was a permissions issue from a run as sudo.
+
+    Videos still don't show up even when I map port 8080 (and verify connect works here).
+
+    I think nginx is running without using the config that I specify, which would explain why it's not forwarding.
+
+    The good news is that once I fix this I can setup the link between containers and it should work, it's an nginx issue.
+
+    Fixing now.

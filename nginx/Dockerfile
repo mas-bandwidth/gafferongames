@@ -11,6 +11,8 @@ VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/v
 
 ADD public /var/www/html
 
+ADD nginx.conf /etc/nginx/nginx.conf
+
 WORKDIR /etc/nginx
 
 CMD ["nginx"]
