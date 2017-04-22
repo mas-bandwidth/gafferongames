@@ -46,6 +46,18 @@ integration_basics:
 	g++ source/game_physics/integration_basics.cpp -o bin/integration_basics
 	cd bin && ./integration_basics
 
+nginx_local:
+	rm -rf public
+	rm -f config.toml
+	cp config_local.toml config.toml
+	hugo
+	rm -rf nginx/public
+	mv public nginx/public
+	-docker kill nginx > /dev/null 2>&1; exit 0
+	-docker rm nginx > /dev/null 2>&1; exit 0
+	docker build -t gafferongames:nginx nginx
+	docker run --name nginx --link webserver:web -ti -p 80:80 -p 443:443 gafferongames:nginx
+
 nginx:
 	rm -rf public
 	rm -f config.toml
@@ -69,3 +81,15 @@ webserver:
 	-docker rm webserver > /dev/null 2>&1; exit 0
 	docker build -t gafferongames:webserver webserver
 	docker run --name webserver --link redis:db -ti -p 8080:8080 gafferongames:webserver
+
+up:
+	rm -rf public
+	rm -f config.toml
+	cp config_nginx.toml config.toml
+	hugo
+	rm -rf nginx/public
+	mv public nginx/public
+	sudo -b docker-compose up
+
+down:
+	sudo docker-compose down

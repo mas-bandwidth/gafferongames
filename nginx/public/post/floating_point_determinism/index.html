@@ -12,10 +12,10 @@
     <title>Floating Point Determinism | Gaffer On Games</title>
 
     
-    <link href="http://127.0.0.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://new.gafferongames.com/css/bootstrap.min.css" rel="stylesheet">
 
     
-    <link href="http://127.0.0.1/css/clean-blog.min.css" rel="stylesheet">
+    <link href="http://new.gafferongames.com/css/clean-blog.min.css" rel="stylesheet">
 
     
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -41,7 +41,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="http://127.0.0.1">Gaffer On Games</a>
+                <a class="navbar-brand" href="http://new.gafferongames.com">Gaffer On Games</a>
             </div>
 
                        
@@ -49,19 +49,19 @@
                 <ul class="nav navbar-nav navbar-right">
                     
                     <li>
-                        <a href="http://127.0.0.1/">home</a>
+                        <a href="http://new.gafferongames.com/">home</a>
                     </li>
                     
                     <li>
-                        <a href="http://127.0.0.1/about/">About</a>
+                        <a href="http://new.gafferongames.com/about/">About</a>
                     </li>
                     
                     <li>
-                        <a href="http://127.0.0.1/post/">Archives</a>
+                        <a href="http://new.gafferongames.com/post/">Archives</a>
                     </li>
                     
                     <li>
-                        <a href="http://127.0.0.1/contact/">Contact</a>
+                        <a href="http://new.gafferongames.com/contact/">Contact</a>
                     </li>
                     
                     <li>
@@ -79,7 +79,7 @@
 
     
     
-    <header class="intro-header" style="background-image: url('http://127.0.0.1/img/post-bg.jpg')">
+    <header class="intro-header" style="background-image: url('http://new.gafferongames.com/img/post-bg.jpg')">
     
       <div class="container">
         <div class="row">
@@ -87,7 +87,7 @@
              <div class="post-heading">
                <h1>Floating Point Determinism</h1>
                <h2 class="subheading">Is it possible to make floating point calculations completely deterministic?</h2>
-               <span class="meta">Posted by <a href="http://127.0.0.1/about">Glenn Fiedler</a> on Wednesday, February 24, 2010
+               <span class="meta">Posted by <a href="http://new.gafferongames.com/about">Glenn Fiedler</a> on Wednesday, February 24, 2010
                </span>
              </div>
            </div>
@@ -104,7 +104,7 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p>Hi, I&rsquo;m <a href="http://127.0.0.1/about">Glenn Fiedler</a> and welcome to <a href="http://127.0.0.1/categories/networking-for-game-programmers/"><strong>Networking for Game Programmers</strong></a>.</p>
+<p>Hi, I&rsquo;m <a href="http://new.gafferongames.com/about">Glenn Fiedler</a> and welcome to <a href="http://new.gafferongames.com/categories/networking-for-game-programmers/"><strong>Networking for Game Programmers</strong></a>.</p>
 
 <p>Lately I&rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.</p>
 
@@ -130,14 +130,14 @@
 <li><p>However with a good deal of work you <u>may</u> be able to <a href="http://www.yosefk.com/blog/consistency-how-to-defeat-the-purpose-of-ieee-floating-point.html">coax</a> exactly the same floating point results out of different compilers or different machine architectures by using your compilers &ldquo;strict&rdquo; IEEE 754 compliant mode and restricting the set of floating point operations you use. This typically results in significantly lower floating point performance.</p></li>
 </ul>
 
-<p>If you would like to debate these points or add your own nuance, please <a href="http://127.0.0.1/contact">contact</a> me! I consider this question by no means settled and am very interested in other peoples experiences with deterministic floating point simulations and exactly reproducible floating point calculations. Please contact me especially if you have managed to get binary exact results across different architectures and compilers in real world situations.</p>
+<p>If you would like to debate these points or add your own nuance, please <a href="http://new.gafferongames.com/contact">contact</a> me! I consider this question by no means settled and am very interested in other peoples experiences with deterministic floating point simulations and exactly reproducible floating point calculations. Please contact me especially if you have managed to get binary exact results across different architectures and compilers in real world situations.</p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <p><u>Here are the resources that I have discovered in my search so far&hellip;</u></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>The technology we license to various customers is based on determinism of floating point (in 64-bit mode, even) and has worked that way since the year 2000.
 
@@ -152,8 +152,8 @@ Also, you can't use SSE or SSE2 for floating point, because it's too under-speci
 <p><b>Jon Watte, GameDev.net forums</b>
 <a href="http://www.gamedev.net/community/forums/topic.asp?topic_id=499435">http://www.gamedev.net/community/forums/topic.asp?topic_id=499435</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>I work at Gas Powered Games and i can tell you first hand that floating point math is deterministic. You just need the same instruction set and compiler and of course the user's processor adheres to the IEEE754 standard, which includes all of our PC and 360 customers. The engine that runs DemiGod, Supreme Commander 1 and 2 rely upon the IEEE754 standard. Not to mention probably all other RTS peer to peer games in the market. As soon as you have a peer to peer network game where each client broadcasts what command they are doing on what 'tick' number and rely on the client computer to figure out the simulation/physical details your going to rely on the determinism of the floating point processor.
 
@@ -178,8 +178,8 @@ We did however have problems when using some physics APIs because their code did
 <p><b>Elijah, Gas Powered Games</b><br>
 <a href="http://www.box2d.org/forum/viewtopic.php?f=3&amp;t=1800">http://www.box2d.org/forum/viewtopic.php?f=3&amp;t=1800</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>If you store replays as controller inputs, they cannot be played back on machines with different CPU architectures, compilers, or optimization settings. In MotoGP, this meant we could not share saved replays between Xbox and PC. It also meant that if we saved a replay from a debug build of the game, it would not work in release builds, or vice versa. This is not always a problem (we never shipped debug builds, after all), but if we ever released a patch, we had to build it using the exact same compiler as the original game. If the compiler had been updated since our original release, and we built a patch using the newer compiler, this could change things around enough that replays saved by the original game would no longer play back correctly.
 
@@ -188,24 +188,24 @@ This is madness! Why don't we make all hardware work the same? Well, we could, i
 <p><b>Shawn Hargreaves, MSDN Blog</b>
 <a href="http://blogs.msdn.com/shawnhar/archive/2009/03/25/is-floating-point-math-deterministic.aspx">http://blogs.msdn.com/shawnhar/archive/2009/03/25/is-floating-point-math-deterministic.aspx</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>"Battlezone 2 used a lockstep networking model requiring absolutely identical results on every client, down to the least-significant bit of the mantissa, or the simulations would start to diverge. While this was difficult to achieve, it meant we only needed to send user input across the network; all other game state could be computed locally. During development, we discovered that AMD and Intel processors produced slightly different results for trancendental functions (sin, cos, tan, and their inverses), so we had to wrap them in non-optimized function calls to force the compiler to leave them at single-precision. That was enough to make AMD and Intel processors consistent, but it was definitely a learning experience.</blockquote>
 
 <p><b>Ken Miller, Pandemic Studios</b><br>
 <a href="http://www.box2d.org/forum/viewtopic.php?f=4&amp;t=175">http://www.box2d.org/forum/viewtopic.php?f=4&amp;t=175</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>... In FSW1 when desync is detected in player would be instantly killed by "magic sniper". :) All that stuff was fixed in FSW2. We just ran precise FP and used Havok FPU libs instead SIMD on PC. Also integer modulo is problem too because C++ standard says it's "implementation defined" (in case when multiple compilers/platforms are used). In general I liked tools for lockstep we developed, finding desyncs in code on FSW2 was trivial.</blockquote>
 
 <p><b>Branimir Karadžić, Pandemic Studios</b>
 <a href="http://www.google.com/buzz/100111796601236342885/8hDZ655S6x3/Floating-Point-Determinism-Gaffer-on-Games">http://www.google.com/buzz/100111796601236342885/8hDZ655S6x3/Floating-Point-Determinism-Gaffer-on-Games</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote> I know three main sources of floating point inconsistency pain:
 
@@ -220,8 +220,8 @@ Summary: use SSE2 or SSE, and if you can’t, configure the FP CSR to use 64b in
 <p><b>Yossi Kreinin, Personal Blog</b><br>
 <a href="http://www.yosefk.com/blog/consistency-how-to-defeat-the-purpose-of-ieee-floating-point.html">http://www.yosefk.com/blog/consistency-how-to-defeat-the-purpose-of-ieee-floating-point.html</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>The short answer is that FP calculations are entirely deterministic, as per the IEEE Floating Point Standard, but that doesn't mean they're entirely reproducible across machines, compilers, OS's, etc.
 
@@ -234,16 +234,16 @@ Where you usually run into problems in floating point is if you have a numerical
 <p><b>Todd Gamblin, Stack Overflow</b>
 <a href="http://stackoverflow.com/questions/968435/what-could-cause-a-deterministic-process-to-generate-floating-point-errors">http://stackoverflow.com/questions/968435/what-could-cause-a-deterministic-process-to-generate-floating-point-errors</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>The C++ standard does not specify a binary representation for the floating-point types float, double and long double. Although not required by the standard, the implementation of floating point arithmetic used by most C++ compilers conforms to a standard, IEEE 754-1985, at least for types float and double. This is directly related to the fact that the floating point units of modern CPUs also support this standard. The IEEE 754 standard specifies the binary format for floating point numbers, as well as the semantics for floating point operations. Nevertheless, the degree to which the various compilers implement all the features of IEEE 754 varies. This creates various pitfalls for anyone writing portable floating-point code in C++.</blockquote>
 
 <p><b>Günter Obiltschnig, Cross-Platform Issues with Floating-Point arithmetics in C++</b>
 <a href="http://www.appinf.com/download/FPIssues.pdf">http://www.appinf.com/download/FPIssues.pdf</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>Floating-point computations are strongly dependent on the FPU hardware implementation, the compiler and its optimizations, and the system mathematical library (libm). Experiments are usually reproducible only on the same machine with the same system library and the same compiler using the same options.</blockquote>
 
@@ -268,72 +268,72 @@ These options usually conflict! Judicious use of compiler options lets you contr
 <p><b>Intel C++ Compiler Manual</b>
 <a href="http://cache-www.intel.com/cd/00/00/34/76/347605_347605.pdf">http://cache-www.intel.com/cd/00/00/34/76/347605_347605.pdf</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>Under the fp:strict mode, the compiler never performs any optimizations that perturb the accuracy of floating-point computations. The compiler will always round correctly at assignments, typecasts and function calls, and intermediate rounding will be consistently performed at the same precision as the FPU registers. Floating-point exception semantics and FPU environment sensitivity are enabled by default. Certain optimizations, such as contractions, are disabled because the compiler cannot guarantee correctness in every case.</blockquote>
 
 <p><b>Microsoft Visual C++ Floating-Point Optimization</b>
 <a href="http://msdn.microsoft.com/en-us/library/aa289157(VS.71).aspx#floapoint_topic4">http://msdn.microsoft.com/en-us/library/aa289157(VS.71).aspx#floapoint_topic4</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>Please note that the results of floating point calculations will likely not be exactly the same between PowerPC and Intel, because the PowerPC scalar and vector FPU cores are designed around a fused multiply add operation. The Intel chips have separate multiplier and adder, meaning that those operations must be done separately. This means that for some steps in a calculation, the Intel CPU may incur an extra rounding step, which may introduce 1/2 ulp errors at the multiplication stage in the calculation.</blockquote>
 
 <p><b>Apple Developer Support</b>
 <a href="http://developer.apple.com/hardwaredrivers/ve/sse.html">http://developer.apple.com/hardwaredrivers/ve/sse.html</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>For all of the instructions that are IEEE operations (*,+,-,/,sqrt, compares, regardless of whether they are SSE or x87), they will produce the same results across platforms with the same control settings (same precision control and rounding modes, flush to zero, etc.) and inputs.  This is true for both 32-bit and 64-bit processors... On the x87 side, the transcendental instructions like, fsin, fcos, etc. could produce slightly different answers across implementations. They are specified with a relative error that is guaranteed, but not bit-for-bit accuracy.</blockquote>
 
 <p><b>Intel Software Network Support</b>
 <a href="http://software.intel.com/en-us/forums/showthread.php?t=48339">http://software.intel.com/en-us/forums/showthread.php?t=48339</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>I'm concerned about the possible differences between hardware implementations of IEEE-754. I already know about the problem of programming languages introducing subtle differences between what is written in the source code and what is actually executed at the assembly level. [Mon08] Now, I'm interested in differences between, say, Intel/SSE and PowerPC at the level of individual instructions.</blockquote>
 
 <p><b>D. Monniaux on IEEE 754 mailing list</b>
 <a href="http://grouper.ieee.org/groups/754/email/msg03864.html">http://grouper.ieee.org/groups/754/email/msg03864.html</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>One must ... avoid the non-754 instructions that are becoming more prevalent for inverse and inverse sqrt that don't round correctly or even consistently from one implementation to another, as well as the x87 transcendental operations which are necessarily implemented differently by AMD and Intel.</blockquote>
 
 <p><b>David Hough on 754 IEEE mailing list</b>
 <a href="http://grouper.ieee.org/groups/754/email/msg03867.html">http://grouper.ieee.org/groups/754/email/msg03867.html</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>Yes, getting reproducible results IS possible.  But you CAN'T do it without defining a programming methodology intended to deliver that property.  And that has FAR more drastic consequences than any of its proponents admit - in particular, it is effectively incompatible with most forms of parallelism.</blockquote>
 
 <p><b>Nick Maclaren on 754 IEEE mailing list</b>
 <a href="http://grouper.ieee.org/groups/754/email/msg03872.html">http://grouper.ieee.org/groups/754/email/msg03872.html</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>If we are talking practicabilities, then things are very different, and expecting repeatable results in real programs is crying for the moon. But we have been there before, and let's not go there again.</blockquote>
 
 <p><b>Nick Maclaren on 754 IEEE mailing list</b>
 <a href="http://grouper.ieee.org/groups/754/email/msg03862.html">http://grouper.ieee.org/groups/754/email/msg03862.html</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>The IEEE 754-1985 allowed many variations in implementations (such as the encoding of some values and the detection of certain exceptions). IEEE 754-2008 has tightened up many of these, but a few variations still remain (especially for binary formats). The reproducibility clause recommends that language standards should provide a means to write reproducible programs (i.e., programs that will produce the same result in all implementations of a language), and describes what needs to be done to achieve reproducible results.</blockquote>
 
 <p><b>Wikipedia Page on IEEE 754-2008 standard</b>
 <a><a href="http://en.wikipedia.org/wiki/IEEE_754-2008#Reproducibility">http://en.wikipedia.org/wiki/IEEE_754-2008#Reproducibility</a></a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>If one wants semantics almost exactly faithful to strict IEEE-754 single or double precision computations in round-to-nearest mode, including with respect to overflow and underflow conditions, one can use, at the same time, limitation of precision and options and programming style that force operands to be systematically written to memory between floating-point operations. This incurs some performance loss; furthermore, there will still be slight discrepancy due to double rounding on underflow.
 
@@ -342,8 +342,8 @@ A simpler solution for current personal computers is simply to force the compile
 <p><b>David Monniaux, The pitfalls of verifying floating-point computations</b>
 <a href="http://hal.archives-ouvertes.fr/docs/00/28/14/29/PDF/floating-point-article.pdf">http://hal.archives-ouvertes.fr/docs/00/28/14/29/PDF/floating-point-article.pdf</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>6. REPRODUCIBILITY
 
@@ -356,8 +356,8 @@ The use of value-changing optimizations is to be avoided for reproducibility. Th
 <p><b>Peter Markstein, The New IEEE Standard for Floating Point Arithmetic</b>
 <a href="http://drops.dagstuhl.de/opus/volltexte/2008/1448/pdf/08021.MarksteinPeter.ExtAbstract.1448.pdf">http://drops.dagstuhl.de/opus/volltexte/2008/1448/pdf/08021.MarksteinPeter.ExtAbstract.1448.pdf</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
 <blockquote>Unfortunately, the IEEE standard does not guarantee that the same program will deliver identical results on all conforming systems. Most programs will actually produce different results on different systems for a variety of reasons. For one, most programs involve the conversion of numbers between decimal and binary formats, and the IEEE standard does not completely specify the accuracy with which such conversions must be performed. For another, many programs use elementary functions supplied by a system library, and the standard doesn't specify these functions at all. Of course, most programmers know that these features lie beyond the scope of the IEEE standard.
 
@@ -366,8 +366,8 @@ Many programmers may not realize that even a program that uses only the numeric 
 <p><b>Differences Among IEEE 754 Implementations</b>
 <a href="http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098">http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098</a></p>
 
-<p><img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" />
-<img style="border:0 initial initial;" title="half-spacer" src="http://127.0.0.1/img/half-spacer.png" width="34" height="12" /></p>
+<p><img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="http://new.gafferongames.com/img/half-spacer.png" width="34" height="12" /></p>
 
                 </div>
             </div>
@@ -382,7 +382,7 @@ Many programmers may not realize that even a program that uses only the numeric 
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                   <ul class="list-inline text-center">
                     <li>
-                      <a href="http://127.0.0.1/contact/">
+                      <a href="http://new.gafferongames.com/contact/">
                         <span class="fa-stack fa-lg">
                           <i class="fa fa-circle fa-stack-2x"></i>
                           <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
@@ -425,13 +425,13 @@ Many programmers may not realize that even a program that uses only the numeric 
     </footer>
 
     
-    <script src="http://127.0.0.1/js/jquery.min.js"></script>
+    <script src="http://new.gafferongames.com/js/jquery.min.js"></script>
 
     
-    <script src="http://127.0.0.1/js/bootstrap.min.js"></script>
+    <script src="http://new.gafferongames.com/js/bootstrap.min.js"></script>
 
     
-    <script src="http://127.0.0.1/js/clean-blog.js"></script>
+    <script src="http://new.gafferongames.com/js/clean-blog.js"></script>
 
     
 

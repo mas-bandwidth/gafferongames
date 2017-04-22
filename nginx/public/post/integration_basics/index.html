@@ -12,10 +12,10 @@
     <title>Integration Basics | Gaffer On Games</title>
 
     
-    <link href="http://127.0.0.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://new.gafferongames.com/css/bootstrap.min.css" rel="stylesheet">
 
     
-    <link href="http://127.0.0.1/css/clean-blog.min.css" rel="stylesheet">
+    <link href="http://new.gafferongames.com/css/clean-blog.min.css" rel="stylesheet">
 
     
     <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -41,7 +41,7 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                <a class="navbar-brand" href="http://127.0.0.1">Gaffer On Games</a>
+                <a class="navbar-brand" href="http://new.gafferongames.com">Gaffer On Games</a>
             </div>
 
                        
@@ -49,19 +49,19 @@
                 <ul class="nav navbar-nav navbar-right">
                     
                     <li>
-                        <a href="http://127.0.0.1/">home</a>
+                        <a href="http://new.gafferongames.com/">home</a>
                     </li>
                     
                     <li>
-                        <a href="http://127.0.0.1/about/">About</a>
+                        <a href="http://new.gafferongames.com/about/">About</a>
                     </li>
                     
                     <li>
-                        <a href="http://127.0.0.1/post/">Archives</a>
+                        <a href="http://new.gafferongames.com/post/">Archives</a>
                     </li>
                     
                     <li>
-                        <a href="http://127.0.0.1/contact/">Contact</a>
+                        <a href="http://new.gafferongames.com/contact/">Contact</a>
                     </li>
                     
                     <li>
@@ -79,7 +79,7 @@
 
     
     
-    <header class="intro-header" style="background-image: url('http://127.0.0.1/img/post-bg.jpg')">
+    <header class="intro-header" style="background-image: url('http://new.gafferongames.com/img/post-bg.jpg')">
     
       <div class="container">
         <div class="row">
@@ -87,7 +87,7 @@
              <div class="post-heading">
                <h1>Integration Basics</h1>
                <h2 class="subheading">How to integrate the equations of motion</h2>
-               <span class="meta">Posted by <a href="http://127.0.0.1/about">Glenn Fiedler</a> on Tuesday, June 1, 2004
+               <span class="meta">Posted by <a href="http://new.gafferongames.com/about">Glenn Fiedler</a> on Tuesday, June 1, 2004
                </span>
              </div>
            </div>
@@ -104,7 +104,7 @@
 
 <h2 id="introduction">Introduction</h2>
 
-<p>Hi, I&rsquo;m <a href="http://127.0.0.1/about">Glenn Fiedler</a> and welcome to the first article in <strong><a href="http://127.0.0.1/categories/game-physics/">Game Physics</a></strong>.</p>
+<p>Hi, I&rsquo;m <a href="http://new.gafferongames.com/about">Glenn Fiedler</a> and welcome to the first article in <strong><a href="http://new.gafferongames.com/categories/game-physics/">Game Physics</a></strong>.</p>
 
 <p>If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.</p>
 
@@ -261,11 +261,11 @@
 
 <p>And here is a graph of the exact solution:</p>
 
-<p><img src="http://127.0.0.1/img/game-physics/integration_basics_damped_exact_solution.png" width="100%"/></p>
+<p><img src="http://new.gafferongames.com/img/game-physics/integration_basics_damped_exact_solution.png" width="100%"/></p>
 
 <p>When we apply explicit euler to integrate this system, we get the following result, which has been scaled down vertically to fit:</p>
 
-<p><img src="http://127.0.0.1/img/game-physics/integration_basics_damped_explicit_euler.png" width="100%"/></p>
+<p><img src="http://new.gafferongames.com/img/game-physics/integration_basics_damped_explicit_euler.png" width="100%"/></p>
 
 <p>Instead of damping and converging on the origin, it gains energy over time!</p>
 
@@ -297,7 +297,7 @@
 
 <p>Applying the semi-implicit euler integrator with <strong>dt</strong> = <sup>1</sup>&frasl;<sub>100</sub> to the spring damper system gives a stable result that is very close to the exact solution:</p>
 
-<p><img src="http://127.0.0.1/img/game-physics/integration_basics_damped_semi_implicit_euler.png" width="100%"/></p>
+<p><img src="http://new.gafferongames.com/img/game-physics/integration_basics_damped_semi_implicit_euler.png" width="100%"/></p>
 
 <p>Even though semi-implicit euler has the same order of accuracy as explicit euler (order 1), we get a much better result when integrating the equations of motion because it is symplectic.</p>
 
@@ -405,11 +405,11 @@
 
 <p>Obviously it will be visibly more accurate than semi-implicit euler, right?</p>
 
-<p><img src="http://127.0.0.1/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler.png" width="100%"/></p>
+<p><img src="http://new.gafferongames.com/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler.png" width="100%"/></p>
 
 <p>Wrong. Both integrators are so close to the exact result that it&rsquo;s impossible to make out any difference at this scale. Both integrators are stable and track the exact solution very well with <strong>dt</strong>=<sup>1</sup>&frasl;<sub>100</sub>.</p>
 
-<p><img src="http://127.0.0.1/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler_zoomed_in.png" width="100%"/></p>
+<p><img src="http://new.gafferongames.com/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler_zoomed_in.png" width="100%"/></p>
 
 <p>Zooming in confirms that RK4 is more accurate than semi-implicit euler, but is it really worth the complexity and extra runtime cost of RK4? It&rsquo;s hard to say.</p>
 
@@ -417,13 +417,13 @@
 
 <p>Here&rsquo;s the exact result we&rsquo;re aiming for:</p>
 
-<p><img src="http://127.0.0.1/img/game-physics/integration_basics_undamped_exact_solution.png" width="100%"/></p>
+<p><img src="http://new.gafferongames.com/img/game-physics/integration_basics_undamped_exact_solution.png" width="100%"/></p>
 
 <p>To make it harder on the integrators, let&rsquo;s increase delta time to 0.1 seconds.</p>
 
 <p>Next, we let the integrators run for 90 seconds and zoom in:</p>
 
-<p><img src="http://127.0.0.1/img/game-physics/integration_basics_undamped_rk4_vs_semi_implicit_euler.png" width="100%"/></p>
+<p><img src="http://new.gafferongames.com/img/game-physics/integration_basics_undamped_rk4_vs_semi_implicit_euler.png" width="100%"/></p>
 
 <p>Wow. After 90 seconds the semi-implicit euler solution (orange) has drifted out of phase with the exact solution because it has a slightly different frequency, while the green line of RK4 matches the frequency, but is losing energy!</p>
 
@@ -431,11 +431,11 @@
 
 <p>RK4 maintains the correct frequency but loses energy:</p>
 
-<p><img src="http://127.0.0.1/img/game-physics/integration_basics_undamped_rk4_5fps.png" width="100%"/></p>
+<p><img src="http://new.gafferongames.com/img/game-physics/integration_basics_undamped_rk4_5fps.png" width="100%"/></p>
 
 <p>While semi-implicit euler does a better job at conserving energy, on average:</p>
 
-<p><img src="http://127.0.0.1/img/game-physics/integration_basics_undamped_semi_implicit_euler_5fps.png" width="100%"/></p>
+<p><img src="http://new.gafferongames.com/img/game-physics/integration_basics_undamped_semi_implicit_euler_5fps.png" width="100%"/></p>
 
 <p>What an interesting result. As you can see it&rsquo;s not simply the case that RK4 has a higher order of accuracy and is &ldquo;better&rdquo;. It&rsquo;s much more nuanced than this.</p>
 
@@ -482,7 +482,7 @@
                 <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
                   <ul class="list-inline text-center">
                     <li>
-                      <a href="http://127.0.0.1/contact/">
+                      <a href="http://new.gafferongames.com/contact/">
                         <span class="fa-stack fa-lg">
                           <i class="fa fa-circle fa-stack-2x"></i>
                           <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
@@ -525,13 +525,13 @@
     </footer>
 
     
-    <script src="http://127.0.0.1/js/jquery.min.js"></script>
+    <script src="http://new.gafferongames.com/js/jquery.min.js"></script>
 
     
-    <script src="http://127.0.0.1/js/bootstrap.min.js"></script>
+    <script src="http://new.gafferongames.com/js/bootstrap.min.js"></script>
 
     
-    <script src="http://127.0.0.1/js/clean-blog.js"></script>
+    <script src="http://new.gafferongames.com/js/clean-blog.js"></script>
 
     
 

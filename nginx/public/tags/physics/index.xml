@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Physics on Gaffer On Games</title>
-    <link>http://127.0.0.1/tags/physics/</link>
+    <link>http://new.gafferongames.com/tags/physics/</link>
     <description>Recent content in Physics on Gaffer On Games</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>© The Network Protocol Company, Inc.</copyright>
     <lastBuildDate>Sun, 04 Jan 2015 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="http://127.0.0.1/tags/physics/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="http://new.gafferongames.com/tags/physics/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Snapshot Compression</title>
-      <link>http://127.0.0.1/post/snapshot_compression/</link>
+      <link>http://new.gafferongames.com/post/snapshot_compression/</link>
       <pubDate>Sun, 04 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1/post/snapshot_compression/</guid>
+      <guid>http://new.gafferongames.com/post/snapshot_compression/</guid>
       <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.
 The problem with a low snapshot rate is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms.</description>
@@ -25,10 +25,10 @@ The problem with a low snapshot rate is that interpolation between snapshots add
     
     <item>
       <title>Snapshots and Interpolation</title>
-      <link>http://127.0.0.1/post/snapshots_and_interpolation/</link>
+      <link>http://new.gafferongames.com/post/snapshots_and_interpolation/</link>
       <pubDate>Sun, 30 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1/post/snapshots_and_interpolation/</guid>
+      <guid>http://new.gafferongames.com/post/snapshots_and_interpolation/</guid>
       <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we networked a physics simulation using deterministic lockstep. Now, in this article we&amp;rsquo;re going to network the same simulation with a completely different technique: snapshot interpolation.
 Why a different technique? While deterministic lockstep is very efficient in terms of bandwidth, it&amp;rsquo;s not always possible to make your simulation deterministic. Also, as the player count increases, deterministic lockstep becomes problematic: you can&amp;rsquo;t simulate frame n until you receive input from all players for that frame, so players end up waiting for the most lagged player.</description>
@@ -36,10 +36,10 @@ Why a different technique? While deterministic lockstep is very efficient in ter
     
     <item>
       <title>Deterministic Lockstep</title>
-      <link>http://127.0.0.1/post/deterministic_lockstep/</link>
+      <link>http://new.gafferongames.com/post/deterministic_lockstep/</link>
       <pubDate>Sat, 29 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1/post/deterministic_lockstep/</guid>
+      <guid>http://new.gafferongames.com/post/deterministic_lockstep/</guid>
       <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In this article series we&amp;rsquo;re exploring different ways to network a physics simulation. In this article specifically, we&amp;rsquo;re going to network a physics simulation using deterministic lockstep.
 Deterministic lockstep is a method of networking a system from one computer to another by sending only the inputs that control that system, rather than the state of that system. In the context of networking a physics simulation, this means we send across a small amount of input, while avoiding sending state like position, orientation, linear velocity and angular velocity per-object.</description>
@@ -47,10 +47,10 @@ Deterministic lockstep is a method of networking a system from one computer to a
     
     <item>
       <title>The Physics Simulation</title>
-      <link>http://127.0.0.1/post/the_physics_simulation/</link>
+      <link>http://new.gafferongames.com/post/the_physics_simulation/</link>
       <pubDate>Fri, 28 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1/post/the_physics_simulation/</guid>
+      <guid>http://new.gafferongames.com/post/the_physics_simulation/</guid>
       <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to the first article in Networked Physics.
 In this article series we&amp;rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.
 But before we get to this, lets spend some time exploring the physics simulation we’re going to network.
@@ -59,10 +59,10 @@ Your browser does not support the video tag.  Here I’ve setup a simple simulat
     
     <item>
       <title>Networked Physics (2004)</title>
-      <link>http://127.0.0.1/post/networked_physics_2004/</link>
+      <link>http://new.gafferongames.com/post/networked_physics_2004/</link>
       <pubDate>Sat, 04 Sep 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1/post/networked_physics_2004/</guid>
+      <guid>http://new.gafferongames.com/post/networked_physics_2004/</guid>
       <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to the final article in in Game Physics.
 In the previous article we discussed how to use spring-like forces to model basic collision response, joints and motors.
 Now we&amp;rsquo;re going to discuss how to network a physics simulation.
@@ -71,10 +71,10 @@ Networking a physics simulation is the holy grail of multiplayer gaming and the 
     
     <item>
       <title>Spring Physics</title>
-      <link>http://127.0.0.1/post/spring_physics/</link>
+      <link>http://new.gafferongames.com/post/spring_physics/</link>
       <pubDate>Fri, 03 Sep 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1/post/spring_physics/</guid>
+      <guid>http://new.gafferongames.com/post/spring_physics/</guid>
       <description>Introduction I&amp;rsquo;m Glenn Fiedler and welcome to the fourth article in Game Physics.
 In the previous article we discussed how to simulate the motion of rigid bodies in 3D. Now we&amp;rsquo;re going to discuss how to implement spring physics.
 The physics behind springs is simple but extremely versatile and useful. You can use springs to link points together to model rope and string, cloth, and even blobs of jelly. Springs can also be used to implement basic collision response, and to create joints that constrain the motion of rigid bodies.</description>
@@ -82,10 +82,10 @@ The physics behind springs is simple but extremely versatile and useful. You can
     
     <item>
       <title>Physics in 3D</title>
-      <link>http://127.0.0.1/post/physics_in_3d/</link>
+      <link>http://new.gafferongames.com/post/physics_in_3d/</link>
       <pubDate>Thu, 02 Sep 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1/post/physics_in_3d/</guid>
+      <guid>http://new.gafferongames.com/post/physics_in_3d/</guid>
       <description>Introduction I&amp;rsquo;m Glenn Fiedler and welcome to the third article in Game Physics.
 In the previous article we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.
 In this article we are going to simulate motion in three dimensions.
@@ -94,10 +94,10 @@ We will concentrate on a type of object called a rigid body. Rigid bodies cannot
     
     <item>
       <title>Fix Your Timestep!</title>
-      <link>http://127.0.0.1/post/fix_your_timestep/</link>
+      <link>http://new.gafferongames.com/post/fix_your_timestep/</link>
       <pubDate>Thu, 10 Jun 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1/post/fix_your_timestep/</guid>
+      <guid>http://new.gafferongames.com/post/fix_your_timestep/</guid>
       <description>Introduction I&amp;rsquo;m Glenn Fiedler and welcome to the second article in Game Physics.
 In the previous article we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&amp;rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &amp;ldquo;delta time&amp;rdquo; (or dt for short).
 But how to choose this delta time value? This may seem like a trivial subject but in fact there are many different ways to do it, each with their own strengths and weaknesses - so read on!</description>
@@ -105,10 +105,10 @@ But how to choose this delta time value? This may seem like a trivial subject bu
     
     <item>
       <title>Integration Basics</title>
-      <link>http://127.0.0.1/post/integration_basics/</link>
+      <link>http://new.gafferongames.com/post/integration_basics/</link>
       <pubDate>Tue, 01 Jun 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1/post/integration_basics/</guid>
+      <guid>http://new.gafferongames.com/post/integration_basics/</guid>
       <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to the first article in Game Physics.
 If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.</description>
     </item>
