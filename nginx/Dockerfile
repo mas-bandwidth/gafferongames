@@ -14,7 +14,7 @@ ADD nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /etc/nginx
 
-CMD "dockerize -wait tcp://web:8080 nginx"
+CMD [ "dockerize", "-wait", "tcp://web:8080", "nginx" ]
 
 EXPOSE 80
 
