@@ -123,7 +123,14 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
     }
     // todo: ^--- end pipeline
 
-    f, err := os.Open( filename ); check( err )
+    writer.WriteHeader( http.StatusNotFound )
+
+    f, err := os.Open( filename );
+    if ( err != null )
+    {
+        writer.WriteHeader( http.StatusNotFound )
+        return
+    }
     file_info, err := f.Stat(); check( err )    
     defer f.Close()
 
