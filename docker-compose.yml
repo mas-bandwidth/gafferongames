@@ -1,18 +1,23 @@
 version: "3"
 services:
 
+  redis:
+    build: redis
+
+  webserver:
+    build: webserver
+    depends_on: 
+      - "redis"
+    links:
+      - "redis:db"
+
   nginx:
     build: nginx
+    depends_on: 
+      - "webserver"
     links:
       - "webserver:web"
     ports:
       - "80:80"
       - "443:443"
 
-  webserver:
-    build: webserver
-    links:
-      - "redis:db"
-
-  redis:
-    build: redis
