@@ -126,7 +126,7 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
     writer.WriteHeader( http.StatusNotFound )
 
     f, err := os.Open( filename );
-    if ( err != null )
+    if ( err != nil )
     {
         writer.WriteHeader( http.StatusNotFound )
         return
