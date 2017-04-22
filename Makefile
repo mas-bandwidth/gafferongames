@@ -1,4 +1,4 @@
-.PHONY: public local upload commit clean nginx redis webserver
+.PHONY: public local upload commit clean nginx redis webserver build up down
 
 public:
 	rm -rf public

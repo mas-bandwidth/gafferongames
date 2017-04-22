@@ -138,7 +138,6 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
 }
 
 func main() {
-    fmt.Printf( "\nstarted webserver on port %d\n\n", Port )
     router := mux.NewRouter()
     router.HandleFunc( "/videos/{file}.{extension}", VideoHandler )
     log.Fatal( http.ListenAndServe( ":" + strconv.Itoa(Port), router ) )

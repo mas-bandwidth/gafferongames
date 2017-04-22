@@ -4,6 +4,15 @@ DONE
 
     Migrate the other docker projects under gafferongames, eg. "redis" and "webserver".    
 
+    Setup makefile rules so they build with dependencies from gafferongames.com
+
 TODO
 
-    Setup makefile rules so they build with dependencies from gafferongames.com
+    Some problems:
+
+        1. Docker compose doesn't seem to update nginx with latest public content when run (?!)
+
+        2. When run manually, the network link from nginx to webserver doesn't appear to work (videos don't show up)
+
+        3. It's annoying to not be able to test the whole system end-to-end on mac, because of the base url.
+        
