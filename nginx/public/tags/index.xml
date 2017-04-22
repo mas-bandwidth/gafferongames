@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Tags on Gaffer On Games</title>
+    <link>http://127.0.0.1/tags/</link>
+    <description>Recent content in Tags on Gaffer On Games</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© The Network Protocol Company, Inc.</copyright>
+    <lastBuildDate>Sun, 26 Feb 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://127.0.0.1/tags/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Networking</title>
+      <link>http://127.0.0.1/tags/networking/</link>
+      <pubDate>Sun, 26 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1/tags/networking/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>Physics</title>
+      <link>http://127.0.0.1/tags/physics/</link>
+      <pubDate>Sun, 04 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1/tags/physics/</guid>
+      <description></description>
+    </item>
+    
+  </channel>
+</rss>

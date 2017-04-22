@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Fix Your Timestep! | Gaffer On Games</title>
+
+    
+    <link href="http://127.0.0.1/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://127.0.0.1/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://127.0.0.1">Gaffer On Games</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://127.0.0.1/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://127.0.0.1/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://127.0.0.1/post/">Archives</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://127.0.0.1/contact/">Contact</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://www.patreon.com/gafferongames">Support gafferongames.com</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://127.0.0.1/img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Fix Your Timestep!</h1>
+               <h2 class="subheading">How to step your physics simulation forward</h2>
+               <span class="meta">Posted by <a href="http://127.0.0.1/about">Glenn Fiedler</a> on Thursday, June 10, 2004
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="introduction">Introduction</h2>
+
+<p>I&rsquo;m <a href="http://127.0.0.1/about">Glenn Fiedler</a> and welcome to the second article in <strong><a href="http://127.0.0.1/categories/game-physics/">Game Physics</a></strong>.</p>
+
+<p>In the <a href="http://127.0.0.1/post/integration_basics/">previous article</a> we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &ldquo;delta time&rdquo; (or dt for short).</p>
+
+<p>But how to choose this delta time value? This may seem like a trivial subject but in fact there are many different ways to do it, each with their own strengths and weaknesses - so read on!</p>
+
+<h2 id="fixed-delta-time">Fixed delta time</h2>
+
+<p>The simplest way to step forward is with a fixed delta time, like 1/60th of a second:</p>
+
+<pre><code>    double t = 0.0;
+    double dt = 1.0 / 60.0;
+
+    while ( !quit )
+    {
+        integrate( state, t, dt );
+        render( state );
+        t += dt;
+    }
+</code></pre>
+
+<p>In many ways this code is ideal. If you&rsquo;re lucky enough to have your physics delta time match the display rate, and you can ensure that your update loop takes less than one frame worth of real time, then you already have the perfect solution for updating your physics simulation and you can stop reading this article.</p>
+
+<p>But in the real world you may not know the display refresh rate ahead of time. VSYNC could be turned off, or you could be running on a slow computer which cannot update and render your frame fast enough to present it at 60fps.</p>
+
+<p>In these cases your simulation will run faster or slower than you intended.</p>
+
+<h2 id="variable-delta-time">Variable delta time</h2>
+
+<p>Fixing this <em>seems</em> simple. Just measure how long the previous frame takes, then feed that value back in as the delta time for the next frame. This makes sense because of course, because if the computer is too slow to update at 60HZ and has to drop down to 30fps, you&rsquo;ll automatically pass in <sup>1</sup>&frasl;<sub>30</sub> as delta time. Same thing for a display refresh rate of 75HZ instead of 60HZ or even the case where VSYNC is turned off on a fast computer:</p>
+
+<pre><code>    double t = 0.0;
+
+    double currentTime = hires_time_in_seconds();
+
+    while ( !quit )
+    {
+        double newTime = hires_time_in_seconds();
+        double frameTime = newTime - currentTime;
+        currentTime = newTime;
+
+        integrate( state, t, frameTime );
+        t += frameTime;
+
+        render( state );
+    }
+</code></pre>
+
+<p>But there is a huge problem with this approach which I will now explain. The problem is that the behavior of your physics simulation depends on the delta time you pass in. The effect could be subtle as your game having a slightly different &ldquo;feel&rdquo; depending on framerate or it could be as extreme as your spring simulation exploding to infinity, fast moving objects tunneling through walls and the player falling through the floor!</p>
+
+<p>One thing is for certain though and that is that it&rsquo;s utterly unrealistic to expect your simulation to correctly handle <em>any</em> delta time passed into it. To understand why, consider what would happen if you passed in 1/10th of a second as delta time? How about one second? 10 seconds? 100? Eventually you&rsquo;ll find a breaking point.</p>
+
+<h2 id="semi-fixed-timestep">Semi-fixed timestep</h2>
+
+<p>It&rsquo;s much more realistic to say that your simulation is well behaved only if delta time is less than or equal to some maximum value. This is usually significantly easier in practice than attempting to make your simulation bulletproof at a wide range of delta time values.</p>
+
+<p>With this knowledge at hand, here&rsquo;s a simple trick to ensure that you never pass in a delta time greater than the maximum value, while still running at the correct speed on different machines:</p>
+
+<pre><code>    double t = 0.0;
+    double dt = 1 / 60.0;
+
+    double currentTime = hires_time_in_seconds();
+
+    while ( !quit )
+    {
+        double newTime = hires_time_in_seconds();
+        double frameTime = newTime - currentTime;
+        currentTime = newTime;
+
+        while ( frameTime &gt; 0.0 )
+        {
+            float deltaTime = min( frameTime, dt );
+            integrate( state, t, deltaTime );
+            frameTime -= deltaTime;
+            t += deltaTime;
+        }
+
+        render( state );
+    }
+</code></pre>
+
+<p>The benefit of this approach is that we now have an upper bound on delta time. It&rsquo;s never larger than this value because if it is we subdivide the timestep. The disadvantage is that we&rsquo;re now taking multiple steps per-display update including one additional step to consume any the remainder of frame time not divisible by dt. This is no problem if you are render bound, but if your simulation is the most expensive part of your frame you could run into the so called &ldquo;spiral of death&rdquo;.</p>
+
+<p>What exactly is this spiral of death? It&rsquo;s what happens when your physics simulation cannot keep up with the steps it&rsquo;s asked to take. For example, if your simulation is told: &ldquo;OK, please simulate X seconds worth of physics&rdquo; and if it takes Y seconds of real time to do so where Y &gt; X, then it doesn&rsquo;t take Einstein to realize that over time your simulation falls behind. It&rsquo;s called the spiral of death because being behind causes your update to simulate more steps to catch up, which causes you to fall further behind, which causes you to simulate more steps&hellip;</p>
+
+<p>So how do we avoid this? In order to ensure a stable update I recommend leaving some headroom. You really need to ensure that it takes <em>significantly less</em> than X seconds of real time to update X seconds worth of physics simulation. If you can do this then your physics engine can &ldquo;catch up&rdquo; from any temporary spike by simulating more frames. Alternatively you can clamp at a maximum # of steps  per-frame and the simulation will appear to slow down under heavy load. Arguably this is better than spiraling to death, especially if the heavy load is just a temporary spike.</p>
+
+<h2 id="free-the-physics">Free the physics</h2>
+
+<p>Now let&rsquo;s take it one step further. What if you want exact reproducibility from one run to the next given the same inputs? This comes in handy when trying to network your physics simulation using deterministic lockstep, but it&rsquo;s also generally a nice thing to know that your simulation behaves exactly the same from one run to the next without any potential for different behavior depending on the render framerate.</p>
+
+<p>But you ask why is it necessary to have fully fixed delta time to do this? Surely the semi-fixed delta time with the small remainder step is &ldquo;good enough&rdquo;? And yes, you are right. It is <em>good enough</em> in most cases but it is not <em>exactly the same</em>. (v*dt) + (v*dt) is not <em>necessarily</em> equal to v*2*dt due to to the limited precision of floating point arithmetic, so it follows that in order to get exactly the same result (and I mean exact down to the floating point bits) it is necessary to use a fixed delta time value.</p>
+
+<p>So what we want is the best of both worlds: a fixed delta time value for the simulation plus the ability to render at different framerates? These two things seem completely at odds, and they are - unless we can find a way to decouple the simulation and rendering framerates.</p>
+
+<p>Here&rsquo;s how to do it. Advance the physics simulation ahead in fixed dt time steps while also making sure that it keeps up with the timer values coming from the renderer so that the simulation advances at the correct rate. For example, if the display framerate is 50fps and the simulation runs at 100fps then we need to take two physics steps every display update. Easy.</p>
+
+<p>What if the display framerate is 200fps? Well in this case it we need to take half a physics step each display update, but we can&rsquo;t do that, we must advance with constant dt. So we take one physics step every two display updates.</p>
+
+<p>Even trickier, what if the display framerate is 60fps, but we want our simulation to run at 100fps? There is no easy multiple. What if VSYNC is disabled and the display frame rate fluctuates from frame to frame?</p>
+
+<p>If you head just exploded don&rsquo;t worry, all that is needed to solve this is to change your point of view. Instead of thinking that you have a certain amount of frame time you must simulate before rendering, flip your viewpoint upside down and think of it like this: The renderer produces time and the simulation consumes it in dt sized steps.</p>
+
+<p>Again:</p>
+
+<p>The renderer produces time and the simulation consumes it in dt sized steps.</p>
+
+<pre><code>    double t = 0.0;
+    const double dt = 0.01;
+
+    double currentTime = hires_time_in_seconds();
+    double accumulator = 0.0;
+
+    while ( !quit )
+    {
+        double newTime = hires_time_in_seconds();
+        double frameTime = newTime - currentTime;
+        currentTime = newTime;
+
+        accumulator += frameTime;
+
+        while ( accumulator &gt;= dt )
+        {
+            integrate( state, t, dt );
+            accumulator -= dt;
+            t += dt;
+        }
+
+        render( state );
+    }
+</code></pre>
+
+<p>Notice that unlike the semi-fixed timestep we only ever integrate with steps sized dt so it follows that in the common case we have some unsimulated time left over at the end of each frame. This is important! This left over time is passed on to the next frame via the accumulator variable and is not thrown away.</p>
+
+<h2 id="the-final-touch">The final touch</h2>
+
+<p>But what do to with this remaining time? It seems incorrect doesn&rsquo;t it?</p>
+
+<p>To understand what is going on consider a situation where the display framerate is 60fps and the physics is running at 50fps. There is no nice multiple so the accumulator causes the simulation to alternate between mostly taking one and occasionally two physics steps per-frame when the remainders &ldquo;accumulate&rdquo; above dt.</p>
+
+<p>Now consider that the majority of render frames will have some small remainder of frame time left in the accumulator that cannot be simulated because it is less than dt. This means we&rsquo;re displaying the state of the physics simulation at a time slightly different from the render time, causing a subtle but visually unpleasant stuttering of the physics simulation on the screen.</p>
+
+<p>One solution to this problem is to interpolate between the previous and current physics state based on how much time is left in the accumulator:</p>
+
+<pre><code>    double t = 0.0;
+    double dt = 0.01;
+
+    double currentTime = hires_time_in_seconds();
+    double accumulator = 0.0;
+
+    State previous;
+    State current;
+
+    while ( !quit )
+    {
+        double newTime = time();
+        double frameTime = newTime - currentTime;
+        if ( frameTime &gt; 0.25 )
+            frameTime = 0.25;
+        currentTime = newTime;
+
+        accumulator += frameTime;
+
+        while ( accumulator &gt;= dt )
+        {
+            previousState = currentState;
+            integrate( currentState, t, dt );
+            t += dt;
+            accumulator -= dt;
+        }
+
+        const double alpha = accumulator / dt;
+
+        State state = currentState * alpha + 
+            previousState * ( 1.0 - alpha );
+
+        render( state );
+    }
+</code></pre>
+
+<p>This <em>looks</em> complicated but here is a simple way to think about it. Any remainder in the accumulator is effectively a measure of just how much more time is required before another whole physics step can be taken. For example, a remainder of dt/2 means that we are currently halfway between the current physics step and the next. A remainder of dt*0.1 means that the update is 1/10th of the way between the current and the next state.</p>
+
+<p>We can use this remainder value to get a blending factor between the previous and current physics state simply by dividing by dt. This gives an alpha value in the range [0,1] which is used to perform a linear interpolation between the two physics states to get the current state to render. This interpolation is easy to do for single values and for vector state values. You can even use it with full 3D rigid body dynamics if you store your orientation as a quaternion and use a spherical linear interpolation (slerp) to blend between the previous and current orientations.</p>
+
+<p>When we do this the physics simulation jitter goes away and the physics simulation appears smooth. But did we just get something for free? Not really. The cost is that the physics simulation is now rendered one frame in the past.</p>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="http://127.0.0.1/contact/">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://twitter.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://www.facebook.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted">© The Network Protocol Company, Inc.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://127.0.0.1/js/jquery.min.js"></script>
+
+    
+    <script src="http://127.0.0.1/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://127.0.0.1/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

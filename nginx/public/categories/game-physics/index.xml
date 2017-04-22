@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Game Physics on Gaffer On Games</title>
+    <link>http://127.0.0.1/categories/game-physics/</link>
+    <description>Recent content in Game Physics on Gaffer On Games</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© The Network Protocol Company, Inc.</copyright>
+    <lastBuildDate>Sat, 04 Sep 2004 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://127.0.0.1/categories/game-physics/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Networked Physics (2004)</title>
+      <link>http://127.0.0.1/post/networked_physics_2004/</link>
+      <pubDate>Sat, 04 Sep 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1/post/networked_physics_2004/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to the final article in in Game Physics.
+In the previous article we discussed how to use spring-like forces to model basic collision response, joints and motors.
+Now we&amp;rsquo;re going to discuss how to network a physics simulation.
+Networking a physics simulation is the holy grail of multiplayer gaming and the massive popularity of first person shooters on the PC is a testament to the just how immersive a networked physics simulation can be.</description>
+    </item>
+    
+    <item>
+      <title>Spring Physics</title>
+      <link>http://127.0.0.1/post/spring_physics/</link>
+      <pubDate>Fri, 03 Sep 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1/post/spring_physics/</guid>
+      <description>Introduction I&amp;rsquo;m Glenn Fiedler and welcome to the fourth article in Game Physics.
+In the previous article we discussed how to simulate the motion of rigid bodies in 3D. Now we&amp;rsquo;re going to discuss how to implement spring physics.
+The physics behind springs is simple but extremely versatile and useful. You can use springs to link points together to model rope and string, cloth, and even blobs of jelly. Springs can also be used to implement basic collision response, and to create joints that constrain the motion of rigid bodies.</description>
+    </item>
+    
+    <item>
+      <title>Physics in 3D</title>
+      <link>http://127.0.0.1/post/physics_in_3d/</link>
+      <pubDate>Thu, 02 Sep 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1/post/physics_in_3d/</guid>
+      <description>Introduction I&amp;rsquo;m Glenn Fiedler and welcome to the third article in Game Physics.
+In the previous article we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.
+In this article we are going to simulate motion in three dimensions.
+We will concentrate on a type of object called a rigid body. Rigid bodies cannot bend, compress or deform in any way. This makes their motion much easier to calculate.</description>
+    </item>
+    
+    <item>
+      <title>Fix Your Timestep!</title>
+      <link>http://127.0.0.1/post/fix_your_timestep/</link>
+      <pubDate>Thu, 10 Jun 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1/post/fix_your_timestep/</guid>
+      <description>Introduction I&amp;rsquo;m Glenn Fiedler and welcome to the second article in Game Physics.
+In the previous article we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&amp;rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &amp;ldquo;delta time&amp;rdquo; (or dt for short).
+But how to choose this delta time value? This may seem like a trivial subject but in fact there are many different ways to do it, each with their own strengths and weaknesses - so read on!</description>
+    </item>
+    
+    <item>
+      <title>Integration Basics</title>
+      <link>http://127.0.0.1/post/integration_basics/</link>
+      <pubDate>Tue, 01 Jun 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1/post/integration_basics/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to the first article in Game Physics.
+If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.</description>
+    </item>
+    
+  </channel>
+</rss>

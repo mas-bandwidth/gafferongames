@@ -1,4 +1,4 @@
-.PHONY: public local upload commit clean
+.PHONY: public local upload commit clean nginx
 
 public:
 	rm -rf public
@@ -38,8 +38,22 @@ clean:
 	rm -f gafferongames_upload.zip
 	rm -f config.toml
 	find . -name .DS_Store -delete
+	-docker kill nginx redis webserver > /dev/null 2>&1; exit 0
+	-docker rm nginx redis webserver > /dev/null 2>&1; exit 0
 
 integration_basics:
 	mkdir -p bin
 	g++ source/game_physics/integration_basics.cpp -o bin/integration_basics
 	cd bin && ./integration_basics
+
+nginx:
+	rm -rf public
+	rm -f config.toml
+	cp config_nginx.toml config.toml
+	hugo
+	rm -rf nginx/public
+	mv public nginx/public
+	-docker kill nginx > /dev/null 2>&1; exit 0
+	-docker rm nginx > /dev/null 2>&1; exit 0
+	docker build -t gafferongames:nginx nginx/
+	docker run --name nginx -ti -p 80:80 -p 443:443 gafferongames:nginx

@@ -730,25 +730,28 @@
 	],
 	"file_history":
 	[
+		"/Users/gaffer/git/gafferongames/content/post/snapshot_compression.md",
+		"/Users/gaffer/git/gafferongames/content/post/snapshots_and_interpolation.md",
+		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
+		"/Users/gaffer/git/gafferongames/content/post/the_physics_simulation.md",
+		"/Users/gaffer/git/gafferongames/config_local.toml",
+		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
+		"/Users/gaffer/git/gafferongames/content/post/networked_physics_2004.md",
+		"/Users/gaffer/git/gafferongames/layouts/partials/header.html",
+		"/Users/gaffer/git/gafferongames/Makefile",
+		"/Users/gaffer/git/gafferongames/TODO",
+		"/Users/gaffer/git/gafferongames/config.toml",
 		"/Users/gaffer/golang/webserver.go",
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/STUFF",
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/CHORES",
-		"/Users/gaffer/git/gafferongames/TODO",
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/HEALTH",
-		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
 		"/Users/gaffer/Desktop/Networked Physics/Assets/Scripts/Context.cs",
 		"/Users/gaffer/Desktop/Networked Physics/Assets/Scripts/Constants.cs",
-		"/Users/gaffer/git/gafferongames/config_local.toml",
-		"/Users/gaffer/git/gafferongames/config.toml",
 		"/Users/gaffer/libyojimbo/premake5.lua",
-		"/Users/gaffer/git/gafferongames/Makefile",
 		"/Users/gaffer/git/gafferongames/.git/MERGE_MSG",
 		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
-		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
-		"/Users/gaffer/git/gafferongames/content/post/snapshots_and_interpolation.md",
 		"/Users/gaffer/Desktop/CANCEL SURGERY",
 		"/Users/gaffer/Desktop/cloudflare.txt",
-		"/Users/gaffer/git/gafferongames/content/post/snapshot_compression.md",
 		"/Users/gaffer/git/gafferongames/static/css/clean-blog.min.css",
 		"/Users/gaffer/git/gafferongames/static/css/bootstrap.min.css",
 		"/Users/gaffer/git/gafferongames/config_upload.toml",
@@ -771,11 +774,9 @@
 		"/Users/gaffer/git/gafferongames/.gitignore",
 		"/Users/gaffer/Desktop/ROBLOX",
 		"/Users/gaffer/git/gafferongames/scratch.md",
-		"/Users/gaffer/git/gafferongames/content/post/the_physics_simulation.md",
 		"/Users/gaffer/Desktop/devon.txt",
 		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
 		"/Users/gaffer/git/gafferongames/archetypes/post.md",
-		"/Users/gaffer/git/gafferongames/content/post/networked_physics_2004.md",
 		"/Users/gaffer/git/gafferongames/content/post/fix_your_timestep.md",
 		"/Users/gaffer/git/gafferongames/content/post/physics_in_3d.md",
 		"/Users/gaffer/git/gafferongames/content/post/spring_physics.md",
@@ -801,7 +802,6 @@
 		"/Users/gaffer/git/gafferongames/layouts/_default/single.html",
 		"/Users/gaffer/git/gafferongames/layouts/_default/archive.html",
 		"/Users/gaffer/git/gafferongames/layouts/partials/navbar.html",
-		"/Users/gaffer/git/gafferongames/layouts/partials/header.html",
 		"/Users/gaffer/git/gafferongames/layouts/partials/ga.html",
 		"/Users/gaffer/git/gafferongames/layouts/partials/footer.html",
 		"/Users/gaffer/git/gafferongames/layouts/partials/categories.html",
@@ -908,6 +908,11 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			".RSSlink",
+			"RSS",
+			"RSSLink",
+			"video/",
+			"video",
 			"orientation",
 			"the the",
 			"receive",
@@ -1030,12 +1035,7 @@
 			"game!",
 			"TCP/IP Ill",
 			"its",
-			"that its",
-			"not arrive",
-			"passed",
-			"is is quite",
-			".jpg",
-			"10.0"
+			"that its"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1144,6 +1144,34 @@
 				"TODO"
 			],
 			[
+				"make",
+				"Makefile"
+			],
+			[
+				"net",
+				"content/post/networked_physics_in_virtual_reality.md"
+			],
+			[
+				"config",
+				"config_local.toml"
+			],
+			[
+				"snapshot_",
+				"content/post/snapshot_compression.md"
+			],
+			[
+				"snapshot",
+				"content/post/snapshots_and_interpolation.md"
+			],
+			[
+				"dete",
+				"content/post/deterministic_lockstep.md"
+			],
+			[
+				"the",
+				"content/post/the_physics_simulation.md"
+			],
+			[
 				"networkedphysisc",
 				"content/post/networked_physics_in_virtual_reality.md"
 			],
@@ -1152,24 +1180,12 @@
 				"config.toml"
 			],
 			[
-				"make",
-				"Makefile"
-			],
-			[
 				"toml",
 				"config_local.toml"
 			],
 			[
 				"whyca",
 				"content/post/why_cant_i_send_udp_packets_from_a_browser.md"
-			],
-			[
-				"dete",
-				"content/post/deterministic_lockstep.md"
-			],
-			[
-				"snapshot",
-				"content/post/snapshots_and_interpolation.md"
 			],
 			[
 				"why",
@@ -1260,10 +1276,6 @@
 				"config_local.toml"
 			],
 			[
-				"the",
-				"content/post/the_physics_simulation.md"
-			],
-			[
 				"about",
 				"content/about.md"
 			],
@@ -1290,10 +1302,6 @@
 			[
 				"_3d",
 				"content/post/physics_in_3d.md"
-			],
-			[
-				"net",
-				"content/post/networked_physics_2004.md"
 			],
 			[
 				"phys",
@@ -1402,10 +1410,6 @@
 			[
 				"im",
 				"bin/implicit_euler_spring_damper.csv"
-			],
-			[
-				"config",
-				"config.toml"
 			],
 			[
 				"clint",
@@ -1646,10 +1650,6 @@
 			[
 				"config.h",
 				"yojimbo_config.h"
-			],
-			[
-				"socket_interfac",
-				"yojimbo_socket_interface.h"
 			]
 		],
 		"width": 0.0

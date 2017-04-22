@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Sending and Receiving Packets | Gaffer On Games</title>
+
+    
+    <link href="http://127.0.0.1/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://127.0.0.1/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://127.0.0.1">Gaffer On Games</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://127.0.0.1/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://127.0.0.1/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://127.0.0.1/post/">Archives</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://127.0.0.1/contact/">Contact</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://www.patreon.com/gafferongames">Support gafferongames.com</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://127.0.0.1/img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Sending and Receiving Packets</h1>
+               <h2 class="subheading">How to send and receive packets over UDP with BSD sockets</h2>
+               <span class="meta">Posted by <a href="http://127.0.0.1/about">Glenn Fiedler</a> on Friday, October 3, 2008
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Hi, I&rsquo;m <a href="http://127.0.0.1/about">Glenn Fiedler</a> and welcome to <a href="http://127.0.0.1/categories/networking-for-game-programmers/"><strong>Networking for Game Programmers</strong></a>.</p>
+
+<p>In the <a href="http://127.0.0.1/post/udp_vs_tcp">previous article</a> we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.</p>
+
+<p>In this article I am going to show you how to send and receive UDP packets.</p>
+
+<h2 id="bsd-sockets">BSD sockets</h2>
+
+<p>For most modern platforms you have some sort of basic socket layer available based on BSD sockets.</p>
+
+<p>BSD sockets are manipulated using simple functions like &ldquo;socket&rdquo;, &ldquo;bind&rdquo;, &ldquo;sendto&rdquo; and &ldquo;recvfrom&rdquo;. You can of course work directly with these functions if you wish, but it becomes difficult to keep your code platform independent because each platform is slightly different.</p>
+
+<p>So although I will first show you BSD socket example code to demonstrate basic socket usage, we won&rsquo;t be using BSD sockets directly for long. Once we&rsquo;ve covered all basic socket functionality we&rsquo;ll abstract everything away into a set of classes, making it easy to you to write platform independent socket code.</p>
+
+<h2 id="platform-specifics">Platform specifics</h2>
+
+<p>First let&rsquo;s setup a define so we can detect what our current platform is and handle the slight differences in sockets from one platform to another:</p>
+
+<pre><code>    // platform detection
+
+    #define PLATFORM_WINDOWS  1
+    #define PLATFORM_MAC      2
+    #define PLATFORM_UNIX     3
+
+    #if defined(_WIN32)
+    #define PLATFORM PLATFORM_WINDOWS
+    #elif defined(__APPLE__)
+    #define PLATFORM PLATFORM_MAC
+    #else
+    #define PLATFORM PLATFORM_UNIX
+    #endif
+</code></pre>
+
+<p>Now let&rsquo;s include the appropriate headers for sockets. Since the header files are platform specific, we&rsquo;ll use the platform #define to include different sets of files depending on the platform:</p>
+
+<pre><code>    #if PLATFORM == PLATFORM_WINDOWS
+
+        #include &lt;winsock2.h&gt;
+
+    #elif PLATFORM == PLATFORM_MAC || 
+          PLATFORM == PLATFORM_UNIX
+
+        #include &lt;sys/socket.h&gt;
+        #include &lt;netinet/in.h&gt;
+        #include &lt;fcntl.h&gt;
+
+    #endif
+</code></pre>
+
+<p>Sockets are built in to the standard system libraries on unix-based platforms so we don&rsquo;t have to link to any additonal libraries. However, on Windows we need to link to the winsock library to get socket functionality.</p>
+
+<p>Here is a simple trick to do this without having to change your project or makefile:</p>
+
+<pre><code>    #if PLATFORM == PLATFORM_WINDOWS
+    #pragma comment( lib, &quot;wsock32.lib&quot; )
+    #endif
+</code></pre>
+
+<p>I like this trick because I&rsquo;m super lazy. You can always link from your project or makefile if you wish.</p>
+
+<h2 id="initializing-the-socket-layer">Initializing the socket layer</h2>
+
+<p>Most unix-like platforms (including macosx) don&rsquo;t require any specific steps to initialize the sockets layer, however Windows requires that you jump through some hoops to get your socket code working.</p>
+
+<p>You must call &ldquo;WSAStartup&rdquo; to initialize the sockets layer before you call any socket functions, and &ldquo;WSACleanup&rdquo; to shutdown when you are done.</p>
+
+<p>Let&rsquo;s add two new functions:</p>
+
+<pre><code>    bool InitializeSockets()
+    {
+        #if PLATFORM == PLATFORM_WINDOWS
+        WSADATA WsaData;
+        return WSAStartup( MAKEWORD(2,2), 
+                           &amp;WsaData ) 
+            == NO_ERROR;
+        #else
+        return true;
+        #endif
+    }
+
+    void ShutdownSockets()
+    {
+        #if PLATFORM == PLATFORM_WINDOWS
+        WSACleanup();
+        #endif
+    }
+</code></pre>
+
+<p>Now we have a platform independent way to initialize the socket layer.</p>
+
+<h2 id="creating-a-socket">Creating a socket</h2>
+
+<p>It&rsquo;s time to create a UDP socket, here&rsquo;s how to do it:</p>
+
+<pre><code>    int handle = socket( AF_INET, 
+                         SOCK_DGRAM, 
+                         IPPROTO_UDP );
+
+    if ( handle &lt;= 0 )
+    {
+        printf( &quot;failed to create socket\n&quot; );
+        return false;
+    }
+</code></pre>
+
+<p>Next we bind the UDP socket to a port number (eg. 30000). Each socket must be bound to a unique port, because when a packet arrives the port number determines which socket to deliver to. Don&rsquo;t use ports lower than 1024 because they are reserved for the system. Also try to avoid using ports above 50000 because they used when dynamically assigning ports.</p>
+
+<p>Special case: if you don&rsquo;t care what port your socket gets bound to just pass in &ldquo;0&rdquo; as your port, and the system will select a free port for you.</p>
+
+<pre><code>    sockaddr_in address;
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = 
+        htons( (unsigned short) port );
+
+    if ( bind( handle, 
+               (const sockaddr*) &amp;address, 
+               sizeof(sockaddr_in) ) &lt; 0 )
+    {
+        printf( &quot;failed to bind socket\n&quot; );
+        return false;
+    }
+</code></pre>
+
+<p>Now the socket is ready to send and receive packets.</p>
+
+<p>But what is this mysterious call to &ldquo;htons&rdquo; in the code above? This is just a helper function that converts a 16 bit integer value from host byte order (little or big-endian) to network byte order (big-endian). This is required whenever you directly set integer members in socket structures.</p>
+
+<p>You&rsquo;ll see &ldquo;htons&rdquo; (host to network short) and its 32 bit integer sized cousin &ldquo;htonl&rdquo; (host to network long) used several times throughout this article, so keep an eye out, and you&rsquo;ll know what is going on.</p>
+
+<h2 id="setting-the-socket-as-non-blocking">Setting the socket as non-blocking</h2>
+
+<p>By default sockets are set in what is called &ldquo;blocking mode&rdquo;.</p>
+
+<p>This means that if you try to read a packet using &ldquo;recvfrom&rdquo;, the function will not return until a packet is available to read. This is not at all suitable for our purposes. Video games are realtime programs that simulate at 30 or 60 frames per second, they can&rsquo;t just sit there waiting for a packet to arrive!</p>
+
+<p>The solution is to flip your sockets into &ldquo;non-blocking mode&rdquo; after you create them. Once this is done, the &ldquo;recvfrom&rdquo; function returns immediately when no packets are available to read, with a return value indicating that you should try to read packets again later.</p>
+
+<p>Here&rsquo;s how put a socket in non-blocking mode:</p>
+
+<pre><code>    #if PLATFORM == PLATFORM_MAC || 
+        PLATFORM == PLATFORM_UNIX
+
+        int nonBlocking = 1;
+        if ( fcntl( handle, 
+                    F_SETFL, 
+                    O_NONBLOCK, 
+                    nonBlocking ) == -1 )
+        {
+            printf( &quot;failed to set non-blocking\n&quot; );
+            return false;
+        }
+
+    #elif PLATFORM == PLATFORM_WINDOWS
+
+        DWORD nonBlocking = 1;
+        if ( ioctlsocket( handle, 
+                          FIONBIO, 
+                          &amp;nonBlocking ) != 0 )
+        {
+            printf( &quot;failed to set non-blocking\n&quot; );
+            return false;
+        }
+
+    #endif
+</code></pre>
+
+<p>Windows does not provide the &ldquo;fcntl&rdquo; function, so we use the &ldquo;ioctlsocket&rdquo; function instead.</p>
+
+<h2 id="sending-packets">Sending packets</h2>
+
+<p>UDP is a connectionless protocol, so each time you send a packet you must specify the destination address. This means you can use one UDP socket to send packets to any number of different IP addresses, there&rsquo;s no single computer at the other end of your UDP socket that you are connected to.</p>
+
+<p>Here&rsquo;s how to send a packet to a specific address:</p>
+
+<pre><code>    int sent_bytes = 
+        sendto( handle, 
+                (const char*)packet_data, 
+                packet_size,
+                0, 
+                (sockaddr*)&amp;address, 
+                sizeof(sockaddr_in) );
+
+    if ( sent_bytes != packet_size )
+    {
+        printf( &quot;failed to send packet\n&quot; );
+        return false;
+    }
+</code></pre>
+
+<p>Important! The return value from &ldquo;sendto&rdquo; only indicates if the packet was successfully sent from the local computer. It does <em>not</em> tell you whether or not the packet was received by the destination computer. UDP has no way of knowing whether or not the the packet arrived at its destination!</p>
+
+<p>In the code above we pass a &ldquo;sockaddr_in&rdquo; structure as the destination address. How do we setup one of these structures?</p>
+
+<p>Let&rsquo;s say we want to send to the address 207.45.186.98:30000</p>
+
+<p>Starting with our address in this form:</p>
+
+<pre><code>    unsigned int a = 207;
+    unsigned int b = 45;
+    unsigned int c = 186;
+    unsigned int d = 98;
+    unsigned short port = 30000;
+</code></pre>
+
+<p>We have a bit of work to do to get it in the form required by &ldquo;sendto&rdquo;:</p>
+
+<pre><code>    unsigned int address = ( a &lt;&lt; 24 ) | 
+                           ( b &lt;&lt; 16 ) | 
+                           ( c &lt;&lt; 8  ) | 
+                             d;
+
+    sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = htonl( address );
+    addr.sin_port = htons( port );
+</code></pre>
+
+<p>As you can see, we first combine the a,b,c,d values in range [0,255] into a single unsigned integer, with each byte of the integer now corresponding to the input values. We then initialize a &ldquo;sockaddr_in&rdquo; structure with the integer address and port, making sure to convert our integer address and port values from host byte order to network byte order using &ldquo;htonl&rdquo; and &ldquo;htons&rdquo;.</p>
+
+<p>Special case: if you want to send a packet to yourself, there&rsquo;s no need to query the IP address of your own machine, just pass in the loopback address 127.0.0.1 and the packet will be sent to your local machine.</p>
+
+<h2 id="receiving-packets">Receiving packets</h2>
+
+<p>Once you have a UDP socket bound to a port, any UDP packets sent to your sockets IP address and port are placed in a queue. To receive packets just loop and call &ldquo;recvfrom&rdquo; until it fails with EWOULDBLOCK indicating there are no more packets to receive.</p>
+
+<p>Since UDP is connectionless, packets may arrive from any number of different computers. Each time you receive a packet &ldquo;recvfrom&rdquo; gives you the IP address and port of the sender, so you know where the packet came from.</p>
+
+<p>Here&rsquo;s how to loop and receive all incoming packets:</p>
+
+<pre><code>    while ( true )
+    {
+        unsigned char packet_data[256];
+
+        unsigned int max_packet_size = 
+            sizeof( packet_data );
+
+        #if PLATFORM == PLATFORM_WINDOWS
+        typedef int socklen_t;
+        #endif
+
+        sockaddr_in from;
+        socklen_t fromLength = sizeof( from );
+
+        int bytes = recvfrom( socket, 
+                              (char*)packet_data, 
+                              max_packet_size,
+                              0, 
+                              (sockaddr*)&amp;from, 
+                              &amp;fromLength );
+
+        if ( bytes &lt;= 0 )
+            break;
+
+        unsigned int from_address = 
+            ntohl( from.sin_addr.s_addr );
+
+        unsigned int from_port = 
+            ntohs( from.sin_port );
+
+        // process received packet
+    }
+</code></pre>
+
+<p>Any packets in the queue larger than your receive buffer will be silently discarded. So if you have a 256 byte buffer to receive packets like the code above, and somebody sends you a 300 byte packet, the 300 byte packet will be dropped. You <em>will not</em> receive just the first 256 bytes of the 300 byte packet.</p>
+
+<p>Since you are writing your own game network protocol, this is no problem at all in practice, just make sure your receive buffer is big enough to receive the largest packet your code could possibly send.</p>
+
+<h2 id="destroying-a-socket">Destroying a socket</h2>
+
+<p>On most unix-like platforms, sockets are file handles so you use the standard file &ldquo;close&rdquo; function to clean up sockets once you are finished with them. However, Windows likes to be a little bit different, so we have to use &ldquo;closesocket&rdquo; instead:</p>
+
+<pre>#if PLATFORM == PLATFORM_MAC || 
+    PLATFORM == PLATFORM_UNIX
+close( socket );
+#elif PLATFORM == PLATFORM_WINDOWS
+closesocket( socket );
+#endif</pre>
+
+<p>Hooray windows.</p>
+
+<h2 id="socket-class">Socket class</h2>
+
+<p>So we&rsquo;ve covered all the basic operations: creating a socket, binding it to a port, setting it to non-blocking, sending and receiving packets, and destroying the socket.</p>
+
+<p>But you&rsquo;ll notice most of these operations are slightly platform dependent, and it&rsquo;s pretty annoying to have to remember to #ifdef and do platform specifics each time you want to perform socket operations.</p>
+
+<p>We&rsquo;re going to solve this by wrapping all our socket functionality up into a &ldquo;Socket&rdquo; class. While we&rsquo;re at it, we&rsquo;ll add an &ldquo;Address&rdquo; class to make it easier to specify internet addresses. This avoids having to manually encode or decode a &ldquo;sockaddr_in&rdquo; structure each time we send or receive packets.</p>
+
+<p>So let&rsquo;s add a socket class:</p>
+
+<pre><code>    class Socket
+    {
+    public:
+
+        Socket();
+
+        ~Socket();
+
+        bool Open( unsigned short port );
+
+        void Close();
+
+        bool IsOpen() const;
+
+        bool Send( const Address &amp; destination, 
+                   const void * data, 
+                   int size );
+
+        int Receive( Address &amp; sender, 
+                     void * data, 
+                     int size );
+
+    private:
+
+        int handle;
+    };
+</code></pre>
+
+<p>and an address class:</p>
+
+<pre><code>    class Address
+    {
+    public:
+
+        Address();
+
+        Address( unsigned char a, 
+                 unsigned char b, 
+                 unsigned char c, 
+                 unsigned char d, 
+                 unsigned short port );
+
+        Address( unsigned int address, 
+                 unsigned short port );
+
+        unsigned int GetAddress() const;
+
+        unsigned char GetA() const;
+        unsigned char GetB() const;
+        unsigned char GetC() const;
+        unsigned char GetD() const;
+
+        unsigned short GetPort() const;
+
+    private:
+
+        unsigned int address;
+        unsigned short port;
+    };
+</code></pre>
+
+<p>Here&rsquo;s how to to send and receive packets with these classes:</p>
+
+<pre><code>    // create socket
+
+    const int port = 30000;
+
+    Socket socket;
+
+    if ( !socket.Open( port ) )
+    {
+        printf( &quot;failed to create socket!\n&quot; );
+        return false;
+    }
+
+    // send a packet
+
+    const char data[] = &quot;hello world!&quot;;
+
+    socket.Send( Address(127,0,0,1,port), data, sizeof( data ) );
+
+    // receive packets
+
+    while ( true )
+    {
+        Address sender;
+        unsigned char buffer[256];
+        int bytes_read = 
+            socket.Receive( sender, 
+                            buffer, 
+                            sizeof( buffer ) );
+        if ( !bytes_read )
+            break;
+
+        // process packet
+    }
+</code></pre>
+
+<p>As you can see it&rsquo;s much simpler than using BSD sockets directly.</p>
+
+<p>As an added bonus the code is the same on all platforms because everything platform specific is handled inside the socket and address classes.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>You now have a platform independent way to send and receive packets. <em>Enjoy</em> :)</p>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="http://127.0.0.1/contact/">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://twitter.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://www.facebook.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted">© The Network Protocol Company, Inc.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://127.0.0.1/js/jquery.min.js"></script>
+
+    
+    <script src="http://127.0.0.1/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://127.0.0.1/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

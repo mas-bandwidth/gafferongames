@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://127.0.0.1/about/</loc>
+    <lastmod>2015-05-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/contact/</loc>
+    <lastmod>2015-05-24T18:52:04+02:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/why_cant_i_send_udp_packets_from_a_browser/</loc>
+    <lastmod>2017-02-26T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/snapshot_compression/</loc>
+    <lastmod>2015-01-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/snapshots_and_interpolation/</loc>
+    <lastmod>2014-11-30T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/deterministic_lockstep/</loc>
+    <lastmod>2014-11-29T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/the_physics_simulation/</loc>
+    <lastmod>2014-11-28T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/floating_point_determinism/</loc>
+    <lastmod>2010-02-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/what_every_programmer_needs_to_know_about_game_networking/</loc>
+    <lastmod>2010-02-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/reliability_ordering_and_congestion_avoidance_over_udp/</loc>
+    <lastmod>2008-10-20T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/virtual_connection_over_udp/</loc>
+    <lastmod>2008-10-08T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/sending_and_receiving_packets/</loc>
+    <lastmod>2008-10-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/udp_vs_tcp/</loc>
+    <lastmod>2008-10-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/networked_physics_2004/</loc>
+    <lastmod>2004-09-04T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/spring_physics/</loc>
+    <lastmod>2004-09-03T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/physics_in_3d/</loc>
+    <lastmod>2004-09-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/fix_your_timestep/</loc>
+    <lastmod>2004-06-10T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/integration_basics/</loc>
+    <lastmod>2004-06-01T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/categories/</loc>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/</loc>
+    <lastmod>2015-05-24T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/categories/game-networking/</loc>
+    <lastmod>2010-02-24T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/categories/game-physics/</loc>
+    <lastmod>2004-09-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/categories/networked-physics/</loc>
+    <lastmod>2015-01-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/tags/networking/</loc>
+    <lastmod>2017-02-26T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/tags/physics/</loc>
+    <lastmod>2015-01-04T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/post/</loc>
+    <lastmod>2017-02-26T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/tags/</loc>
+    <lastmod>2017-02-26T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1/categories/white-papers/</loc>
+    <lastmod>2017-02-26T00:00:00+00:00</lastmod>
+    <priority>0</priority>
+  </url>
+  
+</urlset>
