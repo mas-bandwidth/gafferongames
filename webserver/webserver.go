@@ -69,7 +69,7 @@ func ParseIP( s string ) ( string, error ) {
 }
 
 func FuckOffAndBan( writer http.ResponseWriter, redis_client *redis.Client, from_ip string ) {
-    writer.WriteHeader( http.StatusTooManyRequests )
+    writer.WriteHeader( http.StatusOK )
     writer.Write( []byte( "Fuck off" ) )
     redis_client.Set( "banned-" + from_ip, "1", time.Hour * 24 );
 }

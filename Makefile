@@ -1,4 +1,4 @@
-.PHONY: public local upload commit clean nginx redis
+.PHONY: public local upload commit clean nginx redis webserver
 
 public:
 	rm -rf public
@@ -56,7 +56,7 @@ nginx:
 	-docker kill nginx > /dev/null 2>&1; exit 0
 	-docker rm nginx > /dev/null 2>&1; exit 0
 	docker build -t gafferongames:nginx nginx
-	docker run --name nginx -ti -p 80:80 -p 443:443 gafferongames:nginx
+	docker run --name nginx --link webserver:web -ti -p 80:80 -p 443:443 gafferongames:nginx
 
 redis:
 	-docker kill redis > /dev/null 2>&1; exit 0
@@ -64,3 +64,8 @@ redis:
 	docker build -t gafferongames:redis redis
 	docker run --name redis -ti -p 6379:6379 gafferongames:redis
 
+webserver:
+	-docker kill webserver > /dev/null 2>&1; exit 0
+	-docker rm webserver > /dev/null 2>&1; exit 0
+	docker build -t gafferongames:webserver webserver
+	docker run --name webserver --link redis:db -ti -p 8080:8080 gafferongames:webserver
