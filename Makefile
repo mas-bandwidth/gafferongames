@@ -1,4 +1,4 @@
-.PHONY: public local upload commit clean nginx
+.PHONY: public local upload commit clean nginx redis
 
 public:
 	rm -rf public
@@ -55,5 +55,12 @@ nginx:
 	mv public nginx/public
 	-docker kill nginx > /dev/null 2>&1; exit 0
 	-docker rm nginx > /dev/null 2>&1; exit 0
-	docker build -t gafferongames:nginx nginx/
+	docker build -t gafferongames:nginx nginx
 	docker run --name nginx -ti -p 80:80 -p 443:443 gafferongames:nginx
+
+redis:
+	-docker kill redis > /dev/null 2>&1; exit 0
+	-docker rm redis > /dev/null 2>&1; exit 0
+	docker build -t gafferongames:redis redis
+	docker run --name redis -ti -p 6379:6379 gafferongames:redis
+

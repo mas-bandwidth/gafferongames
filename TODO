@@ -1,65 +1,9 @@
 DONE
 
-    Working on Oculus article for networked physics.
+    Setup an nginx instance inside docker
 
-    What's the title? It has to be catchy. This is always key.
-
-    "Networked Physics in Virtual Reality"
-
-    ^--- This is good. Sounds seminal.
-
-    Sketched out the rough structure of the article.
-
-    I think hitting up the determinism issue early is key.
+    Migrate the other docker projects under gafferongames, eg. "redis" and "webserver".    
 
 TODO
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    -----------------------
-
-    Need to clean up and fix tone on "Client Server Connection" article.
-
-    Need to convert state synchronization article.
-
-    Need to make sure all articles have flow links, plus bio + donate convert at the bottom.
+    Setup makefile rules so they build with dependencies from gafferongames.com
