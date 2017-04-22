@@ -82,13 +82,16 @@ webserver:
 	docker build -t gafferongames:webserver webserver
 	docker run --name webserver --link redis:db -ti -p 8080:8080 gafferongames:webserver
 
-up:
+build:
 	rm -rf public
 	rm -f config.toml
 	cp config_nginx.toml config.toml
 	hugo
 	rm -rf nginx/public
 	mv public nginx/public
+	sudo docker-compose build
+
+up:
 	sudo -b docker-compose up
 
 down:
