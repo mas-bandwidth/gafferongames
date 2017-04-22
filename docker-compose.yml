@@ -3,14 +3,14 @@ services:
 
   nginx:
     build: nginx
+    links:
+      - "webserver:web"
     ports:
       - "80:80"
       - "443:443"
 
   webserver:
     build: webserver
-    ports:
-      - "8080:8080"
     links:
       - "redis:db"
 
