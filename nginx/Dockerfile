@@ -1,21 +1,12 @@
-FROM phusion/baseimage:0.9.18
+FROM nginx
 
-RUN add-apt-repository -y ppa:nginx/stable && \
-    apt-get update && \
-    apt-get install -y nginx && \
-    rm -rf /var/lib/apt/lists/* && \
-    echo "\ndaemon off;" >> /etc/nginx/nginx.conf && \
-    chown -R www-data:www-data /var/lib/nginx
-
-VOLUME ["/etc/nginx/sites-enabled", "/etc/nginx/certs", "/etc/nginx/conf.d", "/var/log/nginx", "/var/www/html"]
-
-ADD public /var/www/html
+ADD public /var/www/html/gafferongames
 
 ADD nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /etc/nginx
 
-CMD ["nginx"]
+RUN ["nginx"]
 
 EXPOSE 80
 
