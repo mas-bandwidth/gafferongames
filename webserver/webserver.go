@@ -123,8 +123,6 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
     }
     // todo: ^--- end pipeline
 
-    writer.WriteHeader( http.StatusNotFound )
-
     f, err := os.Open( filename );
     if ( err != nil ) {
         writer.WriteHeader( http.StatusNotFound )
