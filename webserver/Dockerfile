@@ -6,9 +6,9 @@ RUN go get github.com/gorilla/mux
 
 RUN go get -u github.com/go-redis/redis
 
-ADD webserver.go webserver.go
-
 ADD videos /go/bin/videos
+
+ADD webserver.go webserver.go
 
 RUN go build -o /go/bin/webserver webserver.go
 
