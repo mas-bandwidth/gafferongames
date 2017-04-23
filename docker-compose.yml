@@ -6,7 +6,6 @@ services:
     build: nginx
     depends_on: 
       - "webserver"
-      - "wordpress"
     ports:
       - "80:80"
       - "443:443"

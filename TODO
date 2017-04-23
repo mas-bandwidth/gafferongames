@@ -14,10 +14,20 @@ DONE
 
     However, it's not running the setup process, or at least, I don't know how to log in.
 
-TODO
-
     Seems like I have to expose the port so I can setup w. apache directly, then once it's setup, I can do the redirect.
 
     Fuck the other option, it seems that wordpress doesn't get setup that way. Shit software... =p
-    
-    
+
+    Fuck it. It's not worth the time fucking around with this.
+
+TODO
+
+    Time is better spent:
+
+        1. Converting remaining content to new.gafferongames.com
+
+        2. Setting up redirects for popular URLs linked to gafferongames.com
+
+        3. Getting netcode.io redirect working again
+
+        4. 
