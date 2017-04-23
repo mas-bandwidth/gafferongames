@@ -8,12 +8,16 @@ DONE
 
     Testing... Yes. This works fine!
 
-TODO
-
-    After this, only thing remaining is to do something to make testing effective when running local nginx docker compose setup... eg. base url. how?!
-
-    Also, setup pipelining for the redis commands. Don't be lame.
-
     Setting up wordpress now. A docker volume persists the db. This is how it works.
 
+    After much fucking around, I had to manually override the wp-config.php to get it to work.
+
+    However, it's not running the setup process, or at least, I don't know how to log in.
+
+TODO
+
+    Seems like I have to expose the port so I can setup w. apache directly, then once it's setup, I can do the redirect.
+
+    Fuck the other option, it seems that wordpress doesn't get setup that way. Shit software... =p
+    
     
