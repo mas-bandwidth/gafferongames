@@ -18,28 +18,3 @@ services:
 
   redis:
     build: redis
-
-  wordpress:
-    image: wordpress:latest
-    depends_on:
-      - mysql
-    restart: always
-    environment:
-      WORDPRESS_DB_HOST: mysql:3306
-      WORDPRESS_DB_PASSWORD: wordpress
-    ports:
-      - "8000:80"
-
-  mysql:
-    image: mysql:5.7
-    volumes:
-      - mysql_data:/var/lib/mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: wordpress
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpress
-
-volumes:
-  mysql_data:
