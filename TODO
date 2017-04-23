@@ -20,14 +20,12 @@ DONE
 
     Fuck it. It's not worth the time fucking around with this.
 
+    netcode.io redirect is working again.
+
 TODO
 
-    Time is better spent:
+    I need a better workflow for upgrading and changing website content while dockerized nginx is running.
 
-        1. Converting remaining content to new.gafferongames.com
+    How can I create a volume for the docker files, and then make changes to this volume from outside the container while it's running?
 
-        2. Setting up redirects for popular URLs linked to gafferongames.com
-
-        3. Getting netcode.io redirect working again
-
-        4. 
+    It must be possible. I need to do this to make it possible to upload website changes without bringing the whole website down!
