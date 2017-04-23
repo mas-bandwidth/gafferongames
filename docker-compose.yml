@@ -30,8 +30,6 @@ services:
     image: wordpress:latest
     restart: always
     environment:
-      WP_HOME: http://127.0.0.1/wordpress
-      WP_SITEURL: http://127.0.0.1/wordpress
       WORDPRESS_DB_HOST: mysql:3306
       WORDPRESS_DB_PASSWORD: wordpress
     ports:
