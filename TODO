@@ -1,27 +1,19 @@
 DONE
+    
+    Setup crontab to start gafferongames docker compose automatically on reboot
 
-    Setup an nginx instance inside docker
+    Testing in now by rebooting linode.
 
-    Migrate the other docker projects under gafferongames, eg. "redis" and "webserver".    
+    Ahhhhh... the sudo is making it fail. I can't make a sudo run like that. Edit root crontab instead.
 
-    Setup makefile rules so they build with dependencies from gafferongames.com
+    Testing... Yes. This works fine!
 
 TODO
 
-    Some problems:
+    After this, only thing remaining is to do something to make testing effective when running local nginx docker compose setup... eg. base url. how?!
 
-        1. Docker compose doesn't seem to update nginx with latest public content when run (?!)
+    Also, setup pipelining for the redis commands. Don't be lame.
 
-        2. When run manually, the network link from nginx to webserver doesn't appear to work (videos don't show up)
+    Setting up wordpress now. A docker volume persists the db. This is how it works.
 
-        3. It's annoying to not be able to test the whole system end-to-end on mac, because of the base url.
-
-    Fixed #1 by cleaning and building. I think there was a permissions issue from a run as sudo.
-
-    Videos still don't show up even when I map port 8080 (and verify connect works here).
-
-    I think nginx is running without using the config that I specify, which would explain why it's not forwarding.
-
-    The good news is that once I fix this I can setup the link between containers and it should work, it's an nginx issue.
-
-    Fixing now.
+    

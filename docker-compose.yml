@@ -1,8 +1,18 @@
 version: "3"
+
 services:
 
-  redis:
-    build: redis
+  nginx:
+    build: nginx
+    depends_on: 
+      - "webserver"
+      - "wordpress"
+    links:
+      - "webserver:web"
+      - "wordpress:wp"
+    ports:
+      - "80:80"
+      - "443:443"
 
   webserver:
     build: webserver
@@ -11,13 +21,32 @@ services:
     links:
       - "redis:db"
 
-  nginx:
-    build: nginx
-    depends_on: 
-      - "webserver"
-    links:
-      - "webserver:web"
-    ports:
-      - "80:80"
-      - "443:443"
+  redis:
+    build: redis
 
+  wordpress:
+    depends_on:
+      - mysql
+    image: wordpress:latest
+    restart: always
+    environment:
+      WP_HOME: http://127.0.0.1/wordpress
+      WP_SITEURL: http://127.0.0.1/wordpress
+      WORDPRESS_DB_HOST: mysql:3306
+      WORDPRESS_DB_PASSWORD: wordpress
+    ports:
+      - "8000:80"
+
+  mysql:
+    image: mysql:5.7
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: wordpress
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress
+
+volumes:
+  mysql_data:
