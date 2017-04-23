@@ -7,9 +7,6 @@ services:
     depends_on: 
       - "webserver"
       - "wordpress"
-    links:
-      - "webserver:web"
-      - "wordpress:wp"
     ports:
       - "80:80"
       - "443:443"
@@ -18,24 +15,17 @@ services:
     build: webserver
     depends_on: 
       - "redis"
-    links:
-      - "redis:db"
 
   redis:
     build: redis
 
   wordpress:
+    build: wordpress
     depends_on:
       - mysql
-    image: wordpress:latest
     restart: always
-    environment:
-      WP_HOME: http://new.gafferongames.com/wordpress
-      WP_SITEURL: http://new.gafferongames.com/wordpress
-      WORDPRESS_DB_HOST: mysql:3306
-      WORDPRESS_DB_PASSWORD: wordpress
     ports:
-      - "8000:80"
+      - "8000:80"      
 
   mysql:
     image: mysql:5.7
