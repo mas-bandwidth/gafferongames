@@ -30,6 +30,8 @@ services:
     image: wordpress:latest
     restart: always
     environment:
+      WP_HOME: http://new.gafferongames.com/wordpress
+      WP_SITEURL: http://new.gafferongames.com/wordpress
       WORDPRESS_DB_HOST: mysql:3306
       WORDPRESS_DB_PASSWORD: wordpress
     ports:
