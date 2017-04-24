@@ -1,11 +1,13 @@
 DONE
 
-    Added timestamp to logging.
-        
 TODO
 
-    I'd like to write a script that prints out the list of people who are currently banned.
+    Things to do:
 
-    Would be cool if my webserver.go could detect itself being modified and quit, then I could have a loop in a script where it keeps building itself, running again, etc. This would really speed up iteration.
+        1. Make redis database persist with volume
 
-    To really detect sneaky downloads, I need to wait 10 seconds and query if any other writes have occurred. Testing small writes at the start gives false positives.
+        2. Map webserver.go with volume, and make go detect when the source file has changed, then rebuild the server.
+
+        3. Map nginx.conf with volume and make nginx restart whenever the config file is changed.
+
+        4. Setup DNS so libyojimbo is redirected through my web server as well.

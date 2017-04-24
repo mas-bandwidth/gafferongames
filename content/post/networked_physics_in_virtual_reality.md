@@ -13,25 +13,35 @@ Hi, I'm Glenn Fiedler, and for the last six months I've been researching network
 
 This research was generously sponsored by [Oculus](https://www.oculus.com/), which turned out to be a great fit because the Oculus touch controller and Avatar SDK provide a fantastic way to _interact_ with a physics simulation in virtual reality.
 
-My goal for this project was to see if it was be possible to network a large number of physically simulated cubes that players can interact with in VR. Ideally players should have no latency when picking up, moving, placing and throwing cubes. The stretch goal: players should be able to construct stable stacks of cubes, stacks that network without any jitter or instability.
+<img src="/img/networked-physics-in-vr/touch.png" width="100%"/>
 
-I'm happy to report this work was a success, and thanks to the generosity of Oculus, the full source code of my implementation in Unity is available [here](...). Please try this demo in virtual reality before continuing. While the rest of this article will explain how the demo was implemented, it's no substitute for actually getting in there in there and experiencing it.
+My goal for this project was to see if it would be possible to network a world of physically simulated cubes in virtual reality, such that players have no latency when picking up, moving, placing and throwing cubes. The stretch goal: players should be able to construct stable stacks of cubes, stacks that network without any jitter or instability.
+
+I'm happy to report this work was a success, and thanks to the generosity of Oculus, the full source code of my implementation in Unity is available [here](...). 
+
+Please try this demo in virtual reality before continuing. While the rest of this whitepaper explains how it was implemented, it's no substitute for actually getting in there in there and experiencing it.
 
 # Background
 
-Previously, I've [presented talks at GDC](http://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking) about networked physics in the context of networking worlds of physically simulated cubes, but it's something entirely different to be inside that world and interact with it. This is something that at least to me, feels really exciting and new.
+Previously, I've [presented talks at GDC](http://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking) about networked physics. And yes, I've networked worlds of physicaly simulated cubes before. But it's something entirely different to be inside that world and actually interact with it. This is something that at least to me, feels really exciting and new.
 
-So when considering the best networking approach to use in virtual reality, it was clear that the key constraint is that the player is actually _in there_. Objects being networked are _right in front of the player's face_. Any artifacts or glitches would be obvious and jarring, and any delay on a players actions would be unacceptable. Perhaps it would even make players feel sick?
+So when considering the best networking approach for virtual reality, it was clear that the key constraint is that the player is actually _in there_. Objects being networked are right in front of the player's face. Any artifacts or glitches would be obvious and jarring, and any delay on a players actions would be unacceptable. Perhaps it would even make players feel sick?
 
-My conclusion was that players _must_ be able interact with the world with absolutely no perception of latency. But achieving this with traditional networking techniques is difficult, so how can this be done?
+My conclusion was that for any networking approach to work in virtual reality, players _must_ be able interact with the world with no perception of latency. So lets start with latency hiding: how do other multiplayer games achieve this, and can we use these techniques when networking a physics simulation in Unity?
 
-# What about deterministic lockstep?
+# Deterministic lockstep
 
 Deterministic lockstep is a technique where simulations are kept in sync by sending across just the inputs. It's attractive because the amount of bandwidth used is independent of the number of objects in the world.  
 
+<img src="/img/networked-physics-in-vr/starcraft2.jpg" width="100%"/>
+
 Most people know this technique from old school real-time strategy games like Command and Conquer, Age of Empires and StarCraft. It's a smart way to network these games because sending across the state for thousands of units is impractical.
 
+<img src="/img/networked-physics-in-vr/streetfighter.jpg" width="100%"/>
+
 Deterministic lockstep is also used in the networking of low player count fighting games like Street Fighter, and physics-based platformers like Little Big Planet. These games implement latency hiding techniques so the local player feels no lag on their own actions by predicting ahead a copy of the simulation with the local player's inputs.
+
+<img src="/img/networked-physics-in-vr/littlebigplanet.jpg" width="100%"/>
 
 What all these games have in common is that they're built on top of an engine that is _deterministic_. Determinism in this context means exactly the same result given the same inputs. Not near enough. Exact. Exact down to the bit-level so you could checksum the state at the end of each frame on all machines and it would be the same. In fact, deterministic lockstep games do this checksum all the time and disconnect any player who desyncs. 
 
@@ -39,11 +49,11 @@ When it works, deterministic lockstep is an elegant technique, but it has limita
 
 So will deterministic lockstep work for the our demo? Unfortunately the answer is _no_. The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic.
 
-# What about client-side prediction?
+# Client-side prediction
 
 Another networking concept most people are familiar with is client-side prediction. This technique is used by first person shooters like Counterstrike, Call of Duty, Titanfall and Overwatch.
 
-It works by treating the local player as separate from the rest of the world. The local player is predicted forward with local inputs, including movement, shooting, reloading and item usage, so the player feels no latency on their actions, while the rest of the world is synchronized back from the server to the client and rendered as an interpolation between keyframes.
+It works by treating the local player on each client as separate from the rest of the world. The local player is predicted forward with local inputs, including movement, shooting, reloading and item usage, so the player feels no latency on their actions, while the rest of the world is synchronized back from the server to the client and rendered as an interpolation between keyframes.
 
 They key benefit of client-side prediction is that the server remains authoritative over the simulation. To do this the server continuously sends corrections back to the client, in effect telling the client, at this time I think you were _here_ and doing _this_. But the client can't just apply server corrections as-is, because by the time they arrive they're _in the past_, so the client (invisibly) rolls the local player back in time, applies the correction and replays local inputs to bring the corrected player state back to present time.
 
@@ -94,17 +104,19 @@ In short, we are creating a distributed system that is eventually consistent.
 
 Trusting that I could implement the rules described above, my first task was to prove that synchronizing physics in one direction of flow could actually work with Unity and PhysX.
 
-To do this I setup a simple loopback scene in Unity with 360 simulated cubes that fall from the sky into a large pile in front of the player. These cubes represent the authority side, and an identical set of cubes on the right act as the non-authority side they are synchronized to. The goal: to keep the simulation on the right in sync with the simulation in front of the player.
+To do this I setup a simple loopback scene in Unity where physically simulated cubes fall from the sky into a pile in front of the player. These cubes represent the authority side, and an identical set of cubes on the right act as the non-authority side.
 
-_(diagram showing synchronization from left to right)_
+<img src="/img/networked-physics-in-vr/authority-and-non-authority-cubes.png" width="100%"/>
 
 Testing network code in loopback like this is a best practice when developing AAA network code. It speeds up iteration and makes debugging so much easier. In virtual reality it makes even more sense, considering the alternative, which is running the same virtual reality scene on two machines and switching headsets as you work :)
 
 As expected, with nothing keeping the two sets of cubes in sync, even though they both start from exactly the same initial state and run through exactly the same simulation steps, they give different end results:
 
-_(screencap showing two scenes side-by-side in the editor, with different piles of objects)_
+<img src="/img/networked-physics-in-vr/out-of-sync.png" width="100%"/>
 
-Not surprising because PhysX is non-deterministic. To fight this non-determinism, we'll grab state from the authority side and apply it to the non-authority side 10 times per-second. 
+This is not exactly surprising because PhysX is non-deterministic. To fight this non-determinism, we'll grab state from the authority side and apply it to the non-authority side 10 times per-second. 
+
+<img src="/img/networked-physics-in-vr/left-to-right.png" width="100%"/>
 
 The state grabbed from each cube looks like this:
 
@@ -120,9 +132,11 @@ When we apply this state to the simulation on the right side, we force the posit
 
 Now the simulation on the right gives the same end result:
 
-_(screen cap showing same resulting pile of cubes from top down in unity editor)_
+<img src="/img/networked-physics-in-vr/in-sync.png" width="100%"/>
 
 This is actually a big step, because it proves that a _state synchronization_ based approach for networking can work with PhysX. The only problem is, sending uncompressed physics state uses too much bandwidth.
+
+Let's get busy reducing the amount of bandwidth we send.
 
 # Quantized State
 
