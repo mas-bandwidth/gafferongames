@@ -81,6 +81,12 @@ func FuckOffAndBan( writer http.ResponseWriter, redis_client *redis.Client, from
     redis_client.Set( "banned-" + from_ip, "1", time.Hour * 24 );
 }
 
+func Log(format string, a ...interface{}) {
+    time := time.Now()
+    fmt.Printf( "[%d-%02d-%02d %02d:%02d:%02d] ", time.Year(), time.Month(), time.Day(), time.Hour(), time.Minute(), time.Second())
+    fmt.Printf( format + "\n", a... )
+}
+
 func LogAccess( redis_client *redis.Client, from_ip string, filename string, bytes_read int64, file_size int64 ) {
 
     fraction_read_key := "fraction_read-" + from_ip + "-" + filename
@@ -92,14 +98,14 @@ func LogAccess( redis_client *redis.Client, from_ip string, filename string, byt
     fraction_read, err := strconv.ParseFloat( fraction_read_result, 10 ); check( err )
 
     if ( bytes_read > 100 ) {
-        fmt.Printf( "%s: %s | %d | %d/%d | %.2f\n", from_ip, filename, total_bytes_read, bytes_read, file_size, fraction_read )
+        Log( "%s: %s | %d | %d/%d | %.2f", from_ip, filename, total_bytes_read, bytes_read, file_size, fraction_read )
     }
 }
 
 func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
 
     vars := mux.Vars( request )
-
+    
 //    fmt.Println( "\n=======================================\n" + FormatRequest( request ) + "\n=======================================\n" )
 
     redis_client := redis.NewClient( &redis.Options{ Addr: "redis:6379", Password: "", DB: 0 } )
@@ -109,15 +115,11 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
     if ( forwarded_for != "" ) {
         from = forwarded_for
     }
-    from_ip, err := ParseIP( from )
-    if ( err != nil ) { 
-        fmt.Printf( "couldn't parse from IP\n" )
-        return 
-    }
+    from_ip, err := ParseIP( from ); check( err )
 
     banned_result, err := redis_client.Get( "banned-" + from_ip ).Result()
     if ( banned_result != "" ) {
-        fmt.Printf( "Banned: %s\n", from_ip );
+        Log( "%s: Banned", from_ip );
         FuckOffAndBan( writer, redis_client, from_ip )
         return
     }
@@ -129,7 +131,7 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
     bytes_read_result, err := redis_client.Get( "bytes_read-" + from_ip ).Result()
     bytes_read, err := strconv.ParseInt( bytes_read_result, 10, 0 )
     if ( bytes_read > 1000*1000*1000 ) {
-        fmt.Printf( "Too many bytes read: %s (%d)\n", from_ip, bytes_read )
+        Log( "%s: Too many bytes read: %d", from_ip, bytes_read )
         FuckOffAndBan( writer, redis_client, from_ip )
         return
     }
@@ -137,7 +139,7 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
     fraction_read_result, err := redis_client.Get( fraction_read_key ).Result()
     fraction_read, err := strconv.ParseFloat( fraction_read_result, 10 )
     if ( fraction_read > 10.0 ) {
-        fmt.Printf( "File downloaded too many times: %s by %s (%f)\n", filename, from_ip, fraction_read )
+        Log( "%s: File downloaded too many times: %s (%f)", from_ip, filename, fraction_read )
         FuckOffAndBan( writer, redis_client, from_ip )
         return
     }
@@ -159,15 +161,16 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
     fraction := float64( video_file.bytes_read ) / float64( file_info.Size() )
 
     if ( video_file.bytes_read > 100 && ( video_file.bytes_read < 1024*1024 || fraction < 0.25 ) ) {
+        time.Sleep(10 * time.Second )
+        redis_client.Expire( last_access_key, time.Second * 10 )
+        redis_client.Incr( last_access_key )
         last_access_result, _ := redis_client.Get( last_access_key ).Result()
         if ( last_access_result == "" ) {
-            fmt.Printf( "%s: Smartass partial read. Bumping fraction to 1.0\n", from_ip )
+            Log( "%s: Smartass partial read. Bumping fraction to 1.0", from_ip )
             fraction = 1.0
         }
     }
 
-    redis_client.Expire( last_access_key, time.Second * 10 )
-    redis_client.Incr( last_access_key )
     redis_client.IncrBy( "bytes_read-" + from_ip, video_file.bytes_read )
     redis_client.Expire( fraction_read_key, time.Hour * 4 )
     redis_client.IncrByFloat( fraction_read_key, fraction )

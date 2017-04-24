@@ -1,70 +1,11 @@
 DONE
-    
-    Setup crontab to start gafferongames docker compose automatically on reboot
 
-    Testing in now by rebooting linode.
-
-    Ahhhhh... the sudo is making it fail. I can't make a sudo run like that. Edit root crontab instead.
-
-    Testing... Yes. This works fine!
-
-    Setting up wordpress now. A docker volume persists the db. This is how it works.
-
-    After much fucking around, I had to manually override the wp-config.php to get it to work.
-
-    However, it's not running the setup process, or at least, I don't know how to log in.
-
-    Seems like I have to expose the port so I can setup w. apache directly, then once it's setup, I can do the redirect.
-
-    Fuck the other option, it seems that wordpress doesn't get setup that way. Shit software... =p
-
-    Fuck it. It's not worth the time fucking around with this.
-
-    netcode.io redirect is working again.
-
-    I need a better workflow for upgrading and changing website content while dockerized nginx is running.
-
-    How can I create a volume for the docker files, and then make changes to this volume from outside the container while it's running?
-
-    It must be possible. I need to do this to make it possible to upload website changes without bringing the whole website down!
-
-    Done. Mapped videos and website public to the docker as read only, so the files can be modified without restarting the container.
-
+    Added timestamp to logging.
+        
 TODO
 
-    Next I need to make redis persist with a volume. I don't want to lose all the redis stuff when the container shuts down (eg. bans)
+    I'd like to write a script that prints out the list of people who are currently banned.
 
-    If I want that to go away, I can remove the volume manually.
+    Would be cool if my webserver.go could detect itself being modified and quit, then I could have a loop in a script where it keeps building itself, running again, etc. This would really speed up iteration.
 
-    Ahahah. I caught the hacker, and then he started spinning up instances on subnets, eg. x.y.z.*
-
-    To fix this, I wildcarded the last number in the IP address so they're all considered together.
-
-    This is probably overly aggressive, but might send the right message. Eat shit and die. He'll run his scripts tonight, and it'll pick him up.
-
-    I probably want to relax this, because if people are browsing from a corporate network at the same time, they'll probably get nailed.
-
-    But again, they'll probably get nailed if they are browsing that way with the IP check (with NAT)
-
-    So really, is there any way to solve this without nailing some people. Probably not. Fuck it. Just keep the bans temp.
-
-    On this note, the ban on total amount downloaded is probably a bad idea (both on single IP with NAT, and especially with wildcard).
-
-    Think this through, after seeing how the hacker handles this.
-
-    As far as I can tell, the hacker has slowed down rate of download, and is splitting it across multiple IPs.
-
-    I'll catch him, but be super aggressive, persist the keys longer, so if he downloads the same file more than 10 times in 24 hours, he gets the ban.
-
-    Right now it's 10 times in 1 hr, which may fail to pick him up if he goes real slow. I want to catch him if he goes slow though.
-
-    Seems like the hacker is also slicing the downloads, eg. downloading 512kb at a time. I won't pick him up quickly this way.
-
-    However, he can't do any real damage this way either...
-
-    Some logic I could run is to add another key, and if he hasn't hit this file in the last 10 second or so, but it is > 100 bytes read, treat it as a whole read.
-
-    This is aggressive, but it would catch him doing salami reads like this.
-
-    It's annoying and hard to read seeing the old values. Would be much better if I logged at the end of the function with completely updated values.
-    
+    To really detect sneaky downloads, I need to wait 10 seconds and query if any other writes have occurred. Testing small writes at the start gives false positives.
