@@ -53,19 +53,27 @@ So will deterministic lockstep work for the networked physics demo? Unfortunatel
 
 Another networking concept most people are familiar with is client-side prediction. This technique is used by first person shooters like **Counterstrike**, **Call of Duty**, **Titanfall** and **Overwatch**.
 
-It works by treating the local player on each client as separate from the rest of the world. The local player is predicted forward with local inputs, including movement, shooting, reloading and item usage, so the player feels no latency on their actions, while the rest of the world is synchronized back from the server to the client and rendered as an interpolation between keyframes.
+<img src="/img/networked-physics-in-vr/counterstrike.jpg" width="100%"/>
 
-They key benefit of client-side prediction is that the server remains authoritative over the simulation. To do this the server continuously sends corrections back to the client, in effect telling the client, at this time I think you were _here_ and doing _this_. But the client can't just apply server corrections as-is, because by the time they arrive they're _in the past_, so the client (invisibly) rolls the local player back in time, applies the correction and replays local inputs to bring the corrected player state back to present time.
+Client side prediction works by predicting the local player on each client forward with local inputs. This lets players move and shoot without feeling any latency in their own actions, while the rest of the world is synchronized from the server to client and rendered as an interpolation between keyframes.
 
-These rollbacks happen all the time in first person shooters but you rarely notice, because the local player state and the corrected state almost always agree. When they don't, it's usually because you've experienced a patch of really bad network conditions and the server didn't receive all your inputs, or something happened on the server that can't be predicted from your inputs alone (another player shot you), or... because you were cheating :)
+<img src="/img/networked-physics-in-vr/overwatch.jpg" width="100%"/>
+
+They key benefit of client-side prediction is that the server remains authoritative over the simulation. To do this the server continuously sends corrections back to the client, in effect telling the client, at this time I think you were _here_ and doing _this_.  But the client can't just apply server corrections as-is, because by the time they arrive they're _in the past_, so the client (invisibly) rolls the local player back in time, applies the correction and replays local inputs to bring the corrected player state back up to present time.
+
+This happens all the time in first person shooters but you rarely notice, because the local player state and the corrected state almost always agree. When they don't, it's usually because something happened on the server that can't be predicted from your inputs alone (another player shot you), or... because you were cheating :)
+
+<img src="/img/networked-physics-in-vr/titanfall.jpg" width="100%"/>
 
 What's interesting is that client-side prediction doesn't require determinism. It doesn't hurt of course, but since the client and server exchange state as well as inputs, any non-determinism is quickly squashed by applying state to keep the simulations in sync. In effect, all client-side prediction requires is a _close enough_ extrapolation from a player state given the same inputs for approximately a quarter of a second.
 
 So client side prediction works _great_ for first person shooters, but is it a good technique for networking a physics simulation?
 
-In a first person shooter prediction is applied only to your local player character and perhaps objects you are carrying like items and weapons, but in a physics simulation what needs to be predicted to hide latency? Not only your own character, but objects you interact with as well. This means if you pick up an object and throw it at a stack of objects, the client side prediction would need to include the set of objects you interact with, and in turn any objects they interact with, and so on.
+<img src="/img/networked-physics-in-vr/callofduty.png" width="100%"/>
 
-While this could _theoretically_ work, it's easy to see that the worst case when a player throws a cube at a large stack of cubes is a client predicting the _entire simulation_. Under typical internet conditions it can be expected that players will need to predict up to 250ms to hide latency and at 60HZ this means a client-side prediction of 15 frames. Physics simulations are usually pretty expensive, so anything that requires 15 invisible rollback frames for each frame of real simulation is probably not practical.
+In first person shooters prediction is applied to your local player character and objects you are carrying like items and weapons. What objects would need to be predicted if you threw an object at a stack of objects, and you wanted that cube to hit and collide with those objects with no latency? The answer is that you need to predict all objects you interact with, and any objects they interact with and so on!
+
+While this could _theoretically_ work, it's easy to see that the worst case when a player throws a cube at a large stack of cubes is a client predicting the _entire simulation_. Under typical internet conditions it can be expected that players will need to predict up to 250ms to hide latency and at 60HZ this means a client-side prediction of 15 frames. Physics simulations are usually pretty expensive, so anything that requires up to 15 frames of invisible rollback for each rendered frame is probably not practical.
 
 # What could a solution look like?
 
@@ -107,8 +115,6 @@ Trusting that I could implement the rules described above, my first task was to 
 To do this I setup a simple loopback scene in Unity where physically simulated cubes fall from the sky into a pile in front of the player. These cubes represent the authority side, and an identical set of cubes on the right act as the non-authority side.
 
 <img src="/img/networked-physics-in-vr/authority-and-non-authority-cubes.png" width="100%"/>
-
-Testing network code in loopback like this is a best practice when developing AAA network code. It speeds up iteration and makes debugging so much easier. In virtual reality it makes even more sense, considering the alternative, which is running the same virtual reality scene on two machines and switching headsets as you work :)
 
 As expected, with nothing keeping the two sets of cubes in sync, even though they both start from exactly the same initial state and run through exactly the same simulation steps, they give different end results:
 
