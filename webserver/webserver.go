@@ -48,8 +48,9 @@ type VideoFile struct {
 }
 
 func ( video_file *VideoFile ) Read( p []byte ) (int, error) {
-    video_file.bytes_read += int64( len(p) )
-    return video_file.file.Read( p )
+    bytes, err := video_file.file.Read( p )
+    video_file.bytes_read += int64( bytes )
+    return bytes, err
 }
 
 func ( video_file *VideoFile ) Seek( offset int64, whence int ) (int64, error) {
@@ -80,7 +81,7 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
 
 //    fmt.Println( "\n=======================================\n" + FormatRequest( request ) + "\n=======================================\n" )
 
-    redis_client := redis.NewClient( &redis.Options{ Addr: "db:6379", Password: "", DB: 0 } )
+    redis_client := redis.NewClient( &redis.Options{ Addr: "redis:6379", Password: "", DB: 0 } )
 
     from := request.RemoteAddr
     forwarded_for := request.Header.Get( "X-Forwarded-For" )
@@ -92,8 +93,6 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
         fmt.Printf( "couldn't parse from IP\n" )
         return 
     }
-
-    // todo: should really pipeline all three queries here
 
     banned_result, err := redis_client.Get( "banned-" + from_ip ).Result()
     if ( banned_result != "" ) {
@@ -121,6 +120,7 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
         FuckOffAndBan( writer, redis_client, from_ip )
         return
     }
+
     // todo: ^--- end pipeline
 
     f, err := os.Open( filename );
@@ -134,6 +134,10 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
     var video_file = VideoFile{ f, 0 }
 
     http.ServeContent( writer, request, filename, file_info.ModTime(), &video_file )
+
+    if ( video_file.bytes_read != 0 ) {
+        fmt.Printf( "%s: %s | %d | %.1f\n", from_ip, filename, video_file.bytes_read, fraction_read )
+    }
 
     // todo: should pipeline these guys
     redis_client.IncrBy( "bytes_read-" + from_ip, video_file.bytes_read )

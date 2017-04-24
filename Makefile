@@ -46,29 +46,11 @@ integration_basics:
 	g++ source/game_physics/integration_basics.cpp -o bin/integration_basics
 	cd bin && ./integration_basics
 
-nginx_local:
-	rm -rf public
-	rm -f config.toml
-	cp config_local.toml config.toml
-	hugo
-	rm -rf nginx/public
-	mv public nginx/public
+nginx: public
 	-docker kill nginx > /dev/null 2>&1; exit 0
 	-docker rm nginx > /dev/null 2>&1; exit 0
 	docker build -t gafferongames:nginx nginx
-	docker run --name nginx --link webserver:web -ti -p 80:80 -p 443:443 gafferongames:nginx
-
-nginx:
-	rm -rf public
-	rm -f config.toml
-	cp config_nginx.toml config.toml
-	hugo
-	rm -rf nginx/public
-	mv public nginx/public
-	-docker kill nginx > /dev/null 2>&1; exit 0
-	-docker rm nginx > /dev/null 2>&1; exit 0
-	docker build -t gafferongames:nginx nginx
-	docker run --name nginx --link webserver:web -ti -p 80:80 -p 443:443 gafferongames:nginx
+	docker run --name nginx --depends webserver -ti -p 80:80 -p 443:443 -v ~/gafferongames/public:/var/www/html/gafferongames:ro gafferongames:nginx
 
 redis:
 	-docker kill redis > /dev/null 2>&1; exit 0
@@ -80,7 +62,7 @@ webserver:
 	-docker kill webserver > /dev/null 2>&1; exit 0
 	-docker rm webserver > /dev/null 2>&1; exit 0
 	docker build -t gafferongames:webserver webserver
-	docker run --name webserver --link redis:db -ti -p 8080:8080 gafferongames:webserver
+	docker run --name webserver --depends redis -ti -p 8080:8080 -v ~/gafferongames/videos:/go/bin/videos:ro gafferongames:webserver
 
 wordpress:
 	-docker kill wordpress > /dev/null 2>&1; exit 0
@@ -88,13 +70,7 @@ wordpress:
 	docker build -t gafferongames:wordpress wordpress
 	docker run --name wordpress -ti -p 8000:80 gafferongames:wordpress
 
-build:
-	rm -rf public
-	rm -f config.toml
-	cp config_nginx.toml config.toml
-	hugo
-	rm -rf nginx/public
-	mv public nginx/public
+build: public
 	sudo docker-compose build
 
 up:

@@ -22,10 +22,16 @@ DONE
 
     netcode.io redirect is working again.
 
-TODO
-
     I need a better workflow for upgrading and changing website content while dockerized nginx is running.
 
     How can I create a volume for the docker files, and then make changes to this volume from outside the container while it's running?
 
     It must be possible. I need to do this to make it possible to upload website changes without bringing the whole website down!
+
+    Done. Mapped videos and website public to the docker as read only, so the files can be modified without restarting the container.
+
+TODO
+
+    Next I need to make redis persist with a volume. I don't want to lose all the redis stuff when the container shuts down (eg. bans)
+
+    If I want that to go away, I can remove the volume manually.

@@ -8,8 +8,6 @@ RUN wget https://github.com/jwilder/dockerize/releases/download/$DOCKERIZE_VERSI
     && tar -C /usr/local/bin -xzvf dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz \
     && rm dockerize-linux-amd64-$DOCKERIZE_VERSION.tar.gz
 
-ADD public /var/www/html/gafferongames
-
 ADD nginx.conf /etc/nginx/nginx.conf
 
 WORKDIR /etc/nginx

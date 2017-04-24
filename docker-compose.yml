@@ -9,11 +9,15 @@ services:
     ports:
       - "80:80"
       - "443:443"
+    volumes:
+      - ./public:/var/www/html/gafferongames:ro
 
   webserver:
     build: webserver
     depends_on: 
       - "redis"
+    volumes:
+      - ./videos:/go/bin/videos:ro
 
   redis:
     build: redis
