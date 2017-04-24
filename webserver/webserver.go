@@ -160,7 +160,7 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
 
     if ( video_file.bytes_read > 10 && ( video_file.bytes_read < 1024*1024 || fraction < 0.25 ) ) {
         last_access_result, _ := redis_client.Get( last_access_key ).Result()
-        if ( last_access_result != "" ) {
+        if ( last_access_result == "" ) {
             fmt.Printf( "%s: Smartass partial read. Bumping fraction to 1.0\n", from_ip )
             fraction = 1.0
         }
