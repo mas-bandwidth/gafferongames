@@ -78,3 +78,6 @@ up:
 
 down:
 	sudo docker-compose down
+
+sync:
+	git pull && make build && make down && make up
