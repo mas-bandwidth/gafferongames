@@ -136,7 +136,7 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
     http.ServeContent( writer, request, filename, file_info.ModTime(), &video_file )
 
     if ( video_file.bytes_read != 0 ) {
-        fmt.Printf( "%s: %s | %d | %.1f\n", from_ip, filename, video_file.bytes_read, fraction_read )
+        fmt.Printf( "%s: %s | %d | %d | %.1f\n", from_ip, filename, bytes_read, video_file.bytes_read, fraction_read )
     }
 
     // todo: should pipeline these guys
