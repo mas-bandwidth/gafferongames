@@ -81,6 +81,21 @@ func FuckOffAndBan( writer http.ResponseWriter, redis_client *redis.Client, from
     redis_client.Set( "banned-" + from_ip, "1", time.Hour * 24 );
 }
 
+func LogAccess( redis_client *redis.Client, from_ip string, filename string, bytes_read int64 ) {
+
+    fraction_read_key := "fraction_read-" + from_ip + "-" + filename
+
+    total_bytes_read_result, err:= redis_client.Get( "bytes_read-" + from_ip ).Result(); check( err )
+    total_bytes_read, err := strconv.ParseInt( total_bytes_read_result, 10, 0 ); check( err )
+
+    fraction_read_result, err := redis_client.Get( fraction_read_key ).Result(); check( err )
+    fraction_read, err := strconv.ParseFloat( fraction_read_result, 10 ); check( err )
+
+    if ( bytes_read > 10 ) {
+        fmt.Printf( "%s: %s | %d | %d | %.2f\n", from_ip, filename, total_bytes_read, bytes_read, fraction_read )
+    }
+}
+
 func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
 
     vars := mux.Vars( request )
@@ -127,8 +142,6 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
         return
     }
 
-    // todo: ^--- end pipeline
-
     f, err := os.Open( filename );
     if ( err != nil ) {
         writer.WriteHeader( http.StatusNotFound )
@@ -141,14 +154,25 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
 
     http.ServeContent( writer, request, filename, file_info.ModTime(), &video_file )
 
-    if ( video_file.bytes_read != 0 ) {
-        fmt.Printf( "%s: %s | %d | %d | %.1f\n", from_ip, filename, bytes_read, video_file.bytes_read, fraction_read )
+    last_access_key := "last_access-" + from_ip + "-" + filename
+
+    fraction := float64( video_file.bytes_read ) / float64( file_info.Size() )
+
+    if ( video_file.bytes_read > 10 && ( video_file.bytes_read < 1024*1024 || fraction < 0.25 ) ) {
+        last_access_result, _ := redis_client.Get( last_access_key ).Result()
+        if ( last_access_result != "" ) {
+            fmt.Printf( "%s: Smartass partial read. Bumping fraction to 1.0\n", from_ip )
+            fraction = 1.0
+        }
     }
 
-    // todo: should pipeline these guys
+    redis_client.Expire( last_access_key, time.Second * 10 )
+    redis_client.Incr( last_access_key )
     redis_client.IncrBy( "bytes_read-" + from_ip, video_file.bytes_read )
-    redis_client.Expire( fraction_read_key, time.Hour )
-    redis_client.IncrByFloat( fraction_read_key, float64( video_file.bytes_read ) / float64( file_info.Size() ) )
+    redis_client.Expire( fraction_read_key, time.Hour * 4 )
+    redis_client.IncrByFloat( fraction_read_key, fraction )
+
+    LogAccess( redis_client, from_ip, filename, video_file.bytes_read )
 }
 
 func main() {
