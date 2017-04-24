@@ -81,7 +81,7 @@ func FuckOffAndBan( writer http.ResponseWriter, redis_client *redis.Client, from
     redis_client.Set( "banned-" + from_ip, "1", time.Hour * 24 );
 }
 
-func LogAccess( redis_client *redis.Client, from_ip string, filename string, bytes_read int64 ) {
+func LogAccess( redis_client *redis.Client, from_ip string, filename string, bytes_read int64, file_size int64 ) {
 
     fraction_read_key := "fraction_read-" + from_ip + "-" + filename
 
@@ -91,8 +91,8 @@ func LogAccess( redis_client *redis.Client, from_ip string, filename string, byt
     fraction_read_result, err := redis_client.Get( fraction_read_key ).Result(); check( err )
     fraction_read, err := strconv.ParseFloat( fraction_read_result, 10 ); check( err )
 
-    if ( bytes_read > 10 ) {
-        fmt.Printf( "%s: %s | %d | %d | %.2f\n", from_ip, filename, total_bytes_read, bytes_read, fraction_read )
+    if ( bytes_read > 100 ) {
+        fmt.Printf( "%s: %s | %d | %d/%d | %.2f\n", from_ip, filename, total_bytes_read, bytes_read, file_size, fraction_read )
     }
 }
 
@@ -158,7 +158,7 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
 
     fraction := float64( video_file.bytes_read ) / float64( file_info.Size() )
 
-    if ( video_file.bytes_read > 10 && ( video_file.bytes_read < 1024*1024 || fraction < 0.25 ) ) {
+    if ( video_file.bytes_read > 100 && ( video_file.bytes_read < 1024*1024 || fraction < 0.25 ) ) {
         last_access_result, _ := redis_client.Get( last_access_key ).Result()
         if ( last_access_result == "" ) {
             fmt.Printf( "%s: Smartass partial read. Bumping fraction to 1.0\n", from_ip )
@@ -172,7 +172,7 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
     redis_client.Expire( fraction_read_key, time.Hour * 4 )
     redis_client.IncrByFloat( fraction_read_key, fraction )
 
-    LogAccess( redis_client, from_ip, filename, video_file.bytes_read )
+    LogAccess( redis_client, from_ip, filename, video_file.bytes_read, file_info.Size() )
 }
 
 func main() {
