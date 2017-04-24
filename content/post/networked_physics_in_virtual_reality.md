@@ -9,9 +9,9 @@ draft = true
 
 # Introduction
 
-Hi, I'm Glenn Fiedler, and for the last six months I've been researching networked physics in virtual reality. This research was generously sponsored by [Oculus](https://www.oculus.com/), which turned out to be a great fit because the Oculus touch controller and Avatar SDK provide a fantastic way to _interact_ with a physics simulation in virtual reality.
+Hi, I'm Glenn Fiedler, and for the last few months I've been researching networked physics in virtual reality. This research was generously sponsored by [Oculus](https://www.oculus.com/), which turned out to be a great fit because the Oculus touch controller and Avatar SDK provide a fantastic way to _interact_ with a physics simulation in virtual reality.
 
-<img src="/img/networked-physics-in-vr/touch.png" width="100%"/>
+[<img src="/img/networked-physics-in-vr/touch.png" width="100%"/>](http://www.oculus.com)
 
 My goal for this project was to see if it would be possible to network a world of physically simulated cubes in virtual reality, such that players would feel no latency when picking up, moving, placing and throwing cubes. My stretch goal: players should be able to construct stable stacks of cubes, stacks that network without any jitter or instability.
 
@@ -23,11 +23,13 @@ Please try this demo in virtual reality before continuing. While the rest of thi
 
 # Background
 
-Previously, I've [presented talks at GDC](http://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking) about networked physics. And yes, I've networked worlds of physicaly simulated cubes before. But it's something entirely different to be inside that world and actually interact with it. This is something that at least to me, feels really exciting and new.
+Previously, I've [presented talks at GDC](http://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking) about networked physics. And yes, I've even networked worlds of physicaly simulated cubes before. But it's something completely different to be _inside_ that world and interact with it. This is something that at least to me, feels really exciting and new.
 
-So when considering the best networking approach for virtual reality, it was clear that the key constraint is that the player is actually _in there_. Objects being networked are right in front of the player's face. Any artifacts or glitches would be obvious and jarring, and any delay on a players actions would be unacceptable. Perhaps it would even make players feel sick?
+So when considering the best networking approach for virtual reality, it seems to me that the key constraint is that the player is actually _in there_. Objects being networked are right in front of the player's face. Any artifacts or glitches would be obvious and jarring, and any delay on a player's actions would be unacceptable. Perhaps it would even make players feel sick?
 
-My conclusion was that for any networking approach to work in virtual reality, players _must_ be able interact with the world with no perception of latency. So lets start with latency hiding: how do other multiplayer games achieve this, and can we use these techniques when networking a physics simulation in Unity?
+My theory is that for any networking approach to work in virtual reality, players must be able interact with the world without any perception of latency. This makes a lot of sense considering how much effort has gone into VR platforms to reduce latency for tracking and player input. It would be a real shame to build an experience on top of this that adds latency due to networking.
+
+So let's start with this aspect: latency hiding. How are multiplayer games networked and how do they hide latency? Can we can we use these techniques to network a physics simulation in VR?
 
 # Deterministic lockstep
 
@@ -35,21 +37,21 @@ Deterministic lockstep is a technique where simulations are kept in sync by send
 
 <img src="/img/networked-physics-in-vr/starcraft2.jpg" width="100%"/>
 
-Most people know this technique from old school real-time strategy games like Command and Conquer, Age of Empires and StarCraft. It's a smart way to network these games because sending across the state for thousands of units is impractical.
+Most people know this technique from old school real-time strategy games like **Command and Conquer**, **Age of Empires** and **StarCraft**. It's a smart way to network these games because sending across the state for thousands of units is impractical.
 
 <img src="/img/networked-physics-in-vr/streetfighter.jpg" width="100%"/>
 
-Deterministic lockstep is also used in the networking of low player count fighting games like Street Fighter, and physics-based platformers like Little Big Planet. These games implement latency hiding techniques so the local player feels no lag on their own actions by predicting ahead a copy of the simulation with the local player's inputs.
+It's also used in the networking of fighting games like **Street Fighter**, and physics-based platformers like **Little Big Planet**. These games implement latency hiding techniques so the local player feels no lag on their own actions by predicting ahead a copy of the simulation with the local player's inputs.
 
 <img src="/img/networked-physics-in-vr/littlebigplanet.jpg" width="100%"/>
 
-What all these games have in common is that they're built on top of an engine that is _deterministic_. Determinism in this context means exactly the same result given the same inputs. Not near enough. Exact. Exact down to the bit-level so you could checksum the game state at the end of each frame and it would be the same across all macihnes.
+What all these games have in common is that they're built on top of an engine that is _deterministic_. This means exactly the same result given the same inputs. Exact down to the bit-level so you could checksum the game state at the end of each frame and it would be the same across all machines.
 
 So will deterministic lockstep work for the networked physics demo? Unfortunately the answer is _no_. The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic.
 
 # Client-side prediction
 
-Another networking concept most people are familiar with is client-side prediction. This technique is used by first person shooters like Counterstrike, Call of Duty, Titanfall and Overwatch.
+Another networking concept most people are familiar with is client-side prediction. This technique is used by first person shooters like **Counterstrike**, **Call of Duty**, **Titanfall** and **Overwatch**.
 
 It works by treating the local player on each client as separate from the rest of the world. The local player is predicted forward with local inputs, including movement, shooting, reloading and item usage, so the player feels no latency on their actions, while the rest of the world is synchronized back from the server to the client and rendered as an interpolation between keyframes.
 
