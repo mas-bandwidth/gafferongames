@@ -66,12 +66,18 @@ func ParseIP( s string ) ( string, error ) {
     if ip2 == nil {
         return "", errors.New("invalid IP")
     }
-    return ip2.String(), nil
+    ip_string := ip2.String()
+    result := strings.Split( ip_string, "." )
+    if ( len(result) == 4 ) {
+        return result[0] + "." + result[1] + "." + result[2] + ".*", nil
+    } else {
+        return ip_string, nil
+    }
 }
 
 func FuckOffAndBan( writer http.ResponseWriter, redis_client *redis.Client, from_ip string ) {
     writer.WriteHeader( http.StatusOK )
-    writer.Write( []byte( "Fuck off" ) )
+    writer.Write( []byte( "NOPE" ) )
     redis_client.Set( "banned-" + from_ip, "1", time.Hour * 24 );
 }
 
