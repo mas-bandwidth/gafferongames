@@ -9,13 +9,13 @@ draft = true
 
 # Introduction
 
-Hi, I'm Glenn Fiedler, and for the last six months I've been researching networked physics in virtual reality.
-
-This research was generously sponsored by [Oculus](https://www.oculus.com/), which turned out to be a great fit because the Oculus touch controller and Avatar SDK provide a fantastic way to _interact_ with a physics simulation in virtual reality.
+Hi, I'm Glenn Fiedler, and for the last six months I've been researching networked physics in virtual reality. This research was generously sponsored by [Oculus](https://www.oculus.com/), which turned out to be a great fit because the Oculus touch controller and Avatar SDK provide a fantastic way to _interact_ with a physics simulation in virtual reality.
 
 <img src="/img/networked-physics-in-vr/touch.png" width="100%"/>
 
-My goal for this project was to see if it would be possible to network a world of physically simulated cubes in virtual reality, such that players have no latency when picking up, moving, placing and throwing cubes. The stretch goal: players should be able to construct stable stacks of cubes, stacks that network without any jitter or instability.
+My goal for this project was to see if it would be possible to network a world of physically simulated cubes in virtual reality, such that players would feel no latency when picking up, moving, placing and throwing cubes. My stretch goal: players should be able to construct stable stacks of cubes, stacks that network without any jitter or instability.
+
+<img src="/img/networked-physics-in-vr/stack-of-cubes.jpg" width="100%"/>
 
 I'm happy to report this work was a success, and thanks to the generosity of Oculus, the full source code of my implementation in Unity is available [here](...). 
 
@@ -43,11 +43,9 @@ Deterministic lockstep is also used in the networking of low player count fighti
 
 <img src="/img/networked-physics-in-vr/littlebigplanet.jpg" width="100%"/>
 
-What all these games have in common is that they're built on top of an engine that is _deterministic_. Determinism in this context means exactly the same result given the same inputs. Not near enough. Exact. Exact down to the bit-level so you could checksum the state at the end of each frame on all machines and it would be the same. In fact, deterministic lockstep games do this checksum all the time and disconnect any player who desyncs. 
+What all these games have in common is that they're built on top of an engine that is _deterministic_. Determinism in this context means exactly the same result given the same inputs. Not near enough. Exact. Exact down to the bit-level so you could checksum the game state at the end of each frame and it would be the same across all macihnes.
 
-When it works, deterministic lockstep is an elegant technique, but it has limitations. The first is that the game must be deterministic, the second is that it's best used for small player counts like 2-4 players because you have to wait for input from the most lagged player, and third, if latency hiding is required, you need to make a full copy of the simulation and step it forward with local inputs, which can be very CPU intensive.
-
-So will deterministic lockstep work for the our demo? Unfortunately the answer is _no_. The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic.
+So will deterministic lockstep work for the networked physics demo? Unfortunately the answer is _no_. The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic.
 
 # Client-side prediction
 
