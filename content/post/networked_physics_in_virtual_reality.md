@@ -25,13 +25,13 @@ Please try this demo in virtual reality before continuing. While the rest of thi
 
 Previously, I've [presented talks at GDC](http://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking) about networked physics. And yes, I've even networked worlds of physicaly simulated cubes before. But it's something completely different to be _inside_ that world and interact with it. This is something that at least to me, feels really exciting and new.
 
-So when considering the best approach for networked physics in virtual reality, it seemed that the most important factor is that the player is actually _in there_. Objects being networked are right in front of the player's face. Any artifacts or glitches would be obvious and jarring, and any delay on a player's actions would be unacceptable. Perhaps it would even make players feel sick?
+So when considering the best approach for networked physics in virtual reality, it seemed that the most important factor to consider is that the player is actually _in there_. Networked objects are right in front of the player's face. Any artifacts or glitches would be obvious and jarring, and any delay on a player's actions would be unacceptable. Perhaps it would even make players feel sick?
 
 It seemed obvious then that for any networking approach to work in virtual reality, it must allow players to interact with the world without any perception of latency. This makes a lot of sense considering how much effort has gone into VR platforms to reduce latency for tracking and player input. It would be a real shame to build something on top of this that adds latency due to networking.
 
 So let's start by focusing on this aspect: _latency hiding_. How are multiplayer games networked and how do they hide latency? Can we use these techniques to network a physics simulation in VR with Unity and PhysX?
 
-# Deterministic lockstep
+# Deterministic Lockstep
 
 Deterministic lockstep is a technique where multiple simulations are kept in sync by sending across just the inputs. It's attractive because the amount of bandwidth used is independent of the number of objects in the world.  
 
@@ -49,35 +49,49 @@ What all these games have in common is that they're built on top of an engine th
 
 So will deterministic lockstep work for the networked physics demo? Unfortunately the answer is _no_. The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic.
 
-# Client-side prediction
+# Client-Side Prediction
 
 Another networking concept many people are familiar with is client-side prediction. This technique is used by first person shooters like **Counterstrike**, **Call of Duty**, **Titanfall** and **Overwatch**.
 
 <img src="/img/networked-physics-in-vr/counterstrike.jpg" width="100%"/>
 
-Client side prediction works by predicting the local player on each client forward with local inputs. This lets players move and shoot without feeling any latency in their own actions, while the rest of the world is synchronized from the server to client and rendered as an interpolation between keyframes.
+Client side prediction works by predicting the local player on each client forward with local inputs. This lets players move and shoot without feeling any latency in their own actions, while the rest of the world is synchronized from server to client and rendered as an interpolation between keyframes.
 
 <img src="/img/networked-physics-in-vr/overwatch.jpg" width="100%"/>
 
 The key benefit of client-side prediction is that the client feels no latency while the server remains authoritative over the simulation. This is achieved by continuously sending corrections from the server to the client, in effect telling the client, at this time I think you were _here_ and doing _this_.
 
-But the client can't just apply server corrections as-is, because by the time they arrive they're _in the past_, so the client (invisibly) rolls the local player back in time, applies the correction from the server, then replays local inputs to bring the corrected player state back up to present time on the client.
+Here's where it gets complicated. The client can't just apply server corrections as-is, because by the time they arrive they're _in the past_, so the client (invisibly) rolls the local player back in time, applies the correction from the server, then replays local inputs to bring the corrected player state back up to present time on the client.
 
 This happens all the time in first person shooters but you rarely notice, because the local player state and the corrected state almost always agree. When they don't, it's usually because something happened on the server that can't be predicted from your inputs alone (another player shot you), or... because you were cheating :)
 
 <img src="/img/networked-physics-in-vr/titanfall.jpg" width="100%"/>
 
-Client side prediction works _great_ for first person shooters, but is it a good technique for networking a physics simulation?
+Client side prediction works _great_ for first person shooters, hiding latency while keeping the game secure against cheaters. But is it a good technique for networking a physics simulation?
 
 <img src="/img/networked-physics-in-vr/callofduty.png" width="100%"/>
 
-First person shooters apply prediction to your local player character and objects you are carrying like items and weapons, and depending on the game, projectiles like grenades and missiles. This works well because only a small subset of objects need to be rolled back and resimulated.
+Unfortunately once again, the answer is no. Why?
 
-But what objects would need to be predicted and rolled back if you threw an object at a stack of objects, and you wanted it collide and react with the stack with no latency? The answer is that you need to predict the object you throw, any objects it interacts with, plus any objects they interact with and so on! 
+First person shooters apply prediction to your local player character, objects you are carrying like items and weapons, and depending on the game, projectiles like grenades and missiles. This works well because only a small subset of objects need to be rolled back and resimulated on each client.
 
-While this could _theoretically_ work, the worst case is having to predict the _entire simulation_ if all objects are in one big stack. Under typical internet conditions players need to predict up to 250ms to hide latency, at a simulation rate of 60HZ this means a client-side prediction of up to 15 frames. Unfortunately, physics simulation is computationally expensive, so this isn't practical :(
+But what if you wanted to throw an object at a stack of objects, and have the stack react without latency? What would need to be predicted and rolled back in this case? The answer is not only the object you throw, but also any objects it collides with, plus any objects they collide with and so on! 
 
-# What could a solution look like?
+While this could _theoretically_ work, the worst case is a client predicting the _entire simulation_ when all objects are in a big stack. This quickly becomes impractical because physics simulation is expensive. We simply can't afford to rollback and resimulate 10-15 frames of simulation just to hide latency!
+
+# Distributed Simulation
+
+...
+
+
+
+
+
+
+
+
+
+---------------------------
 
 At this point I think both techniques above can be ruled out:
 
