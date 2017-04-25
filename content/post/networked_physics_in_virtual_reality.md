@@ -27,7 +27,7 @@ Previously, I've [presented talks at GDC](http://www.gdcvault.com/play/1022195/P
 
 So when considering the best approach for networked physics in virtual reality, it seemed that the most important factor to consider is that the player is actually _in there_. Networked objects are right in front of the player's face. Any artifacts or glitches would be obvious and jarring, and any delay on a player's actions would be unacceptable. Perhaps it would even make players feel sick?
 
-It seemed obvious then that for any networking approach to work in virtual reality, it must allow players to interact with the world without any perception of latency. This makes a lot of sense considering how much effort has gone into VR platforms to reduce latency for tracking and player input. It would be a real shame to build something on top of this that adds latency due to networking.
+It seems obvious then that for any networking approach to work in virtual reality, it must allow players to interact with the world without any perception of latency. This makes a lot of sense considering how much effort has gone into VR platforms to reduce latency for tracking and player input. It would be a real shame to build something on top of this that adds latency due to networking.
 
 So let's start by focusing on this aspect: _latency hiding_. How are multiplayer games networked and how do they hide latency? Can we use these techniques to network a physics simulation in VR with Unity and PhysX?
 
@@ -81,7 +81,7 @@ While this could _theoretically_ work, the worst case is a client predicting the
 
 # Distributed Simulation
 
-The third technique is distributed simulation. The basic idea is that instead of having the server be authoritative over the whole simulation, we _distribute_ objects across player machines, such that players take authority over some part of the scene, in effect _becoming the server_ for those objects.
+The third technique is distributed simulation. The basic idea is that instead of having the server be authoritative over the whole simulation, authority is _distributed_ across player machines, such that players take authority over different parts of the world, in effect _becoming the server_ for those objects.
 
 <img src="/img/networked-physics-in-vr/gta5.jpg" width="100%"/>
 
@@ -89,7 +89,7 @@ Distributed simulation is used in open world games like **Grand Theft Auto** bec
 
 <img src="/img/networked-physics-in-vr/destiny.jpg" width="100%"/>
 
-**Destiny** also used a distributed simulation technique, distributing the cost of player and AI simulation across player machines, while keeping important aspects of mission scripting running on lightweight dedicated servers. This significantly reduces server costs and makes it possible for Destiny to present the illusion of a seamless world.
+**Destiny** also uses a distributed simulation technique, distributing the cost of player and AI simulation across player machines, while keeping important aspects of mission scripting running on [lightweight dedicated servers](http://www.gdcvault.com/play/1022247/Shared-World-Shooter-Destiny-s). This significantly reduces server costs and makes it possible for Destiny to present the illusion of a seamless world.
 
 <img src="/img/networked-physics-in-vr/darksouls.jpg" width="100%"/>
 
@@ -97,38 +97,24 @@ Distributed simulation is used in open world games like **Grand Theft Auto** bec
 
 <img src="/img/networked-physics-in-vr/thedivision.jpg" width="100%"/>
 
-**The Division** uses a distributed simulation approach where each player runs the simulation for their player character, sending their player position and actions to a dedicated server. This hides latency for player's actions, while allowing the game to scaling up to high player counts. However, this approach has also caused cheating problems for competitive modes on PC.
-
----------------------------
-
-At this point I think both techniques above can be ruled out:
-
-1. PhysX is not deterministic, so we can't use deterministic lockstep.
-
-2. Rolling back and resimulating the entire simulation is too expensive, so we can't hide latency with client-side prediction.
-
-Any solution we come up would need to work with a physics engine that isn't deterministic, and provide some way to hide latency without client-side prediction.
+**The Division** also uses a distributed simulation approach. Each player runs the simulation for their player character locally, sending their position and actions to a dedicated server. This hides latency for the local player, while allowing the game to scale up to high player counts. However, this approach is not without controversy, as it has caused [serious cheating problems](https://www.theguardian.com/technology/2016/apr/26/hackers-cheats-ruined-the-division-pc-ubisoft) on PC.
 
 # The Authority Scheme
 
-The number one rule of networking is _never trust the client_. 
+Given that the networked physics demo is a cooperative experience, a distributed simulation makes a lot of sense. There's little concern about cheating, it doesn't require determinism because we'll synchronize state, and it avoids expensive rollback and resimulation.
 
-As with all good rules, this one is made to be broken. Never in a competitive game like an FPS, but in a _cooperative experience_, it's something to consider when there are no other options.
-
-Which brings us to the concept of an authority scheme. The basic idea is that instead of having the server be authoritative over the whole simulation, we _distribute_ authority across player machines, such that players take authority over objects they interact with, in effect _becoming the server_ for those objects. If we do this correctly, from each player's point of view, players get to interact with objects lag free, and they never have to rollback and apply corrections. Also, because we are synchronizing state, determinism is not required.
-
-The trick to making this all work is _clearly defined rules_ that keep the distributed simulation in sync while letting players predictively take authority over objects, resolving any conflicts between players after the fact.
+Moving forward with the distributed simulation approach, the first thing we need is _clearly defined rules_ that keep the distributed simulation in sync while letting players predictively take authority over objects. If we do this correctly, from each player's point of view, they get to interact with objects lag free.
 
 To do this, I came up with two concepts:
 
 1. Authority
 2. Ownership
 
-Authority is transmissive. Any object under the authority of a player transmits authority to objects it collides with, and those objects in turn transmit authority to objects they interact with. When objects come to rest, they return to default authority.
+Authority is transmissive. Any object under the authority of a player transmits authority to objects it collides with, and those objects in turn transmit authority to objects they interact with. When objects come to rest, they return to default authority (white).
 
-Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server confirms ownership) that player retains ownership until they release the object or disconnect from the game.
+Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server confirms that ownership) the player retains ownership until they release the object or disconnect from the game.
 
-In both cases, players take authority and ownership without waiting for confirmation from the server. It's the server's job to keep the simulation consistent, which means correcting (but not rolling back and resimulating) any client who thinks they have taken authority or ownership, when another client beat them to it.
+In both cases, players take authority and ownership without waiting for confirmation from the server. It's the server's job to keep the simulation consistent, which means correcting (but not rolling back and resimulating) any client who thinks they have authority or ownership over an object, when another client beat them to it.
 
 In short, we are creating a distributed system that is eventually consistent.
 
