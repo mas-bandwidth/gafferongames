@@ -81,15 +81,23 @@ While this could _theoretically_ work, the worst case is a client predicting the
 
 # Distributed Simulation
 
-...
+The third technique is distributed simulation. The basic idea is that instead of having the server be authoritative over the whole simulation, we _distribute_ objects across player machines, such that players take authority over some part of the scene, in effect _becoming the server_ for those objects.
 
+<img src="/img/networked-physics-in-vr/gta5.jpg" width="100%"/>
 
+Distributed simulation is used in open world games like **Grand Theft Auto** because it distributes the cost of simulating a large world across player's machines. Latency is hidden by giving players authority over their own character and vehicles they are driving.
 
+<img src="/img/networked-physics-in-vr/destiny.jpg" width="100%"/>
 
+**Destiny** also used a distributed simulation technique, distributing the cost of player and AI simulation across player machines, while keeping important aspects of mission scripting running on lightweight dedicated servers. This significantly reduces server costs and makes it possible for Destiny to present the illusion of a seamless world.
 
+<img src="/img/networked-physics-in-vr/darksouls.jpg" width="100%"/>
 
+**Dark Souls** has no dedicated gameplay servers but allows players to invade other player's games. In this case, the invading player has authority over their own character, allowing them to move and attack without latency, while the host player has authority over the rest of the world.
 
+<img src="/img/networked-physics-in-vr/thedivision.jpg" width="100%"/>
 
+**The Division** uses a distributed simulation approach where each player runs the simulation for their player character, sending their player position and actions to a dedicated server. This hides latency for player's actions, while allowing the game to scaling up to high player counts. However, this approach has also caused cheating problems for competitive modes on PC.
 
 ---------------------------
 
