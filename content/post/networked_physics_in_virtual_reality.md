@@ -25,7 +25,7 @@ Please try this demo in virtual reality before continuing. While the rest of thi
 
 Previously, I've [presented talks at GDC](http://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking) about networked physics. And yes, I've even networked worlds of physicaly simulated cubes before. But it's something completely different to be _inside_ that world and interact with it. This is something that at least to me, feels really exciting and new.
 
-So when considering the best approach for networked physics in virtual reality, it seemed that the most important thing is that the player is actually _in there_. Objects being networked are right in front of the player's face. Any artifacts or glitches would be obvious and jarring, and any delay on a player's actions would be unacceptable. Perhaps it would even make players feel sick?
+So when considering the best approach for networked physics in virtual reality, it seemed that the most important factor is that the player is actually _in there_. Objects being networked are right in front of the player's face. Any artifacts or glitches would be obvious and jarring, and any delay on a player's actions would be unacceptable. Perhaps it would even make players feel sick?
 
 It seemed obvious then that for any networking approach to work in virtual reality, it must allow players to interact with the world without any perception of latency. This makes a lot of sense considering how much effort has gone into VR platforms to reduce latency for tracking and player input. It would be a real shame to build something on top of this that adds latency due to networking.
 
@@ -61,21 +61,21 @@ Client side prediction works by predicting the local player on each client forwa
 
 The key benefit of client-side prediction is that the client feels no latency while the server remains authoritative over the simulation. This is achieved by continuously sending corrections from the server to the client, in effect telling the client, at this time I think you were _here_ and doing _this_.
 
-But the client can't just apply server corrections as-is, because by the time they arrive they're _in the past_, so the client (invisibly) rolls the local player back in time, applies the correction from the server, then replays local inputs to bring the corrected player state back up to present time.
+But the client can't just apply server corrections as-is, because by the time they arrive they're _in the past_, so the client (invisibly) rolls the local player back in time, applies the correction from the server, then replays local inputs to bring the corrected player state back up to present time on the client.
 
 This happens all the time in first person shooters but you rarely notice, because the local player state and the corrected state almost always agree. When they don't, it's usually because something happened on the server that can't be predicted from your inputs alone (another player shot you), or... because you were cheating :)
 
 <img src="/img/networked-physics-in-vr/titanfall.jpg" width="100%"/>
 
-Why do first person shooters go through all this effort? Because it stops players from cheating by warping around or directly modifying their weapon state to increase ammunition and fire rates. In short, client side prediction hides latency while keeping important decisions like hit detection and damage on the server.
-
-So client side prediction works _great_ for first person shooters, but is it a good technique for networking a physics simulation?
+Client side prediction works _great_ for first person shooters, but is it a good technique for networking a physics simulation?
 
 <img src="/img/networked-physics-in-vr/callofduty.png" width="100%"/>
 
-First person shooters apply prediction to your local player character and objects you are carrying like items and weapons. But what objects would need to be predicted if you threw an object at a stack of objects, and you wanted that object to collide with the stack with no latency? The answer is that you need to predict all objects you interact with, plus any objects they interact with and so on! 
+First person shooters apply prediction to your local player character and objects you are carrying like items and weapons, and depending on the game, projectiles like grenades and missiles. This works well because only a small subset of objects need to be rolled back and resimulated.
 
-While this could _theoretically_ work, the worst case is a player throwing a cube at one big stack and having to predict the _entire simulation_. Under typical internet conditions players need to predict up to 250ms to hide latency and at 60HZ this means a client-side prediction of up to 15 frames. Physics simulations are usually pretty expensive, so anything that increases simulation cost by a factor of 16 is probably not practical.
+But what objects would need to be predicted and rolled back if you threw an object at a stack of objects, and you wanted it collide and react with the stack with no latency? The answer is that you need to predict the object you throw, any objects it interacts with, plus any objects they interact with and so on! 
+
+While this could _theoretically_ work, the worst case is having to predict the _entire simulation_ if all objects are in one big stack. Under typical internet conditions players need to predict up to 250ms to hide latency, at a simulation rate of 60HZ this means a client-side prediction of up to 15 frames. Unfortunately, physics simulation is computationally expensive, so this isn't practical :(
 
 # What could a solution look like?
 
