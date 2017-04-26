@@ -61,7 +61,7 @@ Client side prediction works by predicting the local player on each client forwa
 
 The key benefit of client-side prediction is that the client feels no latency while the server remains authoritative over the simulation. This is achieved by continuously sending corrections from the server to the client, in effect telling the client, at this time I think you were _here_ and doing _this_.
 
-Here's where it gets complicated. The client can't just apply server corrections as-is, because by the time they arrive they're _in the past_, so the client (invisibly) rolls the local player back in time, applies the correction from the server, then replays local inputs to bring the corrected player state back up to present time on the client.
+Here's where it gets complicated. The client can't just apply the server corrections as-is, because by the time they arrive they're _in the past_, so the client (invisibly) rolls the local player back in time, applies the correction from the server, then replays local inputs to bring the corrected player state back up to present time on the client.
 
 This happens all the time in first person shooters but you rarely notice, because the local player state and the corrected state almost always agree. When they don't, it's usually because something happened on the server that can't be predicted from your inputs alone (another player shot you), or... because you were cheating :)
 
@@ -71,7 +71,7 @@ Client side prediction works _great_ for first person shooters, hiding latency w
 
 <img src="/img/networked-physics-in-vr/callofduty.png" width="100%"/>
 
-Unfortunately once again, the answer is no. Why?
+Unfortunately the answer is no. Why?
 
 First person shooters apply prediction to your local player character, objects you are carrying like items and weapons, and depending on the game, projectiles like grenades and missiles. This works well because only a small subset of objects need to be rolled back and resimulated on each client.
 
