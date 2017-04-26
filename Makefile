@@ -19,10 +19,10 @@ upload: clean
 	hugo
 	mv public gafferongames_upload
 	zip -9r gafferongames_upload.zip gafferongames_upload
-	scp gafferongames_upload.zip gaffer@linux:~/
+	scp gafferongames_upload.zip root@linux:~/
 	rm gafferongames_upload.zip
 	rm -rf gafferongames_upload
-	ssh -t gaffer@linux "sudo mv ~/gafferongames_upload.zip /var/www/html && cd /var/www/html && sudo rm -rf gafferongames_upload && sudo unzip gafferongames_upload.zip && sudo rm -rf gafferongames && sudo mv gafferongames_upload gafferongames"
+	ssh -t root@linux "mv ~/gafferongames_upload.zip /var/www/html && cd /var/www/html && rm -rf gafferongames_upload && unzip gafferongames_upload.zip && rm -rf gafferongames && mv gafferongames_upload gafferongames"
 	open http://new.gafferongames.com
 	rm -f config.toml
 
@@ -71,13 +71,14 @@ wordpress:
 	docker run --name wordpress -ti -p 8000:80 gafferongames:wordpress
 
 build: public
-	sudo docker-compose build
+	docker-compose build
 
 up:
 	sudo -b docker-compose up
 
 down:
-	sudo docker-compose down
+	docker-compose down
 
 sync:
 	git pull && make build && make down && make up
+	

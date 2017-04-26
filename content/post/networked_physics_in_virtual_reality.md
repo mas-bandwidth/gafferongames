@@ -77,7 +77,7 @@ First person shooters apply prediction to your local player character, objects y
 
 But what if you wanted to throw an object at a stack of objects, and have the stack react without latency? What would need to be predicted and rolled back in this case? The answer is not only the object you throw, but also any objects it collides with, plus any objects they collide with and so on! 
 
-While this could _theoretically_ work, the worst case is a client predicting the _entire simulation_ when all objects are in a big stack. This quickly becomes impractical because physics simulation is expensive. We simply can't afford to rollback and resimulate 10-15 frames of simulation just to hide latency!
+While this could _theoretically_ work, the worst case is a client predicting the _entire simulation_ when all objects are in a big stack. This quickly becomes impractical because physics simulation is expensive. We simply can't afford to rollback and resimulate 10-15 frames of simulation just to hide latency.
 
 # Distributed Simulation
 
@@ -101,22 +101,33 @@ Distributed simulation is used in open world games like **Grand Theft Auto** bec
 
 # The Authority Scheme
 
-Given that the networked physics demo is a cooperative experience, a distributed simulation makes a lot of sense. There's little concern about cheating, it doesn't require determinism because we'll synchronize state, and it avoids expensive rollback and resimulation.
+(segway, conclusion, we're going to use distributed authority).
 
-Moving forward with the distributed simulation approach, the first thing we need is _clearly defined rules_ that keep the distributed simulation in sync while letting players predictively take authority over objects. If we do this correctly, from each player's point of view, they get to interact with objects lag free.
+The host can takes authority over objects they interact with, turning the stack blue. 
 
-To do this, I came up with two concepts:
+<img src="/img/networked-physics-in-vr/temp.jpg" width="100%"/>
 
-1. Authority
-2. Ownership
+The host broadcasts state for all cubes to guests at some rate, like 10 times per-second:
 
-Authority is transmissive. Any object under the authority of a player transmits authority to objects it collides with, and those objects in turn transmit authority to objects they interact with. When objects come to rest, they return to default authority (white).
+<img src="/img/networked-physics-in-vr/quad.jpg" width="100%"/>
 
-Ownership corresponds to a player grabbing an object and holding it in one of their avatar hands. Ownership is stronger than authority. Once a player owns an object (and the server confirms that ownership) the player retains ownership until they release the object or disconnect from the game.
+When objects come to rest, the return to default authority (white):
 
-In both cases, players take authority and ownership without waiting for confirmation from the server. It's the server's job to keep the simulation consistent, which means correcting (but not rolling back and resimulating) any client who thinks they have authority or ownership over an object, when another client beat them to it.
+<img src="/img/networked-physics-in-vr/temp.jpg" width="100%"/>
 
-In short, we are creating a distributed system that is eventually consistent.
+Guests can also take authority over objects, for example player 1 turns cubes red:
+
+<img src="/img/networked-physics-in-vr/temp2.jpg" width="100%"/>
+
+While cubes are red, the player 1 ignores updates from the server for these objects and sends their state to the host:
+
+<img src="/img/networked-physics-in-vr/quad2.jpg" width="100%"/>
+
+The host accepts these state updates, applies them to its own simulation, and broadcasts them back out to all guests:
+
+<img src="/img/networked-physics-in-vr/quad2.jpg" width="100%"/>
+
+(Something something conclusion, what about conflicts? We will cover conflict resolution later, but in short, what we are doing is creating a distributed system that is eventually consistent).
 
 # State Synchronization
 
