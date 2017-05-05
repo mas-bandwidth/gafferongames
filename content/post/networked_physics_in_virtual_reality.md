@@ -25,7 +25,7 @@ Please try this demo in virtual reality before continuing. While the rest of thi
 
 Previously, I've [presented talks at GDC](http://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking) about networked physics. And yes, I've even networked worlds of physicaly simulated cubes before. But it's something completely different to be _inside_ that world and interact with it. This is something that at least to me, feels really exciting and new.
 
-So when considering the best approach for networked physics in virtual reality, it seemed that the most important factor to consider is that the player is actually _in there_. Networked objects are right in front of the player's face. Any artifacts or glitches would be obvious and jarring, and any delay on a player's actions would be unacceptable. Perhaps it would even make players feel sick?
+So when considering the best approach for networked physics in virtual reality, this seemed the most important factor. That the player is actually _in there_. Networked objects are right in front of the player's face. Any artifacts or glitches would be obvious and jarring, and any delay on a player's actions would be unacceptable. Perhaps it would even make players feel sick?
 
 It seems obvious then that for any networking approach to work in virtual reality, it must allow players to interact with the world without any perception of latency. This makes a lot of sense considering how much effort has gone into VR platforms to reduce latency for tracking and player input. It would be a real shame to build something on top of this that adds latency due to networking.
 
@@ -155,19 +155,17 @@ The state grabbed from each cube looks like this:
         Vector3 angular_velocity;
     };
 
-When we apply this state to the simulation on the right side, we force the position, rotation, linear and angular velocity of each rigid body to the state grabbed from the authority simulation. This simple change is enough to keep the simulations in sync, and PhysX doesn't diverge enough in the 1/10th of a second between updates to show any noticeable pops.
+When we apply this state to the simulation on the right side, we force the position, rotation, linear and angular velocity of each rigid body to the state grabbed from the authority simulation. 
 
-Now the simulation on the right gives the same end result:
+This simple change is enough to keep the simulations in sync, and PhysX doesn't diverge enough in the 1/10th of a second between updates to show any noticeable pops:
 
 <img src="/img/networked-physics-in-vr/in-sync.png" width="100%"/>
 
 This is actually a big step, because it proves that a _state synchronization_ based approach for networking can work with PhysX. The only problem is, sending uncompressed physics state uses too much bandwidth.
 
-Let's get busy reducing the amount of bandwidth we send.
+# Bandwidth Optimization
 
-# Quantized State
-
-A simple way to reduce bandwidth is to recognize when objects are at rest, and instead of sending (0,0,0) for linear and angular velocity, we can send just one bit: "at rest".
+The first step towards reduce bandwidth is to recognize when objects are at rest, and instead of sending (0,0,0) for linear and angular velocity, send just one bit: "at rest".
 
     [position] (vector3)
     [rotation] (quaternion)

@@ -171,8 +171,9 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
         }
     }
 
+    redis_client.Expire( "bytes_read-" + from_ip, time.Hour * 24 )
     redis_client.IncrBy( "bytes_read-" + from_ip, video_file.bytes_read )
-    redis_client.Expire( fraction_read_key, time.Hour * 4 )
+    redis_client.Expire( fraction_read_key, time.Hour )
     redis_client.IncrByFloat( fraction_read_key, fraction )
 
     LogAccess( redis_client, from_ip, filename, video_file.bytes_read, file_info.Size() )

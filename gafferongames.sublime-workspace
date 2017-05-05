@@ -730,23 +730,51 @@
 	],
 	"file_history":
 	[
-		"/Users/gaffer/git/gafferongames/content/post/snapshot_compression.md",
-		"/Users/gaffer/git/gafferongames/content/post/snapshots_and_interpolation.md",
+		"/Users/gaffer/git/gafferongames/CHANGES",
+		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
 		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
 		"/Users/gaffer/git/gafferongames/content/post/the_physics_simulation.md",
-		"/Users/gaffer/git/gafferongames/config_local.toml",
-		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
-		"/Users/gaffer/git/gafferongames/content/post/networked_physics_2004.md",
-		"/Users/gaffer/git/gafferongames/layouts/partials/header.html",
+		"/Users/gaffer/git/gafferongames/nginx/Dockerfile",
 		"/Users/gaffer/git/gafferongames/Makefile",
 		"/Users/gaffer/git/gafferongames/TODO",
+		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
+		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
+		"/Users/gaffer/.ssh/known_hosts",
+		"/Users/gaffer/git/gafferongames/content/post/untitled",
+		"/Users/gaffer/git/gafferongames/webserver/webserver.go",
+		"/Users/gaffer/git/gafferongames/webserver/Dockerfile",
+		"/Users/gaffer/git/gafferongames/docker-compose.yml",
+		"/Users/gaffer/Desktop/README.txt",
+		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Networked Physics/README.txt",
+		"/Users/gaffer/git/gafferongames/config_nginx.toml",
+		"/Users/gaffer/Desktop/Networked Physics/Assets/Scripts/Constants.cs",
+		"/Users/gaffer/git/gafferongames/wordpress/wp-config.php",
+		"/Users/gaffer/git/gafferongames/wordpress/Dockerfile",
+		"/Users/gaffer/git/gafferongames/redis/Dockerfile",
+		"/Users/gaffer/git/gafferongames/nginx/nginx.sh",
+		"/Users/gaffer/git/gafferongames/nginx/Makefile",
+		"/Users/gaffer/libyojimbo/docker/Dockerfile",
+		"/Users/gaffer/git/gafferongames/config_local.toml",
+		"/Users/gaffer/git/gafferongames/IDEAS",
+		"/Users/gaffer/git/gafferongames/redis/Makefile",
+		"/Users/gaffer/git/gafferongames/webserver/Makefile",
+		"/Users/gaffer/git/gafferongames/PLANNING",
+		"/Users/gaffer/git/gafferongames/RESEARCH",
+		"/Users/gaffer/.Trash/webserver 10.57.05 AM/Makefile",
+		"/Users/gaffer/git/gafferongames/WHITE PAPER",
+		"/Users/gaffer/git/gafferongames/webserver/TODO",
+		"/Users/gaffer/git/gafferongames/redis/TODO",
+		"/Users/gaffer/git/gafferongames/.gitignore",
+		"/Users/gaffer/git/gafferongames/content/post/snapshot_compression.md",
+		"/Users/gaffer/git/gafferongames/content/post/snapshots_and_interpolation.md",
+		"/Users/gaffer/git/gafferongames/content/post/networked_physics_2004.md",
+		"/Users/gaffer/git/gafferongames/layouts/partials/header.html",
 		"/Users/gaffer/git/gafferongames/config.toml",
 		"/Users/gaffer/golang/webserver.go",
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/STUFF",
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/CHORES",
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/HEALTH",
 		"/Users/gaffer/Desktop/Networked Physics/Assets/Scripts/Context.cs",
-		"/Users/gaffer/Desktop/Networked Physics/Assets/Scripts/Constants.cs",
 		"/Users/gaffer/libyojimbo/premake5.lua",
 		"/Users/gaffer/git/gafferongames/.git/MERGE_MSG",
 		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
@@ -764,18 +792,11 @@
 		"/Users/gaffer/git/gafferongames/content/post/how_the_go_stone_moves.md",
 		"/Users/gaffer/git/gafferongames/content/post/tessellating_the_go_stone.md",
 		"/Users/gaffer/git/gafferongames/content/about.md",
-		"/Users/gaffer/git/gafferongames/IDEAS",
-		"/Users/gaffer/git/gafferongames/CHANGES",
-		"/Users/gaffer/git/gafferongames/PLANNING",
-		"/Users/gaffer/git/gafferongames/WHITE PAPER",
 		"/Users/gaffer/git/gafferongames/make",
 		"/Users/gaffer/netcode.io/Yojimbo usage",
-		"/Users/gaffer/git/gafferongames/content/post/untitled",
-		"/Users/gaffer/git/gafferongames/.gitignore",
 		"/Users/gaffer/Desktop/ROBLOX",
 		"/Users/gaffer/git/gafferongames/scratch.md",
 		"/Users/gaffer/Desktop/devon.txt",
-		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
 		"/Users/gaffer/git/gafferongames/archetypes/post.md",
 		"/Users/gaffer/git/gafferongames/content/post/fix_your_timestep.md",
 		"/Users/gaffer/git/gafferongames/content/post/physics_in_3d.md",
@@ -788,7 +809,6 @@
 		"/Users/gaffer/git/gafferongames/content/post/the_go_stone.md",
 		"/Users/gaffer/Desktop/TODO",
 		"/Users/gaffer/git/gafferongames/content/post/sending_and_receiving_packets.md",
-		"/Users/gaffer/git/gafferongames/RESEARCH",
 		"/Users/gaffer/git/gafferongames/content/post/udp_vs_tcp.md",
 		"/Users/gaffer/git/gafferongames/layouts/_default/list.html",
 		"/Users/gaffer/git/gafferongames/layouts/post/archive.html",
@@ -837,27 +857,7 @@
 		"/Users/gaffer/git/sbcb-demo/themes/startbootstrap-clean-blog/layouts/partials/categories.html",
 		"/Users/gaffer/git/sbcb-demo/content/post/packet fragmentation and reassembly.md",
 		"/Users/gaffer/git/sbcb-demo/content/post/serialization strategies.md",
-		"/Users/gaffer/git/sbcb-demo/themes/startbootstrap-clean-blog/layouts/index.html",
-		"/Users/gaffer/git/sbcb-demo/themes/startbootstrap-clean-blog/layouts/404.html",
-		"/Users/gaffer/git/sbcb-demo/themes/startbootstrap-clean-blog/theme.toml",
-		"/Users/gaffer/git/sbcb-demo/config.toml",
-		"/Users/gaffer/git/sbcb-demo/content/post/reading and writing packets.md",
-		"/Users/gaffer/git/sbcb-demo/content/post/client_server_connection.md",
-		"/Users/gaffer/oculus/bandwidth/BANDWIDTH NOTES",
-		"/Users/gaffer/Desktop/bandwidth/BANDWIDTH NOTES",
-		"/Users/gaffer/Dropbox/Bandwidth/packets_basic.txt",
-		"/Users/gaffer/Dropbox/Bandwidth/packets_not_changed.txt",
-		"/Users/gaffer/Dropbox/Bandwidth/packets_optimal.txt",
-		"/Users/gaffer/Desktop/bandwidth/03_packets_prediction_relative.txt",
-		"/Users/gaffer/Desktop/bandwidth/02_packets_perfect_prediction.txt",
-		"/Users/gaffer/Desktop/bandwidth/01_packets_delta_relative.txt",
-		"/Users/gaffer/oculus/NOTES",
-		"/Users/gaffer/oculus/TODO",
-		"/Users/gaffer/moon/NOTES",
-		"/Users/gaffer/moon/LOG",
-		"/Users/gaffer/Documents/WISHLIST",
-		"/Users/gaffer/oculus/GDC 2015 Example Source Code/external/ode/tests/UnitTest++/src/Test.cpp",
-		"/Users/gaffer/oculus/developer/Platform/UnrealEngine4/OculusPlatformPlugin/Source/ThirdParty/Oculus/LibOVRPlatform/LibOVRPlatform/include/OVR_Packet.h"
+		"/Users/gaffer/git/sbcb-demo/themes/startbootstrap-clean-blog/layouts/index.html"
 	],
 	"find":
 	{
@@ -908,6 +908,38 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"latency!",
+			"sudo",
+			"gaffer",
+			"gaffer@linux",
+			"linux",
+			"determinism",
+			"the server",
+			"authoritative",
+			"the scene",
+			"player character",
+			"distribute ",
+			"distribute object",
+			"distribute objects",
+			"objects ",
+			"val",
+			"because it ",
+			"and and",
+			"the ",
+			"a stack",
+			"this means",
+			"back up",
+			"actually",
+			"actual",
+			"Street",
+			"local player",
+			"Log(",
+			"Printf",
+			"Time.",
+			"Printf",
+			"IncrByFloat",
+			"export",
+			"depends_on",
 			".RSSlink",
 			"RSS",
 			"RSSLink",
@@ -1003,39 +1035,7 @@
 			"Lets",
 			"lets",
 			"y'",
-			"on this.",
-			"the center",
-			"realistiic",
-			"lets",
-			"Lets",
-			"&lt",
-			"&gt",
-			"Lets",
-			"lets",
-			"gt",
-			"and at",
-			"left sim",
-			"frame n",
-			"Lets",
-			"lets",
-			"your simul",
-			"100ms",
-			"It follows",
-			"multiplayer gam",
-			"Lets",
-			"lets",
-			"Lets",
-			"Its",
-			"its",
-			"lets",
-			"Lets",
-			"gt",
-			"&lt",
-			"&amp",
-			"game!",
-			"TCP/IP Ill",
-			"its",
-			"that its"
+			"on this."
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1089,7 +1089,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 23.0
+		"height": 22.0
 	},
 	"input":
 	{
@@ -1130,7 +1130,7 @@
 	"project": "gafferongames.sublime-project",
 	"replace":
 	{
-		"height": 42.0
+		"height": 40.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1140,16 +1140,108 @@
 		"selected_items":
 		[
 			[
-				"todo",
-				"TODO"
+				"docker",
+				"nginx/Dockerfile"
 			],
 			[
 				"make",
 				"Makefile"
 			],
 			[
+				"todo",
+				"TODO"
+			],
+			[
+				"netwo",
+				"content/post/networked_physics_in_virtual_reality.md"
+			],
+			[
+				"det",
+				"content/post/deterministic_lockstep.md"
+			],
+			[
+				"the",
+				"content/post/the_physics_simulation.md"
+			],
+			[
 				"net",
 				"content/post/networked_physics_in_virtual_reality.md"
+			],
+			[
+				"ngin",
+				"nginx/nginx.conf"
+			],
+			[
+				"chang",
+				"CHANGES"
+			],
+			[
+				"webser",
+				"webserver/webserver.go"
+			],
+			[
+				"docke",
+				"docker-compose.yml"
+			],
+			[
+				"ngi",
+				"config_nginx.toml"
+			],
+			[
+				"com",
+				"docker-compose.yml"
+			],
+			[
+				"wp-",
+				"wordpress/wp-config.php"
+			],
+			[
+				"dockerfile",
+				"nginx/Dockerfile"
+			],
+			[
+				"docker-",
+				"docker-compose.yml"
+			],
+			[
+				"nginx",
+				"nginx/nginx.conf"
+			],
+			[
+				"n",
+				"nginx/nginx.conf"
+			],
+			[
+				"nig",
+				"nginx/nginx.conf"
+			],
+			[
+				"ng",
+				"nginx/nginx.conf"
+			],
+			[
+				"makefile",
+				"Makefile"
+			],
+			[
+				"webserver.go",
+				"webserver/webserver.go"
+			],
+			[
+				"webserve",
+				"webserver/webserver.go"
+			],
+			[
+				".",
+				".gitignore"
+			],
+			[
+				"conf",
+				"config_local.toml"
+			],
+			[
+				"confi",
+				"config_local.toml"
 			],
 			[
 				"config",
@@ -1166,10 +1258,6 @@
 			[
 				"dete",
 				"content/post/deterministic_lockstep.md"
-			],
-			[
-				"the",
-				"content/post/the_physics_simulation.md"
 			],
 			[
 				"networkedphysisc",
@@ -1248,10 +1336,6 @@
 				"IDEAS"
 			],
 			[
-				"makefile",
-				"Makefile"
-			],
-			[
 				"changes",
 				"CHANGES"
 			],
@@ -1264,16 +1348,8 @@
 				"content/post/snapshots_and_interpolation.md"
 			],
 			[
-				"det",
-				"content/post/deterministic_lockstep.md"
-			],
-			[
 				"interpolation.md",
 				"content/post/snapshots_and_interpolation.md"
-			],
-			[
-				"conf",
-				"config_local.toml"
 			],
 			[
 				"about",
@@ -1448,10 +1524,6 @@
 				"themes/startbootstrap-clean-blog/static/fonts/glyphicons-halflings-regular.svg"
 			],
 			[
-				"chang",
-				"CHANGES"
-			],
-			[
 				"conta",
 				"content/contact.md"
 			],
@@ -1578,78 +1650,6 @@
 			[
 				"protocol2h",
 				"protocol2/protocol2.h"
-			],
-			[
-				"output.txt",
-				"protocol2/output.txt"
-			],
-			[
-				"clue2.txt",
-				"protocol2/clue2.txt"
-			],
-			[
-				"clues.txt",
-				"protocol2/clues.txt"
-			],
-			[
-				"output.tx",
-				"protocol2/output.txt"
-			],
-			[
-				"output",
-				"protocol2/output.txt"
-			],
-			[
-				"out.u",
-				"protocol2/output.txt"
-			],
-			[
-				"output.t",
-				"protocol2/output.txt"
-			],
-			[
-				"30",
-				"protocol2/obj/x64/Debug/003_packet_fragmentation_and_reassembly/003_packet_fragmentation_and_reassembly.d"
-			],
-			[
-				"yojimbo.cpp",
-				"protocol2/yojimbo.cpp"
-			],
-			[
-				"rel",
-				"protocol2/006_reliable_ordered_messages.cpp"
-			],
-			[
-				"001",
-				"protocol2/001_reading_and_writing_packets.cpp"
-			],
-			[
-				"socket_interface.cpp",
-				"protocol2/yojimbo_socket_interface.cpp"
-			],
-			[
-				"packet_processor.h",
-				"yojimbo_packet_processor.h"
-			],
-			[
-				"packet",
-				"yojimbo_packet_processor.h"
-			],
-			[
-				"network2h",
-				"network2.h"
-			],
-			[
-				"yojimbo_con",
-				"yojimbo_config.h"
-			],
-			[
-				"packet_processor",
-				"yojimbo_packet_processor.h"
-			],
-			[
-				"config.h",
-				"yojimbo_config.h"
 			]
 		],
 		"width": 0.0
