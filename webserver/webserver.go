@@ -12,6 +12,7 @@ import (
     "net/http"
     "github.com/gorilla/mux"
     "github.com/go-redis/redis"
+    "github.com/gorilla/context"
 )
 
 const Port = 8080
@@ -138,7 +139,7 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
 
     fraction_read_result, err := redis_client.Get( fraction_read_key ).Result()
     fraction_read, err := strconv.ParseFloat( fraction_read_result, 10 )
-    if ( fraction_read > 10.0 ) {
+    if ( fraction_read > 20.0 ) {
         Log( "%s: File downloaded too many times: %s (%f)", from_ip, filename, fraction_read )
         FuckOffAndBan( writer, redis_client, from_ip )
         return
@@ -182,5 +183,5 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
 func main() {
     router := mux.NewRouter()
     router.HandleFunc( "/videos/{file}.{extension}", VideoHandler )
-    log.Fatal( http.ListenAndServe( ":" + strconv.Itoa(Port), router ) )
+    log.Fatal( http.ListenAndServe( ":" + strconv.Itoa(Port), context.ClearHandler( router ) ) )
 }

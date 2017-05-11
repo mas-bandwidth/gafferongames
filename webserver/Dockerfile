@@ -4,6 +4,8 @@ RUN apt-get -y update
 
 RUN go get github.com/gorilla/mux
 
+RUN go get github.com/gorilla/context
+
 RUN go get -u github.com/go-redis/redis
 
 ADD webserver.go webserver.go
