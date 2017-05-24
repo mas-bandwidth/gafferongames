@@ -11,5 +11,3 @@ TODO
         3. Map nginx.conf with volume and make nginx restart whenever the config file is changed.
 
         4. Setup DNS so libyojimbo is redirected through my web server as well.
-
-        5. Map log files with docker volumes so I can easily tail files to watch what's going on.

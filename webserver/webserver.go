@@ -111,6 +111,10 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
 
     redis_client := redis.NewClient( &redis.Options{ Addr: "redis:6379", Password: "", DB: 0 } )
 
+    // todo: switch to https://godoc.org/github.com/garyburd/redigo/redis
+    // it has connection pool support, which avoids creating clients for each http request.
+    defer redis_client.Close()
+
     from := request.RemoteAddr
     forwarded_for := request.Header.Get( "X-Forwarded-For" )
     if ( forwarded_for != "" ) {
@@ -178,6 +182,8 @@ func VideoHandler( writer http.ResponseWriter, request * http.Request ) {
     redis_client.IncrByFloat( fraction_read_key, fraction )
 
     LogAccess( redis_client, from_ip, filename, video_file.bytes_read, file_info.Size() )
+
+    Log( "")
 }
 
 func main() {

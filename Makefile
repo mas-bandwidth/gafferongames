@@ -81,4 +81,3 @@ down:
 
 sync:
 	git pull && make build && make down && make up
-	
