@@ -15,5 +15,3 @@ WORKDIR /etc/nginx
 CMD [ "dockerize", "-wait", "tcp://webserver:8080", "nginx" ]
 
 EXPOSE 80
-
-EXPOSE 443
