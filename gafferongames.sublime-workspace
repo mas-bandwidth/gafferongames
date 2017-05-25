@@ -730,7 +730,9 @@
 	],
 	"file_history":
 	[
+		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
 		"/Users/gaffer/git/gafferongames/webserver/webserver.go",
+		"/Users/gaffer/git/gafferongames/webserver/Makefile",
 		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/git/gafferongames/webserver/Dockerfile",
 		"/Users/gaffer/git/gafferongames/nginx/Dockerfile",
@@ -739,7 +741,6 @@
 		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
 		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
 		"/Users/gaffer/git/gafferongames/content/post/the_physics_simulation.md",
-		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
 		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
 		"/Users/gaffer/.ssh/known_hosts",
 		"/Users/gaffer/git/gafferongames/content/post/untitled",
@@ -757,7 +758,6 @@
 		"/Users/gaffer/git/gafferongames/config_local.toml",
 		"/Users/gaffer/git/gafferongames/IDEAS",
 		"/Users/gaffer/git/gafferongames/redis/Makefile",
-		"/Users/gaffer/git/gafferongames/webserver/Makefile",
 		"/Users/gaffer/git/gafferongames/PLANNING",
 		"/Users/gaffer/git/gafferongames/RESEARCH",
 		"/Users/gaffer/.Trash/webserver 10.57.05 AM/Makefile",
@@ -1140,16 +1140,24 @@
 		"selected_items":
 		[
 			[
+				"nginx",
+				"nginx/nginx.conf"
+			],
+			[
+				"make",
+				"webserver/Makefile"
+			],
+			[
+				"webserver.go",
+				"webserver/webserver.go"
+			],
+			[
 				"ebse",
 				"webserver/webserver.go"
 			],
 			[
 				"todo",
 				"TODO"
-			],
-			[
-				"make",
-				"Makefile"
 			],
 			[
 				"docker",
@@ -1216,10 +1224,6 @@
 				"docker-compose.yml"
 			],
 			[
-				"nginx",
-				"nginx/nginx.conf"
-			],
-			[
 				"n",
 				"nginx/nginx.conf"
 			],
@@ -1234,10 +1238,6 @@
 			[
 				"makefile",
 				"Makefile"
-			],
-			[
-				"webserver.go",
-				"webserver/webserver.go"
 			],
 			[
 				"webserve",
