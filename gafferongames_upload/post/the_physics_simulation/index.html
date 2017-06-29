@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>The Physics Simulation | Gaffer On Games</title>
+
+    
+    <link href="http://new.gafferongames.com/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://new.gafferongames.com/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://new.gafferongames.com">Gaffer On Games</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                    <li>
+                        <a href="http://new.gafferongames.com/">home</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://new.gafferongames.com/about/">About</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://new.gafferongames.com/post/">Archives</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://new.gafferongames.com/contact/">Contact</a>
+                    </li>
+                    
+                    <li>
+                        <a href="http://www.patreon.com/gafferongames">Support gafferongames.com</a>
+                    </li>
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://new.gafferongames.com/img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>The Physics Simulation</h1>
+               <h2 class="subheading">An introduction to networked physics</h2>
+               <span class="meta">Posted by <a href="http://new.gafferongames.com/about">Glenn Fiedler</a> on Friday, November 28, 2014
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Hi, I&rsquo;m <a href="http://new.gafferongames.com/about">Glenn Fiedler</a> and welcome to the first article in <strong><a href="http://new.gafferongames.com/categories/networked-physics/">Networked Physics</a></strong>.</p>
+
+<p>In this article series we&rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.</p>
+
+<p>But before we get to this, lets spend some time exploring the physics simulation we’re going to network.</p>
+
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+<source src="http://new.gafferongames.com/videos/the_physics_simulation_cube.mp4" type="video/mp4" />
+<source src="http://new.gafferongames.com/videos/the_physics_simulation_cube.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
+
+<p>Here I’ve setup a simple simulation of a cube in the open source physics engine <a href="http://www.ode.org">ODE</a>. The player moves around by applying forces at its center of mass. The physics simulation takes this linear motion and calculates friction as the cube collides with the ground, inducing a rolling and tumbling motion.</p>
+
+<p>This tumbling is why I chose a cube instead a sphere. I <em>want</em> this complex, unpredictable motion because rigid bodies in general move in interesting ways according to their shape. It’s simply not possible to accurately predict the motion of a rigid body with a linear extrapolation or the ballistic equations of motion.</p>
+
+<p>If you want to know where a rigid body is at a future time, you have to run the whole physics simulation: dynamics, collision detection, collision response and friction in order to find out!</p>
+
+<h2 id="an-interactive-world">An Interactive World</h2>
+
+<p>Networking a physics simulation is easy if there is only one object interacting with a static world. It starts to get interesting when the player interacts with other physically simulated objects, <em>especially</em> when those objects push back and affect the motion of the player.</p>
+
+<p>Let&rsquo;s add some more cubes to the simulation:</p>
+
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+<source src="http://new.gafferongames.com/videos/the_physics_simulation_cubes_roll.mp4" type="video/mp4" />
+<source src="http://new.gafferongames.com/videos/the_physics_simulation_cubes_roll.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
+
+<p>Notice when the player interacts with a cube it turns red. When that cube comes to rest it turns back to grey (non-interacting). Interactions aren’t just direct. Red cubes hit by the player turn other cubes they touch red as well. This way player interactions fan-out covering all affected objects.</p>
+
+<p>While it’s cool to roll around and interact with other cubes, what I really wanted was a way to push <em>lots</em> of cubes around. What I came up with is this:</p>
+
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+<source src="http://new.gafferongames.com/videos/the_physics_simulation_cubes_blow.mp4" type="video/mp4" />
+<source src="http://new.gafferongames.com/videos/the_physics_simulation_cubes_blow.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
+
+<p>To implement this I raycast to find the intersection with the ground below the center of mass of the player cube, then apply a spring force (see <a href="https://en.wikipedia.org/wiki/Hooke%27s_law">Hooke’s law</a>) relative to the distance from this point, making the player cube float in the air.</p>
+
+<p>Then all non-player cubes within a certain distance of that intersection point have a force applied proportional to their distance from this point and away from it, so they are pushed away out of the way like leaves from a leaf blower.</p>
+
+<h2 id="a-complicated-case">A Complicated Case</h2>
+
+<p>I also wanted a very complex coupled motion between the player and non-player cubes such that the player and the objects its interacting with become one single system, a group of rigid bodies joined together by constraints.</p>
+
+<p>To implement this I thought it would be cool if the player could roll around and create a ball of cubes, like in one of my favorite games <a href="https://en.wikipedia.org/wiki/Katamari_Damacy">Katamari Damacy</a>.</p>
+
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+<source src="http://new.gafferongames.com/videos/the_physics_simulation_cubes_katamari.mp4" type="video/mp4" />
+<source src="http://new.gafferongames.com/videos/the_physics_simulation_cubes_katamari.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
+
+<p>To implement this effect cubes within a certain distance of the player have a force applied towards the center of the cube. These cubes remain physically simulated while in the katamari ball, they are not just “stuck” to the player like in the original game.</p>
+
+<p>This means that the cubes in the katamari are continually pushing and interacting with each other and the player cube via collision constraints.</p>
+
+<p>This is a very difficult situation for networked physics.</p>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    <li>
+                      <a href="http://new.gafferongames.com/contact/">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-envelope-o fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://twitter.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://www.facebook.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-facebook fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted">© The Network Protocol Company, Inc.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://new.gafferongames.com/js/jquery.min.js"></script>
+
+    
+    <script src="http://new.gafferongames.com/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://new.gafferongames.com/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

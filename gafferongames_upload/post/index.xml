@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on Gaffer On Games</title>
+    <link>http://new.gafferongames.com/post/</link>
+    <description>Recent content in Posts on Gaffer On Games</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© The Network Protocol Company, Inc.</copyright>
+    <lastBuildDate>Sun, 26 Feb 2017 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://new.gafferongames.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Why can&#39;t I send UDP packets from a browser?</title>
+      <link>http://new.gafferongames.com/post/why_cant_i_send_udp_packets_from_a_browser/</link>
+      <pubDate>Sun, 26 Feb 2017 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/why_cant_i_send_udp_packets_from_a_browser/</guid>
+      <description>Premise In 2017 the most popular web games like agar.io are networked via WebSockets over TCP. If a UDP equivalent of WebSockets could be incorporated into browsers, it would greatly improve the networking of these games.
+Background Web browsers are built on top of HTTP, which is a stateless request/response protocol initially designed for serving static web pages. HTTP is built on top of TCP, a low-level protocol which guarantees data sent over the internet arrives reliably, and in the same order it was sent.</description>
+    </item>
+    
+    <item>
+      <title>Snapshot Compression</title>
+      <link>http://new.gafferongames.com/post/snapshot_compression/</link>
+      <pubDate>Sun, 04 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/snapshot_compression/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In the previous article we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.
+The problem with a low snapshot rate is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms.</description>
+    </item>
+    
+    <item>
+      <title>Snapshots and Interpolation</title>
+      <link>http://new.gafferongames.com/post/snapshots_and_interpolation/</link>
+      <pubDate>Sun, 30 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/snapshots_and_interpolation/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In the previous article we networked a physics simulation using deterministic lockstep. Now, in this article we&amp;rsquo;re going to network the same simulation with a completely different technique: snapshot interpolation.
+Why a different technique? While deterministic lockstep is very efficient in terms of bandwidth, it&amp;rsquo;s not always possible to make your simulation deterministic. Also, as the player count increases, deterministic lockstep becomes problematic: you can&amp;rsquo;t simulate frame n until you receive input from all players for that frame, so players end up waiting for the most lagged player.</description>
+    </item>
+    
+    <item>
+      <title>Deterministic Lockstep</title>
+      <link>http://new.gafferongames.com/post/deterministic_lockstep/</link>
+      <pubDate>Sat, 29 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/deterministic_lockstep/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In this article series we&amp;rsquo;re exploring different ways to network a physics simulation. In this article specifically, we&amp;rsquo;re going to network a physics simulation using deterministic lockstep.
+Deterministic lockstep is a method of networking a system from one computer to another by sending only the inputs that control that system, rather than the state of that system. In the context of networking a physics simulation, this means we send across a small amount of input, while avoiding sending state like position, orientation, linear velocity and angular velocity per-object.</description>
+    </item>
+    
+    <item>
+      <title>The Physics Simulation</title>
+      <link>http://new.gafferongames.com/post/the_physics_simulation/</link>
+      <pubDate>Fri, 28 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/the_physics_simulation/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to the first article in Networked Physics.
+In this article series we&amp;rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.
+But before we get to this, lets spend some time exploring the physics simulation we’re going to network.
+Your browser does not support the video tag.  Here I’ve setup a simple simulation of a cube in the open source physics engine ODE.</description>
+    </item>
+    
+    <item>
+      <title>Floating Point Determinism</title>
+      <link>http://new.gafferongames.com/post/floating_point_determinism/</link>
+      <pubDate>Wed, 24 Feb 2010 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/floating_point_determinism/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+Lately I&amp;rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.
+The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation implicitly by sending just the player inputs.
+This is a very attractive synchronization strategy because the amount of network traffic depends on the size of the player inputs instead of the amount of physics state in the world.</description>
+    </item>
+    
+    <item>
+      <title>What Every Programmer Needs To Know About Game Networking</title>
+      <link>http://new.gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/</link>
+      <pubDate>Wed, 24 Feb 2010 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+Have you ever wondered how multiplayer games work?
+From the outside it seems magical: two or more players sharing a consistent experience across the network like they actually exist together in the same virtual world.
+But as programmers we know the truth of what is actually going on underneath is quite different from what you see. It turns out it&amp;rsquo;s all an illusion.</description>
+    </item>
+    
+    <item>
+      <title>Reliability and Congestion Avoidance over UDP</title>
+      <link>http://new.gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/</link>
+      <pubDate>Mon, 20 Oct 2008 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+In the previous article, we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.
+The Problem with TCP Those of you familiar with TCP know that it already has its own concept of connection, reliability-ordering and congestion avoidance, so why are we rewriting our own mini version of TCP on top of UDP?</description>
+    </item>
+    
+    <item>
+      <title>Virtual Connection over UDP</title>
+      <link>http://new.gafferongames.com/post/virtual_connection_over_udp/</link>
+      <pubDate>Wed, 08 Oct 2008 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/virtual_connection_over_udp/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+In the previous article, I showed you how to send and receive packets using UDP.
+Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.
+As the first step towards a general connection system, we&amp;rsquo;ll start with the simplest case possible: creating a virtual connection between two computers on top of UDP.</description>
+    </item>
+    
+    <item>
+      <title>Sending and Receiving Packets</title>
+      <link>http://new.gafferongames.com/post/sending_and_receiving_packets/</link>
+      <pubDate>Fri, 03 Oct 2008 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/sending_and_receiving_packets/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+In the previous article we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.
+In this article I am going to show you how to send and receive UDP packets.
+BSD sockets For most modern platforms you have some sort of basic socket layer available based on BSD sockets.</description>
+    </item>
+    
+    <item>
+      <title>UDP vs. TCP</title>
+      <link>http://new.gafferongames.com/post/udp_vs_tcp/</link>
+      <pubDate>Wed, 01 Oct 2008 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/udp_vs_tcp/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+In this article we start with the most basic aspect of network programming: sending and receiving data over the network. This is perhaps the simplest and most basic part of what network programmers do, but still it is quite intricate and non-obvious as to what the best course of action is.
+You have most likely heard of sockets, and are probably aware that there are two main types: TCP and UDP.</description>
+    </item>
+    
+    <item>
+      <title>Networked Physics (2004)</title>
+      <link>http://new.gafferongames.com/post/networked_physics_2004/</link>
+      <pubDate>Sat, 04 Sep 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/networked_physics_2004/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to the final article in in Game Physics.
+In the previous article we discussed how to use spring-like forces to model basic collision response, joints and motors.
+Now we&amp;rsquo;re going to discuss how to network a physics simulation.
+Networking a physics simulation is the holy grail of multiplayer gaming and the massive popularity of first person shooters on the PC is a testament to the just how immersive a networked physics simulation can be.</description>
+    </item>
+    
+    <item>
+      <title>Spring Physics</title>
+      <link>http://new.gafferongames.com/post/spring_physics/</link>
+      <pubDate>Fri, 03 Sep 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/spring_physics/</guid>
+      <description>Introduction I&amp;rsquo;m Glenn Fiedler and welcome to the fourth article in Game Physics.
+In the previous article we discussed how to simulate the motion of rigid bodies in 3D. Now we&amp;rsquo;re going to discuss how to implement spring physics.
+The physics behind springs is simple but extremely versatile and useful. You can use springs to link points together to model rope and string, cloth, and even blobs of jelly. Springs can also be used to implement basic collision response, and to create joints that constrain the motion of rigid bodies.</description>
+    </item>
+    
+    <item>
+      <title>Physics in 3D</title>
+      <link>http://new.gafferongames.com/post/physics_in_3d/</link>
+      <pubDate>Thu, 02 Sep 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/physics_in_3d/</guid>
+      <description>Introduction I&amp;rsquo;m Glenn Fiedler and welcome to the third article in Game Physics.
+In the previous article we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.
+In this article we are going to simulate motion in three dimensions.
+We will concentrate on a type of object called a rigid body. Rigid bodies cannot bend, compress or deform in any way. This makes their motion much easier to calculate.</description>
+    </item>
+    
+    <item>
+      <title>Fix Your Timestep!</title>
+      <link>http://new.gafferongames.com/post/fix_your_timestep/</link>
+      <pubDate>Thu, 10 Jun 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/fix_your_timestep/</guid>
+      <description>Introduction I&amp;rsquo;m Glenn Fiedler and welcome to the second article in Game Physics.
+In the previous article we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&amp;rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &amp;ldquo;delta time&amp;rdquo; (or dt for short).
+But how to choose this delta time value? This may seem like a trivial subject but in fact there are many different ways to do it, each with their own strengths and weaknesses - so read on!</description>
+    </item>
+    
+    <item>
+      <title>Integration Basics</title>
+      <link>http://new.gafferongames.com/post/integration_basics/</link>
+      <pubDate>Tue, 01 Jun 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://new.gafferongames.com/post/integration_basics/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to the first article in Game Physics.
+If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.</description>
+    </item>
+    
+  </channel>
+</rss>
