@@ -730,12 +730,13 @@
 	],
 	"file_history":
 	[
-		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
-		"/Users/gaffer/git/gafferongames/webserver/webserver.go",
-		"/Users/gaffer/git/gafferongames/webserver/Makefile",
-		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/git/gafferongames/webserver/Dockerfile",
+		"/Users/gaffer/git/gafferongames/webserver/webserver.go",
+		"/Users/gaffer/git/gafferongames/TODO",
+		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
+		"/Users/gaffer/git/gafferongames/docker-compose.yml",
 		"/Users/gaffer/git/gafferongames/nginx/Dockerfile",
+		"/Users/gaffer/git/gafferongames/webserver/Makefile",
 		"/Users/gaffer/git/gafferongames/Makefile",
 		"/Users/gaffer/git/gafferongames/CHANGES",
 		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
@@ -744,7 +745,6 @@
 		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
 		"/Users/gaffer/.ssh/known_hosts",
 		"/Users/gaffer/git/gafferongames/content/post/untitled",
-		"/Users/gaffer/git/gafferongames/docker-compose.yml",
 		"/Users/gaffer/Desktop/README.txt",
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Networked Physics/README.txt",
 		"/Users/gaffer/git/gafferongames/config_nginx.toml",
@@ -1140,6 +1140,26 @@
 		"selected_items":
 		[
 			[
+				"docker",
+				"webserver/Dockerfile"
+			],
+			[
+				"webser",
+				"webserver/webserver.go"
+			],
+			[
+				"todo",
+				"TODO"
+			],
+			[
+				"dockerfile",
+				"nginx/Dockerfile"
+			],
+			[
+				"ngin",
+				"nginx/nginx.conf"
+			],
+			[
 				"nginx",
 				"nginx/nginx.conf"
 			],
@@ -1154,14 +1174,6 @@
 			[
 				"ebse",
 				"webserver/webserver.go"
-			],
-			[
-				"todo",
-				"TODO"
-			],
-			[
-				"docker",
-				"webserver/Dockerfile"
 			],
 			[
 				"web",
@@ -1188,16 +1200,8 @@
 				"content/post/networked_physics_in_virtual_reality.md"
 			],
 			[
-				"ngin",
-				"nginx/nginx.conf"
-			],
-			[
 				"chang",
 				"CHANGES"
-			],
-			[
-				"webser",
-				"webserver/webserver.go"
 			],
 			[
 				"docke",
@@ -1214,10 +1218,6 @@
 			[
 				"wp-",
 				"wordpress/wp-config.php"
-			],
-			[
-				"dockerfile",
-				"nginx/Dockerfile"
 			],
 			[
 				"docker-",
