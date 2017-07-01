@@ -39,9 +39,7 @@ Here's the state sent over the network per-object:
 
 Notice that unlike snapshot interpolation, we're not just sending just visual quantities like position and orientation, we're also sending _non-visual_ state such as linear and angular velocity. Why is this?
 
-The reason is that state synchronization runs the simulation on both sides, so it's _always extrapolating_ from the last state update applied to each object. If linear and angular velocity weren't synchronized, this extrapolation would be done with incorrect velocities, leading to pops when objects are updated. 
-
-So here is the first critical difference between state sychronization and snapshot interpolation. Snapshot interpolation is _shallow_ - only visual quantities are sent. State synchronization is _deep_ - internal values required for extrapolation must also be synchronized.
+The reason is that state synchronization runs the simulation on both sides, so it's _always extrapolating_ from the last state update applied to each object. If linear and angular velocity aren't synchronized, this extrapolation is done with incorrect velocities, leading to pops when objects are updated. 
 
 While we must send the velocities, there's no point wasting bandwidth sending (0,0,0) over and over while an object is at rest. We can fix this with a trivial optimization, like so:
 
@@ -67,7 +65,7 @@ While we must send the velocities, there's no point wasting bandwidth sending (0
 }
 </pre>
 
-What you see above is a _serialization function_. It's a trick I use to unify packet read and write. I like it because it's expressive while at the same time it's difficult to desync read and write. If you would like to read and write packets like this in your own project, you can do that with my open source network library <a href="http://www.libyojimbo.com">yojimbo</a>.
+What you see above is a _serialize function_. It's a trick I like to use to unify packet read and write. I like it because it's expressive while at the same time it's difficult to desync read and write. If you would like to read and write packets like this in your own project, you can do that with my open source network library <a href="http://www.libyojimbo.com">yojimbo</a>.
 
 ## Packet Structure
 
@@ -85,25 +83,25 @@ struct Packet
 };
 </pre>
 
-First up you can see that we include a sequence number in each packet so we can determine out of order, lost or duplicate packets. I recommend you run the simulation at the same framerate on both sides (for example 60fps) and in this case you can make the sequence number work double duty as frame number.
+First we include a sequence number in each packet so we can determine out of order, lost or duplicate packets. I recommend you run the simulation at the same framerate on both sides (for example 60HZ) and in this case the sequence number works double duty as the physics frame number.
 
-Input is included in each packet because it's needed for extrapolation. Like deterministic lockstep we send multiple redundant inputs so in the case of packet loss it is very unlikely that an input gets dropped. Unlike deterministic lockstep, if don't have the next input we don't stop and wait for it, we continue forward with the last input received.
+Input is included in each packet because it's needed for extrapolation. Like deterministic lockstep we send multiple redundant inputs so in the case of packet loss it's very unlikely that an input gets dropped. Unlike deterministic lockstep, if don't have the next input we don't stop and wait for it, we continue extrapolating forward with the last input received.
 
-Next you can see that we only send a maximum of 64 state updates per-packet. Since we have a total of 901 cubes in the simulation so we need some way to select the n most important state updates to include in each packet. We need some sort of prioritization scheme, one that lets us send state updates for important objects rapidly, while distributing updates across less important objects so all objects have a chance to bubble up and get sent.
+Next you can see that we only send a maximum of 64 state updates per-packet. Since we have a total of 901 cubes in the simulation so we need some way to select the n most important state updates to include in each packet. We need some sort of prioritization scheme.
 
 To get started each frame walk over all objects in your simulation and calculate their current priority. For example, in the cube simulation I calculate priority for the player cube as 1000000 because I always want it to be included in every packet, and for interacting (red cubes) I give them a higher priority of 100 while at rest objects have priority of 1.
 
-Unfortunately this alone is not sufficient to distribute object updates fairly because if you just sorted objects according to their current priority each frame you'd only ever send red objects while in a katamari ball and white objects on the ground would never get updated. We need to take a slightly different approach to prioritize sending important objects while also distributing updates across all objects in the simulation.
+Unfortunately if you just picked objects according to their current priority each frame you'd only ever send red objects while in a katamari ball and white objects on the ground would never get updated. We need to take a slightly different approach, one that prioritizes sending important objects while also _distributing_ updates across all objects in the simulation.
 
 ## Priority Accumulator
 
-You can do this with a priority accumulator. This is an array of float values, one float value per-object, that is remembered from frame to frame. Instead of taking the immediate priority value for the object and sorting on that, each frame add the current priority for each object to its priority accumulator value then sort objects in order from largest to smallest priority accumulator value. The first n objects in this sorted list are the objects you should send that frame.
+You can do this with a priority accumulator. This is an array of float values, one value per-object, that is remembered from frame to frame. Instead of taking the immediate priority value for the object and sorting on that, each frame we add the current priority for each object to its priority accumulator value then sort objects in order from largest to smallest priority accumulator value. The first n objects in this sorted list are the objects you should send that frame.
 
 You could just send state updates for all n objects but typically you have some maximum bandwidth you want to support like 256kbit/sec. Respecting this bandwidth limit is easy. Just calculate how large your packet header is and how many bytes of preamble in the packet (sequence, # of objects in packet and so on) and work out conservatively the number of bytes remaining in your packet while staying under your bandwidth target.
 
-Then take the n most important objects according to their priority accumulator values and as you construct the packet, walk these objects in order and measure if their state updates will fit in the packet. If you encounter a state update that doesn't fit, skip over it and try the next one. After you serialize the packet, reset the priority accumulator to zero for objects that fit to zero but leave the priority accumulator alone for objects didn't fit. This way objects that didn't fit are first in line to be included in the next packet.
+Then take the n most important objects according to their priority accumulator values and as you construct the packet, walk these objects in order and measure if their state updates will fit in the packet. If you encounter a state update that doesn't fit, skip over it and try the next one. After you serialize the packet, reset the priority accumulator to zero for objects that fit to zero but leave the priority accumulator value alone for objects that didn't. This way objects that don't fit are first in line to be included in the next packet.
 
-The desired bandwidth can even be adjusted on the fly. This makes it really easy to adapt state synchronization to changing network conditions, for example if you detect the connection is having difficulty you can reduce the amount of bandwidth sent (congestion avoidance) and the quality of state synchronization scales back automatically. If the network connection seems like it can handle more bandwidth you can raise the bandwidth limit.
+The desired bandwidth can even be adjusted on the fly. This makes it really easy to adapt state synchronization to changing network conditions, for example if you detect the connection is having difficulty you can reduce the amount of bandwidth sent (congestion avoidance) and the quality of state synchronization scales back automatically. If the network connection seems like it should be able to handle more bandwidth later on then you can raise the bandwidth limit.
 
 ## Jitter Buffer
 
