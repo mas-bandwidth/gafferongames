@@ -2,8 +2,8 @@
 categories = ["Networked Physics"]
 tags = ["physics","networking"]
 date = "2014-11-28"
-title = "The Physics Simulation"
-description = "An introduction to networked physics"
+title = "Introduction to Networked Physics"
+description = "Three ways to network a physics simulation"
 draft = false
 +++
 

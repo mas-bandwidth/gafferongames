@@ -1,16 +1,16 @@
 DONE
 
+    Port across game physics articles.
+
+    Port across game networking articles.
+
 TODO
 
-    Finish converting across articles, as much as possible...
+    Port across networked physics article series.
 
-    Every article except the Virtual Go series, as far as I am concerned (because of the Latex)
+    ------------------
 
-    This means, finish porting across the physics articles (and probably, not editing them too much...)
-
-    Finish porting across the networked physics articles
-
-    Finish porting across the building a game network protocol
+    Port across building a game network protocol
 
     ------------------
 
@@ -18,7 +18,15 @@ TODO
 
     ------------------
 
-    Need a solution for migrating my old wordpress website into docker. How to do this?
+    Need a solution for migrating my old wordpress website.
+
+    ------------------
+
+    Need a way to convert old article links (especially popular ones), to the new hugo based site.
+
+    ------------------
+
+    How to create a navigation bar for the article structure within hugo? May need to hire a professional.
 
     ------------------
 
@@ -30,7 +38,7 @@ TODO
 
         3. Map nginx.conf with volume and make nginx restart whenever the config file is changed.
 
-        4. Setup DNS so libyojimbo is redirected through my web server as well.
+        4. Setup DNS so libyojimbo.com is redirected through my web server as well.
 
         5. Complete migration of domains over to namecheap.com
 
