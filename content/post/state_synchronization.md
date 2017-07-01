@@ -119,7 +119,7 @@ Once your packet comes out of the jitter how do you apply the state updates? My 
 
 At this point we have quickly built a practical synchronization strategy without much work at all. In fact it's almost good enough to play over the internet already and it handles packet loss, jitter and bandwidth limits quite well.
 
-<video controls="controls" width="300" height="150">
+<video preload="auto" controls="controls" width="100%">
 <source src="http://new.gafferongames.com/videos/state_synchronization_uncompressed.mp4" type="video/mp4" />
 <source src="http://new.gafferongames.com/videos/state_synchronization_uncompressed.webm" type="video/webm" />
 Your browser does not support the video tag.
@@ -131,7 +131,7 @@ Of course we can do a lot better than this and each optimization we do lets us s
 
 But here it gets a bit more complex. We are extrapolating from those state updates so if we quantize these values over the network then the state that arrives on the right side is slightly different from the left side, leading to a slightly different extrapolation and a pop when the next state update arrives for that object.
 
-<video controls="controls" width="300" height="150">
+<video preload="auto" controls="controls" width="100%">
 <source src="http://new.gafferongames.com/videos/state_synchronization_compressed.mp4" type="video/mp4" />
 <source src="http://new.gafferongames.com/videos/state_synchronization_compressed.webm" type="video/webm" />
 Your browser does not support the video tag.
@@ -141,7 +141,7 @@ The solution is to quantize the state on both sides. This means that on both sid
 
 Because these quantized values are being fed back into the simulation, you'll find that much more precision is required than snapshot interpolation where they were just visual quantities used for interpolation. In the cube simulation I found it necessary to have 4096 position values per-meter, up from 512 with snapshot interpolation, and a whopping 15 bits per-quaternion component in smallest three (up from 9). Without this extra precision significant popping occurs because the quantization forces physics objects into penetration with each other, fighting against the simulation which tries to keep the objects out of penetration. I also found that softening the constraints and reducing the maximum velocity which the simulation used to push apart penetrating objects also helped reduce the amount of popping. The softer your constraints the more attractive this approach is. Totally stiff constraints require almost perfect determinism in large stacks.
 
-<video controls="controls" width="300" height="150">
+<video preload="auto" controls="controls" width="100%">
 <source src="http://new.gafferongames.com/videos/state_synchronization_quantize_both_sides.mp4" type="video/mp4" />
 <source src="http://new.gafferongames.com/videos/state_synchronization_quantize_both_sides.webm" type="video/webm" />
 Your browser does not support the video tag.
@@ -159,7 +159,7 @@ The trick to making this all work is that when a state update comes in you take 
 
 I find that using a single smoothing factor gives unacceptable results. A factor of 0.95 is perfect for small jitters because it smooths out high frequency jitter really well, but at the same time it is too slow for large position errors, like those that happen after multiple seconds of packet loss:
 
-<video controls="controls" width="300" height="150">
+<video preload="auto" controls="controls" width="100%">
 <source src="http://new.gafferongames.com/videos/state_synchronization_basic_smoothing.mp4" type="video/mp4" />
 <source src="http://new.gafferongames.com/videos/state_synchronization_basic_smoothing.webm" type="video/webm" />
 Your browser does not support the video tag.
@@ -169,7 +169,7 @@ The solution I use is two different scale factors at different error distances, 
 
 The end result is smooth error reduction for small position and orientation errors combined with a tight error reduction for large pops. As you can see above you don't want to drag out correction of these large pops, they need to be fast and so they're over quickly otherwise they're really disorienting for players, but at the same time you want to have really smooth error reduction when the error is small hence the adaptive error reduction approach works really well.
 
-<video controls="controls" width="300" height="150">
+<video preload="auto" controls="controls" width="100%">
 <source src="http://new.gafferongames.com/videos/state_synchronization_adaptive_smoothing.mp4" type="video/mp4" />
 <source src="http://new.gafferongames.com/videos/state_synchronization_adaptive_smoothing.webm" type="video/webm" />
 Your browser does not support the video tag.
@@ -193,10 +193,6 @@ Now lets look at the type of objects that are going to have these absolute encod
 
 We can fix this by tracking objects which have recently come to rest and bumping their priority until an ack comes back for a packet they were sent in. Thus they are sent at an elevated priority compared with normal grey cubes (which are at rest and have not moved) and keep resending at that elevated rate until we know that update has been received, thus "committing" that grey cube to be at rest at the correct position.
 
-And that's really about it for this technique. It's quite interesting that without anything fancy it is already good enough, and then on top of that another order of magnitude bandwidth improvement can be made (delta encoding) but at a considerable cost of complexity.
+## Conclusion
 
-<b>Up next:</b> <a href="http://gafferongames.com/networked-physics/client-server-vs-peer-to-peer/">Client/Server vs. Peer-to-peer</a>
-
-<a href="http://www.patreon.com/gafferongames"><img src="http://i0.wp.com/gafferongames.com/wp-content/uploads/2014/12/donate.png" /></a>
-
-If you enjoyed this article please consider making a small donation. <b><u>Donations encourage me to write more articles!</u></b>
+And that's really about it for this technique. It's quite interesting I think that without anything fancy it is already good enough. On top of this another order of magnitude bandwidth improvement is possible with delta encoding, at the cost of complexity.
