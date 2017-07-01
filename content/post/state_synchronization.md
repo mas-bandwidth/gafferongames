@@ -83,7 +83,7 @@ struct Packet
 };
 </pre>
 
-First we include a sequence number in each packet so we can determine out of order, lost or duplicate packets. I recommend you run the simulation at the same framerate on both sides (for example 60HZ) and in this case the sequence number works double duty as the physics frame number.
+First we include a sequence number in each packet so we can determine out of order, lost or duplicate packets. I recommend you run the simulation at the same framerate on both sides (for example 60HZ) and in this case the sequence number can work double duty as the frame number.
 
 Input is included in each packet because it's needed for extrapolation. Like deterministic lockstep we send multiple redundant inputs so in the case of packet loss it's very unlikely that an input gets dropped. Unlike deterministic lockstep, if don't have the next input we don't stop the simulation and wait for it, we continue extrapolating forward with the last input received.
 
