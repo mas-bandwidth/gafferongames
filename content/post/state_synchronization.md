@@ -85,7 +85,7 @@ struct Packet
 
 First we include a sequence number in each packet so we can determine out of order, lost or duplicate packets. I recommend you run the simulation at the same framerate on both sides (for example 60HZ) and in this case the sequence number works double duty as the physics frame number.
 
-Input is included in each packet because it's needed for extrapolation. Like deterministic lockstep we send multiple redundant inputs so in the case of packet loss it's very unlikely that an input gets dropped. Unlike deterministic lockstep, if don't have the next input we don't stop and wait for it, we continue extrapolating forward with the last input received.
+Input is included in each packet because it's needed for extrapolation. Like deterministic lockstep we send multiple redundant inputs so in the case of packet loss it's very unlikely that an input gets dropped. Unlike deterministic lockstep, if don't have the next input we don't stop the simulation and wait for it, we continue extrapolating forward with the last input received.
 
 Next you can see that we only send a maximum of 64 state updates per-packet. Since we have a total of 901 cubes in the simulation so we need some way to select the n most important state updates to include in each packet. We need some sort of prioritization scheme.
 
