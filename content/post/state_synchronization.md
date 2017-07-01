@@ -99,25 +99,25 @@ You can do this with a priority accumulator. This is an array of float values, o
 
 You could just send state updates for all n objects but typically you have some maximum bandwidth you want to support like 256kbit/sec. Respecting this bandwidth limit is easy. Just calculate how large your packet header is and how many bytes of preamble in the packet (sequence, # of objects in packet and so on) and work out conservatively the number of bytes remaining in your packet while staying under your bandwidth target.
 
-Then take the n most important objects according to their priority accumulator values and as you construct the packet, walk these objects in order and measure if their state updates will fit in the packet. If you encounter a state update that doesn't fit, skip over it and try the next one. After you serialize the packet, reset the priority accumulator to zero for objects that fit to zero but leave the priority accumulator value alone for objects that didn't. This way objects that don't fit are first in line to be included in the next packet.
+Then take the n most important objects according to their priority accumulator values and as you construct the packet, walk these objects in order and measure if their state updates will fit in the packet. If you encounter a state update that doesn't fit, skip over it and try the next one. After you serialize the packet, reset the priority accumulator to zero for objects that fit but leave the priority accumulator value alone for objects that didn't. This way objects that don't fit are first in line to be included in the next packet.
 
 The desired bandwidth can even be adjusted on the fly. This makes it really easy to adapt state synchronization to changing network conditions, for example if you detect the connection is having difficulty you can reduce the amount of bandwidth sent (congestion avoidance) and the quality of state synchronization scales back automatically. If the network connection seems like it should be able to handle more bandwidth later on then you can raise the bandwidth limit.
 
 ## Jitter Buffer
 
--- todo: clean up this para. bad turn
-
-This covers the sending side. Prioritize objects, add to an accumulator and send only the n most important objects in each packet update. But on the receiver side there is much you need to do when applying these state updates to ensure that you don't see divergence and pops in the extrapolation between object updates.
+The priority accumulator covers the sending side, but on the receiver side there is much you need to do when applying these state updates to ensure that you don't see divergence and pops in the extrapolation between object updates.
 
 The very first thing you need to consider is that network jitter exists. You don't have any guarantee that packets you sent nicely spaced out 60 times per-second arrive that way on the other side. What happens in the real world is you'll typically receive two packets one frame, 0 packets the next, 1, 2, 0 and so on because packets tend to clump up across frames. To handle this situation you need to implement a jitter buffer for your state update packets. If you fail to do this you'll have a poor quality extrapolation and pops in stacks of objects because objects in different state update packets are slightly out of phase with each other with respect to time.
 
 All you do in a jitter buffer is hold packets before delivering them to the application at the correct time as indicated by the sequence number (frame number) in the packet. The delay you need to hold packets for in this buffer is a much smaller amount of time relative to interpolation delay for snapshot interpolation but it's the same basic idea. You just need to delay packets just enough (say 4-5 frames @ 60HZ) so that they come out of the buffer properly spaced apart.
 
-## State Updates
+## Applying State Updates
 
-Once your packet comes out of the jitter how do you apply the state updates? My recommendation is that you should snap this state hard. Apply the values in the state update directly to the simulation. I recommand against trying to apply some smoothing between the state update and the current state at the simulation level. This may sound counterintuitive but the reason for this is that the simulation extrapolates from the state update so you want to make sure it extrapolates from a valid physics state for that object rather than some smoothed, total bullshit made-up one. This is especially important when you have large stacks of objects.
+Once the packet comes out of the jitter how do you apply state updates? My recommendation is that you should snap this state hard. Apply the values in the state update directly to the simulation. 
 
-At this point we have quickly built a practical synchronization strategy without much work at all. In fact it's almost good enough to play over the internet already and it handles packet loss, jitter and bandwidth limits quite well.
+I recommend against trying to apply some smoothing between the state update and the current state at the simulation level. This may sound counterintuitive but the reason for this is that the simulation extrapolates from the state update so you want to make sure it extrapolates from a valid physics state for that object rather than some smoothed, total bullshit made-up one. This is especially important when you are networking large stacks of objects.
+
+Surprisingly, without any smoothing the result is already pretty good:
 
 <video preload="auto" controls="controls" width="100%">
 <source src="http://new.gafferongames.com/videos/state_synchronization_uncompressed.mp4" type="video/mp4" />
@@ -137,9 +137,11 @@ But here it gets a bit more complex. We are extrapolating from those state updat
 Your browser does not support the video tag.
 </video>
 
+## Quantize Both Sides
+
 The solution is to quantize the state on both sides. This means that on both sides before each simulation step you quantize the entire simulation state as if it had been transmitted over the network. Once this is done the left and right side are both extrapolating from quantized state and their extrapolations are very similar.
 
-Because these quantized values are being fed back into the simulation, you'll find that much more precision is required than snapshot interpolation where they were just visual quantities used for interpolation. In the cube simulation I found it necessary to have 4096 position values per-meter, up from 512 with snapshot interpolation, and a whopping 15 bits per-quaternion component in smallest three (up from 9). Without this extra precision significant popping occurs because the quantization forces physics objects into penetration with each other, fighting against the simulation which tries to keep the objects out of penetration. I also found that softening the constraints and reducing the maximum velocity which the simulation used to push apart penetrating objects also helped reduce the amount of popping. The softer your constraints the more attractive this approach is. Totally stiff constraints require almost perfect determinism in large stacks.
+Because these quantized values are being fed back into the simulation, you'll find that much more precision is required than snapshot interpolation where they were just visual quantities used for interpolation. In the cube simulation I found it necessary to have 4096 position values per-meter, up from 512 with snapshot interpolation, and a whopping 15 bits per-quaternion component in smallest three (up from 9). Without this extra precision significant popping occurs because the quantization forces physics objects into penetration with each other, fighting against the simulation which tries to keep the objects out of penetration. I also found that softening the constraints and reducing the maximum velocity which the simulation used to push apart penetrating objects also helped reduce the amount of popping.
 
 <video preload="auto" controls="controls" width="100%">
 <source src="http://new.gafferongames.com/videos/state_synchronization_quantize_both_sides.mp4" type="video/mp4" />
@@ -151,11 +153,17 @@ With quantization applied to both sides you can see the result is perfect once a
 
 Be aware that when a burst of packet loss occurs like 1/4 a second with no packets getting through, and this is inevitable that eventually something like this will happen, you will probably get a different result on the left and the right sides. We have to plan for this. In spite of all effort that we have made to ensure that the extrapolation is as close as possible (quantizing both sides and so on) pops can and will occur if the network stops delivering packets.
 
+## Visual Smoothing
+
+We can cover up pops with smoothing.
+
 Remember how I said earlier that you should not apply smoothing at the simulation level because it ruins the extrapolation? What we're going to do for smoothing instead is calculating and maintaining position and orientation error offsets that we reduce over time. Then when we render the cubes in the right side we don't render them at the simulation position and orientation, we render them at the simulation position + error offset, and orientation * orientation error.
 
 Over time we work to reduce these error offsets back to zero for position error and identity for orientation error. For error reduction I use an exponentially smoothed moving average tending towards zero. So in effect, I multiply the position error offset by some factor each frame (eg. 0.9) until it gets close enough to zero for it to be cleared (thus avoiding denormals). For orientation, I slerp a certain amount (0.1) towards identity each frame, which has the same effect for the orientation error.
 
-The trick to making this all work is that when a state update comes in you take the current simulation position and add the position error to that, and subtract that from the new position, giving the new position error offset which gives an identical result to the current (smoothed) visual position. The same process is then applied to the error quaternion (using multiplication by the conjugate instead of subtraction) and this way you effectively calculate on each state update the new position error and orientation error relative to the new state such that the object appears to have not moved at all. Thus state updates are smooth and have no immediate visual effect, and the error reduction smoothes out any error in the extrapolation over time without the player noticing in the common case.
+The trick to making this all work is that when a state update comes in you take the current simulation position and add the position error to that, and subtract that from the new position, giving the new position error offset which gives an identical result to the current (smoothed) visual position. 
+
+The same process is then applied to the error quaternion (using multiplication by the conjugate instead of subtraction) and this way you effectively calculate on each state update the new position error and orientation error relative to the new state such that the object appears to have not moved at all. Thus state updates are smooth and have no immediate visual effect, and the error reduction smoothes out any error in the extrapolation over time without the player noticing in the common case.
 
 I find that using a single smoothing factor gives unacceptable results. A factor of 0.95 is perfect for small jitters because it smooths out high frequency jitter really well, but at the same time it is too slow for large position errors, like those that happen after multiple seconds of packet loss:
 
@@ -174,6 +182,8 @@ The end result is smooth error reduction for small position and orientation erro
 <source src="http://new.gafferongames.com/videos/state_synchronization_adaptive_smoothing.webm" type="video/webm" />
 Your browser does not support the video tag.
 </video>
+
+## Delta Compression
 
 Even though I would argue the result above is probably good enough already it is possible to improve the synchronization considerably from this point. For example to support a world with larger objects or more objects being interacted with. So lets work through some of those techniques and push this technique as far as it can go.
 
@@ -195,4 +205,4 @@ We can fix this by tracking objects which have recently come to rest and bumping
 
 ## Conclusion
 
-And that's really about it for this technique. It's quite interesting I think that without anything fancy it's already good enough. On top of this is another order of magnitude improvement with delta encoding, at the cost of complexity.
+And that's really about it for this technique. Without anything fancy it's already pretty good, and on top of that another order of magnitude improvement is available with delta compression, at the cost of significant complexity!
