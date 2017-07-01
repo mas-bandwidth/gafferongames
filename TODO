@@ -2,6 +2,26 @@ DONE
 
 TODO
 
+    Finish converting across articles, as much as possible...
+
+    Every article except the Virtual Go series, as far as I am concerned (because of the Latex)
+
+    This means, finish porting across the physics articles (and probably, not editing them too much...)
+
+    Finish porting across the networked physics articles
+
+    Finish porting across the building a game network protocol
+
+    ------------------
+
+    Get all articles cross-linked so they have next/prev, patreon links etc.
+
+    ------------------
+
+    Need a solution for migrating my old wordpress website into docker. How to do this?
+
+    ------------------
+
     Things to do:
 
         1. Make redis database persist with volume
@@ -11,3 +31,7 @@ TODO
         3. Map nginx.conf with volume and make nginx restart whenever the config file is changed.
 
         4. Setup DNS so libyojimbo is redirected through my web server as well.
+
+        5. Complete migration of domains over to namecheap.com
+
+    -------------------
