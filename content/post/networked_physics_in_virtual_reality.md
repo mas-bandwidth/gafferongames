@@ -1,5 +1,5 @@
 +++
-categories = ["White papers"]
+categories = ["Networked Physics"]
 tags = ["physics", "networking", "vr"]
 date = "2017-03-31"
 title = "Networked Physics in Virtual Reality"
