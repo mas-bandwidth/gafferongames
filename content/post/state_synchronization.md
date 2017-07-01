@@ -39,7 +39,7 @@ Here's the state sent over the network per-object:
 
 Notice that instead of sending just visual quantities like position and orientation as we did with snapshot interpolation, we're also sending _non-visual_ state such as linear and angular velocity. Why? 
 
-This non-visual state is necessary because the physics simulation extrapolates from the last state update applied to each object. If linear and angular velocity were not synchronized, they'd never be corrected and the extrapolation continues forward with an incorrect velocity, causing pops when objects are updated.
+This non-visual state is necessary because the physics simulation extrapolates from the last state update applied to each object. If linear and angular velocity were not synchronized, they'd never be corrected and the extrapolation between updates would be done with an incorrect velocity, leading to pops when objects are updated.
 
 While we must send the velocities, there's no point wasting bandwidth sending (0,0,0) over and over while an object is at rest. We can fix this with a trivial optimization, like so:
 
@@ -67,7 +67,9 @@ While we must send the velocities, there's no point wasting bandwidth sending (0
 
 What you see above is what I call a _serialization function_. It's a trick I like to use to unify packet bitpack read and write functions that are often written separately. I like it because it's harder to desync read and write when they are written this way. If you would like to read and write packets like this in your own project, you can do that with my open source network library <a href="http://www.libyojimbo.com">yojimbo</a>.
 
-Next let's look at the overall structure of packets being sent:
+## Packet Structure
+
+Now let's look at the overall structure of packets being sent:
 
 <pre>const int MaxInputsPerPacket = 32;
 const int MaxStateUpdatesPerPacket = 64;
@@ -81,9 +83,9 @@ struct Packet
 };
 </pre>
 
-First up you can see that we include a sequence number in each packet so we can determine out of order, lost or duplicate packets. I strongly recommend you run the simulation at the same framerate on both sides (for example 60fps) and in this case you can use the sequence number double duty as the frame number for the state update.
+First up you can see that we include a sequence number in each packet so we can determine out of order, lost or duplicate packets. I recommend you run the simulation at the same framerate on both sides (for example 60fps) and in this case you can use the sequence number work double duty as the frame number.
 
-Input is included in each packet because it's needed for extrapolation. When the simulation runs in the remote view we want it to extrapolate forward between state updates while running the same inputs from the player so it gets as close as possible to the same result. Like deterministic lockstep we send multiple redundant inputs so that in the case of packet loss it is very unlikely that an input is dropped, but unlike deterministic lockstep, worst case if don't have the next input we don't stop and wait for it, we just simulate forward with the last input received.
+Input is included in each packet because it's needed for extrapolation. Like deterministic lockstep we send multiple redundant inputs so that in the case of packet loss it is very unlikely that an input is dropped, but unlike deterministic lockstep, if don't have the next input we don't stop and wait for it, we continue forward with the last input received.
 
 Next you can see that we only send a maximum of 64 state updates per-packet. We have a total of 901 cubes in the simulation so we need some way to select the n most important state updates to include in each packet. We need some sort of prioritization scheme, one that lets us send state updates for important objects rapidly, while distributing updates across less important objects so all objects have a chance to bubble up and get sent.
 
@@ -91,19 +93,27 @@ To get started each frame walk over all objects in your simulation and calculate
 
 Unfortunately this alone is not sufficient to distribute object updates fairly because if you just sorted objects according to their current priority each frame you'd only ever send red objects while in a katamari ball and white objects on the ground would never get updated. We need to take a slightly different approach to prioritize sending important objects while also distributing updates across all objects in the simulation.
 
+## Priority Accumulator
+
 You can do this with a priority accumulator. This is an array of float values, one float value per-object, that is remembered from frame to frame. Instead of taking the immediate priority value for the object and sorting on that, each frame add the current priority for each object to its priority accumulator value then sort objects in order from largest to smallest priority accumulator value. The first n objects in this sorted list are the objects you should send that frame.
 
 You could just send state updates for all n objects but typically you have some maximum bandwidth you want to support like 256kbit/sec. Respecting this bandwidth limit is easy. Just calculate how large your packet header is and how many bytes of preamble in the packet (sequence, # of objects in packet and so on) and work out conservatively the number of bytes remaining in your packet while staying under your bandwidth target.
 
-Then take the n most important objects according to their priority accumulator values and as you construct the packet, walk these objects in order and measure if their state updates will fit in the packet. If you encounter an state update that doesn't fit, skip over it and try the next one. After you serialize the packet, reset the priority accumulator to zero for objects that fit to zero but leave the priority accumulator alone for objects didn't fit. This way objects that didn't fit are first in line to be included in the next packet.
+Then take the n most important objects according to their priority accumulator values and as you construct the packet, walk these objects in order and measure if their state updates will fit in the packet. If you encounter a state update that doesn't fit, skip over it and try the next one. After you serialize the packet, reset the priority accumulator to zero for objects that fit to zero but leave the priority accumulator alone for objects didn't fit. This way objects that didn't fit are first in line to be included in the next packet.
 
 The desired bandwidth can even be adjusted on the fly. This makes it really easy to adapt state synchronization to changing network conditions, for example if you detect the connection is having difficulty you can reduce the amount of bandwidth sent (congestion avoidance) and the quality of state synchronization scales back automatically. If the network connection seems like it can handle more bandwidth you can raise the bandwidth limit.
+
+## Jitter Buffer
+
+-- todo: clean up this para. bad turn
 
 This covers the sending side. Prioritize objects, add to an accumulator and send only the n most important objects in each packet update. But on the receiver side there is much you need to do when applying these state updates to ensure that you don't see divergence and pops in the extrapolation between object updates.
 
 The very first thing you need to consider is that network jitter exists. You don't have any guarantee that packets you sent nicely spaced out 60 times per-second arrive that way on the other side. What happens in the real world is you'll typically receive two packets one frame, 0 packets the next, 1, 2, 0 and so on because packets tend to clump up across frames. To handle this situation you need to implement a jitter buffer for your state update packets. If you fail to do this you'll have a poor quality extrapolation and pops in stacks of objects because objects in different state update packets are slightly out of phase with each other with respect to time.
 
 All you do in a jitter buffer is hold packets before delivering them to the application at the correct time as indicated by the sequence number (frame number) in the packet. The delay you need to hold packets for in this buffer is a much smaller amount of time relative to interpolation delay for snapshot interpolation but it's the same basic idea. You just need to delay packets just enough (say 4-5 frames @ 60HZ) so that they come out of the buffer properly spaced apart.
+
+## State Updates
 
 Once your packet comes out of the jitter how do you apply the state updates? My recommendation is that you should snap this state hard. Apply the values in the state update directly to the simulation. I recommand against trying to apply some smoothing between the state update and the current state at the simulation level. This may sound counterintuitive but the reason for this is that the simulation extrapolates from the state update so you want to make sure it extrapolates from a valid physics state for that object rather than some smoothed, total bullshit made-up one. This is especially important when you have large stacks of objects.
 
