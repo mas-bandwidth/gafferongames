@@ -3,6 +3,7 @@ categories = ["Game Networking"]
 tags = ["networking"]
 date = "2010-02-24"
 title = "What Every Programmer Needs To Know About Game Networking"
+description = "A short history of game networking techniques"
 draft = false
 +++
 

@@ -3,7 +3,7 @@ categories = ["White papers"]
 tags = ["physics", "networking", "vr"]
 date = "2017-03-31"
 title = "Networked Physics in Virtual Reality"
-description = "Networking a stack of cubes in virtual reality with Unity and PhysX"
+description = "Networking a stack of cubes with Unity and PhysX"
 draft = true
 +++
 

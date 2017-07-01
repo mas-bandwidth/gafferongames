@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I’m Glenn Fiedler and welcome to <b>Networked Physics</b>, my article series on networking a physics simulation.
+Hi, I’m Glenn Fiedler and welcome to <b>Networked Physics</b>, my article series about networking a physics simulation.
 
 In this article we round out our discussion of networked physics strategies with **state synchronization**, the third and final strategy.
 

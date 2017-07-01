@@ -1,7 +1,7 @@
 baseurl = "http://127.0.0.1:1313"
 title = "Gaffer On Games"
 canonifyurls = true
-paginate = 10
+paginate = 1000
 languageCode = "en-us"
 copyright = "© The Network Protocol Company, Inc."
 buildDrafts = true
@@ -27,16 +27,6 @@ buildDrafts = true
 [[params.social]]
     title = "facebook"
     url = "https://www.facebook.com/gafferongames"
-
-[[menu.main]]
-  name = "home"
-  url = "/"
-  weight = -200
-
-[[menu.main]]
-  name = "Archives"
-  url = "/post/"
-  weight = -180
 
 [[menu.main]]
   name = "Support gafferongames.com"

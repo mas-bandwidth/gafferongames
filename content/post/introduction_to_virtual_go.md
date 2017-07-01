@@ -3,7 +3,7 @@ categories = ["Virtual Go"]
 tags = ["physics","go/baduk/weiqi"]
 date = "2013-02-18"
 title = "Introduction to Virtual Go"
-description = "A simulation of a Go board and stones"
+description = "My project to simulate a go board and stones"
 draft = true
 +++
 

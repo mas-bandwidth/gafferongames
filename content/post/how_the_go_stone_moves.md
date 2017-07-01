@@ -1,6 +1,6 @@
 +++
 categories = ["Virtual Go"]
-tags = ["physics","networking","go/baduk/weiqi"]
+tags = ["physics","go/baduk/weiqi"]
 date = "2013-02-21"
 title = "How The Go Stone Moves"
 description = "Simulating the motion of go stones as rigid bodies"

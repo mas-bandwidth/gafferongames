@@ -1,6 +1,6 @@
 +++
 categories = ["Virtual Go"]
-tags = ["physics","networking","go/baduk/weiqi"]
+tags = ["physics","go/baduk/weiqi"]
 date = "2013-02-23"
 title = "Rotation & Inertia Tensors"
 description = "Accurately modelling the wobble of a go stone"

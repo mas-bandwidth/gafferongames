@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories/networked-physics/)**.
+Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories/networked-physics/)**, by article series about networking a physics simulation.
 
 In the <a href="http://gafferongames.com/networked-physics/deterministic-lockstep/">previous article</a> we networked a physics simulation using deterministic lockstep. Now, in this article we're going to network the same simulation with a completely different technique: **snapshot interpolation**.
 

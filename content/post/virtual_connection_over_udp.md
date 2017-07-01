@@ -3,7 +3,7 @@ categories = ["Game Networking"]
 tags = ["networking"]
 date = "2008-10-08"
 title = "Virtual Connection over UDP"
-description = "How the internet really works, and how you can create a connection over connection-less UDP"
+description = "How to create a virtual connection over connectionless UDP"
 draft = false
 +++
 

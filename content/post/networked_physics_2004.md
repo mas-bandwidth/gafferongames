@@ -3,7 +3,7 @@ categories = ["Game Physics"]
 tags = ["physics", "networking"]
 date = "2004-09-04"
 title = "Networked Physics (2004)"
-description = "Network a physics simulation using the same techniques as first person shooters"
+description = "How to network a physics simulation"
 draft = false
 +++
 
