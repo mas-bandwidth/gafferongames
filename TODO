@@ -6,11 +6,15 @@ DONE
 
 TODO
 
-    Port across networked physics article series.
+    Port across state synchronization article.
 
     ------------------
 
-    Port across building a game network protocol
+    Port across initial articles in building a game network protocol.
+
+    ------------------
+
+    Fix up gross "Client/Server Connection" article.
 
     ------------------
 
@@ -18,15 +22,19 @@ TODO
 
     ------------------
 
-    Need a solution for migrating my old wordpress website.
+    Need a solution for migrating my old wordpress website, *or* a solution for completely converting the virtual go math across.
+
+    I'd prefer to convert the math... fuck wordpress.
 
     ------------------
 
     Need a way to convert old article links (especially popular ones), to the new hugo based site.
 
+    If an older article or link is not converted across (eg. the content and so on), then redirect to front page.
+
     ------------------
 
-    How to create a navigation bar for the article structure within hugo? May need to hire a professional.
+    Study google analytics to work out common landing pages, make sure they all have equivalents on the new website.
 
     ------------------
 

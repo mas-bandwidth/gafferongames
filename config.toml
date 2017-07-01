@@ -1,9 +1,10 @@
-baseurl = "http://new.gafferongames.com"
+baseurl = "http://127.0.0.1:1313"
 title = "Gaffer On Games"
 canonifyurls = true
 paginate = 10
 languageCode = "en-us"
 copyright = "© The Network Protocol Company, Inc."
+buildDrafts = true
 
 [author]
     name = "Glenn Fiedler"

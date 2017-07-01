@@ -14,18 +14,6 @@ local:
 	hugo server --watch -D -F
 	rm -f config.toml
 
-upload: clean
-	cp config_upload.toml config.toml
-	hugo
-	mv public gafferongames_upload
-	zip -9r gafferongames_upload.zip gafferongames_upload
-	scp gafferongames_upload.zip root@linux:~/
-	rm gafferongames_upload.zip
-	rm -rf gafferongames_upload
-	ssh -t root@linux "mv ~/gafferongames_upload.zip /var/www/html && cd /var/www/html && rm -rf gafferongames_upload && unzip gafferongames_upload.zip && rm -rf gafferongames && mv gafferongames_upload gafferongames"
-	open http://new.gafferongames.com
-	rm -f config.toml
-
 commit: clean
 	git add .
 	git commit -am "commit"

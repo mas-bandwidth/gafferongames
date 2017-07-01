@@ -1,0 +1,192 @@
++++
+categories = ["Networked Physics"]
+tags = ["physics","networking"]
+date = "2015-01-05"
+title = "State Synchronization"
+description = "Keeping a simulation in sync by sending state"
+draft = false
++++
+
+## Introduction
+
+Hi, I’m Glenn Fiedler and welcome to <b>Networked Physics</b>, my article series on how to network a physics simulation.
+
+In this article we round out our discussion of networked physics strategies with **state synchronization**, the third and final strategy.
+
+What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, _unlike_ deterministic lockstep, we don't just send input, we send both input <u>and</u> state.
+
+Sending input and state gives state synchronization interesting properties. It doesn't need perfect determinism to stay in sync, because the state sent corrects any divergence, and because the simulation runs on both sides, if an object is not included in a packet that object continues moving forward between updates.
+
+This let us approach state synchronization quite differently to snapshot interpolation. Instead of sending state updates for every object in each packet, we can now send updates for only a few, and if we're smart about how we select the objects for each packet, we can save bandwidth by concentrating updates on the most important objects.
+
+So what's the catch? Well, the catch is that state synchronization is an approximate and lossy synchronization strategy. What this means in practice is that you'll spend a lot of time tracking down sources of extrapolation divergence and pops. But other than this, it's a quick and easy strategy to get started with.
+
+So let's do exactly this and get started with practical implementation. 
+
+Here's the state sent over the network per-object:
+
+<pre>struct StateUpdate
+{
+    int index;
+    vec3f position;
+    quat4f orientation;
+    vec3f linear_velocity;
+    vec3f angular_velocity;
+};
+</pre>
+
+Notice that instead of sending just visual quantities like position and orientation as we did with snapshot interpolation, we're also sending non-visual physics state such as linear and angular velocity. 
+
+This is necessary because the physics simulation extrapolates from the last state update applied to each object. Therefore, the state update needs to provide all information required for this extrapolation to be correct. For example, if the linear velocity was not sent the extrapolation continues forward between updates with a potentially incorrect velocity, leading to a pop the next time that object is updated.
+
+When we serialize this state update over the network there is no point wasting bandwidth sending (0,0,0) values for linear and angular velocity over the network while an object is at rest. We can fix this with a trivial optimization, saving 24 bytes per-object while objects are at rest:
+
+<pre>void serialize_state_update( Stream &amp; stream, 
+                             int &amp; index, 
+                             StateUpdate &amp; state_update )
+{
+    serialize_int( stream, index, 0, NumCubes - 1 );
+    serialize_vector( stream, state_update.position );
+    serialize_quaternion( stream, state_update.orientation );
+    bool at_rest = stream.IsWriting() ? state_update.AtRest() : false;    
+    serialize_bool( stream, at_rest );
+    if ( !at_rest )
+    {
+        serialize_vector( stream, state_update.linear_velocity );
+        serialize_vector( stream, state_update.angular_velocity );
+    }
+    else if ( stream.IsReading() )
+    {
+        state_update.linear_velocity = vec3f(0,0,0);
+        state_update.angular_velocity = vec3f(0,0,0);
+    }
+}
+</pre>
+
+The code above is what I call a serialization function. It's a trick I like to use to unify packet bitpack read and write functions that are often written separately. This function is called in two different contexts: writing and reading. You can tell which content you are in via the IsReading/IsWriting functions. I like it because it's harder to desync read and write when they are unified in this way. If you want to write read and write your packets like this you can use my public domain bit stream code available <a href="https://gist.github.com/gafferongames/bb7e593ba1b05da35ab6">here</a>.
+
+When writing the state update this function serializes just one bit (1) in place of the linear and angular velocities when the object is at rest. If the object is not at rest, one bit (0) is written before writing the linear and angular velocity values to the bit stream. On read, the code reads in this bit and if its value is 0 the linear and angular velocities are read in from the bit stream, otherwise their values are cleared to (0,0,0). This is a very simple and effective lossless bandwidth compression strategy that cuts bandwidth nearly in half for at rest objects.
+
+Next lets look at the structure of the packet being sent:
+
+<pre>const int MaxInputsPerPacket = 32;
+const int MaxStateUpdatesPerPacket = 64;
+
+struct Packet
+{
+    uint32_t sequence;
+    Input inputs[MaxInputsPerPacket];
+    int num_object_updates;
+    StateUpdate state_updates[MaxStateUpdatesPerPacket];
+};
+</pre>
+
+First up you can see that we include a sequence number in each packet so we can determine out of order, lost or duplicate packets. I strongly recommend you run the simulation at the same framerate on both sides (for example 60fps) and in this case you can use the sequence number double duty as the frame number for the state update.
+
+Input is included in each packet because it's needed for extrapolation. When the simulation runs in the remote view we want it to extrapolate forward between state updates while running the same inputs from the player so it gets as close as possible to the same result. Like deterministic lockstep we send multiple redundant inputs so that in the case of packet loss it is very unlikely that an input is dropped, but unlike deterministic lockstep, worst case if don't have the next input we don't stop and wait for it, we just simulate forward with the last input received.
+
+Next you can see that we only send a maximum of 64 state updates per-packet. We have a total of 901 cubes in the simulation so we need some way to select the n most important state updates to include in each packet. We need some sort of prioritization scheme, one that lets us send state updates for important objects rapidly, while distributing updates across less important objects so all objects have a chance to bubble up and get sent.
+
+To get started each frame walk over all objects in your simulation and calculate their current priority. For example, in the cube simulation I calculate priority for the player cube as 1000000 because I always want it to be included in every packet, and for interacting (red cubes) I give them a higher priority of 100 while at rest objects have priority of 1.
+
+Unfortunately this alone is not sufficient to distribute object updates fairly because if you just sorted objects according to their current priority each frame you'd only ever send red objects while in a katamari ball and white objects on the ground would never get updated. We need to take a slightly different approach to prioritize sending important objects while also distributing updates across all objects in the simulation.
+
+You can do this with a priority accumulator. This is an array of float values, one float value per-object, that is remembered from frame to frame. Instead of taking the immediate priority value for the object and sorting on that, each frame add the current priority for each object to its priority accumulator value then sort objects in order from largest to smallest priority accumulator value. The first n objects in this sorted list are the objects you should send that frame.
+
+You could just send state updates for all n objects but typically you have some maximum bandwidth you want to support like 256kbit/sec. Respecting this bandwidth limit is easy. Just calculate how large your packet header is and how many bytes of preamble in the packet (sequence, # of objects in packet and so on) and work out conservatively the number of bytes remaining in your packet while staying under your bandwidth target.
+
+Then take the n most important objects according to their priority accumulator values and as you construct the packet, walk these objects in order and measure if their state updates will fit in the packet. If you encounter an state update that doesn't fit, skip over it and try the next one. After you serialize the packet, reset the priority accumulator to zero for objects that fit to zero but leave the priority accumulator alone for objects didn't fit. This way objects that didn't fit are first in line to be included in the next packet.
+
+The desired bandwidth can even be adjusted on the fly. This makes it really easy to adapt state synchronization to changing network conditions, for example if you detect the connection is having difficulty you can reduce the amount of bandwidth sent (congestion avoidance) and the quality of state synchronization scales back automatically. If the network connection seems like it can handle more bandwidth you can raise the bandwidth limit.
+
+This covers the sending side. Prioritize objects, add to an accumulator and send only the n most important objects in each packet update. But on the receiver side there is much you need to do when applying these state updates to ensure that you don't see divergence and pops in the extrapolation between object updates.
+
+The very first thing you need to consider is that network jitter exists. You don't have any guarantee that packets you sent nicely spaced out 60 times per-second arrive that way on the other side. What happens in the real world is you'll typically receive two packets one frame, 0 packets the next, 1, 2, 0 and so on because packets tend to clump up across frames. To handle this situation you need to implement a jitter buffer for your state update packets. If you fail to do this you'll have a poor quality extrapolation and pops in stacks of objects because objects in different state update packets are slightly out of phase with each other with respect to time.
+
+All you do in a jitter buffer is hold packets before delivering them to the application at the correct time as indicated by the sequence number (frame number) in the packet. The delay you need to hold packets for in this buffer is a much smaller amount of time relative to interpolation delay for snapshot interpolation but it's the same basic idea. You just need to delay packets just enough (say 4-5 frames @ 60HZ) so that they come out of the buffer properly spaced apart.
+
+Once your packet comes out of the jitter how do you apply the state updates? My recommendation is that you should snap this state hard. Apply the values in the state update directly to the simulation. I recommand against trying to apply some smoothing between the state update and the current state at the simulation level. This may sound counterintuitive but the reason for this is that the simulation extrapolates from the state update so you want to make sure it extrapolates from a valid physics state for that object rather than some smoothed, total bullshit made-up one. This is especially important when you have large stacks of objects.
+
+At this point we have quickly built a practical synchronization strategy without much work at all. In fact it's almost good enough to play over the internet already and it handles packet loss, jitter and bandwidth limits quite well.
+
+<video controls="controls" width="300" height="150">
+<source src="http://new.gafferongames.com/videos/state_synchronization_uncompressed.mp4" type="video/mp4" />
+<source src="http://new.gafferongames.com/videos/state_synchronization_uncompressed.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
+
+As you can see it's already looking quite good and barely any bandwidth optimization has been performed. Contrast this with the first video for snapshot interpolation which was at 18mbit/sec and you can see that using the simulation to extrapolate between state updates is a great way to use less bandwidth.
+
+Of course we can do a lot better than this and each optimization we do lets us squeeze more state updates in the same amount of bandwidth. The next obvious thing we can do is to apply all the standard quantization compression techniques such as bounding and quantizing position, linear and angular velocity value and using the smallest three compression as described in <a href="http://gafferongames.com/networked-physics/snapshot-compression/">snapshot compression</a>.
+
+But here it gets a bit more complex. We are extrapolating from those state updates so if we quantize these values over the network then the state that arrives on the right side is slightly different from the left side, leading to a slightly different extrapolation and a pop when the next state update arrives for that object.
+
+<video controls="controls" width="300" height="150">
+<source src="http://new.gafferongames.com/videos/state_synchronization_compressed.mp4" type="video/mp4" />
+<source src="http://new.gafferongames.com/videos/state_synchronization_compressed.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
+
+The solution is to quantize the state on both sides. This means that on both sides before each simulation step you quantize the entire simulation state as if it had been transmitted over the network. Once this is done the left and right side are both extrapolating from quantized state and their extrapolations are very similar.
+
+Because these quantized values are being fed back into the simulation, you'll find that much more precision is required than snapshot interpolation where they were just visual quantities used for interpolation. In the cube simulation I found it necessary to have 4096 position values per-meter, up from 512 with snapshot interpolation, and a whopping 15 bits per-quaternion component in smallest three (up from 9). Without this extra precision significant popping occurs because the quantization forces physics objects into penetration with each other, fighting against the simulation which tries to keep the objects out of penetration. I also found that softening the constraints and reducing the maximum velocity which the simulation used to push apart penetrating objects also helped reduce the amount of popping. The softer your constraints the more attractive this approach is. Totally stiff constraints require almost perfect determinism in large stacks.
+
+<video controls="controls" width="300" height="150">
+<source src="http://new.gafferongames.com/videos/state_synchronization_quantize_both_sides.mp4" type="video/mp4" />
+<source src="http://new.gafferongames.com/videos/state_synchronization_quantize_both_sides.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
+
+With quantization applied to both sides you can see the result is perfect once again. It may look visually about the same as the uncompressed version but in fact we're able to fit much more state updates per-packet into the 256kbit/sec bandwidth limit. This means we are better able to handle packet loss because state updates for each object are sent more rapidly. If a packet is lost, it's less of a problem because state updates for those objects are being continually included in future packets.
+
+Be aware that when a burst of packet loss occurs like 1/4 a second with no packets getting through, and this is inevitable that eventually something like this will happen, you will probably get a different result on the left and the right sides. We have to plan for this. In spite of all effort that we have made to ensure that the extrapolation is as close as possible (quantizing both sides and so on) pops can and will occur if the network stops delivering packets.
+
+Remember how I said earlier that you should not apply smoothing at the simulation level because it ruins the extrapolation? What we're going to do for smoothing instead is calculating and maintaining position and orientation error offsets that we reduce over time. Then when we render the cubes in the right side we don't render them at the simulation position and orientation, we render them at the simulation position + error offset, and orientation * orientation error.
+
+Over time we work to reduce these error offsets back to zero for position error and identity for orientation error. For error reduction I use an exponentially smoothed moving average tending towards zero. So in effect, I multiply the position error offset by some factor each frame (eg. 0.9) until it gets close enough to zero for it to be cleared (thus avoiding denormals). For orientation, I slerp a certain amount (0.1) towards identity each frame, which has the same effect for the orientation error.
+
+The trick to making this all work is that when a state update comes in you take the current simulation position and add the position error to that, and subtract that from the new position, giving the new position error offset which gives an identical result to the current (smoothed) visual position. The same process is then applied to the error quaternion (using multiplication by the conjugate instead of subtraction) and this way you effectively calculate on each state update the new position error and orientation error relative to the new state such that the object appears to have not moved at all. Thus state updates are smooth and have no immediate visual effect, and the error reduction smoothes out any error in the extrapolation over time without the player noticing in the common case.
+
+I find that using a single smoothing factor gives unacceptable results. A factor of 0.95 is perfect for small jitters because it smooths out high frequency jitter really well, but at the same time it is too slow for large position errors, like those that happen after multiple seconds of packet loss:
+
+<video controls="controls" width="300" height="150">
+<source src="http://new.gafferongames.com/videos/state_synchronization_basic_smoothing.mp4" type="video/mp4" />
+<source src="http://new.gafferongames.com/videos/state_synchronization_basic_smoothing.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
+
+The solution I use is two different scale factors at different error distances, and to make sure the transition is smooth I blend between those two factors linearly according to the amount of positional error that needs to be reduced. In this simulation, having 0.95 for small position errors (25cms or less) while having a tighter blend factor of 0.85 for larger distances (1m error or above) gives a good result. The same strategy works well for orientation using the dot product between the orientation error and the identity matrix. I found that in this case a blend of the same factors between dot 0.1 and 0.5 works well.
+
+The end result is smooth error reduction for small position and orientation errors combined with a tight error reduction for large pops. As you can see above you don't want to drag out correction of these large pops, they need to be fast and so they're over quickly otherwise they're really disorienting for players, but at the same time you want to have really smooth error reduction when the error is small hence the adaptive error reduction approach works really well.
+
+<video controls="controls" width="300" height="150">
+<source src="http://new.gafferongames.com/videos/state_synchronization_adaptive_smoothing.mp4" type="video/mp4" />
+<source src="http://new.gafferongames.com/videos/state_synchronization_adaptive_smoothing.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
+
+Even though I would argue the result above is probably good enough already it is possible to improve the synchronization considerably from this point. For example to support a world with larger objects or more objects being interacted with. So lets work through some of those techniques and push this technique as far as it can go.
+
+There is an easy compression that can be performed. Instead of encoding absolute position, if it is within a range of the player cube center, encode position as a relative offset to the player center position. In the common cases where bandwidth is high and state updates need to be more frequent (katamari ball) this provides a large win.
+
+Next, what if we do want to perform some sort of delta encoding for state synchronization? We can but it's quite different in this case than it is with snapshots because we're not including every cube in every packet, so we can't just track the most recent packet received and say, OK all these state updates in this packet are relative to packet X.
+
+What you actually have to do is per-object update keep track of the packet that includes the base for that update. You also need to keep track of exactly the set of packets received so that the sender knows which packets are valid bases to encode relative to. This is reasonably complicated and requires a bidirectional ack system over UDP. Such a system is designed for exactly this sort of situation where you need to know exactly which packets definitely got through. You can find a tutorial on how to implement this in <a href="http://gafferongames.com/networking-for-game-programmers/reliability-and-flow-control/">this article</a>.
+
+So assuming that you have an ack system you know with packet sequence numbers get through. What you do then is per-state update write one bit if the update is relative or absolute, if absolute then encode with no base as before, otherwise if relative send the 16 bit sequence number per-state update of the base and then encode relative to the state update data sent in that packet. This adds 1 bit overhead per-update as well as 16 bits to identify the sequence number of the base per-object update. Can we do better?
+
+Yes. In turns out that of course you're going to have to buffer on the send and receive side to implement this relative encoding and you can't buffer forever. In fact, if you think about it you can only buffer up a couple of seconds before it becomes impractical and in the common case of moving objects you're going to be sending the updates for same object frequently (katamari ball) so practically speaking the base sequence will only be from a short time ago.
+
+So instead of sending the 16 bit sequence base per-object, send in the header of the packet the most recent acked packet (from the reliability ack system) and per-object encode the offset of the base sequence relative to that value using 5 bits. This way at 60 packets per-second you can identify an state update with a base half a second ago. Any base older than this is unlikely to provide a good delta encoding anyway because it's old, so in that case just drop back to absolute encoding for that update.
+
+Now lets look at the type of objects that are going to have these absolute encodings rather than relative. They're the objects at rest. What can we do to make them as efficient as possible? In the case of the cube simulation one bad result that can occur is that a cube comes to rest (turns grey) and then has its priority lowered significantly. If that very last update with the position of that object is missed due to packet loss, it can take a long time for that object to have its at rest position updated.
+
+We can fix this by tracking objects which have recently come to rest and bumping their priority until an ack comes back for a packet they were sent in. Thus they are sent at an elevated priority compared with normal grey cubes (which are at rest and have not moved) and keep resending at that elevated rate until we know that update has been received, thus "committing" that grey cube to be at rest at the correct position.
+
+And that's really about it for this technique. It's quite interesting that without anything fancy it is already good enough, and then on top of that another order of magnitude bandwidth improvement can be made (delta encoding) but at a considerable cost of complexity.
+
+<b>Up next:</b> <a href="http://gafferongames.com/networked-physics/client-server-vs-peer-to-peer/">Client/Server vs. Peer-to-peer</a>
+
+<a href="http://www.patreon.com/gafferongames"><img src="http://i0.wp.com/gafferongames.com/wp-content/uploads/2014/12/donate.png" /></a>
+
+If you enjoyed this article please consider making a small donation. <b><u>Donations encourage me to write more articles!</u></b>
