@@ -15,13 +15,15 @@ In this article we round out our discussion of networked physics strategies with
 
 What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, _unlike_ deterministic lockstep, we don't just send input, we send both input <u>and</u> state.
 
-Sending input and state gives state synchronization interesting properties. It doesn't need perfect determinism to stay in sync, because the state sent corrects any divergence, and because the simulation runs on both sides, if an object is not included in a packet that object continues moving forward between updates.
+Sending input and state gives state synchronization interesting properties: it doesn't need perfect determinism to stay in sync, and because the simulation runs on both sides, objects continue moving forward between updates.
 
 This let us approach state synchronization quite differently to snapshot interpolation. Instead of sending state updates for every object in each packet, we can now send updates for only a few, and if we're smart about how we select the objects for each packet, we can save bandwidth by concentrating updates on the most important objects.
 
-So what's the catch? Well, the catch is that state synchronization is an approximate and lossy synchronization strategy. What this means in practice is that you'll spend a lot of time tracking down sources of extrapolation divergence and pops. But other than this, it's a quick and easy strategy to get started with.
+So what's the catch? Well, the catch is that state synchronization is an approximate and lossy synchronization strategy. What this means in practice is that you'll spend a lot of time tracking down sources of extrapolation divergence and pops. But other than that, it's a quick and easy strategy to get started with.
 
 So let's do exactly this and get started with practical implementation. 
+
+## Implementation
 
 Here's the state sent over the network per-object:
 
@@ -35,11 +37,11 @@ Here's the state sent over the network per-object:
 };
 </pre>
 
-Notice that instead of sending just visual quantities like position and orientation as we did with snapshot interpolation, we're also sending non-visual physics state such as linear and angular velocity. 
+Notice that instead of sending just visual quantities like position and orientation as we did with snapshot interpolation, we're also sending _non-visual_ state such as linear and angular velocity. Why? 
 
-This is necessary because the physics simulation extrapolates from the last state update applied to each object. Therefore, the state update needs to provide all information required for this extrapolation to be correct. For example, if the linear velocity was not sent the extrapolation continues forward between updates with a potentially incorrect velocity, leading to a pop the next time that object is updated.
+This non-visual state is necessary because the physics simulation extrapolates from the last state update applied to each object. If linear and angular velocity were not synchronized, they'd never be corrected and the extrapolation continues forward with an incorrect velocity, causing pops when objects are updated.
 
-When we serialize this state update over the network there is no point wasting bandwidth sending (0,0,0) values for linear and angular velocity over the network while an object is at rest. We can fix this with a trivial optimization, saving 24 bytes per-object while objects are at rest:
+While we must send the velocities, there's no point wasting bandwidth sending (0,0,0) over and over while an object is at rest. We can fix this with a trivial optimization, like so:
 
 <pre>void serialize_state_update( Stream &amp; stream, 
                              int &amp; index, 
@@ -63,11 +65,9 @@ When we serialize this state update over the network there is no point wasting b
 }
 </pre>
 
-The code above is what I call a serialization function. It's a trick I like to use to unify packet bitpack read and write functions that are often written separately. This function is called in two different contexts: writing and reading. You can tell which content you are in via the IsReading/IsWriting functions. I like it because it's harder to desync read and write when they are unified in this way. If you want to write read and write your packets like this you can use my public domain bit stream code available <a href="https://gist.github.com/gafferongames/bb7e593ba1b05da35ab6">here</a>.
+What you see above is what I call a _serialization function_. It's a trick I like to use to unify packet bitpack read and write functions that are often written separately. I like it because it's harder to desync read and write when they are written this way. If you would like to read and write packets like this in your own project, you can do that with my open source network library <a href="http://www.libyojimbo.com">yojimbo</a>.
 
-When writing the state update this function serializes just one bit (1) in place of the linear and angular velocities when the object is at rest. If the object is not at rest, one bit (0) is written before writing the linear and angular velocity values to the bit stream. On read, the code reads in this bit and if its value is 0 the linear and angular velocities are read in from the bit stream, otherwise their values are cleared to (0,0,0). This is a very simple and effective lossless bandwidth compression strategy that cuts bandwidth nearly in half for at rest objects.
-
-Next lets look at the structure of the packet being sent:
+Next let's look at the overall structure of packets being sent:
 
 <pre>const int MaxInputsPerPacket = 32;
 const int MaxStateUpdatesPerPacket = 64;
