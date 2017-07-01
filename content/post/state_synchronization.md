@@ -3,23 +3,23 @@ categories = ["Networked Physics"]
 tags = ["physics","networking"]
 date = "2015-01-05"
 title = "State Synchronization"
-description = "Keeping a simulation in sync by sending state"
+description = "Keeping simulations in sync by sending state"
 draft = false
 +++
 
 ## Introduction
 
-Hi, I’m Glenn Fiedler and welcome to <b>Networked Physics</b>, my article series on how to network a physics simulation.
+Hi, I’m Glenn Fiedler and welcome to <b>Networked Physics</b>, my article series on networking a physics simulation.
 
 In this article we round out our discussion of networked physics strategies with **state synchronization**, the third and final strategy.
 
 What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, _unlike_ deterministic lockstep, we don't just send input, we send both input <u>and</u> state.
 
-Sending input and state gives state synchronization interesting properties: it doesn't need perfect determinism to stay in sync, and because the simulation runs on both sides, objects continue moving forward between updates.
+This gives state synchronization interesting properties. Because we send state, it doesn't need perfect determinism to stay in sync, and because the simulation runs on both sides, objects continue moving forward between updates.
 
 This let us approach state synchronization quite differently to snapshot interpolation. Instead of sending state updates for every object in each packet, we can now send updates for only a few, and if we're smart about how we select the objects for each packet, we can save bandwidth by concentrating updates on the most important objects.
 
-So what's the catch? Well, the catch is that state synchronization is an approximate and lossy synchronization strategy. What this means in practice is that you'll spend a lot of time tracking down sources of extrapolation divergence and pops. But other than that, it's a quick and easy strategy to get started with.
+So what's the catch? It's this: state synchronization is an approximate and lossy synchronization strategy. What this means in practice is that you'll spend a lot of time tracking down sources of extrapolation divergence and pops. But other than that, it's a quick and easy strategy to get started with.
 
 So let's do exactly this and get started with practical implementation. 
 
@@ -37,9 +37,11 @@ Here's the state sent over the network per-object:
 };
 </pre>
 
-Notice that instead of sending just visual quantities like position and orientation as we did with snapshot interpolation, we're also sending _non-visual_ state such as linear and angular velocity. Why? 
+Notice that unlike snapshot interpolation, we're not just sending just visual quantities like position and orientation, we're also sending _non-visual_ state such as linear and angular velocity. Why is this?
 
-This non-visual state is necessary because the physics simulation extrapolates from the last state update applied to each object. If linear and angular velocity were not synchronized, they'd never be corrected and the extrapolation between updates would be done with an incorrect velocity, leading to pops when objects are updated.
+The reason is that state synchronization runs the simulation on both sides, so it's _always extrapolating_ from the last state update applied to each object. If linear and angular velocity weren't synchronized, this extrapolation would be done with incorrect velocities, leading to pops when objects are updated. 
+
+So here is the first critical difference between state sychronization and snapshot interpolation. Snapshot interpolation is _shallow_ - only visual quantities are sent. State synchronization is _deep_ - internal values required for extrapolation must also be synchronized.
 
 While we must send the velocities, there's no point wasting bandwidth sending (0,0,0) over and over while an object is at rest. We can fix this with a trivial optimization, like so:
 
@@ -65,7 +67,7 @@ While we must send the velocities, there's no point wasting bandwidth sending (0
 }
 </pre>
 
-What you see above is what I call a _serialization function_. It's a trick I like to use to unify packet bitpack read and write functions that are often written separately. I like it because it's harder to desync read and write when they are written this way. If you would like to read and write packets like this in your own project, you can do that with my open source network library <a href="http://www.libyojimbo.com">yojimbo</a>.
+What you see above is a _serialization function_. It's a trick I use to unify packet read and write. I like it because it's expressive while at the same time it's difficult to desync read and write. If you would like to read and write packets like this in your own project, you can do that with my open source network library <a href="http://www.libyojimbo.com">yojimbo</a>.
 
 ## Packet Structure
 
@@ -83,11 +85,11 @@ struct Packet
 };
 </pre>
 
-First up you can see that we include a sequence number in each packet so we can determine out of order, lost or duplicate packets. I recommend you run the simulation at the same framerate on both sides (for example 60fps) and in this case you can use the sequence number work double duty as the frame number.
+First up you can see that we include a sequence number in each packet so we can determine out of order, lost or duplicate packets. I recommend you run the simulation at the same framerate on both sides (for example 60fps) and in this case you can make the sequence number work double duty as frame number.
 
-Input is included in each packet because it's needed for extrapolation. Like deterministic lockstep we send multiple redundant inputs so that in the case of packet loss it is very unlikely that an input is dropped, but unlike deterministic lockstep, if don't have the next input we don't stop and wait for it, we continue forward with the last input received.
+Input is included in each packet because it's needed for extrapolation. Like deterministic lockstep we send multiple redundant inputs so in the case of packet loss it is very unlikely that an input gets dropped. Unlike deterministic lockstep, if don't have the next input we don't stop and wait for it, we continue forward with the last input received.
 
-Next you can see that we only send a maximum of 64 state updates per-packet. We have a total of 901 cubes in the simulation so we need some way to select the n most important state updates to include in each packet. We need some sort of prioritization scheme, one that lets us send state updates for important objects rapidly, while distributing updates across less important objects so all objects have a chance to bubble up and get sent.
+Next you can see that we only send a maximum of 64 state updates per-packet. Since we have a total of 901 cubes in the simulation so we need some way to select the n most important state updates to include in each packet. We need some sort of prioritization scheme, one that lets us send state updates for important objects rapidly, while distributing updates across less important objects so all objects have a chance to bubble up and get sent.
 
 To get started each frame walk over all objects in your simulation and calculate their current priority. For example, in the cube simulation I calculate priority for the player cube as 1000000 because I always want it to be included in every packet, and for interacting (red cubes) I give them a higher priority of 100 while at rest objects have priority of 1.
 
@@ -195,4 +197,4 @@ We can fix this by tracking objects which have recently come to rest and bumping
 
 ## Conclusion
 
-And that's really about it for this technique. It's quite interesting I think that without anything fancy it is already good enough. On top of this another order of magnitude bandwidth improvement is possible with delta encoding, at the cost of complexity.
+And that's really about it for this technique. It's quite interesting I think that without anything fancy it's already good enough. On top of this is another order of magnitude improvement with delta encoding, at the cost of complexity.
