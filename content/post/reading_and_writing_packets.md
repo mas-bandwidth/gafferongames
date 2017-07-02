@@ -9,7 +9,6 @@ draft = false
 
 ## Introduction
 
-
 Hi, I’m Glenn Fiedler and welcome to **Building a Game Network Protocol**. 
 
 In this article we're going to explore how AAA multiplayer games like first person shooters read and write packets. We'll start with text based formats then move into binary hand-coded binary formats and bitpacking.
