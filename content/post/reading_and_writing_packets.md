@@ -14,17 +14,19 @@ Hi, I’m <a href="https://www.linkedin.com/in/glennfiedler">Glenn Fiedler</a> a
 
 In this article series I’m going to build up a professional-grade client/server network protocol for action games like first person shooters.
 
+-- todo: fill out intro. it's too sparse.
+
 ## Background
 
-If you come from a web development background you’ve probably used XML, JSON or YAML to send data over the network in text format. This works reasonably well in the web development, but text is rarely used for game network protocols. Why is this?
+If you come from a web development background you’ve probably used XML, JSON or YAML to send data over the network in text format. This works reasonably well in the web development, but text is rarely used for game network protocols. Why?
 
 Consider a web server. It listens for requests, does some work asynchronously and sends responses back to clients. It’s stateless and generally not real-time, although a fast response time is great.
 
 In contrast, a game server is a real-time simulation of a game world. It's job is to advance the state of the game world forward with inputs from each client, before broadcasting out the latest state to all connected clients. These are totally different situations!
 
-The network traffic patterns are different too. Instead of infrequent request/response from tens of thousands of clients, a game server has far fewer clients, but processes a continuous stream of input packets sent from each client 60 times per-second, and broadcasts out the state of the world to all clients 10, 20 or even 60 times per-second.
+The network traffic patterns are different too. Instead of infrequent request/response from tens of thousands of clients, a game server has far fewer clients, but processes a continuous stream of input packets sent from each client 60 times per-second, and broadcasts out the state of the world to clients 10, 20 or even 60 times per-second.
 
-And the state sent is huge. Thousands of objects with hundreds of properties each. Game network programmers spend a lot of time optimizing exactly how this state is sent over the network with crazy bit-packing tricks, hand-coded binary formats and delta encoding.
+And this state is __huge__. Thousands of objects with hundreds of properties each. Game network programmers spend a lot of time optimizing exactly how this state is sent over the network with crazy bit-packing tricks, hand-coded binary formats and delta encoding.
 
 What would happen if we just encoded this world state as XML?
 
@@ -81,7 +83,7 @@ JSON is a bit more compact:
 }
 </pre>
 
-But it still suffers from the same problem. The description of the data is larger than the data itself. What if instead of fully describing the world state in each packet, we split it into two parts?
+But it still suffers from the same problem. The description of the data is larger than the data itself. What if instead of fully describing the world state in each packet, we split it up into two parts?
 
  1. A schema that describes the set of object classes and properties per-class, **sent only once** when a client connects to the server.
   
@@ -173,13 +175,13 @@ And we can compress even further by switching to a custom text format:
 110:2,1,8,1
 </pre>
 
-As you can see, with game network programming it’s more about what you __don’t send__ than what you do.
+As you can see, with game network programming it’s much more about what you __don’t send__ than what you do.
 
 ## The Inefficiencies of Text
 
 We’ve made good progress on our text format so far, moving from a highly attributed stream that fully describes the data (more description than actual data) to an unattributed text format that's an order of magnitude more efficient.
 
-But there are still inefficiencies when using text formats for packet data:
+But there are inherent inefficiencies when using text formats for packet data:
 
  * We are most often sending data in the range __A-Z__, __a-z__ and __0-1__, plus a few other symbols. This wastes the remainder of the __0-255__ range for each character sent. From an information theory standpoint, this is an inefficient encoding.
 
@@ -202,6 +204,8 @@ In short, if we wish to optimize any further, it's necessary to switch to a bina
 In the web world there are some really great libraries that read and write binary formats like <a href="http://bjson.org">BJSON</a>, <a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a>, <a href="https://google.github.io/flatbuffers/">Flatbuffers</a>, <a href="https://thrift.apache.org">Thrift</a>, <a href="https://capnproto.org">Cap’n Proto</a> and <a href="http://msgpack.org/index.html">MsgPack</a>. In some cases, these libraries can be a great fit for building your game network protocol.
 
 But in the fast-paced world of first person shooters where efficiency is paramount, a hand-tuned binary protocol is the standard solution.
+
+-- todo: fill out this logic. it's stilted.
 
 There are a few reasons for this. Web binary formats are designed for a situation where versioning of data is <em><span style="text-decoration: underline;">extremely</span> </em>important (if you upgrade your backend, older clients should be able to keep talking to it with the old format). Language agnostic data formats are also key; a backend written in golang should be able to talk with a web client running inside a browser in JavaScript and microservices written in different languages should be able to communicate without having to upgrade all components at the same time.
 
@@ -249,7 +253,7 @@ When writing the packet, set the first byte in the packet to the packet type num
 
 It couldn’t get simpler. So why do most games avoid this approach?
 
-The first reason is that different compilers and platforms provide different packing of structs. If you go this route you’ll spend a lot of time with <strong>#pragma pack</strong> trying to make sure that different compilers and different platforms lay out the structures in memory exactly the same way. Not that it’s impossible, but it’s certainly not trivial.
+The first reason is that different compilers and platforms provide different packing of structs. If you go this route you’ll spend a lot of time with __#pragma pack__ trying to make sure that different compilers and different platforms lay out the structures in memory exactly the same way. Not that it’s impossible, but it’s certainly not trivial.
 
 The next one is endianness. Most computers are mostly <a href="https://en.wikipedia.org/wiki/Endianness#Little-endian">little endian</a> these days (Intel) but PowerPC cores are <a href="https://en.wikipedia.org/wiki/Endianness#Big-endian">big endian</a>. Historically, network data was sent over the wire in big endian format (network byte order) but there is no reason for you to follow this tradition. Modern game network protocols write in little endian order to minimize the amount of work in the common case.
 
@@ -257,11 +261,11 @@ But if you do need to support communication between little endian and big endian
 
 There are other issues as well. If a struct contains pointers you can’t just serialize that value over the network and expect a valid pointer on the other side. Also, if you have variable sized structures, such as an array of 32 elements, but most of the time it’s empty or only has a few elements, it's wasteful to always send the array at worst case size. A better approach would support a variable length encoding that only sends the actual number of elements in the array.
 
-Ultimately, the issue that really drives a stake into the heart of this approach is <strong><span style="text-decoration: underline;">security</span></strong>.
+Ultimately, the issue that really drives a stake into the heart of this approach is __security__.
 
-It’s a <em><span style="text-decoration: underline;">massive</span></em> security risk to take data coming in over the network and trust it. And I can’t think of anything more trusting than taking a block of data sent to you over the network and just copying it into a struct. Wheee! What if somebody constructs a malicious packet and sends it to you with 0xFFFFFFFF in the <strong>numElements </strong>of <strong>PacketB</strong> causing you to trash all over memory when you process that packet?
+It’s a _massive_ security risk to take data coming in over the network and trust it, and that's exactly what you do if you just copy a block of memory sent over the network into your struct. Wheee! What if somebody constructs a malicious packet and sends it to you with 0xFFFFFFFF in the __numElements__ of __PacketB__ causing you to trash all over memory when you process that packet?
 
-You should, no you <span style="text-decoration: underline;">must</span>, at minimum do some sort of per-field checking that values are in range vs. blindly accepting what is sent to you. This is why the memcpy struct approach is rarely used in professional games.
+You should, no you _must_, at minimum do some sort of per-field checking that values are in range vs. blindly accepting what is sent to you. This is why the memcpy struct approach is rarely used in professional games.
 
 ## Read and Write Functions
 

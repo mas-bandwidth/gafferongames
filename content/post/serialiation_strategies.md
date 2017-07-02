@@ -3,15 +3,15 @@ categories = ["Building a Game Network Protocol"]
 tags = ["networking"]
 date = "2016-09-04"
 title = "Serialization Strategies"
-description = "Unifying packing read and write functions"
+description = "Unifying packet read and write functions"
 draft = true
 +++
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler and welcome to the second article in <span style="text-decoration: underline;"><strong>Building a Game Network Protocol</strong></span>.
+Hi, I'm Glenn Fiedler and welcome to the second article in __Building a Game Network Protocol__.
 
-In the <a href="http://gafferongames.com/building-a-game-network-protocol/reading-and-writing-packets/">previous article</a> we discussed different ways to read and write packets in multiplayer games. We quickly shot down sending game state via text formats like XML and JSON because they're really inefficient and decided to write own binary protocol instead. We implemented a bitpacker so we don't have to round bools up to 8 bits, solved endianness issues, wrote words at a time instead of bytes and pretty much made the bitpacker as simple and as fast as possible without platform specific tricks.
+In the [http://gafferongames.com/building-a-game-network-protocol/reading-and-writing-packets/">previous article](previous article) we discussed different ways to read and write packets in multiplayer games. We quickly shot down sending game state via text formats like XML and JSON because they're really inefficient and decided to write own binary protocol instead. We implemented a bitpacker so we don't have to round bools up to 8 bits, solved endianness issues, wrote words at a time instead of bytes and pretty much made the bitpacker as simple and as fast as possible without platform specific tricks.
 
 Where we left off we still had the following problems to solve:
 
