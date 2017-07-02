@@ -12,15 +12,15 @@ draft = true
 
 Hi, I’m Glenn Fiedler and welcome to **Building a Game Network Protocol**. 
 
-In this article series I’m going to build up a professional-grade client/server network protocol for action games like first person shooters.
+In this article we're going to explore how AAA multiplayer games like first person shooters read and write packets. We'll start with text based formats then move into binary hand-coded binary formats and bitpacking.
 
--- todo: fill out intro. it's too sparse.
+At the end of this article and the next, you should understand exactly how to implement your own packet read and write the same way the pros do it.
 
 ## Background
 
 Consider a web server. It listens for requests, does some work asynchronously and sends responses back to clients. It’s stateless and generally not real-time, although a fast response time is great.
 
-A game server is a real-time simulation of a game world and is the definition of stateful. It's job is to advance the state of the game world forward with inputs from each client, then broadcast the latest state to all connected clients. These are totally different situations!
+A game server on the other hand, is a real-time simulation of a game world and is completely stateful. It's job is to advance the state of the game world forward with inputs from each client, then broadcast the latest state to all connected clients. These are totally different situations!
 
 The network traffic patterns are different too. Instead of infrequent request/response from tens of thousands of clients, a game server has far fewer clients, but processes a continuous stream of input packets sent from each client 60 times per-second, and broadcasts out the state of the world to clients 10, 20 or even 60 times per-second.
 
@@ -150,7 +150,7 @@ The schema could look something like this:
   }
 }</pre>
 
-The schema is quite big, but that's beside the point. It's sent only once, and now the client knows the set of classes in the game world and the number, name, type and range of properties for each class. 
+The schema is quite big, but that's beside the point. It's sent only once, and now the client knows the set of classes in the game world and the number, name, type and range of properties per-class. 
 
 With this knowledge we can make the rapidly sent portion of the world state much more compact:
 
@@ -180,7 +180,7 @@ As you can see, it’s much more about what you __don’t send__ than what you d
 
 We’ve made good progress on our text format so far, moving from a highly attributed stream that fully describes the data (more description than actual data) to an unattributed text format that's an order of magnitude more efficient.
 
-But there are inherent inefficiencies when using text formats:
+But there are inherent inefficiencies when using text:
 
  * We are most often sending data in the range __A-Z__, __a-z__ and __0-1__, plus a few other symbols. This wastes the remainder of the __0-255__ range for each character sent. From an information theory standpoint, this is an inefficient encoding.
 
@@ -200,17 +200,17 @@ In short, if we wish to optimize any further, it's necessary to switch to a bina
 
 ## Switching to a Binary Format
 
-In the web world there are some really great libraries that read and write binary formats like <a href="http://bjson.org">BJSON</a>, <a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a>, <a href="https://google.github.io/flatbuffers/">Flatbuffers</a>, <a href="https://thrift.apache.org">Thrift</a>, <a href="https://capnproto.org">Cap’n Proto</a> and <a href="http://msgpack.org/index.html">MsgPack</a>. In some cases, these libraries can be a great fit for building your game network protocol.
+In the web world there are some really great libraries that read and write binary formats like <a href="http://bjson.org">BJSON</a>, <a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a>, <a href="https://google.github.io/flatbuffers/">Flatbuffers</a>, <a href="https://thrift.apache.org">Thrift</a>, <a href="https://capnproto.org">Cap’n Proto</a> and <a href="http://msgpack.org/index.html">MsgPack</a>. 
 
-But in the fast-paced world of first person shooters where efficiency is paramount, a hand-tuned binary protocol is the standard solution.
+In some cases, these libraries can be a great fit for building your game network protocol. But in the fast-paced world of first person shooters where efficiency is paramount, a hand-tuned binary protocol is still the gold standard.
 
--- todo: fill out this logic. it's stilted.
+There are a few reasons for this. Web binary formats are designed for a situation where versioning of data is _extremely_ important. If you upgrade your backend, older clients should be able to keep talking to it with the old format. Data formats are also expected to be language agnostic. A backend written in golang should be able to talk with a web client running inside a browser in JavaScript and maybe some other server-side components written in Python or Java.
 
-There are a few reasons for this. Web binary formats are designed for a situation where versioning of data is <em><span style="text-decoration: underline;">extremely</span> </em>important (if you upgrade your backend, older clients should be able to keep talking to it with the old format). Language agnostic data formats are also key; a backend written in golang should be able to talk with a web client running inside a browser in JavaScript and microservices written in different languages should be able to communicate without having to upgrade all components at the same time.
+Game servers are completely different beasts. The client and server are almost always written in the same language (C++), and versioning is much simpler as well. In fact, if a client with an incompatible version tries to connect, that connection is simply rejected. There's simply no need for versioning.
 
-Game servers for AAA FPS games are completely different beasts. The client and server are almost always written in the same language (C++) because large portions of the game code must run identically on the server and the client for client-side prediction. Versioning is much simpler as well, because if a client with an incompatible game version tries to connect to a game server, that connection is simply rejected. This may seem like a problem, but in practice, game clients are typically required to update to new client versions before they can play online anyway and in development your matchmaker can ensure that clients are sent to game server instances with compatible game versions.
+So if you don’t need versioning and you don’t need cross-language support what are the benefits for these libraries? Convenience. Ease of use. Not needing to worry about creating, testing and debugging your own binary format. 
 
-So if you don’t need versioning and you don’t need cross-language support what are the benefits for these libraries? Convenience. Ease of use. Not needing to worry about creating, testing and debugging your own binary format. But this convenience is offset by the fact that these libraries are less efficient than a binary protocol we can roll ourselves. We know more about the data we are sending than any library writer ever could and we can take advantage of this to send less bits by developing our own custom binary format.
+But this convenience is offset by the fact that these libraries are less efficient and less flexible than a binary protocol we can roll ourselves. For the really critical applications like first person shooters, the flexibility and efficiency of a hand-tuned binary protocol wins out.
 
 ## Getting Started with a Binary Format
 
@@ -252,17 +252,13 @@ When writing the packet, set the first byte in the packet to the packet type num
 
 It couldn’t get simpler. So why do most games avoid this approach?
 
-The first reason is that different compilers and platforms provide different packing of structs. If you go this route you’ll spend a lot of time with __#pragma pack__ trying to make sure that different compilers and different platforms lay out the structures in memory exactly the same way. Not that it’s impossible, but it’s certainly not trivial.
+The first reason is that different compilers and platforms provide different packing of structs. If you go this route you’ll spend a lot of time with __#pragma pack__ trying to make sure that different compilers and different platforms lay out the structures in memory exactly the same way.
 
-The next one is endianness. Most computers are mostly [https://en.wikipedia.org/wiki/Endianness#Little-endian](little endian) these days (Intel) but PowerPC cores are [https://en.wikipedia.org/wiki/Endianness#Big-endian](big endian). Historically, network data was sent over the wire in big endian format (network byte order) but there is no reason for you to follow this tradition. Modern game network protocols write in little endian order to minimize the amount of work in the common case.
-
-If you need to support communication between little endian and big endian machines, the memcpy the struct in and out of the packet approach simply won’t work. At minimum you need to write a function to swap bytes between host and network byte order on read and write for each variable in your struct.
+The next one is endianness. Most computers are mostly [little endian](https://en.wikipedia.org/wiki/Endianness#Little-endian) these days but historically PowerPC cores were [big endian](https://en.wikipedia.org/wiki/Endianness#Big-endian). If you need to support communication between little endian and big endian machines, the memcpy the struct in and out of the packet approach simply won’t work. At minimum you need to write a function to swap bytes between host and network byte order on read and write for each variable in your struct.
 
 There are other issues as well. If a struct contains pointers you can’t just serialize that value over the network and expect a valid pointer on the other side. Also, if you have variable sized structures, such as an array of 32 elements, but most of the time it’s empty or only has a few elements, it's wasteful to always send the array at worst case size. A better approach would support a variable length encoding that only sends the actual number of elements in the array.
 
-Ultimately, what really drives a stake into the heart of this approach is __security__.
-
-It’s a _massive_ security risk to take data coming in over the network and trust it, and that's exactly what you do if you just copy a block of memory sent over the network into your struct. Wheee! What if somebody constructs a malicious packet and sends it to you with 0xFFFFFFFF in the __numElements__ of __PacketB__?
+But ultimately, what really drives a stake into the heart of this approach is __security__. It’s a _massive_ security risk to take data coming in over the network and trust it, and that's exactly what you do if you just copy a block of memory sent over the network into your struct. Wheee! What if somebody constructs a malicious packet and sends it to you with __numElements__ set to 0xFFFFFFFF?
 
 You should, no you _must_, at minimum do some sort of per-field checking that values are in range vs. blindly accepting what is sent to you. This is why the memcpy struct approach is rarely used in professional games.
 
