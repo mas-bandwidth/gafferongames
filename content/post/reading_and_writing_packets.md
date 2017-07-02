@@ -18,11 +18,9 @@ At the end of this article and the next, you should understand exactly how to im
 
 ## Background
 
-Consider a web server. It listens for requests, does some work asynchronously and sends responses back to clients. It’s stateless and generally not real-time, although a fast response time is great.
+Consider a web server. It listens for requests, does some work asynchronously and sends responses back to clients. It’s stateless and generally not real-time, although a fast response time is great. Web servers are most often IO bound.
 
-A game server on the other hand, is a real-time simulation of a game world and is completely stateful. It's job is to advance the state of the game world forward with inputs from each client, then broadcast the latest state to all connected clients. These are totally different situations!
-
-The network traffic patterns are different too. Instead of infrequent request/response from tens of thousands of clients, a game server has far fewer clients, but processes a continuous stream of input packets sent from each client 60 times per-second, and broadcasts out the state of the world to clients 10, 20 or even 60 times per-second.
+A game server is a headless version of the game running in the cloud. They're stateless and instead of infrequent request/response from tens of thousands of clients, a game server has far fewer clients, but processes a continuous stream of input packets sent from each client 60 times per-second, and broadcasts out the state of the world to clients 10, 20 or even 60 times per-second.
 
 And this state is __huge__. Thousands of objects with hundreds of properties each. Game network programmers spend a lot of time optimizing exactly how this state is sent over the network with crazy bit-packing tricks, hand-coded binary formats and delta encoding.
 
@@ -50,7 +48,7 @@ What would happen if we just encoded this world state as XML?
 &lt;/world_update&gt;
 </pre>
 
-Not so great...
+Pretty verbose... hard to see how this would be practical for a large world.
 
 JSON is a bit more compact:
 
@@ -150,7 +148,7 @@ The schema could look something like this:
   }
 }</pre>
 
-The schema is quite big, but that's beside the point. It's sent only once, and now the client knows the set of classes in the game world and the number, name, type and range of properties per-class. 
+This schema is quite big, but that's beside the point. It's sent only once, and now the client knows the set of classes in the game world and the number, name, type and range of properties per-class. 
 
 With this knowledge we can make the rapidly sent portion of the world state much more compact:
 
@@ -204,17 +202,17 @@ In the web world there are some really great libraries that read and write binar
 
 In some cases, these libraries can be a great fit for building your game network protocol. But in the fast-paced world of first person shooters where efficiency is paramount, a hand-tuned binary protocol is still the gold standard.
 
-There are a few reasons for this. Web binary formats are designed for a situation where versioning of data is _extremely_ important. If you upgrade your backend, older clients should be able to keep talking to it with the old format. Data formats are also expected to be language agnostic. A backend written in golang should be able to talk with a web client running inside a browser in JavaScript and maybe some other server-side components written in Python or Java.
+There are a few reasons for this. Web binary formats are designed for situations where versioning of data is _extremely_ important. If you upgrade your backend, older clients should be able to keep talking to it with the old format. Data formats are also expected to be language agnostic. A backend written in Golang should be able to talk with a web client running inside a browser in JavaScript and maybe some other server-side components written in Python or Java.
 
-Game servers are completely different beasts. The client and server are almost always written in the same language (C++), and versioning is much simpler as well. In fact, if a client with an incompatible version tries to connect, that connection is simply rejected. There's simply no need for versioning.
+Game servers are completely different beasts. The client and server are almost always written in the same language (C++), and versioning is much simpler. If a client with an incompatible version tries to connect, that connection is simply rejected. There's simply no need for compatibility across different versions.
 
 So if you don’t need versioning and you don’t need cross-language support what are the benefits for these libraries? Convenience. Ease of use. Not needing to worry about creating, testing and debugging your own binary format. 
 
-But this convenience is offset by the fact that these libraries are less efficient and less flexible than a binary protocol we can roll ourselves. For the really critical applications like first person shooters, the flexibility and efficiency of a hand-tuned binary protocol wins out.
+But this convenience is offset by the fact that these libraries are less efficient and less flexible than a binary protocol we can roll ourselves. So while I encourage you to evaluate these libraries and see if they suit your needs, for the rest of this article, we're going to move forward with a custom binary protocol.
 
 ## Getting Started with a Binary Format
 
-One option for creating your own binary protocol is to use the in-memory format of your data structures in C/C++ as the over-the-wire format. People often start here, so although I don’t recommend this approach, lets explore it for a while before we poke holes in it.
+One option for creating a custom binary protocol is to use the in-memory format of your data structures in C/C++ as the over-the-wire format. People often start here, so although I don’t recommend this approach, lets explore it for a while before we poke holes in it.
 
 First define the set of packets, typically as a union of structs:
 
@@ -248,23 +246,21 @@ struct Packet
 };
 </pre>
 
-When writing the packet, set the first byte in the packet to the packet type number (0,1 or 2). Then depending on the packet type, memcpy the appropriate union struct into the packet. On read do the reverse: read in the first byte, then according to the packet type, copy the packet data to the corresponding struct.
+When writing the packet, set the first byte in the packet to the packet type number (0, 1 or 2). Then depending on the packet type, memcpy the appropriate union struct into the packet. On read do the reverse: read in the first byte, then according to the packet type, copy the packet data to the corresponding struct.
 
 It couldn’t get simpler. So why do most games avoid this approach?
 
 The first reason is that different compilers and platforms provide different packing of structs. If you go this route you’ll spend a lot of time with __#pragma pack__ trying to make sure that different compilers and different platforms lay out the structures in memory exactly the same way.
 
-The next one is endianness. Most computers are mostly [little endian](https://en.wikipedia.org/wiki/Endianness#Little-endian) these days but historically PowerPC cores were [big endian](https://en.wikipedia.org/wiki/Endianness#Big-endian). If you need to support communication between little endian and big endian machines, the memcpy the struct in and out of the packet approach simply won’t work. At minimum you need to write a function to swap bytes between host and network byte order on read and write for each variable in your struct.
+The next one is endianness. Most computers are mostly [little endian](https://en.wikipedia.org/wiki/Endianness#Little-endian) these days but historically some architectures like PowerPC were [big endian](https://en.wikipedia.org/wiki/Endianness#Big-endian). If you need to support communication between little endian and big endian machines, the memcpy the struct in and out of the packet approach simply won’t work. At minimum you need to write a function to swap bytes between host and network byte order on read and write for each variable in your struct.
 
 There are other issues as well. If a struct contains pointers you can’t just serialize that value over the network and expect a valid pointer on the other side. Also, if you have variable sized structures, such as an array of 32 elements, but most of the time it’s empty or only has a few elements, it's wasteful to always send the array at worst case size. A better approach would support a variable length encoding that only sends the actual number of elements in the array.
 
-But ultimately, what really drives a stake into the heart of this approach is __security__. It’s a _massive_ security risk to take data coming in over the network and trust it, and that's exactly what you do if you just copy a block of memory sent over the network into your struct. Wheee! What if somebody constructs a malicious packet and sends it to you with __numElements__ set to 0xFFFFFFFF?
+But ultimately, what really drives a stake into the heart of this approach is __security__. It’s a _massive_ security risk to take data coming in over the network and trust it, and that's exactly what you do if you just copy a block of memory sent over the network into your struct. Wheee! What if somebody constructs a malicious __PacketB__ and sends it to you with __numElements__ = 0xFFFFFFFF?
 
 You should, no you _must_, at minimum do some sort of per-field checking that values are in range vs. blindly accepting what is sent to you. This is why the memcpy struct approach is rarely used in professional games.
 
 ## Read and Write Functions
-
--- todo: edited and cleaned up down to here
 
 The next level of sophistication is read and write functions per-packet.
 
@@ -280,7 +276,7 @@ uint16_t ReadShort( Buffer &amp; buffer );
 uint8_t ReadByte( Buffer &amp; buffer );
 </pre>
 
-These operate on a buffer structure which keeps track of the current position in the packet:
+These operate on a structure which keeps track of the current position:
 
 <pre>
 struct Buffer
@@ -323,7 +319,7 @@ uint32_t ReadInteger( Buffer &amp; buffer )
 }
 </pre>
 
-Now, instead of copying across packet data in and out of structs, implement read and write functions for each packet type:
+Now, instead of copying across packet data in and out of structs, we implement read and write functions for each packet type:
 
 <pre>
 struct PacketA
@@ -389,27 +385,21 @@ struct PacketC
 
 When reading and writing packets, start the packet with a byte specifying the packet type via ReadByte/WriteByte, then according to the packet type, call the read/write on the corresponding packet struct in the union.
 
-This is real progress. Now we have a system that allows machines with different endianness to communicate _and_ supports variable length encoding of elements within structures.
+Now we have a system that allows machines with different endianness to communicate and supports variable length encoding of elements.
 
 ## Bitpacking
 
-So far we have been reading and writing packets at the byte level.
+What if we have a value in the range [0,1000] we really only need 10 bits to represent all possible values. Wouldn't it be nice if we could write just 10 bits, instead of rounding up to 16? What about boolean values? It would be nice to send these as one bit instead of 8!
 
-But if we have a value in the range [0,1000] we really only need 10 bits to represent all possible values. Wouldn't it be nice if we could write just 10 bits, instead of rounding up to 16?
+One way to implement this is to manually organize your C++ structures into packed integers with bitfields and union tricks, such as grouping all bools together into one integer type via bitfield and serializing them as a group. But this is tedious and error prone and there’s no guarantee that different C++ compilers pack bitfields in memory exactly the same way.
 
-It would be really nice if we could send boolean values using only one bit, instead of a byte.
-
-One way to implement this is to manually organize your C++ structures into packed integers with bitfields and union tricks, such as grouping all bools together into one integer type via union and serializing them as a group. But this is tedious and error prone and there’s no guarantee that different C++ compilers pack bitfields in memory exactly the same way.
-
-A much more flexible way that trades some small amount of CPU on packet read and write for convenience is a __bitpacker__. This is code that is able to read and write non-multiples of 8 bits into a buffer. To do this, it must perform a bunch of manual bit-shifting because data being written and read doesn’t correspond to any natural machine word type (byte, short or int).
+A much more flexible way that trades some small amount of CPU on packet read and write for convenience is a __bitpacker__. This is code that reads and writes non-multiples of 8 bits to a buffer.
 
 ## Writing Bits
 
-Many (most?) people write bitpackers that work at the byte level. This means they flush bytes to memory as they are filled. This is simpler to code, but the ideal is to read and write words at a time, because modern machines are optimized to work this way instead of farting across a buffer at byte level like it’s 1985.
+Many people write bitpackers that work at the byte level. This means they flush bytes to memory as they are filled. This is simpler to code, but the ideal is to read and write words at a time, because modern machines are optimized to work this way instead of farting across a buffer at byte level like it’s 1985.
 
-If you want to write 32 bits at a time, you'll need a scratch word twice that size, eg. uint64_t. The reason is that you need the top half for overflow. For example, if you have just written a value 30 bits long into the scratch buffer, then write another value that is 10 bits long you need somewhere to store 30 + 10 = 40 bits, at least until you flush the top 32 bits out to memory.
-
-We’re going to work at the 32 bit word level, so the bitpacker state for write looks something like this:
+If you want to write 32 bits at a time, you'll need a scratch word twice that size, eg. uint64_t. The reason is that you need the top half for overflow. For example, if you have just written a value 30 bits long into the scratch buffer, then write another value that is 10 bits long you need somewhere to store 30 + 10 = 40 bits.
 
 <pre>
 uint64_t scratch;
@@ -444,7 +434,7 @@ __scratch__ now looks like this:
 
 <pre>zzzzz</pre>
 
-We've finished writing bits but we still have data in scratch that's not flushed to memory yet. It's important to flush any remaining bits in __scratch__ to memory at the end of writing.
+We've finished writing bits but we still have data in scratch that's not flushed to memory. For this data to be included in the packet we need to make sure to flush any remaining bits in __scratch__ to memory at the end of writing.
 
 When we flush a word to memory it is converted to little endian byte order. To see why this is important consider what happens if we flush bytes to memory in big endian order:
 
@@ -475,11 +465,15 @@ int word_index;
 uint32_t * buffer;
 </pre>
 
-To start all variables are cleared to zero except __total_bits__ which is set to the size of the packet in bytes * 8, and __buffer__ which points to the start of the packet.
+To start all variables are cleared to zero except __total_bits__ which is set to the size of the packet as bytes * 8, and __buffer__ which points to the start of the packet.
 
-The user requests a read of 3 bits. Since __scratch_bits__ is zero, it’s time to read in the first word. Take that word and stash it in __scratch__, shifted left by __scratch_bits__ (which is zero...). Add 32 to __scratch_bits__.
+The user requests a read of 3 bits. Since __scratch_bits__ is zero, it’s time to read in the first word. Read in the word to __scratch__, shifted left by __scratch_bits__ (0). Add 32 to __scratch_bits__.
 
-Now read the first 3 bits by copying __scratch__ off to another variable and masking &amp; ( (1&lt;&lt;3 ) – 1 ), giving the value of:
+The value of __scratch__ is now:
+
+<pre>zzzzzzzzzzzzzzzzzzzyyyyyyyyyyxxx</pre>
+
+Read off the low 3 bits, giving the expected value of:
 
 <pre>xxx</pre>
 
@@ -487,21 +481,29 @@ Shift __scratch__ to the right 3 bits and subtract 3 from __scratch_bits__:
 
 <pre>zzzzzzzzzzzzzzzzzzzyyyyyyyyyy</pre>
 
-Read off another 10 bits in the same way. Scratch now looks like:
+Read off another 10 bits in the same way, giving the expected value of:
+
+<pre>yyyyyyyyyy</pre>
+
+Scratch now looks like:
 
 <pre>zzzzzzzzzzzzzzzzzzz</pre>
 
 The next read asks for 24 bits but __scratch_bits__ is only 19 (=32-10-3).
 
-It’s time to read in the next word. Or the work from memory into __scratch__ after shifting left by __scratch_bits__ (19). Now we have all the bits necessary for z in __scratch__:
+It’s time to read in the next word. Shifting the word in memory left by __scratch_bits__ (19) and or it on top of __scratch__. 
+
+Now we have all the bits necessary for z in __scratch__:
 
 <pre>zzzzzzzzzzzzzzzzzzzzzzzz</pre>
 
-Read off 24 bits and shift __scratch__ right by 24. __scratch__ is now all zeros. We're done.
+Read off 24 bits and shift __scratch__ right by 24. __scratch__ is now all zeros. 
+
+We're done!
 
 ## Beyond Bitpacking
 
-Bitpackers are an excellent optimization compared with reading and writing at a byte level, but reading and writing integer values into a packet by specifying the number of bits to read/write is not the most user friendly interface possible.
+Reading and writing integer values into a packet by specifying the number of bits to read/write is not the most user friendly option.
 
 Consider this example:
 
@@ -529,7 +531,7 @@ struct PacketB
 };
 </pre>
 
-This code looks fine at first glance, but let’s assume that some time later you, or somebody else on your team, increases __MaxElements__ from 32 to 200 but forgets to update the number of bits required to __7__. Now the high bit of __numElements__ are being silently truncated on send. It's pretty hard to track something like this down after the fact.
+This code looks fine at first glance, but let’s assume that some time later you, or somebody else on your team, increases __MaxElements__ from 32 to 200 but forget to update the number of bits required to __7__. Now the high bit of __numElements__ are being silently truncated on send. It's pretty hard to track something like this down after the fact.
 
 The simplest option is to just turn it around and define the maximum number of elements in terms of the number of bits sent:
 
@@ -578,51 +580,14 @@ const int MaxElements = 32;
 const int MaxElementBits = BITS_REQUIRED( 0, MaxElements );
 </pre>
 
-But be careful when array sizes aren't a power of two, because within the value serialized over the network lies the opportunity for an attacker to construct a packet that makes you trash memory!
+This works great and we're always guaranteed to have the correct number of bits required. But be careful when array sizes aren't a power of two, because the value serialized over the network lies the opportunity for an attacker to construct a packet that makes you trash memory!
 
-In the example above <strong>MaxElements</strong> is 32, so <strong>MaxElementBits</strong> is 6. This seems fine because all valid values for <strong>numElements:</strong> [0,32] fit in 6 bits. The problem is that there are <span style="text-decoration: underline;">also</span> additional values within 6 bits that are <em><span style="text-decoration: underline;">outside</span></em> our array bounds: [33,63]. An attacker can use this fact to construct a malicious packet containing one of these values to make us trash memory.
+In the example above __MaxElements__ is 32, so __MaxElementBits__ is 6. This seems fine because all valid values for [0,32] fit in 6 bits. The problem is that there are additional values within 6 bits that are _outside_ our array bounds: [33,63]. An attacker can use this to construct a malicious packet that corrupts memory.
 
-This leads to the <span style="text-decoration: underline;">inescapable</span> conclusion that it’s not enough to just specify the number of bits required when reading and writing a value, we must instead specify its valid range: [min,max]. This way if a value is outside of the expected range we can detect that and abort packet read.
+This leads to the _inescapable_ conclusion that it’s not enough to just specify the number of bits required when reading and writing a value, we must instead specify its valid range: [min,max]. This way if a value is outside of the expected range we can detect that and abort packet read.
 
-I’ve implemented this abort using C++ exceptions in the past, but when I profiled this code, I found it to be incredibly slow. In my experience, it’s much faster to take one of two approaches: set a flag on the bit reader that it should abort, or return false from read functions on failure. But now, in order to be completely safe on read you must to check this flag or return code on every read operation otherwise it’s possible to get stuck in a memory trashing loop.
+I used to implemented packet read abort using C++ exceptions, but when I profiled this code, I found it to be incredibly slow. In my experience, it’s much faster to take one of two approaches: set a flag on the bit reader that it should abort, or return false from read functions on failure. But now, in order to be completely safe on read you must to check for error on every read operation.
 
-<pre>
-const int MaxElements = 32;
-const int MaxElementBits = BITS_REQUIRED( 0, MaxElements );
+If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. It's too important to leave open to programmer error. _You want it to be automatic_.
 
-struct PacketB
-{
-    int numElements;
-    int elements[MaxElements];
-
-    void Write( BitWriter &amp; writer )
-    {
-        WriteBits( writer, numElements, MaxElementBits );
-        for ( int i = 0; i &lt; numElements; ++i )
-        {
-            WriteBits( writer, elements[i], 32 );
-        }
-    }
-
-    void Read( BitReader &amp; reader )
-    {
-        ReadBits( reader, numElements, MaxElementBits );
-        
-        if ( numElements &gt; MaxElements )
-        {
-            reader.Abort();
-            return;
-        }
-        
-        for ( int i = 0; i &lt; numElements; ++i )
-        {
-            if ( reader.IsOverflow() )
-                break;
-
-            ReadBits( buffer, elements[i], 32 );
-        }
-    }
-};
-</pre>
-
-If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. It's too important to leave open to programmer error. <span style="text-decoration: underline;">You want it to be automatic</span>.
+(Link to next article)
