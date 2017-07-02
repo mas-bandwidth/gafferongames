@@ -264,6 +264,8 @@ You should, no you _must_, at minimum do some sort of per-field checking that va
 
 ## Read and Write Functions
 
+-- todo: edited and cleaned up down to here
+
 The next level of sophistication is read and write functions per-packet.
 
 Start with the following simple operations:
