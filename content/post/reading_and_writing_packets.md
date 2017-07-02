@@ -20,9 +20,9 @@ At the end of this article and the next, you should understand exactly how to im
 
 Consider a web server. It listens for requests, does some work asynchronously and sends responses back to clients. It’s stateless and generally not real-time, although a fast response time is great. Web servers are most often IO bound.
 
-A game server is a headless version of the game running in the cloud. They're stateless and instead of infrequent request/response from tens of thousands of clients, a game server has far fewer clients, but processes a continuous stream of input packets sent from each client 60 times per-second, and broadcasts out the state of the world to clients 10, 20 or even 60 times per-second.
+Game server are different. They're a headless version of the game running in the cloud. As such they are stateful and CPU bound. The traffic patterns are different too. Instead of infrequent request/response from tens of thousands of clients, a game server has far fewer clients, but processes a continuous stream of input packets sent from each client 60 times per-second, and broadcasts out the state of the world to clients 10, 20 or even 60 times per-second.
 
-And this state is __huge__. Thousands of objects with hundreds of properties each. Game network programmers spend a lot of time optimizing exactly how this state is sent over the network with crazy bit-packing tricks, hand-coded binary formats and delta encoding.
+And this state is __huge__. Thousands of objects with hundreds of properties each. Game network programmers spend a lot of their time optimizing exactly how this state is sent over the network with crazy bit-packing tricks, hand-coded binary formats and delta encoding.
 
 What would happen if we just encoded this world state as XML?
 
@@ -48,7 +48,7 @@ What would happen if we just encoded this world state as XML?
 &lt;/world_update&gt;
 </pre>
 
-Pretty verbose... hard to see how this would be practical for a large world.
+Pretty verbose... it's hard to see how this would be practical for a large world.
 
 JSON is a bit more compact:
 
@@ -148,7 +148,7 @@ The schema could look something like this:
   }
 }</pre>
 
-This schema is quite big, but that's beside the point. It's sent only once, and now the client knows the set of classes in the game world and the number, name, type and range of properties per-class. 
+The schema is quite big, but that's beside the point. It's sent only once, and now the client knows the set of classes in the game world and the number, name, type and range of properties per-class. 
 
 With this knowledge we can make the rapidly sent portion of the world state much more compact:
 
@@ -178,7 +178,7 @@ As you can see, it’s much more about what you __don’t send__ than what you d
 
 We’ve made good progress on our text format so far, moving from a highly attributed stream that fully describes the data (more description than actual data) to an unattributed text format that's an order of magnitude more efficient.
 
-But there are inherent inefficiencies when using text:
+But there are inherent inefficiencies when using text format for packets:
 
  * We are most often sending data in the range __A-Z__, __a-z__ and __0-1__, plus a few other symbols. This wastes the remainder of the __0-255__ range for each character sent. From an information theory standpoint, this is an inefficient encoding.
 
@@ -200,9 +200,9 @@ In short, if we wish to optimize any further, it's necessary to switch to a bina
 
 In the web world there are some really great libraries that read and write binary formats like <a href="http://bjson.org">BJSON</a>, <a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a>, <a href="https://google.github.io/flatbuffers/">Flatbuffers</a>, <a href="https://thrift.apache.org">Thrift</a>, <a href="https://capnproto.org">Cap’n Proto</a> and <a href="http://msgpack.org/index.html">MsgPack</a>. 
 
-In some cases, these libraries can be a great fit for building your game network protocol. But in the fast-paced world of first person shooters where efficiency is paramount, a hand-tuned binary protocol is still the gold standard.
+In manay cases, these libraries are great fit for building your game network protocol. But in the fast-paced world of first person shooters where efficiency is paramount, a hand-tuned binary protocol is still the gold standard.
 
-There are a few reasons for this. Web binary formats are designed for situations where versioning of data is _extremely_ important. If you upgrade your backend, older clients should be able to keep talking to it with the old format. Data formats are also expected to be language agnostic. A backend written in Golang should be able to talk with a web client running inside a browser in JavaScript and maybe some other server-side components written in Python or Java.
+There are a few reasons for this. Web binary formats are designed for situations where versioning of data is _extremely_ important. If you upgrade your backend, older clients should be able to keep talking to it with the old format. Data formats are also expected to be language agnostic. A backend written in Golang should be able to talk with a web client written in JavaScript and other server-side components written in Python or Java.
 
 Game servers are completely different beasts. The client and server are almost always written in the same language (C++), and versioning is much simpler. If a client with an incompatible version tries to connect, that connection is simply rejected. There's simply no need for compatibility across different versions.
 
@@ -393,7 +393,7 @@ What if we have a value in the range [0,1000] we really only need 10 bits to rep
 
 One way to implement this is to manually organize your C++ structures into packed integers with bitfields and union tricks, such as grouping all bools together into one integer type via bitfield and serializing them as a group. But this is tedious and error prone and there’s no guarantee that different C++ compilers pack bitfields in memory exactly the same way.
 
-A much more flexible way that trades some small amount of CPU on packet read and write for convenience is a __bitpacker__. This is code that reads and writes non-multiples of 8 bits to a buffer.
+A much more flexible way that trades a small amount of CPU on packet read and write for convenience is a __bitpacker__. This is code that reads and writes non-multiples of 8 bits to a buffer.
 
 ## Writing Bits
 
@@ -580,14 +580,51 @@ const int MaxElements = 32;
 const int MaxElementBits = BITS_REQUIRED( 0, MaxElements );
 </pre>
 
-This works great and we're always guaranteed to have the correct number of bits required. But be careful when array sizes aren't a power of two, because the value serialized over the network lies the opportunity for an attacker to construct a packet that makes you trash memory!
+But be careful when array sizes aren't a power of two! In the example above __MaxElements__ is 32, so __MaxElementBits__ is 6. This seems fine because all values in [0,32] fit in 6 bits. The problem is that there are additional values within 6 bits that are _outside_ our array bounds: [33,63]. An attacker can use this to construct a malicious packet that corrupts memory!
 
-In the example above __MaxElements__ is 32, so __MaxElementBits__ is 6. This seems fine because all valid values for [0,32] fit in 6 bits. The problem is that there are additional values within 6 bits that are _outside_ our array bounds: [33,63]. An attacker can use this to construct a malicious packet that corrupts memory.
+This leads to the _inescapable_ conclusion that it’s not enough to just specify the number of bits required when reading and writing a value, we must also check that it is within the valid range: [min,max]. This way if a value is outside of the expected range we can detect that and abort read.
 
-This leads to the _inescapable_ conclusion that it’s not enough to just specify the number of bits required when reading and writing a value, we must instead specify its valid range: [min,max]. This way if a value is outside of the expected range we can detect that and abort packet read.
+I used to implement this using C++ exceptions, but when I profiled, I found it to be incredibly slow. In my experience, it’s much faster to take one of two approaches: set a flag on the bit reader that it should abort, or return false from read functions on failure. But now, in order to be completely safe on read you must to check for error on every read operation.
 
-I used to implemented packet read abort using C++ exceptions, but when I profiled this code, I found it to be incredibly slow. In my experience, it’s much faster to take one of two approaches: set a flag on the bit reader that it should abort, or return false from read functions on failure. But now, in order to be completely safe on read you must to check for error on every read operation.
+<pre>
+const int MaxElements = 32;
+const int MaxElementBits = BITS_REQUIRED( 0, MaxElements );
 
-If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. It's too important to leave open to programmer error. _You want it to be automatic_.
+struct PacketB
+{
+    int numElements;
+    int elements[MaxElements];
+
+    void Write( BitWriter &amp; writer )
+    {
+        WriteBits( writer, numElements, MaxElementBits );
+        for ( int i = 0; i &lt; numElements; ++i )
+        {
+            WriteBits( writer, elements[i], 32 );
+        }
+    }
+
+    void Read( BitReader &amp; reader )
+    {
+        ReadBits( reader, numElements, MaxElementBits );
+        
+        if ( numElements &gt; MaxElements )
+        {
+            reader.Abort();
+            return;
+        }
+        
+        for ( int i = 0; i &lt; numElements; ++i )
+        {
+            if ( reader.IsOverflow() )
+                break;
+
+            ReadBits( buffer, elements[i], 32 );
+        }
+    }
+};
+</pre>
+
+If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. _You want it to be automatic_.
 
 (Link to next article)
