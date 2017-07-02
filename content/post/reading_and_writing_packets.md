@@ -9,23 +9,24 @@ draft = true
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**.
 
-In this article we're going to build a client/server connection on top of UDP.
+Hi, I’m <a href="https://www.linkedin.com/in/glennfiedler">Glenn Fiedler</a> and welcome to **Building a Game Network Protocol**. 
 
-Hi, I’m <a href="https://www.linkedin.com/in/glennfiedler">Glenn Fiedler</a>. I’m a professional game network programmer with over 15 years experience working in the game industry. These days I run <a href="http://www.thenetworkprotocolcompany.com">The Network Protocol Company</a> where I help people network their games, and in my spare time write open source code and articles like the one you are reading right now. Before I started my own company, I worked as a software engineer at <strong>Irrational Games</strong>, <strong>Sony Santa Monica</strong>, <strong>Respawn Entertainment</strong> and many others.
+In this article series I’m going to build up a professional-grade client/server network protocol for action games like first person shooters.
 
-Welcome to <strong>Building a Game Network Protocol</strong>. In this article series I’m building up a professional-grade client/server network protocol for action games like first person shooters. The best practice is to network these games with a custom network protocol built on top of UDP. I’m going to show you why this is, what this protocol looks like, and how you can build one yourself!
-<h2>Reading and Writing Packets</h2>
-If you come from a web development background you’ve probably used XML, JSON or YAML to send data over the network in text format. This works reasonably well in the web development world, but in game networking, text protocols are rarely used. In this article I’m going to show you <span style="text-decoration: underline;">why</span>.
+## Background
 
-Consider a web server. It listens for requests, does work asynchronously and sends responses back to clients. It’s stateless and generally not real-time (although fast response time is great). In contrast, a game server is runs a real-time simulation of a game world and is completely stateful. These are totally different situations!
+If you come from a web development background you’ve probably used XML, JSON or YAML to send data over the network in text format. This works reasonably well in the web development, but text is rarely used for game network protocols. Why is this?
 
-The network traffic patterns are different too. Instead of infrequent requests from tens of thousands of clients, a game server has fewer clients, but must process a continuous stream of input packets sent from each client 60 times per-second. It takes this input and steps the simulation forward, then at some rate (20, 30 or even 60 times per-second) broadcasts the state of the world to each client.
+Consider a web server. It listens for requests, does some work asynchronously and sends responses back to clients. It’s stateless and generally not real-time, although a fast response time is great.
 
-And this state is <span style="text-decoration: underline;">huge</span>. Thousands of objects with hundreds of properties each. Game network programmers spend a lot of time optimizing how this state is sent over the network with delta encoding, crazy bit-packing tricks and hand-coded binary formats, because it is the bulk of their network traffic.
+In contrast, a game server is a real-time simulation of a game world. It's job is to advance the state of the game world forward with inputs from each client, before broadcasting out the latest state to all connected clients. These are totally different situations!
 
-But before we get to all this, what would happen if we encoded this world state as XML?
+The network traffic patterns are different too. Instead of infrequent request/response from tens of thousands of clients, a game server has far fewer clients, but processes a continuous stream of input packets sent from each client 60 times per-second, and broadcasts out the state of the world to all clients 10, 20 or even 60 times per-second.
+
+And the state sent is huge. Thousands of objects with hundreds of properties each. Game network programmers spend a lot of time optimizing exactly how this state is sent over the network with crazy bit-packing tricks, hand-coded binary formats and delta encoding.
+
+What would happen if we just encoded this world state as XML?
 
 <pre>&lt;world_update world_time="0.0"&gt;
   &lt;object id="1" class="player"&gt;
@@ -46,12 +47,15 @@ But before we get to all this, what would happen if we encoded this world state 
    &lt;property round_in_chamber="true"&gt;&lt;/property&gt;
  &lt;/object&gt;
  ... 1000s more objects ...
-&lt;/world_update&gt;</pre>
-As you can see, we spend more of the XML file <em><span style="text-decoration: underline;">describing</span></em> the data than on actual data!
+&lt;/world_update&gt;
+</pre>
+
+Not so great...
 
 JSON is a bit more compact:
 
-<pre>{
+<pre>
+{
   "world_time": 0.0,
   "objects": {
     1: {
@@ -74,18 +78,16 @@ JSON is a bit more compact:
       "round_in_chamber": 1 
     }
   }
-}</pre>
+}
+</pre>
 
-But it's still not great...
+But it still suffers from the same problem. The description of the data is larger than the data itself. What if instead of fully describing the world state in each packet, we split it into two parts?
 
-What if, instead of fully describing the world state in each packet, we split it into two parts?
+ 1. A schema that describes the set of object classes and properties per-class, **sent only once** when a client connects to the server.
+  
+ 2. Data sent rapidly from server to client, **which is encoded relative to the schema**.
 
-<ol>
-    <li>A schema that describes the set of object classes and properties per-class, <span style="text-decoration: underline;">sent only once</span> when a client connects to the server.</li>
-    <li>Data that is sent rapidly (20, 30 or 60 times per-second) from server to client, <span style="text-decoration: underline;">which is encoded relative to the schema</span>.</li>
-</ol>
-
-A schema could look something like this:
+The schema could look something like this:
 
 <pre>{
   "classes": {
@@ -147,42 +149,51 @@ A schema could look something like this:
   }
 }</pre>
 
-Now the client knows the set of classes in the game world and the number, name, type and range of properties for each class. For example, if an object is an instance of class 2 then we know it’s a weapon, and property 0 on that object is the weapon type: revolver (0) or semi-automatic (1).
+The schema is quite big, but that's beside the point. It's sent only once, and now the client knows the set of classes in the game world and the number, name, type and range of properties for each class. 
 
 With this knowledge we can make the rapidly sent portion of the world state much more compact:
 
-<pre>{
+<pre>
+{
   "world_time": 0.0,
   "objects": {
     1: [0,"(0,0,0)","(1,0,0,0)","(10,0,0)",100,110],
     100: [1,"(100,100,0)",10],
     110: [2,1,8,1]
   }
-}</pre>
+}
+</pre>
 
 And we can compress even further by switching to a custom text format:
 
-<pre>0.0
+<pre>
+0.0
 1:0,0,0,0,1,0,0,0,10,0,0,100,110
 100:1,100,100,0,10
-110:2,1,8,1</pre>
-As you can see, with game network programming it’s more about what you don’t send than what you do. The trick here is when the client and server both know something about the structure of the data, large portions can be omitted that would otherwise need to be sent. This is one case where being stateful is a <span style="text-decoration: underline;">good thing</span>.
+110:2,1,8,1
+</pre>
+
+As you can see, with game network programming it’s more about what you __don’t send__ than what you do.
 
 ## The Inefficiencies of Text
 
 We’ve made good progress on our text format so far, moving from a highly attributed stream that fully describes the data (more description than actual data) to an unattributed text format that's an order of magnitude more efficient.
 
-But there are inherent inefficiencies when using text format for packet data:
+But there are still inefficiencies when using text formats for packet data:
 
-<ol>
-    <li>We are most often sending data in the range <strong>A-Z</strong>, <strong>a-z</strong> and <strong>0-1</strong>, plus a few other symbols. This wastes the remainder of the <strong>0-255</strong> range for each character sent. From an information theory standpoint, this is an inefficient encoding.</li>
-    <li>The text representation of integer values are in the general case much less efficient than the binary format. For example, in text format the worst case unsigned 32 bit integer “<strong>4294967295</strong>” takes 10 bytes, but in binary format it takes just four.</li>
-    <li>In text, even the smallest numbers in <strong>0-9</strong> range require at least one byte. In binary, smaller values like “<strong>0,11,31,100</strong>” can be sent with fewer than 8 bits if we know their range ahead of time.</li>
-    <li>If an integer value is negative, you have to spend a whole byte on <strong>‘-’</strong> to indicate that.</li>
-    <li>Floating point numbers waste one byte specifying the decimal point <strong>‘.’</strong></li>
-    <li>The text representation of numerical values are variable length: <strong>“5”</strong>, <strong>“12345”</strong>, <strong>“3.141593”. </strong>Because of this we need to spend one byte on a separator after each value so we know when it ends. No separators are required in binary because the number of bits required can be determined as a function of the range of its possible values, which is known by both sides.</li>
-    <li>Newlines <strong>‘\n’</strong> or some other separator are required to distinguish between the set of variables belonging to one object and the next. When you have thousands of objects, this adds up.</li>
-</ol>
+ * We are most often sending data in the range __A-Z__, __a-z__ and __0-1__, plus a few other symbols. This wastes the remainder of the __0-255__ range for each character sent. From an information theory standpoint, this is an inefficient encoding.
+
+ * The text representation of integer values are in the general case much less efficient than the binary format. For example, in text format the worst case unsigned 32 bit integer __4294967295__ takes 10 bytes, but in binary format it takes just four.
+
+ * In text, even the smallest numbers in __0-9__ range require at least one byte, but in binary, smaller values like __0, 11, 31, 100__ can be sent with fewer than 8 bits if we know their range ahead of time.
+
+ * If an integer value is negative, you have to spend a whole byte on __'-'__ to indicate that.
+
+ * Floating point numbers waste one byte specifying the decimal point __'.'__
+
+ * The text representation of numerical values are variable length: <strong>“5”</strong>, <strong>“12345”</strong>, <strong>“3.141593”. </strong>Because of this we need to spend one byte on a separator after each value so we know when it ends. No separators are required in binary because the number of bits required can be determined as a function of the range of its possible values, which are known by both sides.
+
+ * Newlines __'\n'__ or some other separator are required to distinguish between the set of variables belonging to one object and the next. When you have thousands of objects, this really adds up.
 
 In short, if we wish to optimize any further, it's necessary to switch to a binary format.
 
@@ -190,19 +201,22 @@ In short, if we wish to optimize any further, it's necessary to switch to a bina
 
 In the web world there are some really great libraries that read and write binary formats like <a href="http://bjson.org">BJSON</a>, <a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a>, <a href="https://google.github.io/flatbuffers/">Flatbuffers</a>, <a href="https://thrift.apache.org">Thrift</a>, <a href="https://capnproto.org">Cap’n Proto</a> and <a href="http://msgpack.org/index.html">MsgPack</a>. In some cases, these libraries can be a great fit for building your game network protocol.
 
-But in others, especially in first person shooters where efficiency is paramount, a hand-tuned binary protocol designed specifically for the task at hand is a much better option.
+But in the fast-paced world of first person shooters where efficiency is paramount, a hand-tuned binary protocol is the standard solution.
 
 There are a few reasons for this. Web binary formats are designed for a situation where versioning of data is <em><span style="text-decoration: underline;">extremely</span> </em>important (if you upgrade your backend, older clients should be able to keep talking to it with the old format). Language agnostic data formats are also key; a backend written in golang should be able to talk with a web client running inside a browser in JavaScript and microservices written in different languages should be able to communicate without having to upgrade all components at the same time.
 
 Game servers for AAA FPS games are completely different beasts. The client and server are almost always written in the same language (C++) because large portions of the game code must run identically on the server and the client for client-side prediction. Versioning is much simpler as well, because if a client with an incompatible game version tries to connect to a game server, that connection is simply rejected. This may seem like a problem, but in practice, game clients are typically required to update to new client versions before they can play online anyway and in development your matchmaker can ensure that clients are sent to game server instances with compatible game versions.
 
 So if you don’t need versioning and you don’t need cross-language support what are the benefits for these libraries? Convenience. Ease of use. Not needing to worry about creating, testing and debugging your own binary format. But this convenience is offset by the fact that these libraries are less efficient than a binary protocol we can roll ourselves. We know more about the data we are sending than any library writer ever could and we can take advantage of this to send less bits by developing our own custom binary format.
-<h2>Getting Started with a Binary Format</h2>
+
+## Getting Started with a Binary Format
+
 One option for creating your own binary protocol is to use the in-memory format of your data structures in C/C++ as the over-the-wire format. People often start here, so although I don’t recommend this approach, lets explore it for a while before we poke holes in it.
 
 First define the set of packets, typically as a union of structs:
 
-<pre>struct Packet
+<pre>
+struct Packet
 {
     enum PacketTypeEnum { PACKET_A, PACKET_B, PACKET_C };
 
@@ -228,7 +242,8 @@ First define the set of packets, typically as a union of structs:
             int z;
         } c;
     }; 
-};</pre>
+};
+</pre>
 
 When writing the packet, set the first byte in the packet to the packet type number (0,1 or 2). Then depending on the packet type, memcpy the appropriate union struct into the packet. On read do the reverse: read in the first byte, then according to the packet type, copy the packet data to the corresponding struct.
 
