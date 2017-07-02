@@ -4,7 +4,7 @@ tags = ["networking"]
 date = "2016-09-01"
 title = "Reading and Writing Packets"
 description = "Best practices when reading and writing packets"
-draft = true
+draft = false
 +++
 
 ## Introduction
