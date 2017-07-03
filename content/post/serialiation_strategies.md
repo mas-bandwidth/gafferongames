@@ -3,13 +3,29 @@ categories = ["Building a Game Network Protocol"]
 tags = ["networking"]
 date = "2016-09-04"
 title = "Serialization Strategies"
-description = "Unifying packet read and write functions"
+description = "Smart tricks to unify packet read and write"
 draft = true
 +++
 
 ## Introduction
 
 Hi, I'm Glenn Fiedler and welcome to __Building a Game Network Protocol__.
+
+In the [previous article](post/reading_and_writing_packets/), we created a bitpacker but still required manual checks to make sure values read in from the network are in the expected range. The stakes here are particularly high. A single missing check creates a vulnerability that an attacker can use to crash your server.
+
+The goal of this article is to create a system where checking is automatic. If a packet comes in that's malformed and we read past the end of the packet, the packet read should abort automatically. If a value comes in over the network that's outside of the expected min/max range, the packet should be dropped.
+
+And all of this in the fastest way we can create it, such that we no longer have to code separate read and write functions for packets, but can instead write one function that performs _both_ read and write.
+
+## Serializing Bits
+
+...
+
+## Serializing Integer Values
+
+So what we're going to do in this article is use some C++ specific tricks to solve both these problems, in such a way that range and bounds checking is automatically performed on packet read, but on packet write 
+
+
 
 -- shit intro: rewrite
 
