@@ -11,39 +11,17 @@ draft = true
 
 Hi, I'm Glenn Fiedler and welcome to __Building a Game Network Protocol__.
 
-In the [previous article](post/reading_and_writing_packets/), we created a bitpacker but still required manual checks to make sure values read in from the network are in the expected range. The stakes here are particularly high. A single missing check creates a vulnerability that an attacker can use to crash your server.
+In the [previous article](/post/reading_and_writing_packets/), we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high. A single missed check creates a vulnerability that an attacker can use to crash your server.
 
-The goal of this article is to create a system where checking is automatic. If a packet comes in that's malformed and we read past the end of the packet, the packet read should abort automatically. If a value comes in over the network that's outside of the expected min/max range, the packet should be dropped.
+Because this so important, the goal of this article is to create a system where this checking is automatic. If we read past the end of a packet, the packet read should abort automatically. If a value comes in over the network that's outside of the expected range, that packet should be dropped automatically.
 
-And all of this in the fastest way we can create it, such that we no longer have to code separate read and write functions for packets, but can instead write one function that performs _both_ read and write.
+We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions for packets anymore, but can write one function that performs _both_ read and write at the same time.
+
+This is called a _serialize function_.
 
 ## Serializing Bits
 
-...
-
-## Serializing Integer Values
-
-So what we're going to do in this article is use some C++ specific tricks to solve both these problems, in such a way that range and bounds checking is automatically performed on packet read, but on packet write 
-
-
-
--- shit intro: rewrite
-
-In the [previous article](http://gafferongames.com/building-a-game-network-protocol/reading-and-writing-packets) we discussed different ways to read and write packets in multiplayer games. We quickly shot down sending game state via text formats like XML and JSON because they're really inefficient and decided to write own binary protocol instead. We implemented a bitpacker so we don't have to round bools up to 8 bits, solved endianness issues, wrote words at a time instead of bytes and pretty much made the bitpacker as simple and as fast as possible without platform specific tricks.
-
-Where we left off we still had the following problems to solve:
-
- * We need a way to check if integer values are outside the expected range and abort packet read because people will send malicious packets trying to make us trash memory. The packet read abort must be automatic and not use exceptions because they're really slow.
- 
- * Separate read and write functions are a maintainance nightmare if those functions are coded manually. We'd like to write the serialization code for a packet <span style="text-decoration: underline;">once</span> but not pay any runtime cost (in terms of additional branching, virtuals and so on) when doing so.
-
-How can we do this? Read on and I'll show you how exactly I do it in C++. It's taken a while for me to develop and refine this technique so I hope you'll find it useful and at least a good alternative to consider vs. the way you currently do it or how you've seen it done in other game engines.
-
-## Unified Packet Serialize Function
-
--- not enough context
-
-Lets start with the goal. Here's where we want to end up:
+Let's start with the goal. Here's where we want to end up:
 
 <pre>
 struct PacketA
@@ -58,7 +36,11 @@ struct PacketA
         return true;
     }
 };
+</pre>
 
+(explanation of what is going on above, read and write in same function).
+
+<pre>
 struct PacketB
 {
     int numElements;
@@ -68,26 +50,26 @@ struct PacketB
     {
         serialize_int( stream, numElements, 0, MaxElements );
         for ( int i = 0; i &lt; numElements; ++i )
+        {
             serialize_bits( buffer, elements[i], 32 );
-        return true;
-    }
-};
-
-struct PacketC
-{
-    bool x;
-    short y;
-    int z;
-
-    template &lt;typename Stream&gt; bool Serialize( Stream &amp; stream )
-    {
-        serialize_int( stream, x, 8 );
-        serialize_int( stream, y, 16 );
-        serialize_int( stream, z, 32 );
+        }
         return true;
     }
 };
 </pre>
+
+To get here...
+
+
+----------
+
+
+-- shit intro: rewrite
+
+## Unified Packet Serialize Function
+
+-- not enough context
+
 
 Notice there is a single serialize function per-packet struct instead of separate read and write functions. This is great! It halves the amount of serialization code and now you have put in some serious effort in order to desync read and write.
 
