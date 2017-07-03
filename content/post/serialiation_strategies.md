@@ -3,7 +3,7 @@ categories = ["Building a Game Network Protocol"]
 tags = ["networking"]
 date = "2016-09-04"
 title = "Serialization Strategies"
-description = "Smart tricks to unify packet read and write"
+description = "Smart tricks that unify packet read and write"
 draft = true
 +++
 
@@ -38,7 +38,7 @@ struct PacketA
 };
 </pre>
 
-(explanation of what is going on above, read and write in same function).
+Here you can see a simple serialize function. We serialize three integer variables x,y,z with 32 bits each.
 
 <pre>
 struct PacketB
@@ -58,34 +58,13 @@ struct PacketB
 };
 </pre>
 
-To get here...
-
-
-----------
-
-
--- shit intro: rewrite
-
-## Unified Packet Serialize Function
-
--- not enough context
-
-
-Notice there is a single serialize function per-packet struct instead of separate read and write functions. This is great! It halves the amount of serialization code and now you have put in some serious effort in order to desync read and write.
-
-The trick to making this work _efficiently_ is having the stream class templated in the serialize function. There are two stream types in my system: ReadStream and WriteStream. Each class has the same set of methods, but otherwise are not related in any way. One class reads values in from a bit stream to variables, and the other writes variables values out to a bit stream. ReadStream and WriteStream are just wrappers on top of BitReader and BitWriter classes from the previous article.
-
-There are of course alternatives to this approach. If you dislike templates you could have a pure virtual base stream interface and implement that interface with read and write stream classes. But now you're taking a virtual function for each serialize call. Seems like an excessive amount of overhead to me.
-
-Another option is to have an uber-stream class that can be configured to act in read or write mode at runtime. This can be faster than the virtual function method, but you still have to branch per-serialize call to decide if you should read or write so it's not going to be as fast as hand-coded read and write.
-
-I prefer the templated method because it lets the compiler do the work of generating optimized read/write functions for you. You can even code serialize functions like this and let the compiler optimize out a bunch of stuff when specializing read and write:
+And now something more complicated. We serialize a variable length array, making sure that the array length is in the range [0,MaxElements] on read.
 
 <pre>
 struct RigidBody
 {
     vec3f position;
-    quat3f orientation;
+    quat4f orientation;
     vec3f linear_velocity;
     vec3f angular_velocity;
 
@@ -93,11 +72,8 @@ struct RigidBody
     {
         serialize_vector( stream, position );
         serialize_quaternion( stream, orientation );
-
-        bool at_rest = Stream::IsWriting ? velocity.length() == 0 : 1;
-
+        bool at_rest = Stream::IsWriting ? ( velocity.length() == 0 ) : 1;
         serialize_bool( stream, at_rest );
-
         if ( !at_rest )
         {
             serialize_vector( stream, linear_velocity );
@@ -108,17 +84,29 @@ struct RigidBody
             linear_velocity = vec3f(0,0,0);
             angular_velocity = vec3f(0,0,0);
         }
-
         return true;
     }
 };
 </pre>
 
-While this may _look_ inefficient, it's actually not! The template specialization of this function optimizes out all of the branches according to the stream type. Pretty neat huh?
+And here we serialize a rigid body with an optimization while it's at rest, writing only one bit in place of the linear and angular velocity vectors.
 
--- todo: ^--- ughhhh
+Notice how we're able to branch on Stream::IsWriting and Stream::IsReading to write code for each case. These branches are removed by the compiler when specialized read and write serialize functions are generated.
 
--- todo: we've kindof skipped the implementation of the underlying serialize bits function
+As you can see, serialize functions are flexible and expressive. They're also _safe_, with each serialize_* call performing checks and aborting read if anything is wrong (eg. a value out of range, going past the end of the buffer). Most importantly, this checking is automatic, _so you can't forget to do it!_
+
+## Implementation
+
+The trick to making this all work ...
+
+----------
+
+
+-- shit intro: rewrite
+
+## Unified Packet Serialize Function
+
+...
 
 ## Bounds Checking and Abort Read
 
