@@ -10,9 +10,11 @@ DONE
 
     Brought across building a game network protocol articles (first pass)
 
+    Pass over "Reading and Writing Packets"
+
 TODO
 
-    Quickly pass over each article in "building a game network protocol".
+    Pass over "Serialization Strategies"
 
     ------------------
 

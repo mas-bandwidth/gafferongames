@@ -15,7 +15,7 @@ In the [previous article](/post/reading_and_writing_packets/), we created a bitp
 
 Because this so important, the goal of this article is to create a system where this checking is automatic. If we read past the end of a packet, the packet read should abort automatically. If a value comes in over the network that's outside of the expected range, that packet should be dropped automatically.
 
-We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions for packets anymore, but can write one function that performs _both_ read and write at the same time.
+We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions anymore, but can write one function that performs _both_ read and write.
 
 This is called a _serialize function_.
 
@@ -97,16 +97,11 @@ As you can see, serialize functions are flexible and expressive. They're also _s
 
 ## Implementation
 
-The trick to making this all work ...
+The trick to making this work is to create two stream class implementations with the same interface: ReadStream and WriteStream, which wraps the bitpacker.
+
+Then when we're reading packets we create a read stream on top of the buffer to read, 
 
 ----------
-
-
--- shit intro: rewrite
-
-## Unified Packet Serialize Function
-
-...
 
 ## Bounds Checking and Abort Read
 
