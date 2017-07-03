@@ -11,9 +11,9 @@ draft = true
 
 Hi, I'm Glenn Fiedler and welcome to __Building a Game Network Protocol__.
 
-In the [previous article](/post/reading_and_writing_packets/), we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high. A single missed check creates a vulnerability that an attacker can use to crash your server.
+In the [previous article](/post/reading_and_writing_packets/), we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high. A single missed check creates a vulnerability an attacker can use to crash your server.
 
-Because this so important, the goal of this article is to create a system where this checking is automatic. If we read past the end of a packet, the packet read should abort automatically. If a value comes in over the network that's outside of the expected range, that packet should be dropped automatically.
+The goal of this article is to create a system where this checking is automatic. If we read past the end of a packet, the packet read should abort automatically. If a value comes in over the network that's outside of the expected range, the packet should be dropped.
 
 We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions anymore, but can write one function that performs _both_ read and write.
 
@@ -38,7 +38,7 @@ struct PacketA
 };
 </pre>
 
-Here you can see a simple serialize function. We serialize three integer variables x,y,z with 32 bits each.
+Here you can see a simple serialize function. We serialize three integer variables x,y,z with 32 bits each. Easy.
 
 <pre>
 struct PacketB
@@ -58,7 +58,9 @@ struct PacketB
 };
 </pre>
 
-And now something more complicated. We serialize a variable length array, making sure that the array length is in the range [0,MaxElements] on read.
+And now something more complicated. We serialize a variable length array, making sure that the array length is in the range [0,MaxElements].
+
+Here we serialize a rigid body with an optimization while it's at rest, writing only one bit in place of linear and angular velocity:
 
 <pre>
 struct RigidBody
@@ -89,11 +91,9 @@ struct RigidBody
 };
 </pre>
 
-And here we serialize a rigid body with an optimization while it's at rest, writing only one bit in place of the linear and angular velocity vectors.
-
 Notice how we're able to branch on Stream::IsWriting and Stream::IsReading to write code for each case. These branches are removed by the compiler when specialized read and write serialize functions are generated.
 
-As you can see, serialize functions are flexible and expressive. They're also _safe_, with each serialize_* call performing checks and aborting read if anything is wrong (eg. a value out of range, going past the end of the buffer). Most importantly, this checking is automatic, _so you can't forget to do it!_
+As you can see, serialize functions are flexible and expressive. They're also _safe_, with each __serialize_*__ call performing checks and aborting read if anything is wrong (eg. a value out of range, going past the end of the buffer). Most importantly, this checking is automatic, _so you can't forget to do it!_
 
 ## Implementation
 
