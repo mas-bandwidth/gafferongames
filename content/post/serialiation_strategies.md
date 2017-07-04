@@ -15,7 +15,7 @@ In the [previous article](/post/reading_and_writing_packets/), we created a bitp
 
 In this article, we're going to transform the bitpacker into a system where this checking is automatic. If we read past the end of a packet, the packet read will abort automatically. If a value comes in over the network that's outside of the expected range, that packet will be dropped.
 
-We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions anymore, performing both read and write with a single function.
+We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions anymore, performing both read and write with the same function.
 
 This is called a _serialize function_.
 
@@ -38,7 +38,7 @@ struct PacketA
 };
 </pre>
 
-Here you can see a simple serialize function. We serialize three integer variables x,y,z with 32 bits each. Straightforward.
+Here you can see a simple serialize function. We serialize three integer variables x,y,z with 32 bits each.
 
 <pre>
 struct PacketB
@@ -60,7 +60,7 @@ struct PacketB
 
 And now something more complicated. We serialize a variable length array, making sure that the array length is in the range [0,MaxElements].
 
-Here we serialize a rigid body with an optimization while it's at rest, writing only one bit in place of linear and angular velocity:
+Here we serialize a rigid body with an optimization while it's at rest, serializing only one bit in place of linear and angular velocity:
 
 <pre>
 struct RigidBody
@@ -91,7 +91,7 @@ struct RigidBody
 };
 </pre>
 
-Notice how we're able to branch on Stream::IsWriting and Stream::IsReading to write code for each case. These branches are removed by the compiler when specialized read and write serialize functions are generated.
+Notice how we're able to branch on Stream::IsWriting and Stream::IsReading to write code for each case. These branches are removed by the compiler when the specialized read and write serialize functions are generated.
 
 As you can see, serialize functions are flexible and expressive. They're also _safe_, with each __serialize_*__ call performing checks and aborting read if anything is wrong (eg. a value out of range, going past the end of the buffer). Most importantly, this checking is automatic, _so you can't forget to do it!_
 
@@ -99,7 +99,7 @@ As you can see, serialize functions are flexible and expressive. They're also _s
 
 The trick to making this all work is to create two stream classes that share the same interface: __ReadStream__ and __WriteStream__.
 
-The write stream implementation _writes values out_ to the buffer:
+The write stream implementation _writes values_ using the bitpacker:
 
 <pre>
 class WriteStream
@@ -147,7 +147,9 @@ public:
         assert( min < max );
         const int bits = bits_required( min, max );
         if ( m_reader.WouldReadPastEnd( bits ) )
+        {
             return false;
+        }
         uint32_t unsigned_value = m_reader.ReadBits( bits );
         value = (int32_t) unsigned_value + min;
         return true;
@@ -187,7 +189,9 @@ For example, this macro serializes an integer in a given range:
         {                                                           \
             value = int32_value;                                    \
             if ( value &lt; min || value &gt; max )                       \
+            {                                                       \
                 return false;                                       \
+            }                                                       \
         }                                                           \
      } while (0)
 </pre>
@@ -196,7 +200,7 @@ A single value read outside the expected range, or a read that would go past the
 
 ## Serializing Floating Point Values
 
-Consider a floating point number. In memory it's just a 32 bit value like any other. The C++ language lets us work with this fundamental property, allowing us to directly access the bits of float value as if it were an integer value:
+Consider a floating point number. In memory it's just a 32 bit value like any other. The C++ language lets us work with this fundamental property, allowing us to directly access the bits of a float value as if it were an integer:
 
 <pre>
 union FloatInt
@@ -210,9 +214,9 @@ tmp.float_value = 10.0f;
 printf( "float value as an integer: %x\n", tmp.int_value );
 </pre>
 
-You can also do this with an aliased uint32_t* pointer, however I've had this break with GCC -O2, so I prefer the union trick instead. Friends of mine point out that the only _truly standard way_ to get the float as an integer is to cast a pointer to the float value to char* and reconstruct the integer from the bytes values accessed through the char pointer.
+You may prefer to do this with an aliased uint32_t* pointer, but this breaks with GCC -O2. Friends of mine point out that the only _truly standard way_ to get the float as an integer is to cast a pointer to the float value to char* and reconstruct the integer from the bytes values accessed through the char pointer.
 
-Meanwhile in the past 5 years I've had no actual problems in the field with the union trick. Here's how I use it to serialize an uncompressed float value:
+Meanwhile in the past 5 years I've had no problems in the field with the union trick. Here's how I use it to serialize an uncompressed float value:
 
 <pre>
 template &lt;typename Stream&gt; 
@@ -238,22 +242,24 @@ bool serialize_float_internal( Stream &amp; stream,
 }
 </pre>
 
-This is wrapped with a __serialize_float__ macro for error checking on read.
+This is of course wrapped with a __serialize_float__ macro for error checking:
 
 <pre>
 #define serialize_float( stream, value )                             \
   do                                                                 \
   {                                                                  \
-    if ( !serialize_float_internal( stream, value ) )                \ 
-        return false;                                                \
+      if ( !serialize_float_internal( stream, value ) )              \
+      {                                                              \
+          return false;                                              \
+      }
   } while (0)
 </pre>
 
-But sometimes you don't need to transmit a floating point value with full precision. You might know for a particular varue its range is [-10.0,+10.0] and an acceptable precision is 0.01. How can you compress this value so it uses less bits?
+We can now transmit full precision floating point values over the network. But sometimes you don't need full precision. For example, positions of other players in an FPS are often quantized to some acceptable resolution before being sent over the network to save bandwidth.
 
-This can be done by convert that floating point value to an integer value that starts at 0 and finishes at an integer value that represents the floating point number according to the desired precision. You send this integer representation over the network and convert it back to a float on the other side.
+Consider a floating point value is the range [0,10] with an acceptable precision of 0.01. Multiplying by 1 / 0.01 converts the floating point value to an integer in range [0,1000]. We can then send this integer value over the network, and convert it back to a float on the other side by multiplying by 0.01.
 
-Here's how it's done:
+Here's a generalized implementation of this idea:
 
 <pre>
 template &lt;typename Stream&gt; 
@@ -289,22 +295,24 @@ bool serialize_compressed_float_internal( Stream &amp; stream,
 }
 </pre>
 
-Similarly, we wrap this with a __serialize_compressed_float__ macro for error checking:
+Of course we need error checking, so we wrap this with a macro:
 
 <pre>
 #define serialize_compressed_float( stream, value, min, max )        \
   do                                                                 \
   {                                                                  \
-    if ( !serialize_float_internal( stream, value, min, max ) )      \ 
+    if ( !serialize_float_internal( stream, value, min, max ) )      \
+    {                                                                \
         return false;                                                \
+    }                                                                \
   } while (0)
 </pre>
 
-The basic interface is complete. We can now serialize compressed and uncompressed floating point values over the network.
+And the basic interface is complete. We can now serialize compressed and uncompressed floating point values over the network.
 
 # Serializing Vectors and Quaternions
 
-Once you can serialize float values it's trivial extend to serialize vectors over the network. I use a modified version of the <a href="https://github.com/scoopr/vectorial">vectorial library</a> in my projects and I implement serialization for its vector types like this:
+Once you can serialize float values it's trivial to serialize vectors over the network. I use a modified version of the <a href="https://github.com/scoopr/vectorial">vectorial library</a> in my projects and I implement serialization for its vector types like this:
 
 <pre>
 template &lt;typename Stream&gt; 
@@ -313,12 +321,16 @@ bool serialize_vector_internal( Stream &amp; stream,
 {
     float values[3];
     if ( Stream::IsWriting )
+    {
         vector.store( values );
+    }
     serialize_float( stream, values[0] );
     serialize_float( stream, values[1] );
     serialize_float( stream, values[2] );
     if ( Stream::IsReading )
+    {
         vector.load( values );
+    }
     return true;
 }
 
@@ -326,7 +338,9 @@ bool serialize_vector_internal( Stream &amp; stream,
  do                                                             \
  {                                                              \
      if ( !serialize_vector_internal( stream, value ) )         \
+     {                                                          \
          return false;                                          \
+     }                                                          \
  }                                                              \
  while(0)
 </pre>
@@ -357,17 +371,17 @@ bool serialize_compressed_vector_internal( Stream &amp; stream,
 }
 </pre>
 
-Notice how we build more complex serialization primitives built on top of the primitives we're already created. You can easily extend the serialization to support any type you need.
+Notice how we are able to build more complex serialization using the serialization primitives we're already created. You can easily extend the serialization to support any type you need.
 
 ## Serializing Strings and Arrays
 
 What if you need to serialize a string over the network?
 
-Is it a good idea to send a string over the network with null termination? Not really. You're just asking for trouble! Instead, treat the string as an array of bytes with length prefixed. Therefore, in order to send a string over the network, we have to work out how to efficiently send an array of bytes.
+Is it a good idea to send a string over the network with null termination? Not really. You're just asking for trouble! Instead, serialize the string as an array of bytes with length prefixed. Therefore, in order to send a string over the network, we have to work out how to send an array of bytes.
 
-First observation: why waste effort bitpacking an array of bytes into your bit stream just so they are randomly shifted by shifted by [0,7] bits? Why not just align to byte so you can memcpy the array of bytes directly into the packet? In theory, this should be much faster than bitpacking one byte at a time.
+First observation. Why waste effort bitpacking an array of bytes into your bit stream just so they are randomly shifted by [0,7] bits? Why not just align to byte so you can memcpy the array of bytes directly into the packet? In theory, this should be much faster than bitpacking one byte at a time.
 
-To align a bitstream to byte just work out your current bit index in the stream and how many bits are left to write until the current bit number in the bit stream divides evenly into 8, then insert that number of padding bits. 
+To align a bitstream just work out your current bit index in the stream and how many bits of padding are needed until the current bit index divides evenly into 8, then insert that number of padding bits. 
 
 For bonus points, pad up with zero bits to add entropy so that on read you can verify that yes, you are reading a byte align and yes, it is indeed padded up with zero bits to the next whole byte bit index. If a non-zero bit is discovered in the pad bits, _abort serialize read and discard the packet_.
 
@@ -406,14 +420,14 @@ bool BitReader::ReadAlign()
   } while (0)
 </pre>
 
-Now we use this align operation to write an array of bytes into the bit stream efficiently. The only wrinkle is because the bit reader and bit writer work at the word level, so it's neccessary to have special code to handle the head and tail portion of the byte array. Because of this, the code is quite complex and is omitted for brevity. You can find it in the [sample code](https://www.patreon.com/gafferongames) for this article.
+Now we can align to byte prior to writing an array of bytes, letting us use memcpy for the bulk of the array data. The only wrinkle is the bitpacker works at the word level, so it's necessary to have special handling for the head and tail portion of the byte array. Because of this, the code is quite complex and is omitted for brevity. You can find it in the [sample code](https://www.patreon.com/gafferongames) for this article.
 
-The end result is a __serialize_bytes__ primitive that we can use to serialize a string as its length followed by the string data like so:
+The end result of all this is a __serialize_bytes__ primitive that we can use to serialize a string as a length followed by the string data, like so:
 
 <pre>
 template &lt;typename Stream&gt; 
 bool serialize_string_internal( Stream &amp; stream, 
-                                char* string, 
+                                char * string, 
                                 int buffer_size )
 {
     uint32_t length;
@@ -425,27 +439,32 @@ bool serialize_string_internal( Stream &amp; stream,
     serialize_int( stream, length, 0, buffer_size - 1 );
     serialize_bytes( stream, (uint8_t*)string, length );
     if ( Stream::IsReading )
+    {
         string[length] = '\0';
+    }
 }
 
 #define serialize_string( stream, string, buffer_size )              \
 do                                                                   \
 {                                                                    \
     if ( !serialize_string_internal( stream,                         \
-                                     string, buffer_size ) )         \
+                                     string,                         \
+                                     buffer_size ) )                 \
+    {                                                                \
         return false;                                                \
+    }                                                                \
 } while (0)
 </pre>
 
-This is an idea format because it lets us quickly reject malicious string data, vs. having to read to the end of the packet data looking for '\0' before giving up. This is important because sometimes attacks are simply designed to degrade your server by making it do work, vs. crashing it immediately.
+This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for __'\0'__ before giving up. This is important because sometimes attacks are designed to degrade your server's performance by making it do extra work.
 
 ## Serializing Array Subsets
 
-When implemeting a game network protocol, sooner or later you need to serialize an array of objects over the network. Perhaps the server needs to send all objects down to the client, or an array of events or messages to be sent. 
+When implemeting a game network protocol, sooner or later you need to serialize an array of objects over the network. Perhaps the server needs to send all objects down to the client, or there is an array of messages to be sent.
 
-This is straightforward if you are sending _all_ objects in the array down to the client, but what if you want to send only a subset of the array?
+This is straightforward if you are sending _all_ objects in the array down to the client, just iterate across the array and serialize each object. But what if you want to send only a subset of the array?
 
-The first and simplest approach is to iterate across all objects in the array and serialize a bool per-object if that object is to be sent. If the value of that bool is 1 then the object data follows, otherwise it's ommitted and the bool for the next object is up next in the stream.
+The simplest approach is to iterate across all objects in the array and serialize a bool per-object if that object is to be sent. If the value of that bool is 1 then the object data follows in the bit stream, otherwise it's ommitted:
 
 <pre>
 template &lt;typename Stream&gt; 
@@ -468,12 +487,12 @@ bool serialize_scene_a( Stream &amp; stream, Scene &amp; scene )
 }
 </pre>
 
-But what if the array of objects is very large, like 4000 objects? 4000 / 8 = 500 bytes overhead, even if you only send one or two objects! That's... not good. Can we switch it around so we take overhead propertional to the number of objects sent instead of the total number of objects in the array?
+But what if the array of objects is very large, like 4000 objects? 4000 / 8 = 500 bytes overhead, even if you only send one or two objects! That's not good. Can we switch it around so we take overhead propertional to the number of objects sent instead of the total number of objects in the array?
 
-We can but now, we've done something interesting. We're walking one set of objects in the serialize write (all objects in the array) and are walking over a different set of objects in the serialize read (subset of objects sent). At this point the unified serialize function concept breaks down. It's best to separate the read and write back into separate functions in cases like this:
+We can but now, we've done something interesting. We're walking one set of objects in the serialize write (all objects in the array) and are walking over a different set of objects in the serialize read (subset of objects sent). At this point the unified serialize function concept breaks down. It's best to separate the read and write back into separate functions like this:
 
 <pre>
-bool write_scene_b( protocol2::WriteStream &amp; stream, Scene &amp; scene )
+bool write_scene_b( WriteStream &amp; stream, Scene &amp; scene )
 {
     int num_objects_sent = 0;
     for ( int i = 0; i &lt; MaxObjects; ++i )
@@ -494,7 +513,7 @@ bool write_scene_b( protocol2::WriteStream &amp; stream, Scene &amp; scene )
     return true;
 }
 
-bool read_scene_b( protocol2::ReadStream &amp; stream, Scene &amp; scene )
+bool read_scene_b( ReadStream &amp; stream, Scene &amp; scene )
 {
     memset( &amp;scene, 0, sizeof( scene ) );
     int num_objects_sent; 
@@ -509,14 +528,14 @@ bool read_scene_b( protocol2::ReadStream &amp; stream, Scene &amp; scene )
 }
 </pre>
 
-Alternatively you could generate a separate data structure with the set of changed objects, and implement a serialize for that array of changed objects. But having to generate a C++ data structure for each data structure you want serialized is a huge pain in the ass. 
+Alternatively you could generate a separate data structure with the set of changed objects, and implement a serialize function for that data structure. This can work, but it's a bit of a pain in the ass to have to generate an intermediate structure each time you want to do this.
 
-Eventually you want to walk several data structures at the same time and effectively write out a dynamic data structure to the bit stream. This is a really common thing to do when writing more advanced serialization methods like delta encoding. As soon as you do this, unified serialize no longer makes sense.
+Eventually you'll end up wanting to walk several data structures at the same time and write out a dynamic data structure to the bit stream. This is a common thing to do when implementing delta encoding. As soon as you do this, unified serialize functions no longer make any sense.
 
-One more point. The code above walks over the set of objects _twice_ on serialize write. Once to determine the number of changed objects and a second time to actually serialize the set of changed objects. Can we do it in one pass instead? Absolutely! You can use another trick, rather than serializing the # of objects in the array up front, use a _sentinel value_ to indicate the end of the array:
+One more point. The code above walks over the set of objects _twice_ on serialize write. Once to determine the number of changed objects and a second time to actually serialize the set of changed objects. Can we do it in one pass instead? Absolutely! You can use another trick, rather than serializing the # of objects in the array up front, use a _sentinel value_ to indicate the end of the array:
 
 <pre>
-bool write_scene_c( protocol2::WriteStream &amp; stream, Scene &amp; scene )
+bool write_scene_c( WriteStream &amp; stream, Scene &amp; scene )
 {
     for ( int i = 0; i &lt; MaxObjects; ++i )
     {
@@ -531,7 +550,7 @@ bool write_scene_c( protocol2::WriteStream &amp; stream, Scene &amp; scene )
     return true;
 }
 
-bool read_scene_c( protocol2::ReadStream &amp; stream, Scene &amp; scene )
+bool read_scene_c( ReadStream &amp; stream, Scene &amp; scene )
 {
     memset( &amp;scene, 0, sizeof( scene ) );
     while ( true )
@@ -547,9 +566,9 @@ bool read_scene_c( protocol2::ReadStream &amp; stream, Scene &amp; scene )
 }
 </pre>
 
-This works great if the set of objects sent is a small percentage of total objects. But what if a large number of objects are sent, lets say half of the 4000 objects in the scene. That's 2000 object indices with each index costing 12 bits... that's 24000 bits or 3000 bytes (almost 3k!) in your packet wasted indexing objects.
+This works great if the objects sent are a small percentage of total objects. But what if a large number of objects are sent, lets say half of the 4000 objects in the scene. That's 2000 object indices with each index costing 12 bits... that's 24000 bits or 3000 bytes (almost 3k!) in your packet wasted on indexing.
 
-You can reduce this by encoding each object index relative to the previous object index. Think about it, we're walking left to right along an array, so object indices start at 0 and go up to MaxObjects - 1. Statistically speaking, you're quite likely to have objects that are close to each other and if the next index is +1 or even +10 or +30 from the previous one, on average, you'll need quite a few less bits to represent that difference than you need to represent an absolute index.
+You can reduce this by encoding each object index relative to the previous object index. Think about it, we're walking left to right along an array, so object indices start at 0 and go up to MaxObjects - 1. Statistically speaking, you're quite likely to have objects that are close to each other and if the next index is +1 or even +10 or +30 from the previous one, on average, you'll need quite a few less bits to represent that difference than an absolute index.
 
 Here's one way to encode the object index as an integer relative to the previous object index, while spending less bits on statistically more likely values (eg. small differences between successive object indices, vs. large ones):
 
@@ -570,12 +589,16 @@ bool serialize_object_index_internal( Stream &amp; stream,
     // +1 (1 bit)
     bool plusOne;
     if ( Stream::IsWriting )
+    {
        plusOne = difference == 1;
+    }
     serialize_bool( stream, plusOne );
     if ( plusOne )
     {
         if ( Stream::IsReading )
+        {
             current = previous + 1;
+        }
         previous = current;
         return true;
     }
@@ -583,13 +606,17 @@ bool serialize_object_index_internal( Stream &amp; stream,
     // [+2,5] -&gt; [0,3] (2 bits)
     bool twoBits;
     if ( Stream::IsWriting )
+    {
         twoBits = difference &lt;= 5;
+    }
     serialize_bool( stream, twoBits );
     if ( twoBits )
     {
         serialize_int( stream, difference, 2, 5 );
         if ( Stream::IsReading )
+        {
             current = previous + difference;
+        }
         previous = current;
         return true;
     }
@@ -597,13 +624,17 @@ bool serialize_object_index_internal( Stream &amp; stream,
     // [6,13] -&gt; [0,7] (3 bits)
     bool threeBits;
     if ( Stream::IsWriting )
+    {
         threeBits = difference &lt;= 13;
+    }
     serialize_bool( stream, threeBits );
     if ( threeBits )
     {
         serialize_int( stream, difference, 6, 13 );
         if ( Stream::IsReading )
+        {
             current = previous + difference;
+        }
         previous = current;
         return true;
     }
@@ -611,13 +642,17 @@ bool serialize_object_index_internal( Stream &amp; stream,
     // [14,29] -&gt; [0,15] (4 bits)
     bool fourBits;
     if ( Stream::IsWriting )
+    {
         fourBits = difference &lt;= 29;
+    }
     serialize_bool( stream, fourBits );
     if ( fourBits )
     {
         serialize_int( stream, difference, 14, 29 );
         if ( Stream::IsReading )
+        {
             current = previous + difference;
+        }
         previous = current;
         return true;
     }
@@ -625,13 +660,17 @@ bool serialize_object_index_internal( Stream &amp; stream,
     // [30,61] -&gt; [0,31] (5 bits)
     bool fiveBits;
     if ( Stream::IsWriting )
+    {
         fiveBits = difference &lt;= 61;
+    }
     serialize_bool( stream, fiveBits );
     if ( fiveBits )
     {
         serialize_int( stream, difference, 30, 61 );
         if ( Stream::IsReading )
+        {
             current = previous + difference;
+        }
         previous = current;
         return true;
     }
@@ -639,13 +678,17 @@ bool serialize_object_index_internal( Stream &amp; stream,
     // [62,125] -&gt; [0,63] (6 bits)
     bool sixBits;
     if ( Stream::IsWriting )
+    {
         sixBits = difference &lt;= 125;
+    }
     serialize_bool( stream, sixBits );
     if ( sixBits )
     {
         serialize_int( stream, difference, 62, 125 );
         if ( Stream::IsReading )
+        {
             current = previous + difference;
+        }
         previous = current;
         return true;
     }
@@ -653,7 +696,9 @@ bool serialize_object_index_internal( Stream &amp; stream,
     // [126,MaxObjects+1] 
     serialize_int( stream, difference, 126, MaxObjects + 1 );
     if ( Stream::IsReading )
+    {
         current = previous + difference;
+    }
     previous = current;
     return true;
 }
@@ -668,7 +713,9 @@ bool serialize_scene_d( Stream &amp; stream, Scene &amp; scene )
         for ( int i = 0; i &lt; MaxObjects; ++i )
         {
             if ( !scene.objects[i].send )
+            {
                 continue;
+            }
             write_object_index( stream, previous_index, i );
             write_object( stream, scene.objects[i] );
         }
@@ -681,7 +728,9 @@ bool serialize_scene_d( Stream &amp; stream, Scene &amp; scene )
             int index; 
             read_object_index( stream, previous_index, index );
             if ( index == MaxObjects )
+            {
                 break;
+            }
             read_object( stream, scene.objects[index] );
         }
     }
@@ -689,7 +738,7 @@ bool serialize_scene_d( Stream &amp; stream, Scene &amp; scene )
 }
 </pre>
 
-Notice how larger indices far apart cost more per-index than the non-relative encoding (12 bits per index). This _seems_ bad but is it really? Even if you hit the 'worst case' (objects indices spaced apart by exactly +126 apart) how many of these can you actually fit into an array 4000 large? Just 32. No worries!
+Notice how larger indices far apart cost more per-index than the non-relative encoding (12 bits per index). This _seems_ bad but is it really? Even if you hit the 'worst case' (objects indices spaced apart by exactly +126 apart) how many of these can you actually fit into an array of size 4000? Just 32. No worries!
 
 ## Protocol IDs, CRC32 and Serialization Checks
 
