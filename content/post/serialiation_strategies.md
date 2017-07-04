@@ -196,11 +196,7 @@ A single value read outside the expected range, or a read that would go past the
 
 ## Serializing Floating Point Values
 
-The bit stream only serializes integer values. How can we serialize a float value?
-
-Seems trickly but it's not actually. A floating point number stored in memory is just a 32 bit value like any other. Your computer doesn't know if a 32 bit word in memory is an integer, a floating point value or part of a string. It's just a 32 bit value. Luckily, the C++ language (unlike a few others) lets us work with this fundamental property.
-
-You can access the integer value behind a floating point number with a union:
+Consider a floating point number. In memory it's just a 32 bit value like any other. The C++ language lets us work with this fundamental property, allowing us to directly access the bits of float value as if it were an integer value:
 
 <pre>
 union FloatInt
@@ -214,9 +210,9 @@ tmp.float_value = 10.0f;
 printf( "float value as an integer: %x\n", tmp.int_value );
 </pre>
 
-You can also do it via an aliased uint32_t* pointer, but I've experienced this break with GCC -O2, so I prefer the union trick instead. Friends of mine point out (likely correctly) that the only _truly standard way_ to get the float as an integer is to cast a pointer to the float value to uint8_t* and reconstruct the integer value from the four byte values accessed individually through the byte pointer. Seems a pretty dumb way to do it to me though. Ladies and gentlemen... __C++!__
+You can also do this with an aliased uint32_t* pointer, however I've had this break with GCC -O2, so I prefer the union trick instead. Friends of mine point out that the only _truly standard way_ to get the float as an integer is to cast a pointer to the float value to char* and reconstruct the integer from the bytes values accessed through the char pointer.
 
-Meanwhile in the past 5 years I've had no actual problems in the field with the union trick. Here's how I serialize an uncompressed float value:
+Meanwhile in the past 5 years I've had no actual problems in the field with the union trick. Here's how I use it to serialize an uncompressed float value:
 
 <pre>
 template &lt;typename Stream&gt; 
@@ -228,21 +224,21 @@ bool serialize_float_internal( Stream &amp; stream,
         float float_value;
         uint32_t int_value;
     };
-
     FloatInt tmp;
     if ( Stream::IsWriting )
+    {
         tmp.float_value = value;
-
+    }
     bool result = stream.SerializeBits( tmp.int_value, 32 );
-
     if ( Stream::IsReading )
+    {
         value = tmp.float_value;
-
+    }
     return result;
 }
 </pre>
 
-Wrap this with a __serialize_float__ macro for error checking on read:
+This is wrapped with a __serialize_float__ macro for error checking on read.
 
 <pre>
 #define serialize_float( stream, value )                             \
@@ -253,13 +249,11 @@ Wrap this with a __serialize_float__ macro for error checking on read:
   } while (0)
 </pre>
 
-# Serializing Compressed Floats
+But sometimes you don't need to transmit a floating point value with full precision. You might know for a particular varue its range is [-10.0,+10.0] and an acceptable precision is 0.01. How can you compress this value so it uses less bits?
 
-Sometimes you don't want to transmit a full precision float. How can you compress a float value? The first step is to _bound_ that value in some known range then _quantize_ it down to an integer representation.
+This can be done by convert that floating point value to an integer value that starts at 0 and finishes at an integer value that represents the floating point number according to the desired precision. You send this integer representation over the network and convert it back to a float on the other side.
 
-For example, if you know a floating point number in is range [-10,+10] and an acceptable resolution for that value is 0.01, then you can just multiply that floating point number by 100.0 to get it in the range [-1000,+1000] and serialize that as an integer over the network. On the other side, just divide by 100.0 to get back to the floating point value.
-
-Here is a generalized version of this concept:
+Here's how it's done:
 
 <pre>
 template &lt;typename Stream&gt; 
@@ -295,9 +289,22 @@ bool serialize_compressed_float_internal( Stream &amp; stream,
 }
 </pre>
 
+Similarly, we wrap this with a __serialize_compressed_float__ macro for error checking:
+
+<pre>
+#define serialize_compressed_float( stream, value, min, max )        \
+  do                                                                 \
+  {                                                                  \
+    if ( !serialize_float_internal( stream, value, min, max ) )      \ 
+        return false;                                                \
+  } while (0)
+</pre>
+
+The basic interface is complete. We can now serialize compressed and uncompressed floating point values over the network.
+
 # Serializing Vectors and Quaternions
 
-Once you can serialize float values it's trivial extend to serialize vectors and quaternions over the network. I use a modified version of  the awesome <a href="https://github.com/scoopr/vectorial">vectorial library</a> for vector math in my projects and I implement serialization for those types like this:
+Once you can serialize float values it's trivial extend to serialize vectors over the network. I use a modified version of the <a href="https://github.com/scoopr/vectorial">vectorial library</a> in my projects and I implement serialization for its vector types like this:
 
 <pre>
 template &lt;typename Stream&gt; 
@@ -315,22 +322,6 @@ bool serialize_vector_internal( Stream &amp; stream,
     return true;
 }
 
-template &lt;typename Stream&gt; 
-bool serialize_quaternion_internal( Stream &amp; stream, 
-                                    quat4f &amp; quaternion )
-{
-    float values[4];
-    if ( Stream::IsWriting )
-        quaternion.store( values );
-    serialize_float( stream, values[0] );
-    serialize_float( stream, values[1] );
-    serialize_float( stream, values[2] );
-    serialize_float( stream, values[3] );
-    if ( Stream::IsReading )
-        quaternion.load( values );
-    return true;
-}
-
 #define serialize_vector( stream, value )                       \
  do                                                             \
  {                                                              \
@@ -338,17 +329,9 @@ bool serialize_quaternion_internal( Stream &amp; stream,
          return false;                                          \
  }                                                              \
  while(0)
-
-#define serialize_quaternion( stream, value )                   \
- do                                                             \
- {                                                              \
-     if ( !serialize_quaternion_internal( stream, value ) )     \
-         return false;                                          \
- }                                                              \
- while(0)
 </pre>
 
-If you know your vector is bounded in some range, you can compress it like this:
+If your vector is bounded in some range, then you can compress it:
 
 <pre>
 template &lt;typename Stream&gt; 
@@ -360,25 +343,33 @@ bool serialize_compressed_vector_internal( Stream &amp; stream,
 {
     float values[3];
     if ( Stream::IsWriting )
+    {
         vector.store( values );
+    }
     serialize_compressed_float( stream, values[0], min, max, res );
     serialize_compressed_float( stream, values[1], min, max, res );
     serialize_compressed_float( stream, values[2], min, max, res );
     if ( Stream::IsReading )
+    {
         vector.load( values );
+    }
     return true;
 }
 </pre>
 
+Notice how we build more complex serialization primitives built on top of the primitives we're already created. You can easily extend the serialization to support any type you need.
+
 ## Serializing Strings and Arrays
 
-What if you want to serialize a string over the network?
+What if you need to serialize a string over the network?
 
-Is it a good idea to send a string over the network with null termination? I don't think so. You're just asking for trouble! Instead, treat the string as an array of bytes with length prefixed. So, in order to send a string over the network, we have to work out how to efficiently send an array of bytes.
+Is it a good idea to send a string over the network with null termination? Not really. You're just asking for trouble! Instead, treat the string as an array of bytes with length prefixed. Therefore, in order to send a string over the network, we have to work out how to efficiently send an array of bytes.
 
-First observation: why waste effort bitpacking an array of bytes into your bit stream just so they are randomly shifted by shifted by [0,7] bits? Why not just _align to byte_ before writing the array, so the array data sits in the packet nicely aligned, each byte of the array corresponding to an actual byte in the packet. You lose only [0,7] bits for each array of bytes serialized, depending on the alignment, but that's nothing to be too concerned about in my opinion.
+First observation: why waste effort bitpacking an array of bytes into your bit stream just so they are randomly shifted by shifted by [0,7] bits? Why not just align to byte so you can memcpy the array of bytes directly into the packet? In theory, this should be much faster than bitpacking one byte at a time.
 
-How to align the bit stream to byte? Just work out your current bit index in the stream and how many bits are left to write until the current bit number in the bit stream divides evenly into 8, then insert that number of padding bits. For bonus points, pad up with zero bits to add entropy so that on read you can verify that yes, you are reading a byte align and yes, it is indeed padded up with zero bits to the next whole byte bit index. If a non-zero bit is discovered in the pad bits, _abort serialize read and discard the packet_.
+To align a bitstream to byte just work out your current bit index in the stream and how many bits are left to write until the current bit number in the bit stream divides evenly into 8, then insert that number of padding bits. 
+
+For bonus points, pad up with zero bits to add entropy so that on read you can verify that yes, you are reading a byte align and yes, it is indeed padded up with zero bits to the next whole byte bit index. If a non-zero bit is discovered in the pad bits, _abort serialize read and discard the packet_.
 
 Here's my code to align a bit stream to byte:
 
@@ -415,112 +406,9 @@ bool BitReader::ReadAlign()
   } while (0)
 </pre>
 
-Now we can use this align operation to write an array of bytes into the bit stream efficiently: since we are aligned to bytes we can do most of the work using memcpy. The only wrinkle is because the bit reader and bit writer work at the word level, so it's neccessary to have special code to handle the head and tail portion of the byte array, to make sure any previous scratch bits are flushed to memory at the head, and the scratch is properly setup for the next bytes after the array in the tail section.
+Now we use this align operation to write an array of bytes into the bit stream efficiently. The only wrinkle is because the bit reader and bit writer work at the word level, so it's neccessary to have special code to handle the head and tail portion of the byte array. Because of this, the code is quite complex and is omitted for brevity. You can find it in the [sample code](https://www.patreon.com/gafferongames) for this article.
 
--- todo: code below I think is out of date and has bugs
-
-<pre> 
-void BitWriter::WriteBytes( const uint8_t* data, int bytes )
-{
-    assert( GetAlignBits() == 0 );
-    assert( m_bitsWritten + bytes * 8 &lt;= m_numBits );
-    assert( ( m_bitsWritten % 32 ) == 0 || 
-            ( m_bitsWritten % 32 ) == 8 ||              
-            ( m_bitsWritten % 32 ) == 16 || 
-            ( m_bitsWritten % 32 ) == 24 );
-
-    int headBytes = ( 4 - ( m_bitsWritten % 32 ) / 8 ) % 4;
-    if ( headBytes &gt; bytes )
-        headBytes = bytes;
-    for ( int i = 0; i &lt; headBytes; ++i )
-        WriteBits( data[i], 8 );
-    if ( headBytes == bytes )
-        return;
-
-    assert( GetAlignBits() == 0 );
-
-    int numWords = ( bytes - headBytes ) / 4;
-    if ( numWords &gt; 0 )
-    {
-        assert( ( m_bitsWritten % 32 ) == 0 );
-        memcpy( &amp;m_data[m_wordIndex], data+headBytes, numWords*4 );
-        m_bitsWritten += numWords * 32;
-        m_wordIndex += numWords;
-        m_scratch = 0;
-    }
-
-    assert( GetAlignBits() == 0 );
-
-    int tailStart = headBytes + numWords * 4;
-    int tailBytes = bytes - tailStart;
-    assert( tailBytes &gt;= 0 &amp;&amp; tailBytes &lt; 4 );
-    for ( int i = 0; i &lt; tailBytes; ++i )
-        WriteBits( data[tailStart+i], 8 );
-
-    assert( GetAlignBits() == 0 );
-
-    assert( headBytes + numWords * 4 + tailBytes == bytes );
-}
-
-void ReadBytes( uint8_t* data, int bytes )
-{
-    assert( GetAlignBits() == 0 );
-    assert( m_bitsRead + bytes * 8 &lt;= m_numBits );
-    assert( ( m_bitsRead % 32 ) == 0 || 
-            ( m_bitsRead % 32 ) == 8 || 
-            ( m_bitsRead % 32 ) == 16 || 
-            ( m_bitsRead % 32 ) == 24 );
-
-    int headBytes = ( 4 - ( m_bitsRead % 32 ) / 8 ) % 4;
-    if ( headBytes &gt; bytes )
-    headBytes = bytes;
-    for ( int i = 0; i &lt; headBytes; ++i )
-    data[i] = ReadBits( 8 );
-    if ( headBytes == bytes )
-        return;
-
-    assert( GetAlignBits() == 0 );
-
-    int numWords = ( bytes - headBytes ) / 4;
-    if ( numWords &gt; 0 )
-    {
-        assert( ( m_bitsRead % 32 ) == 0 );
-        memcpy( data + headBytes, &amp;m_data[m_wordIndex], numWords * 4 );
-        m_bitsRead += numWords * 32;
-        m_wordIndex += numWords;
-        m_scratchBits = 0;
-    }
-
-    assert( GetAlignBits() == 0 );
-
-    int tailStart = headBytes + numWords * 4;
-    int tailBytes = bytes - tailStart;
-    assert( tailBytes &gt;= 0 &amp;&amp; tailBytes &lt; 4 );
-    for ( int i = 0; i &lt; tailBytes; ++i )
-        data[tailStart+i] = ReadBits( 8 );
-
-    assert( GetAlignBits() == 0 );
-
-    assert( headBytes + numWords * 4 + tailBytes == bytes );
-}
-
-template &lt;typename Stream&gt; 
-bool serialize_bytes_internal( Stream &amp; stream, 
-                               uint8_t* data, 
-                               int bytes )
-{
-    return stream.SerializeBytes( data, bytes );
-}
-
-#define serialize_bytes( stream, data, bytes )                    \
-  do                                                              \
-  {                                                               \
-      if ( !serialize_bytes_internal( stream, data, bytes ) )     \
-          return false;                                           \
-  } while (0)
-</pre>
-
-Now we can serialize a string by by serializing its length followed by the string data:
+The end result is a __serialize_bytes__ primitive that we can use to serialize a string as its length followed by the string data like so:
 
 <pre>
 template &lt;typename Stream&gt; 
@@ -549,7 +437,7 @@ do                                                                   \
 } while (0)
 </pre>
 
-As you can see, you can build up quite complicated serialization from basic primitives.
+This is an idea format because it lets us quickly reject malicious string data, vs. having to read to the end of the packet data looking for '\0' before giving up. This is important because sometimes attacks are simply designed to degrade your server by making it do work, vs. crashing it immediately.
 
 ## Serializing Array Subsets
 
