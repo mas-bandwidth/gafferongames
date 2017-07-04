@@ -15,7 +15,7 @@ In the [previous article](/post/reading_and_writing_packets/), we created a bitp
 
 In this article, we're going to transform the bitpacker into a system where this checking is automatic. If we read past the end of a packet, the packet read will abort automatically. If a value comes in over the network that's outside of the expected range, that packet will be dropped.
 
-We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions anymore, performing both read _and_ write with a single function.
+We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions anymore, performing both read and write with a single function.
 
 This is called a _serialize function_.
 
