@@ -13,7 +13,7 @@ Hi, I'm Glenn Fiedler and welcome to __Building a Game Network Protocol__.
 
 In the [previous article](/post/reading_and_writing_packets/), we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high. A single missed check creates a vulnerability that an attacker can use to crash your server.
 
-The goal of this article is to create a system where this checking is automatic. If we read past the end of a packet, the packet read should abort automatically. If a value comes in over the network that's outside of the expected range, the packet should be dropped.
+In this article, we're going to transform the bitpacker into a system where this checking is automatic. If we read past the end of a packet, the packet read will abort automatically. If a value comes in over the network that's outside of the expected range, that packet will be dropped.
 
 We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions, but can write one function that performs _both_ read and write.
 
@@ -99,7 +99,7 @@ As you can see, serialize functions are flexible and expressive. They're also _s
 
 The trick to making this all work is to create two stream classes that share the same interface: __ReadStream__ and __WriteStream__.
 
-The write stream implementation _writes values_ to the buffer:
+The write stream implementation _writes values out_ to the buffer:
 
 <pre>
 class WriteStream
@@ -161,9 +161,9 @@ private:
 };
 </pre>
 
-With the magic of C++ templates, we leave it up to the compiler to specialize the generic serialize method to the stream class passed in, producing optimized read and write functions from a single serialize function.
+With the magic of C++ templates, we leave it up to the compiler to specialize the generic serialize method to the stream class, producing optimized read and write functions from a single serialize function.
 
-To handle safety __serialize_*__ calls are not actually functions at all. They're actually special macros that return false on error, thus unwinding the serialization stack in case of error, without the need for exceptions. 
+To handle safety __serialize_*__ calls are not actually functions at all. They're actually macros that return false on error, thus unwinding the serialization stack in case of error, without the need for exceptions. 
 
 For example, this macro serializes an integer in a given range:
 
@@ -192,9 +192,9 @@ For example, this macro serializes an integer in a given range:
      } while (0)
 </pre>
 
-Thus error is checking automatic. A single value read from the network thaht is outside the expected range, or a read past the end of a buffer aborts the read. And the best part is, since it's automatic, _you can't forget to do it_.
+As you can see, error is checking is completely automatic. A single value read outside the expected range, or a read past the end of the buffer unwinds the serialization callstack and aborts the packet read.
 
-## Serializing Floats and Vectors
+## Serializing Floating Point Values
 
 The bit stream only serializes integer values. How can we serialize a float value?
 
@@ -253,6 +253,8 @@ Wrap this with a __serialize_float__ macro for error checking on read:
   } while (0)
 </pre>
 
+# Serializing Compressed Floats
+
 Sometimes you don't want to transmit a full precision float. How can you compress a float value? The first step is to _bound_ that value in some known range then _quantize_ it down to an integer representation.
 
 For example, if you know a floating point number in is range [-10,+10] and an acceptable resolution for that value is 0.01, then you can just multiply that floating point number by 100.0 to get it in the range [-1000,+1000] and serialize that as an integer over the network. On the other side, just divide by 100.0 to get back to the floating point value.
@@ -292,6 +294,8 @@ bool serialize_compressed_float_internal( Stream &amp; stream,
     return true;
 }
 </pre>
+
+# Serializing Vectors and Quaternions
 
 Once you can serialize float values it's trivial extend to serialize vectors and quaternions over the network. I use a modified version of  the awesome <a href="https://github.com/scoopr/vectorial">vectorial library</a> for vector math in my projects and I implement serialization for those types like this:
 
