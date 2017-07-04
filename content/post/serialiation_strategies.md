@@ -11,11 +11,11 @@ draft = true
 
 Hi, I'm Glenn Fiedler and welcome to __Building a Game Network Protocol__.
 
-In the [previous article](/post/reading_and_writing_packets/), we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high. A single missed check creates a vulnerability an attacker can use to crash your server.
+In the [previous article](/post/reading_and_writing_packets/), we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high. A single missed check creates a vulnerability that an attacker can use to crash your server.
 
 The goal of this article is to create a system where this checking is automatic. If we read past the end of a packet, the packet read should abort automatically. If a value comes in over the network that's outside of the expected range, the packet should be dropped.
 
-We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions anymore, but can write one function that performs _both_ read and write.
+We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions, but can write one function that performs _both_ read and write.
 
 This is called a _serialize function_.
 
@@ -38,7 +38,7 @@ struct PacketA
 };
 </pre>
 
-Here you can see a simple serialize function. We serialize three integer variables x,y,z with 32 bits each. Easy.
+Here you can see a simple serialize function. We serialize three integer variables x,y,z with 32 bits each. Straightforward.
 
 <pre>
 struct PacketB
@@ -97,56 +97,102 @@ As you can see, serialize functions are flexible and expressive. They're also _s
 
 ## Implementation
 
-The trick to making this work is to create two stream class implementations with the same interface: ReadStream and WriteStream, which wraps the bitpacker.
+The trick to making this all work is to create two stream classes that share the same interface: __ReadStream__ and __WriteStream__.
 
-Then when we're reading packets we create a read stream on top of the buffer to read, 
-
-----------
-
-## Bounds Checking and Abort Read
-
-Now that we've twisted the compiler's arm to generate optimized read/write functions, we need some way to automate error checking on read so we're not vulnerable to malicious packets.
-
-The first step is to pass in the range of the integer to the serialize function instead of just the number of bits required. Think about it. The serialize function can work out the number of bits required from the min/max values:
+The write stream implementation _writes values_ to the buffer:
 
 <pre>
-serialize_int( stream, numElements, 0, MaxElements );
+class WriteStream
+{
+public:
+
+    enum { IsWriting = 1 };
+    enum { IsReading = 0 };
+
+    WriteStream( uint8_t * buffer, int bytes ) : m_writer( buffer, bytes ) {}
+
+    bool SerializeInteger( int32_t value, int32_t min, int32_t max )
+    {
+        assert( min < max );
+        assert( value >= min );
+        assert( value <= max );
+        const int bits = bits_required( min, max );
+        uint32_t unsigned_value = value - min;
+        m_writer.WriteBits( unsigned_value, bits );
+        return true;
+    }
+
+    // ...
+
+private:
+
+    BitWriter m_writer;
+};
 </pre>
 
-This opens up the interface to support easy serialization of signed integer quantities and the serialize function can check the value read in from the network and make sure it's within the expected range. If the value is outside range, <span style="text-decoration: underline;">abort serialize read immediately and discard the packet</span>.
+And the read stream implementation _reads values in_:
 
-Since we can't use exceptions to handle this abort (too slow), here's how I like to do it.
+<pre>
+class ReadStream
+{
+public:
 
-In my setup __serialize_int__ is not actually a function, it's a sneaky macro like this:
+    enum { IsWriting = 0 };
+    enum { IsReading = 1 };
+
+    ReadStream( const uint8_t * buffer, int bytes ) : m_reader( buffer, bytes ) {}
+
+    bool SerializeInteger( int32_t & value, int32_t min, int32_t max )
+    {
+        assert( min < max );
+        const int bits = bits_required( min, max );
+        if ( m_reader.WouldReadPastEnd( bits ) )
+            return false;
+        uint32_t unsigned_value = m_reader.ReadBits( bits );
+        value = (int32_t) unsigned_value + min;
+        return true;
+    }
+
+    // ...
+
+private:
+
+    BitReader m_reader;
+};
+</pre>
+
+With the magic of C++ templates, we leave it up to the compiler to specialize the generic serialize method to the stream class passed in, producing optimized read and write functions from a single serialize function.
+
+To handle safety __serialize_*__ calls are not actually functions at all. They're actually special macros that return false on error, thus unwinding the serialization stack in case of error, without the need for exceptions. 
+
+For example, this macro serializes an integer in a given range:
 
 <pre>
 #define serialize_int( stream, value, min, max )                    \
     do                                                              \
     {                                                               \
-        assert( min &lt; max );                                     \
+        assert( min &lt; max );                                        \
         int32_t int32_value;                                        \
         if ( Stream::IsWriting )                                    \
         {                                                           \
-            assert( value &gt;= min );                              \
-            assert( value &lt;= max );                              \
+            assert( value &gt;= min );                                 \
+            assert( value &lt;= max );                                 \
             int32_value = (int32_t) value;                          \
         }                                                           \
         if ( !stream.SerializeInteger( int32_value, min, max ) )    \
+        {                                                           \
             return false;                                           \
+        }                                                           \
         if ( Stream::IsReading )                                    \
         {                                                           \
             value = int32_value;                                    \
-            if ( value &lt; min || value &gt; max )                 \
+            if ( value &lt; min || value &gt; max )                       \
                 return false;                                       \
         }                                                           \
      } while (0)
 </pre>
 
-The reason I'm being a terrible person here is that I'm using the macro to insert code that checks the result of SerializeInteger and returns false on error. This gives you exception-like behavior in the sense that it unwinds the stack back to the top of the serialization callstack on error, but you don't pay anything like the cost of exceptions to do this. The branch to unwind is super uncommon (serialization errors are _rare_) so branch prediction should have no trouble at all.
-
-Another case where we need to abort is if the stream reads past the end. This is also a rare branch but it's one we do have to check on each serialization operation because reading past the end is undefined. If we fail to do this check, we expose ourselves to infinite loops as we read past the end of the buffer. While it's common to return 0 values when reading past the end of a bit stream (as per-the previous article) there is no guarantee that reading zero values will always result in the serialize function terminating correctly if it has loops. This overflow check is necessary for well defined behavior.
-
-One final point. On serialize write I don't do any abort on range checks or write past the end of the stream. You can be a lot more relaxed on the write since if anything goes wrong it's pretty much guaranteed to be _your fault_. Just assert that everything is as expected (in range, not past the end of stream) for each serialize write and you're good to go.
+Thus error is checking automatic. A single value read from the network thaht is outside the expected range, or a read past the end of a buffer aborts the read. And the best part is, since it's automatic, _you can't forget to do it_.
 
 ## Serializing Floats and Vectors
 
@@ -196,13 +242,13 @@ bool serialize_float_internal( Stream &amp; stream,
 }
 </pre>
 
-Wrap this with a __serialize_float__ macro for convenient error checking on read:
+Wrap this with a __serialize_float__ macro for error checking on read:
 
 <pre>
 #define serialize_float( stream, value )                             \
   do                                                                 \
   {                                                                  \
-    if ( !protocol2::serialize_float_internal( stream, value ) )     \ 
+    if ( !serialize_float_internal( stream, value ) )                \ 
         return false;                                                \
   } while (0)
 </pre>
@@ -225,9 +271,7 @@ bool serialize_compressed_float_internal( Stream &amp; stream,
     const float values = delta / res;
     const uint32_t maxIntegerValue = (uint32_t) ceil( values );
     const int bits = bits_required( 0, maxIntegerValue );
- 
-    uint32_t integerValue = 0;
- 
+    uint32_t integerValue = 0; 
     if ( Stream::IsWriting )
     {
         float normalizedValue = 
@@ -235,17 +279,16 @@ bool serialize_compressed_float_internal( Stream &amp; stream,
         integerValue = (uint32_t) floor( normalizedValue * 
                                          maxIntegerValue + 0.5f );
     }
- 
     if ( !stream.SerializeBits( integerValue, bits ) )
+    {
         return false;
-
+    }
     if ( Stream::IsReading )
     {
         const float normalizedValue = 
             integerValue / float( maxIntegerValue );
         value = normalizedValue * delta + min;
     }
-
     return true;
 }
 </pre>
