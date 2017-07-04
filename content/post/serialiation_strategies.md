@@ -161,9 +161,9 @@ private:
 };
 </pre>
 
-With the magic of C++ templates, we leave it up to the compiler to specialize the generic serialize method to the stream class, producing optimized read and write functions from a single serialize function.
+With the magic of C++ templates, we leave it up to the compiler to specialize the serialize function to the stream class passed in, producing optimized read and write functions.
 
-To handle safety __serialize_*__ calls are not actually functions at all. They're actually macros that return false on error, thus unwinding the serialization stack in case of error, without the need for exceptions. 
+To handle safety __serialize_*__ calls are not actually functions at all. They're actually macros that return false on error, thus unwinding the stack in case of error, without the need for exceptions. 
 
 For example, this macro serializes an integer in a given range:
 
@@ -192,7 +192,7 @@ For example, this macro serializes an integer in a given range:
      } while (0)
 </pre>
 
-As you can see, error is checking is completely automatic. A single value read outside the expected range, or a read past the end of the buffer unwinds the serialization callstack and aborts the packet read.
+A single value read outside the expected range, or a read that would go past the end of the buffer returns false and aborts the packet read.
 
 ## Serializing Floating Point Values
 
