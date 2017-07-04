@@ -15,7 +15,7 @@ In the [previous article](/post/reading_and_writing_packets/), we created a bitp
 
 In this article, we're going to transform the bitpacker into a system where this checking is automatic. If we read past the end of a packet, the packet read will abort automatically. If a value comes in over the network that's outside of the expected range, that packet will be dropped.
 
-We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions, but can write one function that performs _both_ read and write.
+We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions anymore, performing both read _and_ write with a single function.
 
 This is called a _serialize function_.
 
@@ -441,9 +441,11 @@ This is an idea format because it lets us quickly reject malicious string data, 
 
 ## Serializing Array Subsets
 
-When implemeting a game network protocol, sooner or later you need to serialize an array of objects over the network. Perhaps the server needs to send all objects down to the client, or an array of events or messages to be sent. This is fairly straightforward if you are sending _all_ objects in the array down to the client, but what if you want to send only a subset of the array?
+When implemeting a game network protocol, sooner or later you need to serialize an array of objects over the network. Perhaps the server needs to send all objects down to the client, or an array of events or messages to be sent. 
 
-The first and simplest approach is to iterate across all objects in the array and serialize a bool per-object if that object is to be sent. If the value of that bool 1 then the object data follows, otherwise it's ommitted and the bool for the next object is up next in the stream.
+This is straightforward if you are sending _all_ objects in the array down to the client, but what if you want to send only a subset of the array?
+
+The first and simplest approach is to iterate across all objects in the array and serialize a bool per-object if that object is to be sent. If the value of that bool is 1 then the object data follows, otherwise it's ommitted and the bool for the next object is up next in the stream.
 
 <pre>
 template &lt;typename Stream&gt; 
@@ -452,22 +454,21 @@ bool serialize_scene_a( Stream &amp; stream, Scene &amp; scene )
     for ( int i = 0; i &lt; MaxObjects; ++i )
     {
         serialize_bool( stream, scene.objects[i].send );
- 
         if ( !scene.objects[i].send )
         {
             if ( Stream::IsReading )
+            {
                 memset( &amp;scene.objects[i], 0, sizeof( Object ) );
+            }
             continue;
         }
-
         serialize_object( stream, scene.objects[i] );
     }
-
     return true;
 }
 </pre>
 
-But what if the array of objects is very large, like 4000 objects in the scene? 4000 / 8 = 500. Ruh roh. That's an overhead of 500 bytes, even if you only send one or two objects! That's... not good. Can we switch it around so we take overhead propertional to the number of objects sent instead of the total number of objects in the array?
+But what if the array of objects is very large, like 4000 objects? 4000 / 8 = 500 bytes overhead, even if you only send one or two objects! That's... not good. Can we switch it around so we take overhead propertional to the number of objects sent instead of the total number of objects in the array?
 
 We can but now, we've done something interesting. We're walking one set of objects in the serialize write (all objects in the array) and are walking over a different set of objects in the serialize read (subset of objects sent). At this point the unified serialize function concept breaks down. It's best to separate the read and write back into separate functions in cases like this:
 
@@ -475,53 +476,44 @@ We can but now, we've done something interesting. We're walking one set of obje
 bool write_scene_b( protocol2::WriteStream &amp; stream, Scene &amp; scene )
 {
     int num_objects_sent = 0;
-
     for ( int i = 0; i &lt; MaxObjects; ++i )
     {
         if ( scene.objects[i].send )
             num_objects_sent++;
     }
-
     write_int( stream, num_objects_sent, 0, MaxObjects );
-
     for ( int i = 0; i &lt; MaxObjects; ++i )
     {
         if ( !scene.objects[i].send )
+        {
             continue;
+        }
         write_int( stream, i, 0, MaxObjects - 1 );
         write_object( stream, scene.objects[i] );
     }
-
     return true;
 }
 
 bool read_scene_b( protocol2::ReadStream &amp; stream, Scene &amp; scene )
 {
     memset( &amp;scene, 0, sizeof( scene ) );
-
     int num_objects_sent; 
     read_int( stream, num_objects_sent, 0, MaxObjects );
-
     for ( int i = 0; i &lt; num_objects_sent; ++i )
     {
         int index; 
         read_int( stream, index, 0, MaxObjects - 1 );
         read_object( stream, scene.objects[index] );
     }
-
     return true;
 }
 </pre>
 
-Alternatively you could generate a separate data structure with the set of changed objects, and implement a serialize for that array of changed objects. But having to generate a C++ data structure for each data structure you want serialized is a huge pain in the ass. Eventually you want to walk several data structures at the same time and effectively write out a dynamic data structure to the bit stream. This is a really common thing to do when writing more advanced serialization methods like delta encoding. As soon as you do it this way, unified serialize no longer makes sense.
+Alternatively you could generate a separate data structure with the set of changed objects, and implement a serialize for that array of changed objects. But having to generate a C++ data structure for each data structure you want serialized is a huge pain in the ass. 
 
--- todo: ^--- vulgar
+Eventually you want to walk several data structures at the same time and effectively write out a dynamic data structure to the bit stream. This is a really common thing to do when writing more advanced serialization methods like delta encoding. As soon as you do this, unified serialize no longer makes sense.
 
-My advice is that when you want to do this, don't worry, just separate read and write. Unifying read and write are simply not worth the hassle when dynamically generating a data structure on write. My rule of thumb is that complicated serialization _probably_ justifies separate read and write functions, but if possible, try to keep the leaf nodes unified if you can (eg. the actual objects / events, whatever being serialized).
-
-One more point. The code above walks over the set of objects _twice_ on serialize write. Once to determine the number of changed objects and a second time to actually serialize the set of changed objects. Can we do it in one pass instead? Absolutely! You can use another trick, a _sentinel value_ to indicate the end of the array, rather than serializing the # of objects in the array up front. This way you can iterate over the array only once on send, and when there are no more objects to send, serialize the sentinal value to indicate the end of the array.
-
-For example:
+One more point. The code above walks over the set of objects _twice_ on serialize write. Once to determine the number of changed objects and a second time to actually serialize the set of changed objects. Can we do it in one pass instead? Absolutely! You can use another trick, rather than serializing the # of objects in the array up front, use a _sentinel value_ to indicate the end of the array:
 
 <pre>
 bool write_scene_c( protocol2::WriteStream &amp; stream, Scene &amp; scene )
@@ -529,35 +521,35 @@ bool write_scene_c( protocol2::WriteStream &amp; stream, Scene &amp; scene )
     for ( int i = 0; i &lt; MaxObjects; ++i )
     {
         if ( !scene.objects[i].send )
+        {
             continue;
+        }
         write_int( stream, i, 0, MaxObjects );
         write_object( stream, scene.objects[i] );
     }
-
     write_int( stream, MaxObjects, 0, MaxObjects );
-
     return true;
 }
 
 bool read_scene_c( protocol2::ReadStream &amp; stream, Scene &amp; scene )
 {
     memset( &amp;scene, 0, sizeof( scene ) );
-
     while ( true )
     {
         int index; read_int( stream, index, 0, MaxObjects );
         if ( index == MaxObjects )
+        {
             break;
+        }
         read_object( stream, scene.objects[index] );
     }
-
     return true;
 }
 </pre>
 
-This is pretty simple and it works great if the set of objects sent is a small percentage of total objects. But what if a large number of objects are sent, lets say half of the 4000 objects in the scene. That's 2000 object indices with each index costing 12 bits... that's 24000 bits or 3000 bytes (almost 3k!) in your packet wasted indexing objects.
+This works great if the set of objects sent is a small percentage of total objects. But what if a large number of objects are sent, lets say half of the 4000 objects in the scene. That's 2000 object indices with each index costing 12 bits... that's 24000 bits or 3000 bytes (almost 3k!) in your packet wasted indexing objects.
 
-You can reduce this by encoding each object index relative to the previous object index. Think about it, we're walking left to right along an array, so object indices start at 0 and go up to MaxObjects - 1. Statistically speaking, you're likely to have objects that are close to each other and if the next index is +1 or even +10 or +30 from the previous one, on average, you'll need quite a few less bits to represent that difference than you need to represent an absolute index.
+You can reduce this by encoding each object index relative to the previous object index. Think about it, we're walking left to right along an array, so object indices start at 0 and go up to MaxObjects - 1. Statistically speaking, you're quite likely to have objects that are close to each other and if the next index is +1 or even +10 or +30 from the previous one, on average, you'll need quite a few less bits to represent that difference than you need to represent an absolute index.
 
 Here's one way to encode the object index as an integer relative to the previous object index, while spending less bits on statistically more likely values (eg. small differences between successive object indices, vs. large ones):
 
@@ -697,15 +689,17 @@ bool serialize_scene_d( Stream &amp; stream, Scene &amp; scene )
 }
 </pre>
 
-In the common case this saves a bunch of bandwidth because object indices tend to be clustered together. In the case where the next object is sent, that's just one bit for the next index being +1 and 5 bits per-index for +2 to +5. On average this gives somewhere between a 2-3X reduction in indexing overhead. But notice that larger indices far apart cost a lot more for each index than the non-relative encoding (12 bits per index). This <span style="text-decoration: underline;">seems</span> bad but it's not because think about it, even if you hit the 'worst case' (objects indices spaced apart evenly with by +128 apart) how many of these can you actually fit into an object array 4000 large? Just 32. No worries!
+Notice how larger indices far apart cost more per-index than the non-relative encoding (12 bits per index). This _seems_ bad but is it really? Even if you hit the 'worst case' (objects indices spaced apart by exactly +126 apart) how many of these can you actually fit into an array 4000 large? Just 32. No worries!
 
 ## Protocol IDs, CRC32 and Serialization Checks
+
+-- todo: fix turn
 
 At this point you may wonder. Wow. This whole thing seems really fragile. It's a totally unattributed binary stream. A stack of cards. What if you somehow desync read and write? What if somebody just sent packets containing random bytes to your server. How long until you hit a sequence of bytes that crashes you out?
 
 I have good news for you and the rest of the game industry since most game servers basically work this way. There are techniques you can use to reduce or virtually eliminate the possibility of corrupt data getting past the serialization layer.
 
-The first technique is to include a protocol id in your packet. Typically, the first 4 bytes you can set to some reasonable rare and unique value, maybe 0x12345678 because nobody else will ever think to use that. But seriously, put in a hash of your protocol id and your protocol version number in the first 32 bits of each packet and you're doing pretty good. At least if a random packet gets sent to your port from some other application (remember UDP packets can come in from any IP/port combination at any time) you can trivially discard it:
+The first technique is to include a protocol id in your packet. Typically, the first 4 bytes you can set to some unique value. It could be a hash of your protocol id and your protocol version number in the first 32 bits of each packet and you're doing pretty good. At least if a random packet gets sent to your port from some other application (remember UDP packets can come in from any IP/port combination at any time) you can trivially discard it:
 
 <pre>
 [protocol id] (32bits)
@@ -743,4 +737,4 @@ So now the packet looks something like this:
 [end of packet serialize check] (32 bits)
 </pre>
 
-You can just compile these protocol checks out in your retail build if you like, especially if you have a good encryption and packet signature, as they should no longer be necessary.
+You can just compile these protocol checks out of your retail build if you like. Here you almost certainly have robust encryption and a packet signature, so you can replace the fragile development techniques based around CRC32 and serialization checks with their cryptographically secure equivalent.
