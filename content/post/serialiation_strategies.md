@@ -11,11 +11,9 @@ draft = true
 
 Hi, I'm Glenn Fiedler and welcome to __Building a Game Network Protocol__.
 
-In the [previous article](/post/reading_and_writing_packets/), we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high. A single missed check creates a vulnerability that an attacker can use to crash your server.
+In the [previous article](/post/reading_and_writing_packets/), we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.
 
-In this article, we're going to transform the bitpacker into a system where this checking is automatic. If we read past the end of a packet, the packet read will abort automatically. If a value comes in over the network that's outside of the expected range, that packet will be dropped.
-
-We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions anymore, performing both read and write with the same function.
+In this article, we're going to transform the bitpacker into a system where this checking is _automatic_. We're going to do this with minimal runtime overhead, and in such a way that we don't have to code separate read and write functions, performing both read and write with a single function.
 
 This is called a _serialize function_.
 
@@ -38,7 +36,7 @@ struct PacketA
 };
 </pre>
 
-Here you can see a simple serialize function. We serialize three integer variables x,y,z with 32 bits each.
+Above you can see a simple serialize function. We serialize three integer variables x,y,z with 32 bits each.
 
 <pre>
 struct PacketB
@@ -60,7 +58,7 @@ struct PacketB
 
 And now something more complicated. We serialize a variable length array, making sure that the array length is in the range [0,MaxElements].
 
-Here we serialize a rigid body with an optimization while it's at rest, serializing only one bit in place of linear and angular velocity:
+Next, we serialize a rigid body with an simple optimization while it's at rest, serializing only one bit in place of linear and angular velocity:
 
 <pre>
 struct RigidBody
@@ -95,7 +93,7 @@ Notice how we're able to branch on Stream::IsWriting and Stream::IsReading to wr
 
 As you can see, serialize functions are flexible and expressive. They're also _safe_, with each __serialize_*__ call performing checks and aborting read if anything is wrong (eg. a value out of range, going past the end of the buffer). Most importantly, this checking is automatic, _so you can't forget to do it!_
 
-## Implementation
+## Implementation in C++
 
 The trick to making this all work is to create two stream classes that share the same interface: __ReadStream__ and __WriteStream__.
 
@@ -196,11 +194,13 @@ For example, this macro serializes an integer in a given range:
      } while (0)
 </pre>
 
-A single value read outside the expected range, or a read that would go past the end of the buffer returns false and aborts the packet read.
+If a value read in from the network is outside the expected range, or we read past the end of the buffer, the packet read is aborted.
 
 ## Serializing Floating Point Values
 
-Consider a floating point number. In memory it's just a 32 bit value like any other. The C++ language lets us work with this fundamental property, allowing us to directly access the bits of a float value as if it were an integer:
+We're used to thinking about floating point numbers as being different to integers, but in memory they're just a 32 bit value like any other. 
+
+The C++ language lets us work with this fundamental property, allowing us to directly access the bits of a float value as if it were an integer:
 
 <pre>
 union FloatInt
@@ -255,11 +255,13 @@ This is of course wrapped with a __serialize_float__ macro for error checking:
   } while (0)
 </pre>
 
-We can now transmit full precision floating point values over the network. But sometimes you don't need full precision. For example, positions of other players in an FPS are often quantized to some acceptable resolution before being sent over the network to save bandwidth.
+We can now transmit full precision floating point values over the network. 
 
-Consider a floating point value is the range [0,10] with an acceptable precision of 0.01. Multiplying by 1 / 0.01 converts the floating point value to an integer in range [0,1000]. We can then send this integer value over the network, and convert it back to a float on the other side by multiplying by 0.01.
+But what about situations where you don't need full precision? What about a floating point value in the range [0,10] with an acceptable precision of 0.01? Is there a way to send this over the network using less bits?
 
-Here's a generalized implementation of this idea:
+Yes there is. The trick is to simply divide by 0.01 to get an integer in the range [0,1000] and send that value over the network. On the other side, convert back to a float by multiplying by 0.01.
+
+Here's a general purpose implementation of this basic idea:
 
 <pre>
 template &lt;typename Stream&gt; 
@@ -308,11 +310,11 @@ Of course we need error checking, so we wrap this with a macro:
   } while (0)
 </pre>
 
-And the basic interface is complete. We can now serialize compressed and uncompressed floating point values over the network.
+And now the basic interface is complete. We can serialize both compressed and uncompressed floating point values over the network.
 
 # Serializing Vectors and Quaternions
 
-Once you can serialize float values it's trivial to serialize vectors over the network. I use a modified version of the <a href="https://github.com/scoopr/vectorial">vectorial library</a> in my projects and I implement serialization for its vector types like this:
+Once you can serialize float values it's trivial to serialize vectors over the network. I use a modified version of the <a href="https://github.com/scoopr/vectorial">vectorial library</a> in my projects and implement serialization for its vector type like this:
 
 <pre>
 template &lt;typename Stream&gt; 
@@ -371,19 +373,19 @@ bool serialize_compressed_vector_internal( Stream &amp; stream,
 }
 </pre>
 
-Notice how we are able to build more complex serialization using the serialization primitives we're already created. You can easily extend the serialization to support any type you need.
+Notice how we are able to build more complex serialization using the primitives we're already created. Using this approach you can easily extend the serialization to support anything you need.
 
 ## Serializing Strings and Arrays
 
 What if you need to serialize a string over the network?
 
-Is it a good idea to send a string over the network with null termination? Not really. You're just asking for trouble! Instead, serialize the string as an array of bytes with length prefixed. Therefore, in order to send a string over the network, we have to work out how to send an array of bytes.
+Is it a good idea to send a string over the network with null termination? Not really. You're just asking for trouble! Instead, serialize the string as an array of bytes with the string length in front. Therefore, in order to send a string over the network, we have to work out how to send an array of bytes.
 
-First observation. Why waste effort bitpacking an array of bytes into your bit stream just so they are randomly shifted by [0,7] bits? Why not just align to byte so you can memcpy the array of bytes directly into the packet? In theory, this should be much faster than bitpacking one byte at a time.
+First observation. Why waste effort bitpacking an array of bytes into your bit stream just so they are randomly shifted by [0,7] bits? Why not align to byte so you can memcpy the array of bytes directly into the packet?
 
 To align a bitstream just work out your current bit index in the stream and how many bits of padding are needed until the current bit index divides evenly into 8, then insert that number of padding bits. 
 
-For bonus points, pad up with zero bits to add entropy so that on read you can verify that yes, you are reading a byte align and yes, it is indeed padded up with zero bits to the next whole byte bit index. If a non-zero bit is discovered in the pad bits, _abort serialize read and discard the packet_.
+For bonus points, pad up with zero bits to add entropy so that on read you can verify that yes, you are reading a byte align and yes, it is indeed padded up with zero bits to the next whole byte bit index. If a non-zero bit is discovered in the padding, _abort serialize read and discard the packet_.
 
 Here's my code to align a bit stream to byte:
 
@@ -420,7 +422,7 @@ bool BitReader::ReadAlign()
   } while (0)
 </pre>
 
-Now we can align to byte prior to writing an array of bytes, letting us use memcpy for the bulk of the array data. The only wrinkle is the bitpacker works at the word level, so it's necessary to have special handling for the head and tail portion of the byte array. Because of this, the code is quite complex and is omitted for brevity. You can find it in the [sample code](https://www.patreon.com/gafferongames) for this article.
+Now we can align to byte prior to writing an array of bytes, letting us use memcpy for the bulk of the array data. The only wrinkle is because the bitpacker works at the word level, it's necessary to have special handling for the head and tail portions. Because of this, the code is quite complex and is omitted for brevity. You can find it in the [sample code](https://www.patreon.com/gafferongames) for this article.
 
 The end result of all this is a __serialize_bytes__ primitive that we can use to serialize a string as a length followed by the string data, like so:
 
@@ -456,15 +458,15 @@ do                                                                   \
 } while (0)
 </pre>
 
-This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for __'\0'__ before giving up. This is important because sometimes attacks are designed to degrade your server's performance by making it do extra work.
+This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for __'\0'__ before giving up. This is important because otherwise protocol level attacks could be crafted to degrade your server's performance by making it do extra work.
 
 ## Serializing Array Subsets
 
-When implemeting a game network protocol, sooner or later you need to serialize an array of objects over the network. Perhaps the server needs to send all objects down to the client, or there is an array of messages to be sent.
+When implemeting a game network protocol, sooner or later you need to serialize an array of objects over the network. Perhaps the server needs to send object state down to the client, or there is an array of messages to be sent.
 
-This is straightforward if you are sending _all_ objects in the array down to the client, just iterate across the array and serialize each object. But what if you want to send only a subset of the array?
+This is straightforward if you are sending _all_ objects in the array - just iterate across the array and serialize each object in turn. But what if you want to send a subset of the array?
 
-The simplest approach is to iterate across all objects in the array and serialize a bool per-object if that object is to be sent. If the value of that bool is 1 then the object data follows in the bit stream, otherwise it's ommitted:
+The simplest approach is to iterate across all objects in the array and serialize a bit per-object if that object is to be sent. If the value of the bit is 1 then the object data follows in the bit stream, otherwise it's ommitted:
 
 <pre>
 template &lt;typename Stream&gt; 
@@ -487,9 +489,11 @@ bool serialize_scene_a( Stream &amp; stream, Scene &amp; scene )
 }
 </pre>
 
-But what if the array of objects is very large, like 4000 objects? 4000 / 8 = 500 bytes overhead, even if you only send one or two objects! That's not good. Can we switch it around so we take overhead propertional to the number of objects sent instead of the total number of objects in the array?
+This approach breaks down as the size of the array gets larger. For example, for an array size of size 4096, then 4096 / 8 = 512 bytes spent on skip bits. That's not good. Can we switch it around so we take overhead propertional to the number of objects sent instead of the total number of objects in the array?
 
-We can but now, we've done something interesting. We're walking one set of objects in the serialize write (all objects in the array) and are walking over a different set of objects in the serialize read (subset of objects sent). At this point the unified serialize function concept breaks down. It's best to separate the read and write back into separate functions like this:
+We can but now, we've done something interesting. We're walking one set of objects in the serialize write (all objects in the array) and are walking over a different set of objects in the serialize read (subset of objects sent). 
+
+At this point the unified serialize function concept starts to breaks down, and in my opinion, it's best to separate the read and write back into separate functions, because they have so little in common:
 
 <pre>
 bool write_scene_b( WriteStream &amp; stream, Scene &amp; scene )
@@ -528,10 +532,6 @@ bool read_scene_b( ReadStream &amp; stream, Scene &amp; scene )
 }
 </pre>
 
-Alternatively you could generate a separate data structure with the set of changed objects, and implement a serialize function for that data structure. This can work, but it's a bit of a pain in the ass to have to generate an intermediate structure each time you want to do this.
-
-Eventually you'll end up wanting to walk several data structures at the same time and write out a dynamic data structure to the bit stream. This is a common thing to do when implementing delta encoding. As soon as you do this, unified serialize functions no longer make any sense.
-
 One more point. The code above walks over the set of objects _twice_ on serialize write. Once to determine the number of changed objects and a second time to actually serialize the set of changed objects. Can we do it in one pass instead? Absolutely! You can use another trick, rather than serializing the # of objects in the array up front, use a _sentinel value_ to indicate the end of the array:
 
 <pre>
@@ -566,11 +566,11 @@ bool read_scene_c( ReadStream &amp; stream, Scene &amp; scene )
 }
 </pre>
 
-This works great if the objects sent are a small percentage of total objects. But what if a large number of objects are sent, lets say half of the 4000 objects in the scene. That's 2000 object indices with each index costing 12 bits... that's 24000 bits or 3000 bytes (almost 3k!) in your packet wasted on indexing.
+The above technique works great if the objects sent are a small percentage of total objects. But what if a large number of objects are sent, lets say half of the 4000 objects in the scene. That's 2000 object indices with each index costing 12 bits... that's 24000 bits or 3000 bytes (almost 3k!) in your packet wasted on indexing.
 
-You can reduce this by encoding each object index relative to the previous object index. Think about it, we're walking left to right along an array, so object indices start at 0 and go up to MaxObjects - 1. Statistically speaking, you're quite likely to have objects that are close to each other and if the next index is +1 or even +10 or +30 from the previous one, on average, you'll need quite a few less bits to represent that difference than an absolute index.
+You can reduce this overhead by encoding each object index relative to the previous object index. Think about it, you're walking from left to right along an array, so object indices start at 0 and go up to MaxObjects - 1. Statistically speaking, you're quite likely to have objects that are close to each other and if the next index is +1 or even +10 or +30 from the previous one, on average, you'll need quite a few less bits to represent that difference than an absolute index.
 
-Here's one way to encode the object index as an integer relative to the previous object index, while spending less bits on statistically more likely values (eg. small differences between successive object indices, vs. large ones):
+Here's one way to encode the object index as an integer relative to the previous object index, while spending less bits on statistically more likely values:
 
 <pre>
 template &lt;typename Stream&gt; 
@@ -738,52 +738,52 @@ bool serialize_scene_d( Stream &amp; stream, Scene &amp; scene )
 }
 </pre>
 
-Notice how larger indices far apart cost more per-index than the non-relative encoding (12 bits per index). This _seems_ bad but is it really? Even if you hit the 'worst case' (objects indices spaced apart by exactly +126 apart) how many of these can you actually fit into an array of size 4000? Just 32. No worries!
+But what about the worst case? Won't we spent more bits when indices are >= +126 apart than on an absolute index? Yes we do, but how many of these worst case indices fit in an array of size 4096? Just 32. It's nothing to worry about.
 
 ## Protocol IDs, CRC32 and Serialization Checks
 
--- todo: fix turn
+We are nearly at the end of this article, and you can see by now that we are sending a completely unattributed binary stream. It's essential that read and write match perfectly, which is of course why the serialize functions are so great, it's hard to desync something when you unify read and write.
 
-At this point you may wonder. Wow. This whole thing seems really fragile. It's a totally unattributed binary stream. A stack of cards. What if you somehow desync read and write? What if somebody just sent packets containing random bytes to your server. How long until you hit a sequence of bytes that crashes you out?
+But accidents happen, and when they do this system can seem like a stack of cards. What if you somehow desync read and write? How can you debug this? What if somebody tries to connect to your latest server code with an old version of your client?
 
-I have good news for you and the rest of the game industry since most game servers basically work this way. There are techniques you can use to reduce or virtually eliminate the possibility of corrupt data getting past the serialization layer.
-
-The first technique is to include a protocol id in your packet. Typically, the first 4 bytes you can set to some unique value. It could be a hash of your protocol id and your protocol version number in the first 32 bits of each packet and you're doing pretty good. At least if a random packet gets sent to your port from some other application (remember UDP packets can come in from any IP/port combination at any time) you can trivially discard it:
+One technique to protect against this is to include a protocol id in your packet. For example, it could be a combination of a unique number for your game, plus the hash of your protocol version and a hash of your game data. Now if a packet comes in from an incompatible game version, it's automatically discarded because the protocol ids don't match:
 
 <pre>
-[protocol id] (32bits)
+[protocol id] (64bits)
 (packet data)
 </pre>
 
-The next level of protection is to pass a CRC32 over your packet and include that in the header. This lets you pick up corrupt packets (these do happen, remember that the IP checksum is just 16 bits, and a bunch of stuff will not get picked up by a checksum of 16bits...). Now your packet header looks ilke this:
+The next level of protection is to pass a CRC32 over your packet and include that in the header. This lets you pick up corrupt packets (these do happen, remember that the IP checksum is just 16 bits...). Now your packet header looks like this:
 
 <pre>
-[protocol id] (32bits)
+[protocol id] (64bits)
 [crc32] (32bits)
 (packet data)
 </pre>
 
-At this point you may be wincing. Wait. I have to take 8 bytes of overhead per-packet just to implement my own checksum and protocol id? Well actually, _you don't_. You can take a leaf out of how IPv4 does their checksum, and make the protocol id a _magical prefix_. eg: you don't actually send it, but if both sender and receiver knows the protocol id and the CRC32 is calculated as if the packet were prefixed by the protocol id, the CRC32 will be incorrect if the sender does not have the same protocol id as the receiver, saving 4 bytes per-packet:
+At this point you may be wincing. Wait. I have to take 8+4 = 12 bytes of overhead per-packet just to implement my own checksum and protocol id? Well actually, _you don't_. You can take a leaf out of how IPv4 does their checksum, and make the protocol id a __magical prefix__.
+
+This means you don't actually send it, and rely on the fact that if the CRC32 is calculated as if the packet were prefixed by the protocol id, then the CRC32 will be incorrect if the sender does not have the same protocol id as the receiver, saving 8 bytes per-packet:
 
 <pre>
-<del>[protocol id] (32bits)</del>   // not actually sent, but used to calc crc32
+<del>[protocol id] (64bits)</del>   // not actually sent, but used to calc crc32
 [crc32] (32bits)
 (packet data)
 </pre>
-
-Of course CRC32 is only protection against random packet correction, and is no actual protection against a malicious sender who can easily modify or construct a malicious packet and then properly adjust the CRC32 in the first four bytes. To protect against this you need to use a more cryptographically secure hash function combined with a secret key perhaps exchanged between client and server over HTTPS by the matchmaker prior to the client attempting to connect to the game server.
 
 One final technique, perhaps as much a check against programmer error on your part and malicious senders (although redundant once you encrypt and sign your packet) is the _serialization check_. Basically, somewhere mid-packet, either before or after a complicated serialization section, just write out a known 32 bit integer value, and check that it reads back in on the other side with the same value. If the serialize check value is incorrect _abort read and discard the packet_.
 
-I like to do this between sections of my packet as I write them, so at least I know which part of my packet serialization has desynced read and write as I'm developing my protocol (it's going to happen no matter how hard you try to avoid it...). Another cool trick I like to use is to serialize a protocol check at the very end of the packet, this is super, super useful because it helps pick up packet truncations.
+I like to do this between sections of my packet as I write them, so at least I know which part of my packet serialization has desynced read and write as I'm developing my protocol. Another cool trick I like to use is to always serialize a protocol check at the very end of the packet, to detect accidental packet truncation (which happens more often than you would think).
 
-So now the packet looks something like this:
+Now the packet looks something like this:
 
 <pre>
-<del>[protocol id] (32bits)</del>   // not actually sent, but used to calc crc32
+<del>[protocol id] (64bits)</del>   // not actually sent, but used to calc crc32
 [crc32] (32bits)
 (packet data)
 [end of packet serialize check] (32 bits)
 </pre>
 
-You can just compile these protocol checks out of your retail build if you like. Here you almost certainly have robust encryption and a packet signature, so you can replace the fragile development techniques based around CRC32 and serialization checks with their cryptographically secure equivalent.
+This is great packet structure to use during development. 
+
+Please make sure you switch over to cryptographically secure primitives before you release your game For details on exactly how to do this, refer to my future article, __Securing Dedicated Servers__.
