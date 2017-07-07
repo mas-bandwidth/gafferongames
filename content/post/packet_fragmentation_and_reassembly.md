@@ -13,7 +13,7 @@ Hi, I'm Glenn Fiedler and welcome to __Building a Game Network Protocol__.
 
 In the [previous article](/post/serialization_strategies/) we discussed how to unify packet read and write into a single serialize function and add a bunch of safety features when reading packets.
 
-Now we are ready to start putting interesting things in our packets and sending them over the network, but we immediately run into an interesting question: _how big should our packets be?_
+Now we are ready to start putting interesting things in our packets and sending them over the network, but immediately we run into an interesting question: _how big should our packets be?_
 
 To answer this question you need to understand the concept of maximum transmission unit.
 
@@ -21,11 +21,11 @@ To answer this question you need to understand the concept of maximum transmissi
 
 When you send a packet over the Internet, it's not like there's a direct cable connection between the source and destination IP address. The internet simply doesn't work this way. What actually happens is that packets hop from one computer to another to reach their destination.
 
-According to the IP standard, each computer along this route enforces a maximum packet size it supports which is called the MTU. If any computer (router) recieves a packet larger than its MTU, it has the option of a) fragmenting that packet at the IP level before passing it on, or b) dropping that packet.
+Each computer along this route enforces a maximum packet size called the maximum transmissible unit, or MTU. According to the IP standard, if any computer recieves a packet larger than its MTU, it has the option of a) fragmenting that packet at the IP level, or b) dropping the packet.
 
-So here's how this usually goes down. People write multiplayer game where the average packet size is quite small, lets say a few hundred bytes, but every now and then when a lot of stuff is happening in their game and a burst of packet loss occurs, packets get a lot larger than usual, going above MTU for the route, and suddenly all packets start getting dropped!
+So here's how this usually goes down. People write a multiplayer game where the average packet size is quite small, lets say a few hundred bytes, but every now and then when a lot of stuff is happening in their game and a burst of packet loss occurs, packets get a lot larger than usual, going above MTU for the route, and suddenly all packets start getting dropped!
 
-Just last year (2015) I was talking with Alex Austin at Indiecade about networking in his game [Sub Rosa](http://subrosagame.com). He had this strange networking bug he couldn't reproduce and it was giving him hell. For some reason, players would randomly get disconnected from the game, but only when a bunch of stuff was going on. He was never able to reproduce it. Looking at the logs Alex told me it seemed like _packets just stopped getting through_.
+Just last year (2015) I was talking with Alex Austin at Indiecade about networking in his game [Sub Rosa](http://subrosagame.com). He had this strange networking bug he couldn't reproduce and it was giving him hell. For some reason, players would randomly get disconnected from the game, but only when a bunch of stuff was going on and it was extremely rare. He was never able to reproduce it. Alex told me looking at the logs it seemed like _packets just stopped getting through_.
 
 This sounded _exactly_ like an MTU issue to me, and sure enough, when Alex limited his maximum packet size to a reasonable value the bug went away.
 
@@ -55,13 +55,13 @@ ping: sendto: Message too long
 ping: sendto: Message too long
 Request timeout for icmp_seq 142</pre>
 
-Why 1500? That's the default MTU for MacOS X. It's also the default MTU on Windows. So now we have an upper bound for your packet size assuming you actually care about packets getting through to Windows and Mac boxes without IP level fragmentation or chance of being dropped: __1472 bytes__.
+Why 1500? That's the default MTU for MacOS X. It's also the default MTU on Windows. So now we have an upper bound for your packet size assuming you actually care about packets getting through to Windows and Mac boxes without IP level fragmentation or a chance of being dropped: __1472 bytes__.
 
-So what's the lower bound? Unfortunately for the routers in between your computer and the destination the IPv4 standard says __576__. Does this mean we have to limit our packets to 400 bytes or less? Not really. 
+So what's the lower bound? Unfortunately for the routers in between your computer and the destination the IPv4 standard says __576__. Does this mean we have to limit our packets to 400 bytes or less? In practice, not really. 
 
-Lets talk real-world. MacOS X lets me set MTU values in range 1280 to 1500 so considering packet header overhead, my first guess for a conservative lower bound on the IPv4 Internet today would be __1200 bytes__. Moving forward, in IPv6 this is also a good value, as any packet of 1280 bytes or less is guaranteed to get passed on without IP level fragmentation.
+MacOS X lets me set MTU values in range 1280 to 1500 so considering packet header overhead, my first guess for a conservative lower bound on the IPv4 Internet today would be __1200 bytes__. Moving forward, in IPv6 this is also a good value, as any packet of 1280 bytes or less is guaranteed to get passed on without IP level fragmentation.
 
-This lines up with numbers that I have seen throughout my career. In my experience games rarely try anything complicated like attempting to discover path MTU, they just assume a reasonably conservative MTU and roll with that, something like 1000 to 1200 bytes of payload data. If a packet larger than this needs to be sent, it's split up into fragments by the game protocol and re-assembled on the other side.
+This lines up with numbers that I've seen throughout my career. In my experience games rarely try anything complicated like attempting to discover path MTU, they just assume a reasonably conservative MTU and roll with that, something like 1000 to 1200 bytes of payload data. If a packet larger than this needs to be sent, it's split up into fragments by the game protocol and re-assembled on the other side.
 
 And that's _exactly_ what I'm going to show you how to do in this article.
 
@@ -69,9 +69,9 @@ And that's _exactly_ what I'm going to show you how to do in this article.
 
 Let's get started with implementation.
 
-The first thing we need to decide when building up our own packet fragmentation and reassembly in how we're going to represent fragment packets over the network. 
+The first thing we need to decide is how we're going to represent fragment packets over the network so they are distinct from non-fragmented packets.
 
-Ideally, we would like fragmented and non-fragmented packets to be compatible with the existing packet structure we've already built, with as little overhead as possible in the network protocol when sending packets smaller than MTU.
+Ideally, we would like fragmented and non-fragmented packets to be compatible with the existing packet structure we've already built, with as little overhead as possible in the common case when we are sending packets smaller than MTU.
 
 Here's the packet structure from the end of the previous article:
 
