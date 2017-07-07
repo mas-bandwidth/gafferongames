@@ -11,7 +11,7 @@ draft = false
 
 Hi, I'm Glenn Fiedler and welcome to __Building a Game Network Protocol__.
 
-In the [previous article](/post/serialization_strategies/) we discussed how to unify packet read and write into a single serialize function and add a bunch of safety features when reading packets.
+In the [previous article](/post/serialization_strategies/) we discussed how to unify packet read and write into a single serialize function and added a bunch of safety features to packet read.
 
 Now we are ready to start putting interesting things in our packets and sending them over the network, but immediately we run into an interesting question: _how big should our packets be?_
 
