@@ -213,54 +213,70 @@ Aside from these concerns, implementation is reasonably straightforward: store r
 
 ## Data Structure on Receiver Side
 
-The first thing we need is some way to...
-
--- todo: we need a better turn here
-
-What sort of data structure makes sense here? Nothing fancy! It's something I call a sequence buffer:
+The first thing we need is some way to store fragments before they are reassembled. My favorite data structure is something I call a _sequence buffer_:
 
 <pre>
 const int MaxEntries = 256;
 
 struct SequenceBuffer
 {
-    bool exists[MaxEntries];
-    uint16_t sequence[MaxEntries];
+    uint32_t sequence[MaxEntries];
     Entry entries[MaxEntries];
 };
 </pre>
 
-There are a few things going on here. Firstly, structure-of-arrays (SoA) allows quick and cache efficient testing if a particular entry exists in the sequence buffer, even if the per-packet entry structure is is large (and for packet fragmentation and re-assembly it could very well be.)
-
-So how do we use this data structure? When you have a packet fragment coming in it has a sequence number which identifies which packet the fragment belongs to. The sequence number keeps moving forward (with the exception of the wrap around event) so the key trick is that you hash the sequence number into a rolling index into the array like this:
+Indexing into the arrays is performed with modulo arithmetic, giving us a fast O(1) lookup of entries by sequence number:
 
 <pre>
-int index = sequence % MaxEntries;
+const int index = sequence % MaxEntries;
 </pre>
 
-Now you can quickly test at O(1) whether a particular entry exists by sequence number, and test if that entry matches the packet sequence number you would like to read or write. You need to test both the exists flag and sequence number, because all sequence numbers are valid numbers (eg. 0), and because the entry from your particular packet sequence number may exist, but belong to another sequence number from in the past (eg. some other sequence that resolves to the same index modulo MaxEntries).
+A sentinel value of 0xFFFFFFFF is used to represent empty entries. This value cannot possibly occur with 16 bit sequence numbers, thus providing us with a fast test to see if an entry exists for a given sequence number, without an additional branch to test if that entry exists.
 
-So when the first fragment of a new packet comes in you hash the sequence to an index, discover that it does not exist yet, so you set exists[index] = 1 and the sequence[index] to match the packet sequence you are processing and store that fragment in that entry in the sequence buffer. The next time a fragment packet comes in, you have the same sequence number, and see that an entry for that sequence already exists, and that the sequence number for that entry matches your packet sequence number, so you accumulate the next fragment in that entry, and you keep doing this until eventually all fragments for that packet have been received.
+This data structure is used as follows. When the first fragment of a new packet comes in, the sequence number is mapped to an entry in the sequence buffer. If an entry doesn't exist, it's added and the fragment data is stored in there, along with information about the fragment, eg. how many fragments there are, how many fragments have been received so far, and so on.
 
-And that's basically it at a high level. For a more complete explanation of this approach please refer to the example source code for this article. <a href="https://www.patreon.com/gafferongames?ty=h">Click here to get the example source code for this article series</a>.
+Each time a new fragment arrives, it looks up the entry by the packet sequence number. When an entry already exists, the fragment data is stored and number of fragments received is incremented. Eventually, once the number of fragments received matches the number of fragments in the packet, the packet is reassembled and delivered to the user.
 
-## Test Driven Development for Network Protocols
+Since it's possible for old entries to stick around (potentially with allocated blocks), great care must be taken to clean up any stale entries when inserting new entries in the sequence buffer. These stale entries correspond to packets that didn't receive all fragments.
 
-One thing I'd like to close this article out on. I feel like I'd be doing a disservice if I don't mention this approach to my readers.
+And that's basically it at a high level. For further details on this approach please refer to the example source code for this article. 
 
-Writing a custom network protocol is <span style="text-decoration: underline;"><strong>hard</strong></span>. So hard that I've done this from scratch at least 10 times but each time I manage to fuck it up in a new and interesting ways. You'd think I'd learn eventually but this stuff is complicated. You can't just write the code and expect it to work. You have to test it!
+<a href="https://www.patreon.com/gafferongames">Click here to get the example source code for this article series</a>.
 
-My strategy when writing low-level network protocol layer code is:
+## Test Driven Development
 
-<ul>
-    <li>Code defensively. Assert everywhere. These asserts will fire and they'll be important clues you need when something goes wrong.</li>
-    <li>Add functional tests and make sure stuff is working as you are writing. Put your code through its paces at a basic level as you write it and make sure it's working as you build it up. Think hard about cases that make sense that need to be properly handled and add tests for those.</li>
-    <li>Just adding a bunch of functional tests is not enough. There are of course cases you didn't think of! Now you have to get really mean. I call this soak testing and I've never, not even once, have coded a network protocol that hasn't subsequently had problems found in it by soak testing. When soak testing just loop forever and just do a mix of random stuff that puts your system through its paces, eg. random length packets in this case with a huge amount of packet loss, out of order and duplicates through a packet simulator. Your soak test passes when it runs overnight and doesn't hang or assert.</li>
-    <li>If you find anything wrong with soak testing. You may need to go back and add detailed logs to the soak test to work out how you got to the failure case. Once you know what's going on, STOP. Don't fix it immediately and just run the soak test again. That's stupid. Instead, add a unit test that reproduces that problem you are trying to fix, verify that test reproduces the problem, and that the problem goes away with your fix. Only after this, go back to the soak test and make sure they run overnight. This way the unit tests document the correct behavior of your system and can quickly be run in future to make sure you don't break this thing moving forward when you make other changes.</li>
-</ul>
+One thing I'd like to close this article out on.
 
-That's my process and it seems to work pretty well. If you are doing low-level network protocol design, the rest of your game depends on this code. You need to be absolutely sure it works before you build on it, otherwise it's like a stack of cards. Game neworking is hard enough without having a suspicion that that your low-level network protocol might not be working properly or has bugs in it. <span style="text-decoration: underline;">So make sure you know it works</span>!
+Writing a custom UDP network protocol is _hard_. It's so hard that even though I've done this from scratch at least 10 times, each time I still manage to fuck it up in a new and exciting ways. You'd think eventually I'd learn, but this stuff is complicated. You can't just write low-level netcode and expect it to just work. 
 
-I hope you're enjoyed the writing in this series so far. <a href="http://www.patreon.com/gafferongames">Please support my writing on patreon</a>, and I'll write new articles faster, plus you get access to example source code for this article under BSD open source licence. <strong><span style="text-decoration: underline;">Thanks for your support</span>!</strong>
+You have to test it!
 
-<a href="http://www.patreon.com/gafferongames"><img src="http://i0.wp.com/gafferongames.com/wp-content/uploads/2014/12/donate.png" alt="" /></a>
+My strategy when testing low-level netcode is as follows:
+
+* Code defensively. Assert everywhere. These asserts will fire and they'll be important clues you need when something goes wrong.
+
+* Add functional tests and make sure stuff is working as you are writing it. Put your code through its paces at a basic level as you write it and make sure it's working as you build it up. Think hard about the essential cases that need to be property handled and add tests that cover them.
+
+* But just adding a bunch of functional tests is not enough. There are of course cases you didn't think of! Now you have to get really mean. I call this soak testing and I've never, not even once, have coded a network protocol that hasn't subsequently had problems found in it by soak testing. 
+
+* When soak testing just loop forever and just do a mix of random stuff that puts your system through its paces, eg. random length packets in this case with a huge amount of packet loss, out of order and duplicates through a packet simulator. Your soak test passes when it runs overnight and doesn't hang or assert.
+
+* If you find anything wrong with soak testing. You may need to go back and add detailed logs to the soak test to work out how you got to the failure case. Once you know what's going on, stop. Don't fix it immediately and just run the soak test again. 
+
+* Instead, add a unit test that reproduces that problem you are trying to fix, verify your test reproduces the problem, and that it problem goes away with your fix. Only after this, go back to the soak test and make sure they run overnight. This way the unit tests document the correct behavior of your system and can quickly be run in future to make sure you don't break this thing moving forward when you make other changes.
+
+* Add a bunch of logs. High level errors, info asserts showing an overview of what is going on, but also low-level warnings and debug logs that show what went wrong after the fact. You're going to need these logs to diagnose issues that don't occur on your machine. Make sure the log level can be adjusted dynamically.
+
+* Implement network simulators and make sure code handles the worst possible network conditions imaginable. 99% packet loss, 10 seconds of latency and +/- several seconds of jitter. Again, you'll be surprised how much this uncovers. Testing is the time where you want to uncover and fix issues with bad network conditions, not the night before your open beta.
+
+* Implement fuzz tests where appropriate to make sure your protocol doesn't crash when processing random packets. Leave fuzz tests running overnight to feel confident that your code is reasonably secure against malicious packets and doesn't crash.
+
+* Surprisingly, I've consistently found issues that only show up when I loop the set of unit tests over and over, perhaps these issues are caused by different random numbers in tests, especially with the network simulator being driven by random numbers. This is a great way to take a rare test that fails once every few days and make it fail every time. So before you congratulate yourself on your tests passing 100%, add a mode where your unit tests can be looped easily, to uncover such errors.
+
+* Test simultaneously on multiple platforms. I've never written a low-level library that worked first time on MacOS, Windows and Linux. There are always interesting compiler specific issues and crashes. Test on multiple platforms as you develop, otherwise it's pretty painful fixing all these at the end.
+
+* This about how people can attack the protocol. Implement code to defend against these attacks. Add functional tests that mimic these attacks and make sure that your code handles them correctly.
+
+This is my process and it seems to work pretty well. If you are writing a low-level network protocol, the rest of your game depends on this code working correctly. You need to be absolutely sure it works before you build on it, otherwise it's basically a stack of cards.
+
+In my experience, game neworking is hard enough without having suspicions that that your low-level network protocol has bugs that only show up under extreme network conditions. That's exactly where you need to be able to trust your code works correctly. __So test it!__
