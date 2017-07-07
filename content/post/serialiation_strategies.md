@@ -3,7 +3,7 @@ categories = ["Building a Game Network Protocol"]
 tags = ["networking"]
 date = "2016-09-04"
 title = "Serialization Strategies"
-description = "Smart tricks to unify packet read and write"
+description = "Smart tricks that unify packet read and write"
 draft = false
 +++
 

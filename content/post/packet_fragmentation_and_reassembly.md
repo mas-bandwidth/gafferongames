@@ -3,38 +3,39 @@ categories = ["Building a Game Network Protocol"]
 tags = ["networking"]
 date = "2016-09-06"
 title = "Packet Fragmentation and Reassembly"
-description = "How to implement packet fragmentation and reassembly for your game network protocol"
+description = "How to send and receive packets larger than MTU"
 draft = true
 +++
 
 ## Introduction
 
-<p style="text-align: left;">Hi, I'm Glenn Fiedler and welcome to the third article in <a href="http://gafferongames.com/building-a-game-network-protocol/">Building a Game Network Protocol</a>.</p>
-In the <a href="http://gafferongames.com/building-a-game-network-protocol/serialization-strategies/">previous article</a> we discussed how to unify packet read and write into a single serialize function.
+Hi, I'm Glenn Fiedler and welcome to __Building a Game Network Protocol__.
 
-Now we actually want to put starting interestings things in our packets, but immediately we run into an interesting question: <strong><span style="text-decoration: underline;">How big should packets be?</span></strong>
+In the [previous article](/post/serialization_strategies/) we discussed how to unify packet read and write into a single serialize function and add a bunch of safety features when reading packets.
+
+Now we are ready to start putting interesting things in our packets and sending them over the network, but we immediately run into an interesting question: _how big should our packets be?_
 
 To answer this question you need to understand the concept of maximum transmission unit.
 
-## Maximum Transmission Unit (MTU)
+## Background
 
-When you send a packet over the internet is that it hops from one computer (router) to another in order to reach its destination. This is how a packet switched network operates. It's not like there's a direct wire connecting the between the source and destination IP addresses most of the time.
+When you send a packet over the Internet, it's not like there's a direct cable connection between the source and destination IP address. The internet simply doesn't work this way. What actually happens is that packets hop from one computer to another to reach their destination.
 
-Each computer (router) along the route enforces a maximum packet size called the MTU. And if any router recieves a packet larger than its MTU, it has the option of a) fragmenting that packet at the IP level and passing it on, or b) <em><span style="text-decoration: underline;">dropping that packet</span></em>.
+According to the IP standard, each computer along this route enforces a maximum packet size it supports which is called the MTU. If any computer (router) recieves a packet larger than its MTU, it has the option of a) fragmenting that packet at the IP level before passing it on, or b) dropping that packet.
 
-So here's a situation that I see all the time. People write multiplayer game where the average packet size is quite small, lets say a few hundred bytes, but every now and then when a lot of stuff is happening in their game <span style="text-decoration: underline;">and</span> a burst of packet loss occurs, packet get a lot larger than usual...
+So here's how this usually goes down. People write multiplayer game where the average packet size is quite small, lets say a few hundred bytes, but every now and then when a lot of stuff is happening in their game and a burst of packet loss occurs, packets get a lot larger than usual, going above MTU for the route, and suddenly all packets start getting dropped!
 
-Suddenly, for a very small percentage of the player base, <span style="text-decoration: underline;">everything goes to hell</span>.
+Just last year (2015) I was talking with Alex Austin at Indiecade about networking in his game [Sub Rosa](http://subrosagame.com). He had this strange networking bug he couldn't reproduce and it was giving him hell. For some reason, players would randomly get disconnected from the game, but only when a bunch of stuff was going on. He was never able to reproduce it. Looking at the logs Alex told me it seemed like _packets just stopped getting through_.
 
-Just last year (2015) I was talking with Alex Austin at Indiecade about networking in his game <a href="http://subrosagame.com">Sub Rosa</a>. He had this strange networking bug he couldn't reproduce. For some reason, certain clients (one or two in his entire player base!) would randomly get disconnected from the game when a bunch of stuff was going on. Looking at the logs Alex said it seemed like <span style="text-decoration: underline;">packets just stopped getting through</span>.
-
-It sounded <span style="text-decoration: underline;">exactly</span> like an MTU issue to me, and sure enough, when Alex limited his maximum packet size to a reasonable value the bug went away.
+This sounded _exactly_ like an MTU issue to me, and sure enough, when Alex limited his maximum packet size to a reasonable value the bug went away.
 
 ## MTU in the real world
 
-So what is a "reasonable packet size"?
+So what's a reasonable maximum packet size?
 
-On the Internet today (2016, IPv4) the MTU is typically 1500 bytes. Give or take a few bytes for UDP/IP packet header and you'll find that the typical number before packets start to get dropped or fragmented is somewhere around 1472.
+On the Internet today (2016, IPv4) the real-world MTU is 1500 bytes. 
+
+Give or take a few bytes for UDP/IP packet header and you'll find that the typical number before packets start to get dropped or fragmented is somewhere around 1472.
 
 You can try this out for yourself by running this command on MacOS X:
 
@@ -54,36 +55,42 @@ ping: sendto: Message too long
 ping: sendto: Message too long
 Request timeout for icmp_seq 142</pre>
 
-Why 1500? That's the default MTU for MacOS X. It's also the default MTU on Windows. So now we have an upper bound for your packet size assuming you actually care about packets getting through to Windows and Mac boxes without IP level fragmentation or chance of being dropped: <strong>1472 bytes.</strong>
+Why 1500? That's the default MTU for MacOS X. It's also the default MTU on Windows. So now we have an upper bound for your packet size assuming you actually care about packets getting through to Windows and Mac boxes without IP level fragmentation or chance of being dropped: __1472 bytes__.
 
-So what's the lower bound? MacOS X lets me set MTU values in range 1280 to 1500 so my first guess for a conservative lower bound on the IPv4 Internet today would be <span style="text-decoration: underline;"><strong>1200 bytes</strong></span>. Moving forward into IPv6 this is also a good value to use for conservative MTU, as any packet size &lt;= 1280 bytes is guaranteed to get passed on without IP level fragmentation.
+So what's the lower bound? Unfortunately for the routers in between your computer and the destination the IPv4 standard says __576__. Does this mean we have to limit our packets to 400 bytes or less? Not really. 
 
-This lines up with numbers that I have seen throughout my career. In my experience games rarely try anything complicated like attempting to discover path MTU, they just assume a reasonably conservative MTU and roll with that. If a packet needs to be sent that is larger than the conservative MTU, the game protocol splits that packet up into fragments and re-assembles them on the other side.
+Lets talk real-world. MacOS X lets me set MTU values in range 1280 to 1500 so considering packet header overhead, my first guess for a conservative lower bound on the IPv4 Internet today would be __1200 bytes__. Moving forward, in IPv6 this is also a good value, as any packet of 1280 bytes or less is guaranteed to get passed on without IP level fragmentation.
 
-<span style="text-decoration: underline;">That's exactly what I'm going to show you how to do in this article</span>.
+This lines up with numbers that I have seen throughout my career. In my experience games rarely try anything complicated like attempting to discover path MTU, they just assume a reasonably conservative MTU and roll with that, something like 1000 to 1200 bytes of payload data. If a packet larger than this needs to be sent, it's split up into fragments by the game protocol and re-assembled on the other side.
+
+And that's _exactly_ what I'm going to show you how to do in this article.
 
 ## Fragment Packet Structure
 
-Lets get started building up our own packet fragmentation and reassembly by deciding how we're going to represent fragment packets over the network. Ideally, we would like fragmented and non-fragmented packets to be compatible with the existing packet structure we've already built, with zero overhead in the network protocol when sending packets which are smaller than MTU.
+Let's get started with implementation.
+
+The first thing we need to decide when building up our own packet fragmentation and reassembly in how we're going to represent fragment packets over the network. 
+
+Ideally, we would like fragmented and non-fragmented packets to be compatible with the existing packet structure we've already built, with as little overhead as possible in the network protocol when sending packets smaller than MTU.
 
 Here's the packet structure from the end of the previous article:
 
 <pre>
-<del>[protocol id] (32 bits)</del> // not actually sent, but used to calc crc32 
+<del>[protocol id] (64 bits)</del> // not actually sent, but used to calc crc32 
 [crc32] (32 bits) 
-[packet type] (2 bits)
+[packet type] (2 bits for 3 distinct packet types)
 (variable length packet data according to packet type) 
 [end of packet serialize check] (32 bits)
 </pre>
 
 We have three packet types in our example: A, B and C.
 
-Lets make one of these packet types generate really large packets that go over MTU:
+Lets make one of these packet types generate really large packets:
 
 <pre>
 static const int MaxItems = 4096 * 4;
 
-struct TestPacketB : public protocol2::Packet
+struct TestPacketB : public Packet
 {
     int numItems;
     int items[MaxItems];
@@ -99,17 +106,25 @@ struct TestPacketB : public protocol2::Packet
     {
         serialize_int( stream, numItems, 0, MaxItems );
         for ( int i = 0; i &lt; numItems; ++i )
+        {
             serialize_int( stream, items[i], -100, +100 );
+        }
         return true;
     }
 };
 </pre>
 
-This may seem contrived but in the real world these situations really do occur. For example, if you have a strategy where you send all un-acked events from server to client and you hit a spike of reliable-ordered events and a burst of packet loss, you can easily end up with packets larger than MTU, even though your average packet size is quite small.
+This may seem somewhat contrived but these situations really do occur. For example, if you have a strategy where you send all un-acked events from server to client and you hit a burst of packet loss, you can easily end up with packets larger than MTU, even though your average packet size is quite small.
+
+Another case ... delta encoder.
+
+-- trim this section. too divergent
 
 In most cases, it's a good idea to avoid this by implementing a strategy where you only include a subset of events or state updates into each packet in order to stay under a specified maximum packet size. This strategy works well in many cases... but there is one case where it doesn't: <strong><span style="text-decoration: underline;">delta encoding</span>. </strong>
 
 Packets created by a delta encoder have a size proportional to the amount of state changed between the previous and the current state. If there are a lot of differences between the states then the delta will be large and there's simply nothing you can do about it. If this delta just happens to be bigger than MTU, tough luck, you still have to send it! So you can see that with delta encoding, you really can't limit to some maximum packet size that is below MTU, so a packet fragmentation and re-assembly strategy makes sense in that case.
+
+-- end trim
 
 Lets get back to packet structure. It's fairly common to add a sequence number at the header of each packet. This isn't anything complicated. It's just a packet number that increases with each packet sent. eg: 0,1,2,3. I like to use 16 bits for sequence numbers even though they wrap around in about 15 minutes @ 60 packets-per-second, it's very unlikely you will ever receive a ~15 minute old packet sent over the network and confuse it for a newer packet with the same number. If this is a concern for you, consider using 32 bit sequence numbers instead.
 
@@ -118,7 +133,7 @@ No matter what size sequence numbers you choose, they're useful for a bunch of t
 So lets add a sequence number to our packet:
 
 <pre>
-<del>[protocol id] (32 bits)</del>   // not actually sent, but used to calc crc32
+<del>[protocol id] (64 bits)</del>   // not actually sent, but used to calc crc32
 [crc32] (32 bits)
 <strong>[sequence] (16 bits)</strong>
 [packet type] (2 bits)
@@ -126,7 +141,7 @@ So lets add a sequence number to our packet:
 [end of packet serialize check] (32 bits)
 </pre>
 
-Here's the interesting part. We could just add a bit <strong>is_fragment</strong> to the header, but then in the common case of non-fragmented packets you're wasting one bit that is always set to zero. Lame.
+Here's the interesting part. We could just add a bit __is_fragment__ to the header, but then in the common case of non-fragmented packets you're wasting one bit that is always set to zero. Lame.
 
 What I do instead is add a special "fragment packet" type:
 

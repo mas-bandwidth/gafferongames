@@ -24,6 +24,10 @@ TODO
 
     Write "Securing Dedicated Servers"
 
+        -- focus on the packet encryption, securing etc, HMAC, sequence # stuff, nonce, replay protection. not on the key exchange.
+
+        -- packet structure with AEAD. etc.
+
     ------------------
 
     Get all articles cross-linked so they have next/prev, patreon links etc.
