@@ -4,7 +4,7 @@ tags = ["networking"]
 date = "2016-09-06"
 title = "Packet Fragmentation and Reassembly"
 description = "How to send and receive packets larger than MTU"
-draft = true
+draft = false
 +++
 
 ## Introduction
