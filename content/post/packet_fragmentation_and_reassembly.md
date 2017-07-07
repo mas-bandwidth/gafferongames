@@ -15,17 +15,17 @@ In the [previous article](/post/serialization_strategies/) we discussed how t
 
 Now we are ready to start putting interesting things in our packets and sending them over the network, but immediately we run into an interesting question: _how big should our packets be?_
 
-To answer this question you need to understand the concept of maximum transmission unit.
+To answer this question properly we need a bit of background about how packets are actually sent over the Internet, and the concept of MTU.
 
 ## Background
 
-When you send a packet over the Internet, it's not like there's a direct cable connection between the source and destination IP address. The internet simply doesn't work this way. What actually happens is that packets hop from one computer to another to reach their destination.
+Perhaps the most important thing to understand about the internet is that there's no direct connection between the source and destination IP address. What actually happens is that packets hop from one computer to another to reach their destination.
 
-Each computer along this route enforces a maximum packet size called the maximum transmissible unit, or MTU. According to the IP standard, if any computer recieves a packet larger than its MTU, it has the option of a) fragmenting that packet at the IP level, or b) dropping the packet.
+Each computer along this route enforces a maximum packet size called the maximum transmission unit, or MTU. According to the IP standard, if any computer recieves a packet larger than its MTU, it has the option of a) fragmenting that packet, or b) dropping the packet.
 
 So here's how this usually goes down. People write a multiplayer game where the average packet size is quite small, lets say a few hundred bytes, but every now and then when a lot of stuff is happening in their game and a burst of packet loss occurs, packets get a lot larger than usual, going above MTU for the route, and suddenly all packets start getting dropped!
 
-Just last year (2015) I was talking with Alex Austin at Indiecade about networking in his game [Sub Rosa](http://subrosagame.com). He had this strange networking bug he couldn't reproduce and it was giving him hell. For some reason, players would randomly get disconnected from the game, but only when a bunch of stuff was going on and it was extremely rare. He was never able to reproduce it. Alex told me looking at the logs it seemed like _packets just stopped getting through_.
+Just last year (2015) I was talking with Alex Austin at Indiecade about networking in his game [Sub Rosa](http://subrosagame.com). He had this strange networking bug he couldn't reproduce. For some reason, players would randomly get disconnected from the game, but only when a bunch of stuff was going on. It was extremely rare and he was unable to reproduce it. Alex told me looking at the logs it seemed like _packets just stopped getting through_.
 
 This sounded _exactly_ like an MTU issue to me, and sure enough, when Alex limited his maximum packet size to a reasonable value the bug went away.
 
@@ -73,7 +73,7 @@ The first thing we need to decide is how we're going to represent fragment packe
 
 Ideally, we would like fragmented and non-fragmented packets to be compatible with the existing packet structure we've already built, with as little overhead as possible in the common case when we are sending packets smaller than MTU.
 
-Here's the packet structure from the end of the previous article:
+Here's the packet structure from the previous article:
 
 <pre>
 <del>[protocol id] (64 bits)</del> // not actually sent, but used to calc crc32 
@@ -83,9 +83,9 @@ Here's the packet structure from the end of the previous article:
 [end of packet serialize check] (32 bits)
 </pre>
 
-We have three packet types in our example: A, B and C.
+In our protocol we have three packet types: A, B and C.
 
-Lets make one of these packet types generate really large packets:
+Let's make one of these packet types generate really large packets:
 
 <pre>
 static const int MaxItems = 4096 * 4;
@@ -116,21 +116,11 @@ struct TestPacketB : public Packet
 
 This may seem somewhat contrived but these situations really do occur. For example, if you have a strategy where you send all un-acked events from server to client and you hit a burst of packet loss, you can easily end up with packets larger than MTU, even though your average packet size is quite small.
 
-Another case ... delta encoder.
+Another common case is delta encoded snapshots in a first person shooter. Here packet size is proportional to the amount of state changed between the baseline and current snapshots for each client. If there are a lot of differences between the snapshots the delta packet is large and there's nothing you can do about it except break it up into fragments and re-assemble them on the other side.
 
--- trim this section. too divergent
+Getting back to packet structure. It's fairly common to add a sequence number at the header of each packet. This is just a packet number that increases with each packet sent. I like to use 16 bits for sequence numbers even though they wrap around in about 15 minutes @ 60 packets-per-second, because it's extremely unlikely that a packet will be delivered 15 minutes late.
 
-In most cases, it's a good idea to avoid this by implementing a strategy where you only include a subset of events or state updates into each packet in order to stay under a specified maximum packet size. This strategy works well in many cases... but there is one case where it doesn't: <strong><span style="text-decoration: underline;">delta encoding</span>. </strong>
-
-Packets created by a delta encoder have a size proportional to the amount of state changed between the previous and the current state. If there are a lot of differences between the states then the delta will be large and there's simply nothing you can do about it. If this delta just happens to be bigger than MTU, tough luck, you still have to send it! So you can see that with delta encoding, you really can't limit to some maximum packet size that is below MTU, so a packet fragmentation and re-assembly strategy makes sense in that case.
-
--- end trim
-
-Lets get back to packet structure. It's fairly common to add a sequence number at the header of each packet. This isn't anything complicated. It's just a packet number that increases with each packet sent. eg: 0,1,2,3. I like to use 16 bits for sequence numbers even though they wrap around in about 15 minutes @ 60 packets-per-second, it's very unlikely you will ever receive a ~15 minute old packet sent over the network and confuse it for a newer packet with the same number. If this is a concern for you, consider using 32 bit sequence numbers instead.
-
-No matter what size sequence numbers you choose, they're useful for a bunch of things like implementing reliability and detecting and discarding out of order packets. Plus, we're definitely going to need a packet sequence number when fragmenting packets because we need some way to identify which packet a fragment belongs to.
-
-So lets add a sequence number to our packet:
+Sequence numbers are useful for a bunch of things like acks, reliability and detecting and discarding out of order packets. In our case, we're going to use the sequence number to identify which packet a fragment belongs to:
 
 <pre>
 <del>[protocol id] (64 bits)</del>   // not actually sent, but used to calc crc32
@@ -141,9 +131,9 @@ So lets add a sequence number to our packet:
 [end of packet serialize check] (32 bits)
 </pre>
 
-Here's the interesting part. We could just add a bit __is_fragment__ to the header, but then in the common case of non-fragmented packets you're wasting one bit that is always set to zero. Lame.
+Here's the interesting part. Sure we could just add a bit __is_fragment__ to the header, but then in the common case of non-fragmented packets you're wasting one bit that is always set to zero.
 
-What I do instead is add a special "fragment packet" type:
+What I do instead is add a special fragment packet type:
 
 <pre>
 enum TestPacketTypes
@@ -156,7 +146,7 @@ enum TestPacketTypes
 };
 </pre>
 
-And it just happens to be free because four packet types fit into the 2 bits we're already using for packet type. Now when a packet is read, if the packet type is zero then we know that a special fragmented packet layout follows the packet type, otherwise we run through the ordinary, non-fragmented read packet codepath.
+And it just happens to be _free_ because four packet types fit into 2 bits. Now when a packet is read, if the packet type is zero we know it's a fragment packet, otherwise we run through the ordinary, non-fragmented read packet codepath.
 
 Lets design what this fragment packet looks like. We'll allow a maximum of 256 fragments per-packet and have a fragment size of 1024 bytes. This gives a maximum packet size of 256k that we can send through this system, which should be enough for anybody, but please don't quote me on this.
 
@@ -173,27 +163,23 @@ With a small fixed size header, UDP header and IP header a fragment packet be we
 &lt;fragment data&gt;</strong>
 </pre>
 
-Notice that we pad bits up to the next byte before writing out the fragment data. Why do this? Two reasons: 1) it's faster to copy the fragment data into the packet via memcpy than bitpacking each byte, 2) we save a small amount of bandwidth by not sending the size of the fragment data. We infer it by subtracting the packet byte index at the start of fragment data from the total size of the packet.
+Notice that we pad bits up to the next byte before writing out the fragment data. Why do this? Two reasons: 1) it's faster to copy fragment data into the packet via memcpy than bitpacking each byte, and 2) we can now save a small amount of bandwidth by inferring the fragment size by subtracting the start of the fragment data from the total size of the packet.
 
 ## Sending Packet Fragments
 
-Sending packet fragments is <span style="text-decoration: underline;">easy</span>. Just work out if the packet being sent is &lt;= conservative MTU and if so, send the packet normally. Otherwise, calculate how many 1024 byte fragments it needs to be split into, construct those fragment packets and send them over the network. Fire and forget!
+Sending packet fragments is _easy_. For any packet larger than conservative MTU, simply calculate how many 1024 byte fragments it needs to be split into, and send those fragment packets over the network. Fire and forget!
 
-One consequence of this fire and forget approach is that if <span style="text-decoration: underline;">any</span> fragment of that packet is lost then the entire packet is lost. It follows that if you have packet loss then sending a 256k packet as 256 fragments is probably not a very good idea.
-
-It's a bad idea because the probability of dropping a packet increases significantly as the number of fragments. Not quite linearly, but in a moderately complicated way that you can read about <a href="http://www.fourmilab.ch/rpkp/experiments/statistics.html">here</a>.
+One consequence of this is that if _any_ fragment of that packet is lost then the entire packet is lost. It follows that if you have packet loss then sending a 256k packet as 256 fragments is not a very good idea, because the probability of dropping a packet increases significantly as the number of fragments increases. Not quite linearly, but in an interesting way that you can read more about [here](http://www.fourmilab.ch/rpkp/experiments/statistics.html).
 
 In short, to calculate the probability of losing a packet, you must calculate the probability of all fragments being delivered successfully and subtract that from one, giving you the probability that at least one fragment was dropped.
 
-This gives you the probability that your fragmented packet will be dropped:
-
 <pre>
-1 - ( probability of fragment being delivered ) ^ num_fragments
+1 - probability_of_fragment_being_delivered ^ num_fragments
 </pre>
 
-For example, if we send a non-fragmented packet over the network with 1% packet loss, there is a 1/100 chance that packet will be dropped, or, redundantly: 1 - (99/100) ^ 1 = 1/100 = <strong>1%</strong>
+For example, if we send a non-fragmented packet over the network with 1% packet loss, there is naturally a 1/100 chance the packet will be dropped.
 
-As the number of fragments increase, the chance of losing the packet also increases:
+As the number of fragments increase, packet loss is amplified:
 <ul>
     <li>Two fragments: 1 - (99/100) ^ 2 = <strong>2%</strong></li>
     <li>Ten fragments: 1 - (99/100) ^ 10 = <strong>9.5%</strong></li>
@@ -201,40 +187,37 @@ As the number of fragments increase, the chance of losing the packet also increa
     <li>256 fragments: 1 - (99/100) ^ 256 = <strong>92.4%</strong></li>
 </ul>
 
-So I recommend you take it easy with the number of fragments. It's best to use this strategy only for packets in the 2-4 fragment range, and only for time critical data that doesn't matter too much if it gets dropped like delta encoded state. It's <strong><span style="text-decoration: underline;">definitely not</span></strong> a good idea to fire down a bunch of reliable-ordered events in a huge packet and rely on packet fragmentation and reassembly to save your ass.
+So I recommend you take it easy with the number of fragments. It's best to use this strategy only for packets in the 2-4 fragment range, and only for time critical data that doesn't matter too much if it gets dropped. It's _definitely not_ a good idea to fire down a bunch of reliable-ordered events in a huge packet and rely on packet fragmentation and reassembly to save your ass.
 
-Another typical use case for large packets is when a client joins a game. You usually want to send a large block of data down reliably to that client. Perhaps it represents the initial state of the world for late join. Whatever you do, don't send that block of data down using the fragmentation trick in this article. Instead, check out the technique in <a href="http://gafferongames.com/building-a-game-network-protocol/sending-large-blocks-of-data/">next article</a> which lets you send large blocks of data quickly and reliably under packet loss by resending fragments until they are all received.
+Another typical use case for large packets is when a client initially joins a game. Here you usually want to send a large block of data down reliably to that client, for example, representing the initial state of the world for late join. Whatever you do, don't send that block of data down using the fragmentation and re-assembly technique in this article. 
+
+Instead, check out the technique in [next article](/post/sending-large-blocks-of-data.html) which handles packet loss by resending fragments until they are all received.
 
 ## Receiving Packet Fragments
 
-While sending fragmented packets is super easy, receiving them is actually pretty tricky.
+It's time to implement the code that receives and processed packet fragments. This is a bit tricky because we have to be particularly careful of somebody trying to attack us with malicious packets.
 
-The reason for this is that not only do we have to maintain a data structure to buffer and re-assemble fragments into packets, we also have to be particularly careful of somebody trying to crash us by sending malicious packets.
+Here's a list of all the ways I can think of to attack the protocol:
 
-Here is the fragment packet we are receiving:
+* Try to send out of bound fragments ids trying to get you to crash memory. eg: send fragments [0,255] in a packet that has just two fragments.
 
-<pre>
-<del>[protocol id] (32 bits)</del>   // not actually sent, but used to calc crc32
-[crc32] (32 bits)
-[sequence] (16 bits)
-[packet type = 0] (2 bits)
-<strong>[fragment id] (8 bits)
-[num fragments] (8 bits)
-[pad zero bits to nearest byte index]
-&lt;fragment data&gt;</strong>
-</pre>
+* Send packet n with some maximum fragment count of say 2, and then send more fragment packets belonging to the same packet n but with maximum fragments of 256 hoping that you didn't realize I widened the maximum number of fragments in the packet after the first one you received, and you trash memory.
 
-And here's a list of all the ways that I would try to attack your protocol to try to crash your server:
-<ul>
-    <li>Try to send out of bound fragments ids trying to get you to crash memory. eg: send fragments [0,255] in a packet that has just two fragments.</li>
-    <li>Send packet n with some maximum fragment count of say 2, and then send more fragment packets belonging to the same packet n but with maximum fragments of 256 hoping that you didn't realize I widened the maximum number of fragments in the packet after the first one you received, and you trash memory.</li>
-    <li>Send really large fragment packets with fragment data larger than 1k hoping to get you to trash memory as you try to copy that fragment data into the data structure, or blow memory budget trying to allocate fragments</li>
-    <li>Continually send you fragments of maximum size (256/256 fragments) in hope that it I could make you allocate a bunch of memory and crash you out. Lets say you have a sliding window of 256 packets, 256 fragments per-packet max, and each fragment is 1k. That's 67,108,864 bytes or 64 mb per-client maximum allocated. Can I crash the server this way? Can I fragment your heap with a bunch of funny sized fragment packets? Only you as the owner of the server can know for sure. It depends on your memory budget and how you allocate memory to store fragments. If this is a problem, limit the number of fragments in the buffer at any point (across all packets) or consider reducing the maximum number of fragments per-packet. Consider statically allocating the data structure for fragments or using a pool to reduce memory fragmentation.</li>
-</ul>
+* Send really large fragment packets with fragment data larger than 1k hoping to get you to trash memory as you try to copy that fragment data into the data structure, or blow memory budget trying to allocate fragments
 
-So you can see that on the receive side you are quite vulnerable and have to be extremely careful to check everything. Aside from this, it's reasonably straightforward: keep the fragments in a data structure, when all packets for a fragment arrive (keep a count) reassemble those fragments into a large packet and return the big packet to the receiver.
+* Continually send fragments of maximum size (256/256 fragments) in hope that it I could make you allocate a bunch of memory and crash you out. Lets say you have a sliding window of 256 packets, 256 fragments per-packet max, and each fragment is 1k. That's 64 mb per-client.
 
-What sort of data structure makes sense here? Nothing fancy! It's something I like to call a sequence buffer. The key trick I'd like to share with you to make this data structure efficient is:
+* Can I fragment the heap with a bunch of funny sized fragment packets sent over and over? Perhaps the server shares a common allocator across clients and I can make allocations fail for other clients in the game because the heap becomes fragmented.
+
+Aside from these concerns, implementation is reasonably straightforward: store received fragments somewhere and when all fragments arrive for a packet, reassemble them into the original packet and return that to the user.
+
+## Data Structure on Receiver Side
+
+The first thing we need is some way to...
+
+-- todo: we need a better turn here
+
+What sort of data structure makes sense here? Nothing fancy! It's something I call a sequence buffer:
 
 <pre>
 const int MaxEntries = 256;
