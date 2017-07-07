@@ -12,13 +12,17 @@ DONE
 
     Pass over "Reading and Writing Packets"
 
-TODO
-
     Pass over "Serialization Strategies"
 
-    ------------------
+TODO
 
-    Fix up gross "Client/Server Connection" article.
+    Pass over "Packet Fragmentation and Reassembly"
+
+    Pass over "Sending Large Blocks of Data"
+
+    Pass over "Client/Server Connection"
+
+    Write "Securing Dedicated Servers"
 
     ------------------
 

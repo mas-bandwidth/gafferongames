@@ -3,8 +3,8 @@ categories = ["Building a Game Network Protocol"]
 tags = ["networking"]
 date = "2016-09-04"
 title = "Serialization Strategies"
-description = "Smart tricks that unify packet read and write"
-draft = true
+description = "Smart tricks to unify packet read and write"
+draft = false
 +++
 
 ## Introduction
@@ -763,7 +763,7 @@ The next level of protection is to pass a CRC32 over your packet and include tha
 
 At this point you may be wincing. Wait. I have to take 8+4 = 12 bytes of overhead per-packet just to implement my own checksum and protocol id? Well actually, _you don't_. You can take a leaf out of how IPv4 does their checksum, and make the protocol id a __magical prefix__.
 
-This means you don't actually send it, and rely on the fact that if the CRC32 is calculated as if the packet were prefixed by the protocol id, then the CRC32 will be incorrect if the sender does not have the same protocol id as the receiver, saving 8 bytes per-packet:
+This means you don't actually send it, and rely on the fact that if the CRC32 is calculated as if the packet were prefixed by the protocol id, then the CRC32 will be incorrect if the sender does not have the same protocol id as the receiver, thus saving 8 bytes per-packet:
 
 <pre>
 <del>[protocol id] (64bits)</del>   // not actually sent, but used to calc crc32
