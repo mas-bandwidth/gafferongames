@@ -15,7 +15,7 @@ In the [previous article](/post/serialization_strategies/) we discussed how t
 
 Now we are ready to start putting interesting things in our packets and sending them over the network, but immediately we run into an interesting question: _how big should our packets be?_
 
-To answer this question properly we need a bit of background about how packets are actually sent over the Internet, and the concept of MTU.
+To answer this question properly we need a bit of background about how packets are actually sent over the Internet.
 
 ## Background
 

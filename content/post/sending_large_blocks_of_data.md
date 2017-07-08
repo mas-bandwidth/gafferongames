@@ -3,24 +3,40 @@ categories = ["Building a Game Network Protocol"]
 tags = ["networking"]
 date = "2016-09-12"
 title = "Sending Large Blocks of Data"
-description = "How to efficiently send large blocks of data over packet loss"
-draft = true
+description = "How to send large blocks reliably over UDP"
+draft = false
 +++
 
 ## Introduction
 
-Hi, I’m Glenn Fiedler and welcome to the fourth article in <strong>Building a Game Network Protocol</strong>.
+Hi, I'm Glenn Fiedler and welcome to __Building a Game Network Protocol__.
 
-In the <a href="http://gafferongames.com/building-a-game-network-protocol/packet-fragmentation-and-reassembly/">previous article</a> we implemented packet fragmentation and reassembly at the game protocol level so game packets larger than MTU (~1500 bytes) aren't dropped by misconfigured routers on the Internet.
+In the [previous article](/post/packet-fragmentation-and-reassembly/) we implemented packet fragmentation and reassembly so we can send packets larger than MTU.
 
-In situations where the data is time critical the technique from the previous article is the best approach. For example, if you are sending large time critical state updates and or deltas with smaller numbers of fragments (lets say, 2-8 fragments) you should use the technique from the previous article.
+This approach is great when the data block you're sending is time critical, but in other cases you need to send large blocks of quickly and reliably over packet loss, and you need the data to get through.
 
-But in other cases you need to send large blocks of data quickly and reliably, and the data is not immediately time critical (eg. time series data). You just need it to get through. Some common examples of this include a large block of data that needs to get down to a client on initial join (perhaps the initial state of the world), the baseline for the start of a delta encoder, or a block of data that a client is waiting on to progress past a load screen in a multiplayer game.
+In this situation, using a different technique gives much better results.
 
-Using the article from the previous techinque results in <em><span style="text-decoration: underline;">packet loss amplification</span></em> because a single dropped fragment results in the whole block being lost. By the time you hit 256 fragments (eg. a 256k block sent with 1024 byte fragments) sending this block over just 1% packet loss has a 92.4% chance of the block being dropped. You'd need to send that entire block 10 times on average in order for it to get through.
+## Background
 
-As the number of fragments increase, you can see that it's becomes important to handle packet loss gracefully instead of just dropping the whole block when a single fragment is lost. Also, because the user is often waiting for this block of data behind a connect or load screen it would be nice to take advantage of available bandwidth and send the block of data as quickly as possible.
-<h2>Chunks and Slices</h2>
+It's common for servers to send large block of data to the client on connect, for example, the initial state of the game world for late join.
+
+Let's assume this data is 256k in size and the client needs to receive it before they can join the game. The client is stuck behind a load screen waiting for the data, so obviously we want it to be transmitted as quickly as possible.
+
+If we send the data with the technique from the previous article, we get _packet loss amplification_ because a single dropped fragment results in the whole packet being lost. The effect of this is actually quite severe. Our example block split into 256 fragments and sent over 1% packet loss has a whopping 92.4% chance of being dropped!
+
+Since we just need the data to get across, we have no choice but to keep resending it. On average, we have to send the block 10 times before it's received. You may laugh but this actually happened on a AAA game I worked on!
+
+To fix this, I implemented a new system for sending large blocks, one that handles packet loss by resends fragments until they are acked. Then I took the problematic large blocks and piped them through this system, fixing a bunch of players stalling out on connect, while continuing to send time critical data (snapshots) via packet fragmentation and reassembly.
+
+It seemed to work pretty well. You should probably do this too.
+
+## Chunks and Slices
+
+-- turn: implementation
+
+-- todo: no. I don't like chunk and slice terminology.
+
 Lets get started with basic terminology. In this new system the large blocks of data are called 'chunks' and the fragments they are split up into are called 'slices'. This name change keeps the chunk system terminology (chunks/slices) distinct from packet fragmentation and reassembly (packets/fragments).
 
 This is something I think is important because these systems solve different problems and there's no reason why you can't use both in the same network protocol. In fact, I often combine the two using packet fragmentation and reassembly for time critical state delta packets, while using the chunk system to send down the (much larger) initial state when a client joins the game.
