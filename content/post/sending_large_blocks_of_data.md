@@ -181,7 +181,7 @@ Also, please don't use this burst strategy if your chunk is large eg. megabytes
 
 Now that we have the sender all sorted out lets move on to the reciever. As mentioned previously, unlike the packet fragmentation and reassembly system from the previous article, the chunk system only ever has one chunk in flight.
 
-This makes the reciever side of the chunk system much simpler, as you can see below:
+This makes the reciever side of the chunk system much simpler:
 
     class ChunkReceiver
     {
@@ -199,22 +199,20 @@ We have a state whether we are currently 'receiving' a chunk over the network, 
 
 In this data structure we also keep track of chunk size (although it is not known with complete accuracy until the last slice arrives), num slices and num received slices, as well as a received flag per-slice. This per-slice received flag lets us discard packets containing slices we have already received, and count the number of slices received so far (since we may receive the slice multiple times, we only increase this count the first time we receive a particular slice). It is also used when generating ack packets. The chunk receive is completed from the receiver's point of view when numReceivedSlices == numSlices.
 
-What does it look like end-to-end receiving a chunk?
+So what does it look like end-to-end receiving a chunk?
 
 First, the receiver sets up set to start at chunk 0. When the a slice packet comes in over the network matching the chunk id 0, 'receiving' flips from false to true, data for that first slice is inserted into 'chunkData' at the correct position, numSlices is set to the value in that packet, numReceivedSlices is incremented from 0 -&gt; 1, and the received flag in the array entry corresponding to that slice is set to true.
 
 As the remaining slice packets for the chunk come in, each of them are checked that they match the current chunk id and numSlices that are being received and discarded if they don't match. Packets are also discarded if they contain a slice that has already been received. Otherwise, the slice data is copied into the correct place in the chunkData array, numReceivedSlices is incremented and received flag for that slice is set to true.
 
-This process continues until all slices of the chunk are received, at which point the receiver sets receiving to 'false' and 'readyToRead' to true. While 'readyToRead' is true all incoming slice packets are discarded. At this point, typically very shortly after the chunk receive packet processing is performed on the same frame, the caller checks 'do I have a chunk to read?' and processes the chunk data. All chunk receive data is cleared back to defaults, except chunk id which is incremented 0 -&gt; 1, and we are ready to receive the next chunk.
+This process continues until all slices of the chunk are received, at which point the receiver sets receiving to 'false' and 'readyToRead' to true. While 'readyToRead' is true all incoming slice packets are discarded. At this point, the chunk receive packet processing is performed, typically on the same frame. The caller checks 'do I have a chunk to read?' and processes the chunk data. All chunk receive data is cleared back to defaults, except chunk id which is incremented 0 -&gt; 1, and we are ready to receive the next chunk.
 
-## Acks and the Importance of Soak Testing
+## The Importance of Soak Testing
 
 At first glance the ack system seems really simple:
 
-<ul>
-    <li>Keep trace of slices that have been received</li>
-    <li>When a slice packet is received, reply with an ack packet containing all acked slices</li>
-</ul>
+* Keep trace of slices that have been received
+* When a slice packet is received, reply with an ack packet containing all acked slices
 
 This seems fairly straightforward to implement, but like most things over UDP there are some subtle points that make it a bit tricky when packet loss gets involved.
 
