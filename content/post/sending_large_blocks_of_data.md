@@ -3,7 +3,7 @@ categories = ["Building a Game Network Protocol"]
 tags = ["networking"]
 date = "2016-09-12"
 title = "Sending Large Blocks of Data"
-description = "How to send large blocks reliably over UDP"
+description = "How to send blocks quickly and reliably over UDP"
 draft = false
 +++
 
@@ -175,21 +175,21 @@ One thing I've tried in the past with excellent results is an initial burst. Ass
 
 Why does this work? In the case where the user has a good internet connection (some multiple of 10mbps or greater...), the slices get through very quickly indeed. In the situation where the connection is not so great, the burst gets buffered up and _most_ slices will be delivered as quickly as possible limited only by the amount bandwidth available. After this point switching to the regular strategy at a lower rate picks up any slices that didn't get through the first time.
 
-This seems a bit risky so let me explain. In the case where the user can't quite support this bandwidth what you're relying on here is that routers on the Internet _strongly prefer_ to buffer packets rather than discard them at almost any cost. It's a TCP thing. Normally, I hate this because it induces latency in packet delivery and messes up your game packets which you want delivered as quickly as possible, but in this case it's good behavior because the player really has nothing else to do but wait for your chunk to get through. 
+This seems a bit risky so let me explain. In the case where the user can't quite support this bandwidth what you're relying on here is that routers on the Internet _strongly prefer_ to buffer packets rather than discard them at almost any cost. It's a TCP thing. Normally, I hate this because it induces latency in packet delivery and messes up your game packets which you want delivered as quickly as possible, but in this case it's good behavior because the player really has nothing else to do but wait for your chunk to get through. 
 
 Just don't go too overboard with the spam or the congestion will persist after your chunk send completes and it will affect your game for the first few seconds. Also, make sure you increase the size of your OS socket buffers on both ends so they are larger than your maximum chunk size (I recommend at least double), otherwise you'll be dropping slices packets before they even hit the wire.
 
-Finally, I want to be a responsible network citizen here so although I recommend sending all slices once in an initial burst, it's important for me to mention that I think this really is only appropriate, and only really _borderline appropriate_ behavior for small chunks in the few 100s of k range in 2016, and only when your game isn't sending anything else that is time-critical at the same time. For example, please use the conservative strategy if you are sending a block of data down while the user is playing your game otherwise you risk affecting their playing experience by inducing additional latency and/or packet loss.
+Finally, I want to be a responsible network citizen here so although I recommend sending all slices once in an initial burst, it's important for me to mention that I think this really is only appropriate, and only really _borderline appropriate_ behavior for small chunks in the few 100s of k range in 2016, and only when your game isn't sending anything else that is time-critical at the same time.
 
-Please don't use this burst strategy if your chunk is large eg. megabytes to 10s of megabytes range because that's way too big to be relying on the kindness of strangers, AKA. the buffers in the routers between you and your packet's destination. For sustained high throughput delivery of _really_ large blocks of data it's necessary to implement something smarter. Something adaptive that tries to send data as quickly as it can, but backs off as it detects too much latency and/or packet loss as a result of flooding the connection. Such a system is outside of the scope of this article.
+Please don't use this burst strategy if your chunk is really large, eg: megabytes of data, because that's way too big to be relying on the kindness of strangers, AKA. the buffers in the routers between you and your packet's destination. For this it's necessary to implement something smarter. Something adaptive that tries to send data as quickly as it can, but backs off as it detects too much latency and/or packet loss as a result of flooding the connection. Such a system is outside of the scope of this article.
 
 ## Receiver Implementation
 
-Now that we have the sender all sorted out lets move on to the reciever. 
+Now that we have the sender all sorted out let's move on to the reciever. 
 
-As mentioned previously, unlike the packet fragmentation and reassembly system from the previous article, the chunk system only ever has one chunk in flight.
+As mentioned previously, unlike the packet fragmentation and reassembly system from the previous article, the chunk system only ever has one chunk in flight. 
 
-This makes the reciever side of the chunk system much, much simpler:
+This makes the reciever side of the chunk system much simpler:
 
     class ChunkReceiver
     {
@@ -203,45 +203,18 @@ This makes the reciever side of the chunk system much, much simpler:
         uint8_t chunkData[MaxChunkSize];
     };
 
-We have a state whether we are currently 'receiving' a chunk over the network, plus a 'readyToRead' state which indicates that a chunk has received all slices and is ready to be popped off by the user. This is effectively a minimal receive queue of length 1. If you don't like this, of course you are free to immediately pop the chunk data off the receiver and stick it in a real receive queue instead.
+We have a state whether we are currently 'receiving' a chunk over the network, plus a 'readyToRead' state which indicates that a chunk has received all slices and is ready to be popped off by the user. This is effectively a minimal receive queue of length 1. If you don't like this, of course you are free to immediately pop the chunk data off the receiver and stick it in a queue.
 
-In this data structure we also keep track of chunk size (although it is not known with complete accuracy until the last slice arrives), num slices and num received slices, as well as a received flag per-slice. This per-slice received flag lets us discard packets containing slices we have already received, and count the number of slices received so far (since we may receive the slice multiple times, we only increase this count the first time we receive a particular slice). It is also used when generating ack packets. The chunk receive is completed from the receiver's point of view when numReceivedSlices == numSlices.
+In this data structure we also keep track of chunk size (although it is not known with complete accuracy until the last slice arrives), num slices and num received slices, as well as a received flag per-slice. This per-slice received flag lets us discard packets containing slices we have already received, and count the number of slices received so far (since we may receive the slice multiple times, we only increase this count the first time we receive a particular slice). It's also used when generating ack packets. The chunk receive is completed from the receiver's point of view when numReceivedSlices == numSlices.
 
 So what does it look like end-to-end receiving a chunk?
 
 First, the receiver sets up set to start at chunk 0. When the a slice packet comes in over the network matching the chunk id 0, 'receiving' flips from false to true, data for that first slice is inserted into 'chunkData' at the correct position, numSlices is set to the value in that packet, numReceivedSlices is incremented from 0 -&gt; 1, and the received flag in the array entry corresponding to that slice is set to true.
 
-As the remaining slice packets for the chunk come in, each of them are checked that they match the current chunk id and numSlices that are being received and discarded if they don't match. Packets are also discarded if they contain a slice that has already been received. Otherwise, the slice data is copied into the correct place in the chunkData array, numReceivedSlices is incremented and received flag for that slice is set to true.
+As the remaining slice packets for the chunk come in, each of them are checked that they match the current chunk id and numSlices that are being received and are ignored if they don't match. Packets are also ignored if they contain a slice that has already been received. Otherwise, the slice data is copied into the correct place in the chunkData array, numReceivedSlices is incremented and received flag for that slice is set to true.
 
-This process continues until all slices of the chunk are received, at which point the receiver sets receiving to 'false' and 'readyToRead' to true. While 'readyToRead' is true all incoming slice packets are discarded. At this point, the chunk receive packet processing is performed, typically on the same frame. The caller checks 'do I have a chunk to read?' and processes the chunk data. All chunk receive data is cleared back to defaults, except chunk id which is incremented 0 -&gt; 1, and we are ready to receive the next chunk.
-
-## The Importance of Soak Testing
-
-At first glance the ack system seems really simple:
-
-* Keep trace of slices that have been received
-* When a slice packet is received, reply with an ack packet containing all acked slices
-
-This seems fairly straightforward to implement, but like most things over UDP there are some subtle points that make it a bit tricky when packet loss gets involved.
-
-A naive implementation for acks might work like this. Each time a slice is received, reply with an ack packet containing all acks (including the slice that was just received). This works logically, but it leaves the chunk protocol open for a malicious sender to exploit it as a DDoS tool. How? Well, if you 1-1 reply to each slice sent to you with an ack, and the sender is able to construct a _tiny_ slice packet and you respond with an ack packet that's larger than the slice packet sent to you, you have just provided somebody with a way to amplify their DDoS attack with forged packet headers.
-
-Now maybe I'm being paranoid here (I definitely am) but one way to guard against DDoS amplification is by designing your protocol such that a packet received has a one-to-one mapping to a another packet sent in response. Don't make it so that if somebody sends you 1000 slice packets you reply with 1000 ack packets. Sent only one ack packet in response, at a maximum rate of 10 or 20 ack packets per-second.
-
-There are other ways this ack system tends to go wrong and these all tend to manifest as 'send hangs'. In other words, the receiver knows the chunk has finished being sent, but due to programmer error, the sender is missing an ack (perhaps for the last slice) and gets stuck in a state where it keeps resending this slice over and over and never getting an ack in return.
-
-I've implemented this chunk system from scratch probably at least 5 times in the past 10 years and each time I find new and exciting ways to hang the sender. My strategy for developing and testing the chunk system is to first code it so that it works, and then setup a test harness that randomly sends chunks across of random sizes under large amounts of packet loss, out of order packets and duplicates. This tends to flush out any hangs. Not once have I managed to implement the chunk system without having at least one hang in it and usually I managed to slip in at least 2 or 3. So reader, don't get cocky if you are planning on implementing this from scratch. Please setup a soak test. You can thank me later.
-
-The first hang I usually encounter is caused by not sending acks back for redundant receives of the same slice. It goes a bit like this: "oh, this slice has already been received? discard the slice packet" and forgetting to set the dirty flag for an ack. This breaks the sender because without an ack, how will the sender ever realize the slice it is repeatedly sending has been received when the first ack for that packet was dropped? You'll only see this hang if you get particularly unlucky with packet loss, eg. it's necessary to lose the very last ack packet sent in response to the last slice in order for this condition to occur.
-
-The next hang happens because the receiver knows the chunk send has completed before the sender does, so it transitions into the state 'readyToRead' which drops incoming packets. Again, in this state, even though the receiver thinks the chunk has been fully received, the sender doesn't yet know this, so it's necessary to keep setting that dirty flag for acks even once the chunk has been received, so the sender keeps getting acks sent back to it until it realizes that the chunk has been received too.
-
-The final hang that usually trips me up is on the transition after reading the chunk, where 'readyToRead' is set back to false and the chunk id is incremented. eg: chunk 0 finishes receiving, the user reads that chunk off and chunk id is incremented 1 so we are ready to start receiving slices for that chunk (we discard any slices with a different chunk id to the current slice we are receiving).
-
-Again, here the sender is a bit behind and because of packet loss, may not get the first ack sent through. In this case, it is necessary to watch for slice packets and if we are in a state where we are not receiving chunk n yet, and a slice comes in for chunk n-1, then we must set a special dirty flag where we send out an ack for all slices in chunk n-1, otherwise the sender won't realize the chunk is received and will hang.
-
-As you can see, acks are subtle and it's a somewhat strange process of induction where slices received on one end set a dirty flag which results in acks getting sent back until the sender eventually agrees with the set of received chunks on the sender. If you ever break this chain of slice -&gt; ack response then the system will hang. I encourage you to take a close look at the [source code](http://www.patreon.com/gafferongames) for this article for further details.
+This process continues until all slices of the chunk are received, at which point the receiver sets receiving to 'false' and 'readyToRead' to true. While 'readyToRead' is true, incoming slice packets are discarded. At this point, the chunk receive packet processing is performed, typically on the same frame. The caller checks 'do I have a chunk to read?' and processes the chunk data. All chunk receive data is cleared back to defaults, except chunk id which is incremented from 0 -&gt; 1, and we are ready to receive the next chunk.
 
 ## Conclusion
 
-The chunk system is simple in concept, but the implementation is certainly not trivial. There's just so much to learn when you implement a system like this from scratch. Give it a go!
+The chunk system is simple in concept, but the implementation is certainly not trivial. I encourage you to take a close look at the [source code](http://www.patreon.com/gafferongames) for this article for further details.
