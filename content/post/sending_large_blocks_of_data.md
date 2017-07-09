@@ -13,9 +13,9 @@ Hi, I'm Glenn Fiedler and welcome to __Building a Game Network Protocol__.
 
 In the [previous article](/post/packet-fragmentation-and-reassembly/) we implemented packet fragmentation and reassembly so we can send packets larger than MTU.
 
-This approach is great when the data block you're sending is time critical, but in other cases you need to send large blocks of quickly and reliably over packet loss, and you need the data to get through.
+This approach works great when the data block you're sending is time critical, but in other cases you need to send large blocks of quickly and reliably over packet loss, and you need the data to get through.
 
-In this situation, using a different technique gives much better results.
+In this situation, a different technique gives much better results.
 
 ## Background
 
@@ -23,137 +23,125 @@ It's common for servers to send large block of data to the client on connect, fo
 
 Let's assume this data is 256k in size and the client needs to receive it before they can join the game. The client is stuck behind a load screen waiting for the data, so obviously we want it to be transmitted as quickly as possible.
 
-If we send the data with the technique from the previous article, we get _packet loss amplification_ because a single dropped fragment results in the whole packet being lost. The effect of this is actually quite severe. Our example block split into 256 fragments and sent over 1% packet loss has a whopping 92.4% chance of being dropped!
+If we send the data with the technique from the previous article, we get _packet loss amplification_ because a single dropped fragment results in the whole packet being lost. The effect of this is actually quite severe. Our example block split into 256 fragments and sent over 1% packet loss now has a whopping 92.4% chance of being dropped!
 
-Since we just need the data to get across, we have no choice but to keep resending it. On average, we have to send the block 10 times before it's received. You may laugh but this actually happened on a AAA game I worked on!
+Since we just need the data to get across, we have no choice but to keep sending it until it gets through. On average, we have to send the block 10 times before it's received. You may laugh but this actually happened on a AAA game I worked on!
 
 To fix this, I implemented a new system for sending large blocks, one that handles packet loss by resends fragments until they are acked. Then I took the problematic large blocks and piped them through this system, fixing a bunch of players stalling out on connect, while continuing to send time critical data (snapshots) via packet fragmentation and reassembly.
 
-It seemed to work pretty well. You should probably do this too.
-
 ## Chunks and Slices
 
--- turn: implementation
+In this new system blocks of data are called _chunks_. Chunks are split up into _slices_. This name change keeps the chunk system terminology (chunks/slices) distinct from packet fragmentation and reassembly (packets/fragments).
 
--- todo: no. I don't like chunk and slice terminology.
+The basic idea is that slices are sent over the network repeatedly until they all get through. Since we are implementing this over UDP with packet loss, out of order packet delivery and duplicate packets, simple in concept becomes a little more complicated in implementation. We have to build in our own basic reliability system so the sender knows which slices have been received.
 
-Lets get started with basic terminology. In this new system the large blocks of data are called 'chunks' and the fragments they are split up into are called 'slices'. This name change keeps the chunk system terminology (chunks/slices) distinct from packet fragmentation and reassembly (packets/fragments).
+This reliability gets quite tricky if we have a bunch of different chunks in flight, so we're going to make a simplifying assumption up front: we're only going to send one chunk over the network at a time. This doesn't mean the sender can't have a local send queue for chunks, just that in terms of network traffic there's only ever one chunk _in flight_ at any time.
 
-This is something I think is important because these systems solve different problems and there's no reason why you can't use both in the same network protocol. In fact, I often combine the two using packet fragmentation and reassembly for time critical state delta packets, while using the chunk system to send down the (much larger) initial state when a client joins the game.
+This makes intuitive sense because the whole point of the chunk system is to send chunks reliably and in-order. If you are for some reason sending chunk 0 and chunk 1 at the same time, what's the point? You can't process chunk 1 until chunk 0 comes through, because otherwise it wouldn't be reliable-ordered. 
 
-The basic idea of the chunk system is that chunks are split up into slices and those slices are sent over the network repeatedly until they all get through. Of course, since we are implementing this over UDP with packet loss, out of order packet delivery and duplicate packets, simple in concept becomes a little more complicated in implementation, because we have to build in our own basic reliability system over UDP so the sender knows which slices have been received.
+That said, if you dig a bit deeper you'll see that sending one chunk at a time does introduce a small trade-off, and that is that it adds a delay of RTT between chunk n being received and the send starting for chunk n+1 from the receiver's point of view.
 
-This reliability gets quite tricky if we have a bunch of different chunks in flight (like we did with packet fragmentation and reassembly) so we're going to make a simplifying assumption up front: we're only going to send one chunk over the network at a time. This doesn't mean the sender can't have a local send queue for chunks, just that in terms of network traffic there's only ever one chunk in flight.
-
-This makes a sense because the whole point of the chunk system is to send chunks reliably and in-order. If you are for some reason sending chunk 0 and chunk 1 at the same time, what's the point? You can't process chunk 1 until chunk 0 comes through, otherwise it wouldn't be reliable-ordered. That said, if you dig a bit deeper you'll see that sending one chunk at a time does introduce a small trade-off, and that is that it adds a delay of RTT between chunk n being received and the send starting for chunk n+1 from the receiver's point of view.
-
-This trade-off is totally acceptable for the occasional sending of large chunks (eg. chunk sent on client connect, chunk sent once per-level load...), but it's definitely <span style="text-decoration: underline;">not</span> acceptable for chunks sent 10 or 20 times per-second. So remember, this system is useful for large, infrequently sent chunks, and not for time critical ones. Use the system in the <a href="http://gafferongames.com/building-a-game-network-protocol/packet-fragmentation-and-reassembly/">previous article</a> for those.
+This trade-off is totally acceptable for the occasional sending of large chunks like data sent once on client connect, but it's definitely _not_ acceptable for data sent 10 or 20 times per-second like snapshots. So remember, this system is useful for large, infrequently sent blocks of data, and not for time critical data. Use the system in the [previous article](/post/packet_fragmentation_and_reassembly.html) for those.
 
 ## Packet Structure
 
-There are two sides to the chunk system, the <strong>sender</strong> and the <strong>receiver</strong>.
+There are two sides to the chunk system, the __sender__ and the __receiver__.
 
-The sender is the side that queues up the chunk and sends slices over the network. The receiver is what reads those slice packets and reassembles on the other side. The receiver is also responsible for communicating back to the sender which slices have been received via 'acks'.
+The sender is the side that queues up the chunk and sends slices over the network. The receiver is what reads those slice packets and reassembles the chunk on the other side. The receiver is also responsible for communicating back to the sender which slices have been received via acks.
 
-The netcode that I work on is usually client/server, and in this case I usually want to be able to send blocks of data from the server to the client <em><span style="text-decoration: underline;">and</span></em> from the client to the server. In that case, there are two senders and two receivers, a sender on the client corresponding to a receiver on the server and-vice versa. Think of the sender and receiver as end points for this chunk transmission protocol that define the direction of flow. If you want to send chunks in different direction, or even extend the chunk sender to support peer-to-peer, just add sender and receiver end points for each direction you need to send chunks.
+The netcode that I work on is usually client/server, and in this case I usually want to be able to send blocks of data from the server to the client _and_ from the client to the server. In that case, there are two senders and two receivers, a sender on the client corresponding to a receiver on the server and-vice versa. 
+
+Think of the sender and receiver as end points for this chunk transmission protocol that define the direction of flow. If you want to send chunks in different direction, or even extend the chunk sender to support peer-to-peer, just add sender and receiver end points for each direction you need to send chunks.
 
 Traffic over the network for this system is sent using two packets types:
 
-<ul>
-    <li><strong>Slice packet</strong> - contains a slice of a chunk up to 1k in size.</li>
-    <li><strong>Ack packet -</strong> a bitfield indicating which slices have been received so far.</li>
-</ul>
+* __Slice packet__ - contains a slice of a chunk up to 1k in size.
+* __Ack packet__ - a bitfield indicating which slices have been received so far.
 
-The slice packet is sent from the sender to the receiver. It is the payload packet that gets the chunk data across the network and is designed so each packet fits neatly under a conservative MTU of 1200 bytes. Each slice is a maximum of 1k and there is a maximum of 256 slices per-chunk, so the largest data you can send over the network with this system is 256k (you could increase this if you wish by bumping the max # of slices). I recommend leaving slice size at 1k for MTU reasons.
+The slice packet is sent from the sender to the receiver. It is the payload packet that gets the chunk data across the network and is designed so each packet fits neatly under a conservative MTU of 1200 bytes. Each slice is a maximum of 1k and there is a maximum of 256 slices per-chunk, therefore the largest data you can send over the network with this system is 256k.
 
-<pre>
-const int SliceSize = 1024;
-const int MaxSlicesPerChunk = 256;
-const int MaxChunkSize = SliceSize * MaxSlicesPerChunk;
+    const int SliceSize = 1024;
+    const int MaxSlicesPerChunk = 256;
+    const int MaxChunkSize = SliceSize * MaxSlicesPerChunk;
 
-struct SlicePacket : public protocol2::Packet
-{
-    uint16_t chunkId;
-    int sliceId;
-    int numSlices;
-    int sliceBytes;
-    uint8_t data[SliceSize];
- 
-    template &lt;typename Stream&gt; bool Serialize( Stream &amp; stream )
+    struct SlicePacket : public protocol2::Packet
     {
-        serialize_bits( stream, chunkId, 16 );
-        serialize_int( stream, sliceId, 0, MaxSlicesPerChunk - 1 );
-        serialize_int( stream, numSlices, 1, MaxSlicesPerChunk );
-        if ( sliceId == numSlices - 1 )
+        uint16_t chunkId;
+        int sliceId;
+        int numSlices;
+        int sliceBytes;
+        uint8_t data[SliceSize];
+     
+        template &lt;typename Stream&gt; bool Serialize( Stream &amp; stream )
         {
-            serialize_int( stream, sliceBytes, 1, SliceSize );
+            serialize_bits( stream, chunkId, 16 );
+            serialize_int( stream, sliceId, 0, MaxSlicesPerChunk - 1 );
+            serialize_int( stream, numSlices, 1, MaxSlicesPerChunk );
+            if ( sliceId == numSlices - 1 )
+            {
+                serialize_int( stream, sliceBytes, 1, SliceSize );
+            }
+            else if ( Stream::IsReading )
+            {
+                sliceBytes = SliceSize;
+            }
+            serialize_bytes( stream, data, sliceBytes );
+            return true;
         }
-        else if ( Stream::IsReading )
-        {
-            sliceBytes = SliceSize;
-        }
-        serialize_bytes( stream, data, sliceBytes );
-        return true;
-    }
-};
-</pre>
+    };
 
 There are two points I'd like to make about the slice packet. The first is that even though there is only ever one chunk in flight over the network, it's still necessary to include a chunk id (eg. 0,1,2,3, etc...) because packets sent over UDP can be received out of order. This way if a slice packet comes in corresponding to an old chunk, for example, you are receiving chunk 2, but an old packet containing a slice from chunk 1 comes in, you can reject that packet instead of splicing it's data into chunk 2 and corrupting it.
 
-Second point. Due to the way chunks are sliced up we know that all slices except the last one must be SliceSize (1024 bytes). We take advantage of this to save a small bit of bandwidth by only sending the slice size in the last slice, but there is a trade-off: the receiver doesn't know the exact size of the chunk in bytes until it receives the last slice.
+Second point. Due to the way chunks are sliced up we know that all slices except the last one must be SliceSize (1024 bytes). We take advantage of this to save a small bit of bandwidth sending the slice size only in the last slice, but there is a trade-off: the receiver doesn't know the exact size of a chunk until it receives the last slice.
 
-Moving forward the other packet sent by this system is the ack packet. This packet is sent in the other direction, from the receiver back to the sender, and is the reliability part of the chunk network protocol. Its purpose is to lets the sender know which slices have been received.
+The other packet sent by this system is the ack packet. This packet is sent in the other direction, from the receiver back to the sender, and is the reliability part of the chunk network protocol. Its purpose is to lets the sender know which slices have been received.
 
-<pre>
-struct AckPacket : public protocol2::Packet 
-{ 
-    uint16_t chunkId; 
-    int numSlices; 
-    bool acked[MaxSlicesPerChunk]; 
-
-    bool Serialize( Stream &amp; stream )
+    struct AckPacket : public protocol2::Packet 
     { 
-        serialize_bits( stream, chunkId, 16 ); 
-        serialize_int( stream, numSlices, 1, MaxSlicesPerChunk ); 
-        for ( int i = 0; i &lt; numSlices; ++i ) 
-            serialize_bool( stream, acked[i] ); return true; } };
-    }
-};
-</pre>
+        uint16_t chunkId; 
+        int numSlices; 
+        bool acked[MaxSlicesPerChunk]; 
 
-Acks are short for 'acknowledgments'. So an ack for slice 100 means the receiver is <em><span style="text-decoration: underline;">acknowledging</span></em> that it has received slice 100. This is critical information for the sender because not only does it let the sender determine when all slices have been received so it knows when to stop, it also allows the sender to target bandwidth more efficiently by only resending slices that have not been acked yet.
+        bool Serialize( Stream &amp; stream )
+        { 
+            serialize_bits( stream, chunkId, 16 ); 
+            serialize_int( stream, numSlices, 1, MaxSlicesPerChunk ); 
+            for ( int i = 0; i &lt; numSlices; ++i ) 
+                serialize_bool( stream, acked[i] ); return true; } };
+        }
+    };
 
-Looking a bit deeper into the ack packet, at first glance it seems a bit <span style="text-decoration: underline;">redundant</span> that we send acks for all slices in every packet. Why are we doing this? Well, ack packets are sent over UDP so there is no guarantee that all ack packets are going to get through and you certainly don't want a desync between the sender and the receiver regarding which slices are acked.
+Acks are short for 'acknowledgments'. So an ack for slice 100 means the receiver is _acknowledging_ that it has received slice 100. This is critical information for the sender because not only does it let the sender determine when all slices have been received so it knows when to stop, it also allows the sender to target bandwidth more efficiently by only resending slices that haven't been acked yet.
 
-So we need some reliability for acks, but we don't want to implement an <span style="text-decoration: underline;">ack system for acks</span> because that would be a huge pain in the ass. Since the worst case ack bitfield is just 256 bits or 32 bytes, the simplest approach here is also the best. Send the entire state of all acked slices in each ack packet, and when the ack packet is received, consider a slice to be acked the instant when an ack packet comes in with that slice marked as acked and locally it is not seen as acked yet. This last step, biasing in the direction of non-acked to ack, like a fuse getting blown, and ignoring any ack packet that comes in and says for example, that a slice n that the sender already thinks is acked is not acked (old ack packet) means we also handle out of order delivery of acks packets.
+Looking a bit deeper into the ack packet, at first glance it seems a bit _redundant_ that we send acks for all slices in every packet. Why are we doing this? Well, ack packets are sent over UDP so there is no guarantee that all ack packets are going to get through and you certainly don't want a desync between the sender and the receiver regarding which slices are acked.
 
-## Basic Sender Implementation
+So we need some reliability for acks, but we don't want to implement an _ack system for acks_, because that would be a huge pain in the ass. Since the worst case ack bitfield is just 256 bits or 32 bytes, we just send the entire state of all acked slices in each ack packet. When the ack packet is received, we consider a slice to be acked the instant when an ack packet comes in with that slice marked as acked and locally that slice is not seen as acked yet. 
 
-Now that we have the basic idea behind the system, lets get started with the implementation of the sender.
+This last step, biasing in the direction of non-acked to ack, like a fuse getting blown, and ignoring any ack packet that says a slice n that the sender already thinks is acked is not acked, means we also handle out of order delivery of ack packets.
+
+## Sender Implementation
+
+Let's get started with the implementation of the sender.
 
 The strategy for the sender is:
 
-<ul>
-    <li>Keep sending slices until all slices are acked</li>
-    <li>Don't resend slices that have already been acked</li>
-</ul>
+* Keep sending slices until all slices are acked
+* Don't resend slices that have already been acked
 
 We use the following data structure for the sender:
 
-<pre>
-class ChunkSender
-{
-    bool sending;
-    uint16_t chunkId;
-    int chunkSize;
-    int numSlices;
-    int numAckedSlices;
-    int currentSliceId;
-    bool acked[MaxSlicesPerChunk];
-    uint8_t chunkData[MaxChunkSize];
-    double timeLastSent[MaxSlicesPerChunk];
-};
-</pre>
+    class ChunkSender
+    {
+        bool sending;
+        uint16_t chunkId;
+        int chunkSize;
+        int numSlices;
+        int numAckedSlices;
+        int currentSliceId;
+        bool acked[MaxSlicesPerChunk];
+        uint8_t chunkData[MaxChunkSize];
+        double timeLastSent[MaxSlicesPerChunk];
+    };
 
 As mentioned before, only one chunk is sent at a time, so there is a 'sending' state which is true if we are currently sending a chunk, false if we are in an idle state ready for the user to send a chunk. In this implementation, you can't send another chunk while the current chunk is still being sent over the network. You have to wait for the current chunk to finish sending before you may send another. If you don't like this, stick a send queue in front of the chunk sender if you wish.
 
@@ -195,18 +183,17 @@ Now that we have the sender all sorted out lets move on to the reciever. As men
 
 This makes the reciever side of the chunk system much simpler, as you can see below:
 
-<pre>class ChunkReceiver
-{
-    bool receiving;
-    bool readyToRead;
-    uint16_t chunkId;
-    int chunkSize;
-    int numSlices;
-    int numReceivedSlices;
-    bool received[MaxSlicesPerChunk];
-    uint8_t chunkData[MaxChunkSize];
-<strong>};</strong>
-</pre>
+    class ChunkReceiver
+    {
+        bool receiving;
+        bool readyToRead;
+        uint16_t chunkId;
+        int chunkSize;
+        int numSlices;
+        int numReceivedSlices;
+        bool received[MaxSlicesPerChunk];
+        uint8_t chunkData[MaxChunkSize];
+    };
 
 We have a state whether we are currently 'receiving' a chunk over the network, plus a 'readyToRead' state which indicates that a chunk has received all slices and is ready to be popped off by the user. This is effectively a minimal receive queue of length 1. If you don't like this, of course you are free to immediately pop the chunk data off the receiver and stick it in a real receive queue instead.
 
