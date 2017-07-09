@@ -185,9 +185,11 @@ Please don't use this burst strategy if your chunk is large eg. megabytes to 10
 
 ## Receiver Implementation
 
-Now that we have the sender all sorted out lets move on to the reciever. As mentioned previously, unlike the packet fragmentation and reassembly system from the previous article, the chunk system only ever has one chunk in flight.
+Now that we have the sender all sorted out lets move on to the reciever. 
 
-This makes the reciever side of the chunk system much simpler:
+As mentioned previously, unlike the packet fragmentation and reassembly system from the previous article, the chunk system only ever has one chunk in flight.
+
+This makes the reciever side of the chunk system much, much simpler:
 
     class ChunkReceiver
     {
