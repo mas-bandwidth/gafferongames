@@ -236,4 +236,4 @@ As you can see, acks are subtle and it's a somewhat strange process of induction
 
 ## Conclusion
 
-The chunk system is simple in concept, but the implementation is certainly not trivial. In my opinion, it's a great learning experience to implement this chunk system design. There's just so much to learn when you implement a system like this from scratch.
+The chunk system is simple in concept, but the implementation is certainly not trivial. There's just so much to learn when you implement a system like this from scratch. Give it a go!
