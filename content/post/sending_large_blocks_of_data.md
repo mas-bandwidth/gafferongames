@@ -33,7 +33,7 @@ To fix this, I implemented a new system for sending large blocks, one that handl
 
 In this new system blocks of data are called _chunks_. Chunks are split up into _slices_. This name change keeps the chunk system terminology (chunks/slices) distinct from packet fragmentation and reassembly (packets/fragments).
 
-The basic idea is that slices are sent over the network repeatedly until they all get through. Since we are implementing this over UDP with packet loss, out of order packet delivery and duplicate packets, simple in concept becomes a little more complicated in implementation. We have to build in our own basic reliability system so the sender knows which slices have been received.
+The basic idea is that slices are sent over the network repeatedly until they all get through. Since we are implementing this over UDP, simple in concept becomes a little more complicated in implementation because have to build in our own basic reliability system so the sender knows which slices have been received.
 
 This reliability gets quite tricky if we have a bunch of different chunks in flight, so we're going to make a simplifying assumption up front: we're only going to send one chunk over the network at a time. This doesn't mean the sender can't have a local send queue for chunks, just that in terms of network traffic there's only ever one chunk _in flight_ at any time.
 
@@ -41,7 +41,7 @@ This makes intuitive sense because the whole point of the chunk system is to se
 
 That said, if you dig a bit deeper you'll see that sending one chunk at a time does introduce a small trade-off, and that is that it adds a delay of RTT between chunk n being received and the send starting for chunk n+1 from the receiver's point of view.
 
-This trade-off is totally acceptable for the occasional sending of large chunks like data sent once on client connect, but it's definitely _not_ acceptable for data sent 10 or 20 times per-second like snapshots. So remember, this system is useful for large, infrequently sent blocks of data, and not for time critical data. Use the system in the [previous article](/post/packet_fragmentation_and_reassembly.html) for those.
+This trade-off is totally acceptable for the occasional sending of large chunks like data sent once on client connect, but it's definitely _not_ acceptable for data sent 10 or 20 times per-second like snapshots. So remember, this system is useful for large, infrequently sent blocks of data, not for time critical data.
 
 ## Packet Structure
 
@@ -49,7 +49,7 @@ There are two sides to the chunk system, the __sender__ and the __receiver__.
 
 The sender is the side that queues up the chunk and sends slices over the network. The receiver is what reads those slice packets and reassembles the chunk on the other side. The receiver is also responsible for communicating back to the sender which slices have been received via acks.
 
-The netcode I work on is usually client/server, and in this case I usually want to be able to send blocks of data from the server to the client _and_ from the client to the server. In that case, there are two senders and two receivers, a sender on the client corresponding to a receiver on the server and-vice versa. 
+The netcode I work on is usually client/server, and in this case I usually want to be able to send blocks of data from the server to the client _and_ from the client to the server. In that case, there are two senders and two receivers, a sender on the client corresponding to a receiver on the server and vice-versa. 
 
 Think of the sender and receiver as end points for this chunk transmission protocol that define the direction of flow. If you want to send chunks in a different direction, or even extend the chunk sender to support peer-to-peer, just add sender and receiver end points for each direction you need to send chunks.
 
@@ -90,11 +90,11 @@ The slice packet is sent from the sender to the receiver. It is the payload pack
         }
     };
 
-There are two points I'd like to make about the slice packet. The first is that even though there is only ever one chunk in flight over the network, it's still necessary to include the chunk id (0,1,2,3, etc...) because packets sent over UDP can be received out of order. This way if a slice packet comes in corresponding to an old chunk, for example, you are receiving chunk 2, but an old packet containing a slice from chunk 1 comes in, you can ignore that packet instead of splicing it's data into chunk 2 and corrupting it.
+There are two points I'd like to make about the slice packet. The first is that even though there is only ever one chunk in flight over the network, it's still necessary to include the chunk id (0,1,2,3, etc...) because packets sent over UDP can be received out of order.
 
-Second point. Due to the way chunks are sliced up we know that all slices except the last one must be SliceSize (1024 bytes). We take advantage of this to save a small bit of bandwidth sending the slice size only in the last slice, but there is a trade-off: now the receiver doesn't know the exact size of a chunk until it receives the last slice.
+Second point. Due to the way chunks are sliced up we know that all slices except the last one must be SliceSize (1024 bytes). We take advantage of this to save a small bit of bandwidth sending the slice size only in the last slice, but there is a trade-off: the receiver doesn't know the exact size of a chunk until it receives the last slice.
 
-The other packet sent by this system is the ack packet. This packet is sent in the other direction, from the receiver back to the sender. This is the reliability part of the chunk network protocol. Its purpose is to lets the sender know which slices have been received.
+The other packet sent by this system is the ack packet. This packet is sent in the opposite direction, from the receiver back to the sender. This is the reliability part of the chunk network protocol. Its purpose is to lets the sender know which slices have been received.
 
     struct AckPacket : public protocol2::Packet 
     { 
@@ -113,13 +113,13 @@ The other packet sent by this system is the ack packet. This packet is sent in
         }
     };
 
-Acks are short for 'acknowledgments'. So an ack for slice 100 means the receiver is _acknowledging_ that it has received slice 100. This is critical information for the sender because not only does it let the sender determine when all slices have been received so it knows when to stop, it also allows the sender to target bandwidth more efficiently by only sending slices that haven't been acked yet.
+Acks are short for 'acknowledgments'. So an ack for slice 100 means the receiver is _acknowledging_ that it has received slice 100. This is critical information for the sender because not only does it let the sender determine when all slices have been received so it knows when to stop, it also allows the sender to use bandwidth more efficiently by only sending slices that haven't been acked.
 
-Looking a bit deeper into the ack packet, at first glance it seems a bit _redundant_. Why are we sending acks for all slices in every packet? Well, ack packets are sent over UDP so there is no guarantee that all ack packets are going to get through and you certainly don't want a desync between the sender and the receiver regarding which slices are acked.
+Looking a bit deeper into the ack packet, at first glance it seems a bit _redundant_. Why are we sending acks for all slices in every packet? Well, ack packets are sent over UDP so there is no guarantee that all ack packets are going to get through. You certainly don't want a desync between the sender and the receiver regarding which slices are acked.
 
 So we need some reliability for acks, but we don't want to implement an _ack system for acks_ because that would be a huge pain in the ass. Since the worst case ack bitfield is just 256 bits or 32 bytes, we just send the entire state of all acked slices in each ack packet. When the ack packet is received, we consider a slice to be acked the instant an ack packet comes in with that slice marked as acked and locally that slice is not seen as acked yet.
 
-This last step, biasing in the direction of non-acked to ack, like a fuse getting blown, means that we can handle out of order delivery of ack packets.
+This last step, biasing in the direction of non-acked to ack, like a fuse getting blown, means we can handle out of order delivery of ack packets.
 
 ## Sender Implementation
 
@@ -145,15 +145,15 @@ We use the following data structure for the sender:
         double timeLastSent[MaxSlicesPerChunk];
     };
 
-As mentioned before, only one chunk is sent at a time, so there is a 'sending' state which is true if we are currently sending a chunk, false if we are in an idle state ready for the user to send a chunk. In this implementation, you can't send another chunk while the current chunk is still being sent over the network. You have to wait for the current chunk to finish sending before you may send another. If you don't like this, stick a queue in front of the sender.
+As mentioned before, only one chunk is sent at a time, so there is a 'sending' state which is true if we are currently sending a chunk, false if we are in an idle state ready for the user to send a chunk. In this implementation, you can't send another chunk while the current chunk is still being sent over the network. If you don't like this, stick a queue in front of the sender.
 
-Next, we have the id of the chunk we are currently sending, or if we are not sending a chunk, the id of the next chunk to be sent, the size of the chunk and the number of slices it has been split into. We also track, per-slice, whether that slice has been acked, which lets us avoid resending slices that have already been received and count the number of slices that have been acked so far while ignoring redundant acks. A chunk is considered fully received from the sender's point of view when the number of acked slices equals the total number of slices in the chunk.
+Next, we have the id of the chunk we are currently sending, or, if we are not sending a chunk, the id of the next chunk to be sent, followed by the size of the chunk and the number of slices it has been split into. We also track, per-slice, whether that slice has been acked, which lets us count the number of slices that have been acked so far while ignoring redundant acks. A chunk is considered fully received from the sender's point of view when numAckedSlices == numSlices.
 
 We also keep track of the current slice id for the algorithm that determines which slices to send, which works like this. At the start of a chunk send, start at slice id 0 and work from left to right and wrap back around to 0 again when you go past the last slice. Eventually, you stop iterating across because you've run out of bandwidth to send slices. At this point, remember our current slice index via current slice id so you can pick up from where you left off next time. This last part is important because it distributes sends across all slices, not just the first few.
 
 Now let's discuss bandwidth limiting. Obviously you don't just blast slices out continuously as you'd flood the connection in no time, so how do we limit the sender bandwidth? My implementation works something like this: as you walk across slices and consider each slice you want to send, estimate roughly how many bytes the slice packet will take eg: roughly slice bytes + some overhead for your protocol and UDP/IP header. Then compare the amount of bytes required vs. the available bytes you have to send in your bandwidth budget. If you don't have enough bytes accumulated, stop. Otherwise, subtract the bytes required to send the slice and repeat the process for the next slice.
 
-Where does the available bytes to send budget come from? Each frame before you update the chunk sender, take your target bandwidth (eg. 256kbps), convert it to bytes per-second, and add it multiplied by delta time (dt) to an accumulator. 
+Where does the available bytes in the send budget come from? Each frame before you update the chunk sender, take your target bandwidth (eg. 256kbps), convert it to bytes per-second, and add it multiplied by delta time (dt) to an accumulator. 
 
 A conservative send rate of 256kbps means you can send 32000 bytes per-second, so add 32000 * dt to the accumulator. A middle ground of 512kbit/sec is 64000 bytes per-second. A more aggressive 1mbit is 125000 bytes per-second. This way each update you _accumulate_ a number of bytes you are allowed to send, and when you've sent all the slices you can given that budget, any bytes left over stick around for the next time you try to send a slice.
 
@@ -171,7 +171,7 @@ Do the math you'll notice it still takes a long time for a 256k chunk to get ac
 
 Which kinda sucks. The whole point here is quickly and reliably. Emphasis on _quickly_. Wouldn't it be nice to be able to get the chunk across faster? The typical use case of the chunk system supports this. For example, a large block of data sent down to the client immediately on connect or a block of data that has to get through before the client exits a load screen and starts to play. You want this to be over as quickly as possible and in both cases the user really doesn't have anything better to do with their bandwidth, so why not use as much of it as possible?
 
-One thing I've tried in the past with excellent results is an initial burst. Assuming your chunk size isn't so large, and your chunk sends are infrequent, I can see no reason why you can't just fire across the entire chunk, all slices of it, in separate packets in one glorious burst of bandwidth, wait 100ms, and resume the regular bandwidth limited slice sending strategy.
+One thing I've tried in the past with excellent results is an initial burst. Assuming your chunk size isn't so large, and your chunk sends are infrequent, I can see no reason why you can't just fire across the entire chunk, all slices of it, in separate packets in one glorious burst of bandwidth, wait 100ms, and then resume the regular bandwidth limited slice sending strategy.
 
 Why does this work? In the case where the user has a good internet connection (some multiple of 10mbps or greater...), the slices get through very quickly indeed. In the situation where the connection is not so great, the burst gets buffered up and _most_ slices will be delivered as quickly as possible limited only by the amount bandwidth available. After this point switching to the regular strategy at a lower rate picks up any slices that didn't get through the first time.
 
@@ -179,9 +179,9 @@ This seems a bit risky so let me explain. In the case where the user can't quite
 
 Just don't go too overboard with the spam or the congestion will persist after your chunk send completes and it will affect your game for the first few seconds. Also, make sure you increase the size of your OS socket buffers on both ends so they are larger than your maximum chunk size (I recommend at least double), otherwise you'll be dropping slices packets before they even hit the wire.
 
-Finally, I want to be a responsible network citizen here so although I recommend sending all slices once in an initial burst, it's important for me to mention that I think this really is only appropriate, and only really _borderline appropriate_ behavior for small chunks in the few 100s of k range in 2016, and only when your game isn't sending anything else that is time-critical at the same time.
+Finally, I want to be a responsible network citizen here so although I recommend sending all slices once in an initial burst, it's important for me to mention that I think this really is only appropriate, and only really _borderline appropriate_ behavior for small chunks in the few 100s of k range in 2016, and only when your game isn't sending anything else that is time-critical.
 
-Please don't use this burst strategy if your chunk is really large, eg: megabytes of data, because that's way too big to be relying on the kindness of strangers, AKA. the buffers in the routers between you and your packet's destination. For this it's necessary to implement something smarter. Something adaptive that tries to send data as quickly as it can, but backs off as it detects too much latency and/or packet loss as a result of flooding the connection. Such a system is outside of the scope of this article.
+Please don't use this burst strategy if your chunk is really large, eg: megabytes of data, because that's way too big to be relying on the kindness of strangers, AKA. the buffers in the routers between you and your packet's destination. For this it's necessary to implement something much smarter. Something adaptive that tries to send data as quickly as it can, but backs off when it detects too much latency and/or packet loss as a result of flooding the connection. Such a system is outside of the scope of this article.
 
 ## Receiver Implementation
 
@@ -203,7 +203,7 @@ This makes the reciever side of the chunk system much simpler:
         uint8_t chunkData[MaxChunkSize];
     };
 
-We have a state whether we are currently 'receiving' a chunk over the network, plus a 'readyToRead' state which indicates that a chunk has received all slices and is ready to be popped off by the user. This is effectively a minimal receive queue of length 1. If you don't like this, of course you are free to immediately pop the chunk data off the receiver and stick it in a queue.
+We have a state whether we are currently 'receiving' a chunk over the network, plus a 'readyToRead' state which indicates that a chunk has received all slices and is ready to be popped off by the user. This is effectively a minimal receive queue of length 1. If you don't like this, of course you are free to add a queue.
 
 In this data structure we also keep track of chunk size (although it is not known with complete accuracy until the last slice arrives), num slices and num received slices, as well as a received flag per-slice. This per-slice received flag lets us discard packets containing slices we have already received, and count the number of slices received so far (since we may receive the slice multiple times, we only increase this count the first time we receive a particular slice). It's also used when generating ack packets. The chunk receive is completed from the receiver's point of view when numReceivedSlices == numSlices.
 
@@ -217,4 +217,4 @@ This process continues until all slices of the chunk are received, at which poin
 
 ## Conclusion
 
-The chunk system is simple in concept, but the implementation is certainly not trivial. I encourage you to take a close look at the [source code](http://www.patreon.com/gafferongames) for this article for further details.
+The chunk system is simple in concept, but the implementation is certainly not. I encourage you to take a close look at the [source code](http://www.patreon.com/gafferongames) for this article for further details.
