@@ -22,6 +22,12 @@ TODO
 
     Pass over "Client/Server Connection"
 
+    ------------------
+
+    Pass over "Networked Physics" article series again.
+
+    ------------------
+
     Write "Securing Dedicated Servers"
 
         -- focus on the packet encryption, securing etc, HMAC, sequence # stuff, nonce, replay protection. not on the key exchange.
