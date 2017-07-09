@@ -90,9 +90,9 @@ The slice packet is sent from the sender to the receiver. It is the payload pack
         }
     };
 
-There are two points I'd like to make about the slice packet. The first is that even though there is only ever one chunk in flight over the network, it's still necessary to include a chunk id (eg. 0,1,2,3, etc...) because packets sent over UDP can be received out of order. This way if a slice packet comes in corresponding to an old chunk, for example, you are receiving chunk 2, but an old packet containing a slice from chunk 1 comes in, you can reject that packet instead of splicing it's data into chunk 2 and corrupting it.
+There are two points I'd like to make about the slice packet. The first is that even though there is only ever one chunk in flight over the network, it's still necessary to include a chunk id (0,1,2,3, etc...) because packets sent over UDP can be received out of order. This way if a slice packet comes in corresponding to an old chunk, for example, you are receiving chunk 2, but an old packet containing a slice from chunk 1 comes in, you can reject that packet instead of splicing it's data into chunk 2 and corrupting it.
 
-Second point. Due to the way chunks are sliced up we know that all slices except the last one must be SliceSize (1024 bytes). We take advantage of this to save a small bit of bandwidth sending the slice size only in the last slice, but there is a trade-off: the receiver doesn't know the exact size of a chunk until it receives the last slice.
+Second point. Due to the way chunks are sliced up we know that all slices except the last one must be SliceSize (1024 bytes). We take advantage of this to save a small bit of bandwidth sending the slice size only in the last slice, but there is a trade-off: now the receiver doesn't know the exact size of a chunk until it receives the last slice.
 
 The other packet sent by this system is the ack packet. This packet is sent in the other direction, from the receiver back to the sender, and is the reliability part of the chunk network protocol. Its purpose is to lets the sender know which slices have been received.
 
@@ -107,17 +107,19 @@ The other packet sent by this system is the ack packet. This packet is sent in
             serialize_bits( stream, chunkId, 16 ); 
             serialize_int( stream, numSlices, 1, MaxSlicesPerChunk ); 
             for ( int i = 0; i &lt; numSlices; ++i ) 
+            {
                 serialize_bool( stream, acked[i] ); return true; } };
+            }
         }
     };
 
-Acks are short for 'acknowledgments'. So an ack for slice 100 means the receiver is _acknowledging_ that it has received slice 100. This is critical information for the sender because not only does it let the sender determine when all slices have been received so it knows when to stop, it also allows the sender to target bandwidth more efficiently by only resending slices that haven't been acked yet.
+Acks are short for 'acknowledgments'. So an ack for slice 100 means the receiver is _acknowledging_ that it has received slice 100. This is critical information for the sender because not only does it let the sender determine when all slices have been received so it knows when to stop, it also allows the sender to target bandwidth more efficiently by only sending slices that haven't been acked yet.
 
 Looking a bit deeper into the ack packet, at first glance it seems a bit _redundant_ that we send acks for all slices in every packet. Why are we doing this? Well, ack packets are sent over UDP so there is no guarantee that all ack packets are going to get through and you certainly don't want a desync between the sender and the receiver regarding which slices are acked.
 
-So we need some reliability for acks, but we don't want to implement an _ack system for acks_, because that would be a huge pain in the ass. Since the worst case ack bitfield is just 256 bits or 32 bytes, we just send the entire state of all acked slices in each ack packet. When the ack packet is received, we consider a slice to be acked the instant when an ack packet comes in with that slice marked as acked and locally that slice is not seen as acked yet. 
+So we need some reliability for acks, but we don't want to implement an _ack system for acks_ because that would be a huge pain in the ass. Since the worst case ack bitfield is just 256 bits or 32 bytes, we just send the entire state of all acked slices in each ack packet. When the ack packet is received, we consider a slice to be acked the instant an ack packet comes in with that slice marked as acked and locally that slice is not seen as acked yet.
 
-This last step, biasing in the direction of non-acked to ack, like a fuse getting blown, and ignoring any ack packet that says a slice n that the sender already thinks is acked is not acked, means we also handle out of order delivery of ack packets.
+This last step, biasing in the direction of non-acked to ack, like a fuse getting blown, and ignoring any ack packet that says a slice n that the sender already thinks is acked is not acked, means we can handle out of order delivery of ack packets.
 
 ## Sender Implementation
 
