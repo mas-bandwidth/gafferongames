@@ -16,9 +16,9 @@ DONE
 
     Pass over "Packet Fragmentation and Reassembly"
 
-TODO
-
     Pass over "Sending Large Blocks of Data"
+
+TODO
 
     Pass over "Client/Server Connection"
 
@@ -27,6 +27,10 @@ TODO
         -- focus on the packet encryption, securing etc, HMAC, sequence # stuff, nonce, replay protection. not on the key exchange.
 
         -- packet structure with AEAD. etc.
+
+    ------------------
+
+    Update the about page. It can be much better.
 
     ------------------
 
