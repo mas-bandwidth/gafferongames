@@ -9,9 +9,9 @@ draft = false
 
 ## Introduction
 
-I'm [Glenn Fiedler](/about) and welcome to the fourth article in **[Game Physics](/categories/game-physics/)**.
+Hi, I'm Glenn Fiedler and to the third article in __Game Physics__
 
-In the <a href="http://www.gafferongames.com/game-physics/physics-in-3d/">previous article</a> we discussed how to simulate the motion of rigid bodies in 3D. Now we're going to discuss how to implement spring physics.
+In the [previous article](/physics-in-3d/) we discussed how to simulate the motion of rigid bodies in 3D. Now we're going to discuss how to implement spring physics.
 
 The physics behind springs is simple but extremely versatile and useful. You can use springs to link points together to model rope and string, cloth, and even blobs of jelly. Springs can also be used to implement basic collision response, and to create joints that constrain the motion of rigid bodies.
 
@@ -25,7 +25,7 @@ The formula to use for simulating spring-like behavior is called <a href="http:/
 
 Where <strong>x</strong> is the vector displacement of the end of the spring from it's equilibrium position,  and k is a constant describing the tightness of the spring. Larger values of k mean that the spring is tighter and will therefore stretch less per unit of force, smaller values mean the spring is looser and will stretch further.
 
-Newton's third law says that every force has an equal and opposite force. If two objects a and b are connected together by a spring then the spring will apply one force which pulls object a towards object b, and an equal and opposite force pulling object b towards a. However, if you want to attach one object to a fixed point in space its you can apply the force of the object in one direction. This makes sense is you consider that a point which cannot move as having <i>infinite mass</i>.
+Newton's third law says that every force has an equal and opposite force. If two objects a and b are connected together by a spring then the spring will apply one force which pulls object a towards object b, and an equal and opposite force pulling object b towards a. However, if you want to attach one object to a fixed point in space its you can apply the force of the object in one direction. This makes sense if you consider that point as having <i>infinite mass</i>.
 
 Spring forces alone are not much use though. You need to combine them with dampers to have a realistic simulation. Damping simulates energy loss, and it is used in physics simulations to make sure that springs don't oscillate forever but come to rest over time.
 
@@ -78,11 +78,9 @@ Next we will implement a basic collision response using springs. The trick here 
 
 So we have a collision detected and the usual information is returned to the physics system ready to apply collision response. This information is typically something like:
 
-<ol>
-    <li>A unit length collision normal</li>
-    <li>The penetration depth along the normal</li>
-    <li>The physics state for each of the colliding objects at the time of collision</li>
-</ol>
+* A unit length collision normal
+* The penetration depth along the normal
+* The physics state for each of the colliding objects at the time of collision
 
 All this information grouped together is called a contact. Processing collision geometry and returning a series of generic contacts is a great idea because it decouples your collision response from the gritty details of collision detection.
 
@@ -98,7 +96,7 @@ Various different collision responses types can also be achieved using this equa
 
 It seems we can achieve a large variety of different collision effects using only springs and easily make joints and constraints. Its not all good news however because springs come with their own set of weaknesses which I will now explain.
 
-The first weakness is that its difficult to tune the spring constants to get exactly the effect you want. For example, if you are attempting to model the real world physics of an object, you will need to experiment to find the spring k and b values that match the simulation. These values are usually dependent on other values of your simulation, such as the gravity constant, meaning that if you adjust gravity you'll need to retune your springs to get the same effect. This is a pain.
+The first weakness is that its difficult to tune the spring constants to get exactly the effect you want. For example, if you are attempting to model the real world physics of an object, you will need to experiment to find the spring k and b values that match the simulation. These values are usually dependent on other values of your simulation, such as the gravity constant, meaning that if you adjust gravity you'll need to retune your springs to get the same effect.
 
 The next problem is that tighter the spring k you use, the more difficult it becomes to solve the differential equation. Using an RK4 integrator sure help with this, but even with RK4 there is a fundamental limit to how large you can make your spring k before your simulation will explode. At this point you need to either decrease your timestep or reduce your spring k.
 
