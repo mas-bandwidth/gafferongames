@@ -29,7 +29,7 @@ As long as we only have single floating point values for position and velocity o
 
 We want our object to be able to move in three dimensions: left and right, forward and back, up and down. If we apply the equations of motion to each dimension separately, we can integrate each dimension in turn to find the motion of the object in three dimensions.
 
-Or we could just use vectors.
+Or... we could just use vectors.
 
 Vectors are a mathematical type representing an array of numbers. A three dimensional vector has three components x, y and z. Each component corresponds to a dimension. In this article x is left and right, y is up and down, and z is forward and back.
 
@@ -113,7 +113,7 @@ The second way is to integrate force directly to get momentum, then convert this
 
 Both methods work, but the second way is more consistent with the way that we must approach rotation later in the article, so we'll use that.
 
-When we switch to the second technique, it adds a new level of complexity to our code. Each time that momentum changes we need to make sure that the velocity is recalculated by dividing momentum by mass. Doing this manually everywhere that momentum is changed would be error prone and a chore. So we now separate all our state quantities into primary, secondary and constant values, and add a method called 'recalculate' to the State struct which is responsible for updating all the secondary values from the primary ones:
+When we switch to momentum we need to make sure that the velocity is recalculated after each integration by dividing momentum by mass. Doing this manually everywhere that momentum is changed would be error prone, so we now separate all our state quantities into primary, secondary and constant values, and add a method called 'recalculate' to the State struct which is responsible for updating all the secondary values from the primary ones:
 
         struct State
         {
@@ -140,25 +140,23 @@ When we switch to the second technique, it adds a new level of complexity to our
             Vector force;
         };
 
-If we make sure that recalculate is called whenever any of the primary values change, then our secondary values will always stay in sync. This may seem like overkill just to handle converting momentum to velocity, but as our simulation becomes more complex we will have many more secondary values, so it is important to design a system that scales well.
+If we make sure that recalculate is called whenever any of the primary values change, then our secondary values will always stay in sync. This may seem like overkill just to handle converting momentum to velocity, but as our simulation becomes more complex we will have many more secondary values, so it is important to design a system that handles this.
 
 ## Spinning Around
 
-So far we have covered linear motion, we can simulate an object so that it moves in 3D space, but it cannot rotate.
+So far we have covered linear motion, we can simulate an rigid body so that it moves in 3D space, but it cannot rotate yet.
 
 The good news is that rotational equivalents to force, momentum, velocity, position and mass exist, and once we understand how they work, integration of rotational physics state can be performed using our RK4 integrator.
 
-So lets start off by talking about how an object rotates. The bodies that we are simulating are rigid meaning that they cannot deform. This might not sound important, but its actually the key simplification in rigid bodies! Basically it means that we can treat the linear and rotational parts of an object's motion as being entirely separate: a linear component (position, velocity, momentum, mass) and a rotational component rotating about the center of mass.
+Let's start off by talking about how rigid bodies rotate. Because our objects are rigid they cannot deform. This means that we can treat the linear and rotational parts of an object's motion as being entirely separate: a linear component (position, velocity, momentum, mass) and a rotational component rotating about the center of mass.
 
-The center of mass of the object is the weighted average of all points making up the body by their mass. For objects of uniform density, the center of mass is always the geometric center of the object, for example the center of a sphere or a cube.
+How do we represent how the object is rotating? If you think about it a bit, you'll realize that for a rigid body rotation can only ever be around a single axis, so the first thing we need to know is what that axis is. We can represent this axis with a unit length vector. Next we need to know how fast the object is rotating about this axis in radians per second.
 
-So how do we represent how the object is rotating? If you think about it a bit, you'll realize that for a rigid body rotation can only ever be around a single axis, so the first thing we need to know is what that axis is. We can represent this axis with a unit length vector. Next we need to know how fast the object is rotating about this axis in radians per second.
-
-If we know the center of mass of the object, the axis of rotation, and the speed of rotation then we have the all the information we need to describe how an object is rotating.
+If we know the center of mass of the object, the axis of rotation, and the speed of rotation then we have the all the information we need to describe how it is rotating.
 
 The standard way of representing rotation over time is by combining the axis and the speed of rotation into a single vector called angular velocity. The length of the angular velocity vector is the speed of rotation in radians while the direction of the vector indicates the axis of rotation. For example, an angular velocity of (2Pi,0,0) indicates a rotation about the x axis doing one revolution per second.
 
-But what direction is this rotation in? In the example source code I use a right handed coordinate system which is standard when using OpenGL. To find the direction of rotation just take your right hand and point your thumb down the axis - your fingers will now curl in the direction of rotation. If your 3D engine uses a left handed coordinate system then just use your left hand instead.
+But what direction is this rotation in? In the example source code I use a right handed coordinate system which is standard when using OpenGL. To find the direction of rotation just take your right hand and point your thumb down the axis, your fingers curl in the direction of rotation. If your 3D engine uses a left handed coordinate system then just use your left hand instead.
 
 Why do we combine the axis and rate of rotation into a single vector? Doing so gives us a single vector quantity that is easy to manipulate just like velocity for linear motion. We can easily add and subtract changes to angular velocity to change how the object is rotating just like we can add and subtract from linear velocity. If we stuck with a unit length vector and scalar for rotation speed then it would be much more complicated to apply these changes.
 
@@ -203,9 +201,9 @@ The solution is to convert angular velocity into a quaternion form, then to use 
 
 Here is the final result:
 
-        d<b>q</b>/dt = spin = 0.5 <b>w</b> <b>q</b>
+        d*q*/dt = spin = 0.5 *w* *q*
 
-Where <b>q</b> is the current orientation quaternion, and <b>w</b> is the current angular velocity in quaternion form (0,x,y,z) such that x, y, z are the components of the angular velocity vector. Note that the multiplication done between <b>w</b> and <b>q</b> is quaternion multiplication.
+Where **q** is the current orientation quaternion, and **w** is the current angular velocity in quaternion form (0,x,y,z) such that x, y, z are the components of the angular velocity vector. Note that the multiplication done between **w** and **q** is quaternion multiplication.
 
 To implement this in code we add spin as a new secondary quantity calculated from angular velocity in the recalculate method. We also add spin to the derivatives struct as it is the derivative of orientation:
 
@@ -309,4 +307,4 @@ Where <b>p</b> is the point on the rigid body and <b>x</b> is the center of mass
 
 ## Conclusion
 
-We have covered the techniques required to simulate linear and rotational movement of a rigid body in three dimensions. By combining the linear and rotational physics into a single physics state and integrating, we can simulate the motion of a cube in three dimensions as it moves and spins around.
+We have covered the techniques required to simulate linear and rotational movement of a rigid body in three dimensions. By combining the linear and rotational physics into a single physics state and integrating, we can simulate the motion of a rigid body in three dimensions.
