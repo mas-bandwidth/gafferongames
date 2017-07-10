@@ -3,7 +3,7 @@ categories = ["Building a Game Network Protocol"]
 tags = ["networking"]
 date = "2016-09-01"
 title = "Reading and Writing Packets"
-description = "Best practices when reading and writing packets"
+description = "Best practices for reading and writing packets"
 draft = false
 +++
 
