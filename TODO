@@ -28,13 +28,15 @@ DONE
 
     Pass over "Spring Physics" article.
 
+    Pass over "Networked Physics (2004)" article. (argh...)
+
 TODO
 
-    Pass over "Networked Physics (2004)" article.
+    Pass over "Networked Physics" article series again.
 
     ------------------
 
-    Pass over "Networked Physics" article series again.
+    Pass over original "Game Networking" article series (quickly...)
 
     ------------------
 
@@ -54,9 +56,7 @@ TODO
 
     ------------------
 
-    Need a solution for migrating my old wordpress website, *or* a solution for completely converting the virtual go math across.
-
-    I'd prefer to convert the math... fuck wordpress.
+    Work out how to convert the math for the virtual go article series.
 
     ------------------
 
@@ -68,7 +68,9 @@ TODO
 
     Study google analytics to work out common landing pages, make sure they all have equivalents on the new website.
 
-    Any post that no longer has a direct analog should the main index of articles as a default.
+    ------------------
+
+    Any links that don't have a corresponding article should drop at the main page, eg. no 404 page anymore.
 
     ------------------
 
