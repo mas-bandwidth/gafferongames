@@ -9,31 +9,29 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler and welcome to the final article in in **[Game Physics](/categories/game-physics/)**.
+Hi, I'm Glenn Fiedler and welcome to the final article in __Game Physics__.
 
-In the <a href="http://www.gafferongames.com/game-physics/spring-physics">previous article</a> we discussed how to use spring-like forces to model basic collision response, joints and motors.
+In the [previous article](/post/spring_physics) we discussed how to use spring-like forces to model basic collision response, joints and motors.
 
-Now we're going to discuss how to network a physics simulation.
-
-Networking a physics simulation is the holy grail of multiplayer gaming and the massive popularity of first person shooters on the PC is a testament to the just how immersive a networked physics simulation can be.
-
-In this article I will show you how apply the key networking techniques from first person shooters to network your own physics simulation.
+In this article we're going to discuss how to network a physics simulation.
 
 ## First Person Shooters
 
-First person shooter physics are usually very simple. The world is static and players are limited to running around and jumping and shooting. Because of cheating, first person shooters typically operate on a client-server model where the server is authoritative over physics. This means that the true physics simulation runs on the server and the clients display an approximation of the server physics to the player.
+First person shooter physics are usually very simple. The world is static and players are limited to running around and jumping and shooting. 
+
+Because of cheating, first person shooters typically operate on a client-server model where the server is authoritative over physics. This means that the true physics simulation runs on the server and the clients display an approximation of the server physics to the player.
 
 The problem then is how to allow each client to control his own character while displaying a reasonable approximation of the motion of the other players.
 
 In order to do this elegantly and simply, we structure the physics simulation as follows:
 
-<ol>
-<li>Character physics are completely driven from input data</li>
-<li>Physics state is known and can be fully encapsulated in a state structure</li>
-<li>The physics simulation is reasonably deterministic given the same initial state and inputs</li>
-</ol>
+1. Character physics are completely driven from input data.
 
-To do this we need to gather all the user input that drives the physics simulation into a single structure and the state representing each player character into another. Here is an example from a simple run and jump shooter:
+2. Physics state is fully encapsulated in a state structure.
+
+To do this we need to gather all the user input that drives the physics simulation into a single structure and the state representing each player character into another. 
+
+Here is an example from a simple run and jump shooter:
 
 <pre>
     struct Input
@@ -52,7 +50,7 @@ To do this we need to gather all the user input that drives the physics simulati
     };
 </pre>
 
-Next we need to make sure that the simulation gives the same result given the same initial state and inputs over time. Or at least, that the results are as close as possible. I'm not talking about determinism to the level of floating point accuracy and rounding modes, just a reasonable, 1-2 second prediction giving basically the same result.
+Next we need to make sure that the simulation gives the same result given the same initial state and inputs over time. Or at least, that the results are as close as possible. I'm not talking about perfect floating point determinism here, just a reasonable 1/2 second prediction giving approximately the same result.
 
 ## Network Fundamentals
 
