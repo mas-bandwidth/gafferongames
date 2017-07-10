@@ -9,13 +9,15 @@ draft = false
 
 ## Introduction
 
-I'm [Glenn Fiedler](/about) and welcome to the third article in **[Game Physics](/categories/game-physics/)**.
+Hi, I'm Glenn Fiedler and to the third article in __Game Physics__
 
-In the <a href="http://www.gafferongames.com/game-physics/fix-your-timestep/">previous article</a> we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.
+In the [previous article](/post/fix_your_timestep/) we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.
 
 In this article we are going to simulate motion in three dimensions.
 
-We will concentrate on a type of object called a rigid body. Rigid bodies cannot bend, compress or deform in any way. This makes their motion much easier to calculate.
+## Rigid Bodies
+
+We will concentrate on a type of object called a __rigid body__. Rigid bodies cannot bend, compress or deform in any way. This makes their motion much easier to calculate.
 
 To simulate the motion of rigid bodies, we must study both rigid body kinematics and rigid body dynamics. Kinematics is the study of how an object moves in the absence of forces, while dynamics describes how an object reacts to them. Together they provide all the information you need to simulate the motion of a rigid body in three dimensions.
 
@@ -67,7 +69,7 @@ Addition of two vectors is defined as adding each component together. Multiplyin
     };
 </pre>
 
-Now instead of maintaining completely seperate equations of motion and integrating seperately for x, y and z, we convert our position, velocity, acceleration and force to vector quantities, then integrate the vectors directly using the equations of motion from the <a href="http://www.gafferongames.com/game-physics/integration-basics/">first article</a>:
+Now instead of maintaining completely seperate equations of motion and integrating seperately for x, y and z, we convert our position, velocity, acceleration and force to vector quantities, then integrate the vectors directly using the equations of motion from the [first article](/post/integration_basics/):
 
 <pre>
     <b>F</b> = m<b>a</b>
@@ -180,9 +182,9 @@ This complexity is due to the difficulty of representing orientations in three d
 
 In two dimensions orientations are easy, you just keep track of an angle in radians and you are done. In three dimensions it becomes much more complex. It turns out that you must either use 3x3 rotation matrices or quaternions to correctly represent the orientation of an object.
 
-For reasons of simplicity and efficiency I'm going to use quaternions to represent the orientation instead of matrices. This also gives us an easy way to interpolate between the previous and current physics orientation to get smooth framerate independent animation as per the time stepping scheme outlined in the <a href="http://www.gafferongames.com/game-physics/fix-your-timestep/">previous article</a>.
+For reasons of simplicity and efficiency I'm going to use quaternions to represent the orientation instead of matrices. This also gives us an easy way to interpolate between the previous and current physics orientation to get smooth framerate independent animation as per the time stepping scheme outlined in the [previous article](/post/fix_your_timestep/).
 
-Now there are plenty of resources on the internet which explain what quaternions are and how unit length quaternions are used to represent rotations in three dimensions. Here is a particularly <a href="http://www.sjbrown.co.uk/quaternions.html">nice one</a>. What you need to know however is that, effectively, unit quaternions represent an axis of rotation and an amount of rotation about that axis. This may seem similar to our angular velocity, but quaternions are four dimensional vectors instead of three, so mathematically they are actually quite different!
+Now there are plenty of resources on the internet which explain what quaternions are and how unit length quaternions are used to represent rotations in three dimensions. Here is a particularly [nice one](http://www.sjbrown.co.uk/quaternions.html). What you need to know however is that, effectively, unit quaternions represent an axis of rotation and an amount of rotation about that axis. This may seem similar to our angular velocity, but quaternions are four dimensional vectors instead of three, so mathematically they are actually quite different!
 
 We will represent quaternions in code as another struct:
 
@@ -197,7 +199,7 @@ If we define the rotation of a quaternion as being relative to an initial orient
 
 We are now presented with a problem. Orientation is a quaternion but angular velocity is a vector. How can we integrate orientation from angular velocity when the two quantities are in different mathematical forms?
 
-The solution is to convert angular velocity into a quaternion form, then to use this quaternion to integrate orientation. For lack of a better term I will call this time derivative of orientation "spin". Exactly how to calculate this spin quaternion is described in detail <a href="http://www-2.cs.cmu.edu/~baraff/sigcourse/notesd1.pdf">here</a>.
+The solution is to convert angular velocity into a quaternion form, then to use this quaternion to integrate orientation. For lack of a better term I will call this time derivative of orientation "spin". Exactly how to calculate this spin quaternion is described in detail [here](http://www-2.cs.cmu.edu/~baraff/sigcourse/notesd1.pdf).
 
 Here is the final result:
 
@@ -266,7 +268,7 @@ Think of body coordinates in terms of the object in a convenient layout, for exa
 
 The important thing to understand is that the object remains stationary in body space, and is transformed into world space using a combination of translation and rotation operations which put it in the correct position and orientation for rendering. When you see the cube animating on screen it is because it is being drawn in world space using the body to world transformation.
 
-We have the raw materials to implement this transform from body coordinates into world coordinates in the position vector and the orientation quaternion. The trick to combining the two is to convert each of them into 4x4 matrix form which is capable of representing both rotation and translation. Then we combine the two transformations into a single matrix by multiplication. This combined matrix has the effect of first rotating the cube around the origin to get the correct orientation, then translating the cube to the correct position in world space. See <a href="http://www.gamedev.net/reference/articles/article695.asp">this article</a> for details on how this is done.
+We have the raw materials to implement this transform from body coordinates into world coordinates in the position vector and the orientation quaternion. The trick to combining the two is to convert each of them into 4x4 matrix form which is capable of representing both rotation and translation. Then we combine the two transformations into a single matrix by multiplication. This combined matrix has the effect of first rotating the cube around the origin to get the correct orientation, then translating the cube to the correct position in world space. See [this article](http://www.gamedev.net/reference/articles/article695.asp) for details on how this is done.
 
 If we then invert this matrix we get one that has the opposite effect, it transforms points in world coordinates into the body coordinates of the object. Once we have both these matrices we have the ability to convert points from body to world coordinates and back again which is very handy. These two matrices become new secondary values calculated in the 'recalculate' method from the orientation quaternion and position vector.
 
@@ -293,7 +295,7 @@ Another example: consider a bowling ball lying on a slippery surface such as ice
 
 So remember, whenever you apply a force to an object there will always be a linear force component which causes the object to accelerate linearly, as well as, depending on the direction of the force, a rotational component that causes the object to rotate.
 
-## Velocity at a point</b>
+## Velocity at a Point</b>
 
 The final piece of the puzzle is how to calculate the velocity of a single point in the rigid body. To do this we start with the linear velocity of the object, because all points must move with this velocity to keep it rigid, then add the velocity at the point due to rotation.
 

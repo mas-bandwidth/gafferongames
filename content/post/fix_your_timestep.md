@@ -186,4 +186,6 @@ This *looks* complicated but here is a simple way to think about it. Any remaind
 
 We can use this remainder value to get a blending factor between the previous and current physics state simply by dividing by dt. This gives an alpha value in the range [0,1] which is used to perform a linear interpolation between the two physics states to get the current state to render. This interpolation is easy to do for single values and for vector state values. You can even use it with full 3D rigid body dynamics if you store your orientation as a quaternion and use a spherical linear interpolation (slerp) to blend between the previous and current orientations.
 
-When we do this the jitter goes away and the physics simulation appears smooth. But did we just get something for free? Not exactly. The cost of this smoothness is that the physics simulation is rendered one frame in the past.
+When we do this the jitter goes away and the physics simulation appears perfectly smooth. But did we just get something for free? __Not exactly__. 
+
+The cost is that the physics simulation is now rendered one frame in the past.
