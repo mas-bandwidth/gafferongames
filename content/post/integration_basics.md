@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to the first article in **[Game Physics](/categories/game-physics/)**.
+Hi, I'm Glenn Fiedler and to the first article in __Game Physics__
 
 If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.
 
@@ -165,15 +165,11 @@ Instead of damping and converging on the origin, it gains energy over time!
 
 This system is unstable when integrated with explicit euler and **dt**=1/100. 
 
-Unfortunately, since we're already integrating with a small timestep, we don't have a lot of practical options to improve the accuracy. Even if we do reduce the timestep, there's always a spring tightness k above which we'll see this behavior.
-
-**Recommendation:** Don't use explicit euler because it tends to explode!
+Unfortunately, since we're already integrating with a small timestep, we don't have a lot of practical options to improve the accuracy. Even you we do reduce the timestep, there's always a spring tightness k above which you'll see this behavior.
 
 ## Semi-implicit Euler
 
 Another integrator to consider is [semi-implicit euler](https://en.wikipedia.org/wiki/Semi-implicit_Euler_method).
-
-Semi-implicit euler integrates velocity before integrating position instead of the other way around. This seemingly trivial change makes the integrator [symplectic](https://en.wikipedia.org/wiki/Symplectic_integrator). 
 
 Most commercial game physics engines use this integrator.
 
@@ -191,23 +187,23 @@ Applying the semi-implicit euler integrator with **dt** = 1/100 to the spring da
 
 <img src="/img/game-physics/integration_basics_damped_semi_implicit_euler.png" width="100%"/>
 
-Even though semi-implicit euler has the same order of accuracy as explicit euler (order 1), we get a much better result when integrating the equations of motion because it is symplectic.
-
-If you take only one thing away from this article, this should be it.
+Even though semi-implicit euler has the same order of accuracy as explicit euler (order 1), we get a much better result when integrating the equations of motion because it is [symplectic](https://en.wikipedia.org/wiki/Symplectic_integrator).
 
 ## Many different integration methods exist
 
-And now for something completely different. [Implicit euler](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html). This method is better for simulating stiff equations that become unstable with other methods, but requires solving a system of equations per-timestep. It's not often used in game physics.
+And now for something completely different.
 
-Another option for greater accuracy and less memory when simulating a large number of particles is [verlet integration](https://en.wikipedia.org/wiki/Verlet_integration). This is a second order integrator and it is also symplectic. There is a variant that does not require storing velocity per-particle, as it derives velocity from the two most recent position values. This makes collision response and position fix-up easy to implement and saves memory when you have lots of particles.
+[Implicit euler](http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html) is an integration technique that is well suited for simulating stiff equations that become unstable with other methods. The drawback is that it requires solving a system of equations per-timestep.
 
-Up next are a whole family of integrators called the Runge-Kutta methods. In fact, explicit euler is considered part of this family, but it also includes higher order integrators, the most classic of these being the Runge Kutta order 4 or simply "**RK4**". 
+[Verlet integration](https://en.wikipedia.org/wiki/Verlet_integration) provides greater accuracy than implicit euler and less memory usage when simulating a large number of particles is. This is a second order integrator which is also symplectic.
+
+There is a whole family of integrators called the __Runge-Kutta methods__. In fact, explicit euler is considered part of this family, but it also includes higher order integrators, the most classic of these being the Runge Kutta order 4 or simply __RK4__.
 
 This family of integrators is named for the German physicists who discovered them: [Carl Runge](https://en.wikipedia.org/wiki/Carl_David_Tolmé_Runge) and [Martin Kutta](https://en.wikipedia.org/wiki/Martin_Wilhelm_Kutta). This means the 'g' is hard and the 'u' is a short 'oo' sound. I am sorry to inform but this means we are talking about the _'roon-geh koo-ta'_ methods and not a _'runge cutter'_, whatever that is :)
 
-Anyway. The RK4 is a fourth order integrator, which means its accumulated error is on the order of the fourth derivative. This makes it very accurate. Much more accurate than explicit and implicit euler which are only first order.
+The RK4 is a fourth order integrator, which means its accumulated error is on the order of the fourth derivative. This makes it very accurate. Much more accurate than explicit and implicit euler which are only first order.
 
-But I want to make a very important point here. Although it is more accurate, that's not to say RK4 is automatically "the best" integrator, or even that it is better than implicit euler. It's much more complicated than that. Regardless, it's an interesting integrator and it's well worth studying.
+But although it's more accurate, that's not to say RK4 is automatically "the best" integrator, or even that it is better than semi-implicit euler. It's much more complicated than this. Regardless, it's an interesting integrator and is well worth studying.
 
 ## Implementing RK4
 
@@ -290,15 +286,15 @@ Once the four derivatives have been evaluated, the best overall derivative is ca
 
 Let's put the RK4 integrator to the test. 
 
-Obviously it will be visibly more accurate than semi-implicit euler, right?
+Obviously, since it is a higher order integrator (4th order vs. 1st order) it will be visibly more accurate than semi-implicit euler, right?
 
 <img src="/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler.png" width="100%"/>
 
-Wrong. Both integrators are so close to the exact result that it's impossible to make out any difference at this scale. Both integrators are stable and track the exact solution very well with **dt**=1/100.
+__Wrong__. Both integrators are so close to the exact result that it's impossible to make out any difference at this scale. Both integrators are stable and track the exact solution very well with **dt**=1/100.
 
 <img src="/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler_zoomed_in.png" width="100%"/>
 
-Zooming in confirms that RK4 is more accurate than semi-implicit euler, but is it really worth the complexity and extra runtime cost of RK4? It's hard to say.
+Zooming in confirms that RK4 _is_ more accurate than semi-implicit euler, but is it really worth the complexity and extra runtime cost of RK4? It's hard to say.
 
 Let's push a bit harder and see if we can find a significant difference between the two integrators. Unfortunately, we can't look at this system for long periods of time because it quickly damps down to zero, so let's switch to a [simple harmonic oscillator](https://en.wikipedia.org/wiki/Harmonic_oscillator#Simple_harmonic_oscillator) which oscillates forever without any damping.
 
@@ -312,7 +308,7 @@ Next, we let the integrators run for 90 seconds and zoom in:
 
 <img src="/img/game-physics/integration_basics_undamped_rk4_vs_semi_implicit_euler.png" width="100%"/>
 
-Wow. After 90 seconds the semi-implicit euler solution (orange) has drifted out of phase with the exact solution because it has a slightly different frequency, while the green line of RK4 matches the frequency, but is losing energy!
+After 90 seconds the semi-implicit euler solution (orange) has drifted out of phase with the exact solution because it has a slightly different frequency, while the green line of RK4 matches the frequency, but is losing energy!
 
 We can see this more clearly by increasing the time step to 0.25 seconds.
 
@@ -324,7 +320,7 @@ While semi-implicit euler does a better job at conserving energy, on average:
 
 <img src="/img/game-physics/integration_basics_undamped_semi_implicit_euler_5fps.png" width="100%"/>
 
-What an interesting result. As you can see it's not simply the case that RK4 has a higher order of accuracy and is "better". It's much more nuanced than this.
+But drifts out of phase. What an interesting result! As you can see it's not simply the case that RK4 has a higher order of accuracy and is "better". It's much more nuanced than this.
 
 ## Conclusion
 
