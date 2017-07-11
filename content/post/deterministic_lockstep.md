@@ -11,7 +11,7 @@ draft = false
 
 Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories/networked-physics/)**.
 
-In this article series we're exploring different ways to network a physics simulation. In this article specifically, we're going to network a physics simulation using deterministic lockstep.
+In the [previous article](/post/introduction_to_networked_physics/) we explored the physics simulation we're going to network in this article series. In this article specifically, we're going to network this physics simulation using __deterministic lockstep__.
 
 Deterministic lockstep is a method of networking a system from one computer to another by sending only the *inputs* that control that system, rather than the *state* of that system. In the context of networking a physics simulation, this means we send across a small amount of input, while avoiding sending state like position, orientation, linear velocity and angular velocity per-object.
 

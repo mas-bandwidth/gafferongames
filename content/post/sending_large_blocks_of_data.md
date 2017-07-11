@@ -9,11 +9,11 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler and welcome to __Building a Game Network Protocol__.
+Hi, I’m [Glenn Fiedler](/about) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
 
-In the [previous article](/post/packet-fragmentation-and-reassembly/) we implemented packet fragmentation and reassembly so we can send packets larger than MTU.
+In the [previous article](/post/packet_fragmentation_and_reassembly/) we implemented packet fragmentation and reassembly so we can send packets larger than MTU.
 
-This approach works great when the data block you're sending is time critical, but in other cases you need to send large blocks of quickly and reliably over packet loss, and you need the data to get through.
+This approach works great when the data block you're sending is time critical and can be dropped, but in other cases you need to send large blocks of quickly and reliably over packet loss, and you need the data to get through.
 
 In this situation, a different technique gives much better results.
 
@@ -218,3 +218,5 @@ This process continues until all slices of the chunk are received, at which poin
 ## Conclusion
 
 The chunk system is simple in concept, but the implementation is certainly not. I encourage you to take a close look at the [source code](http://www.patreon.com/gafferongames) for this article for further details.
+
+__NEXT ARTICLE:__ [Client/Server Connection](/post/client_server_connection/)

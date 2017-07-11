@@ -9,9 +9,9 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler and welcome to __Building a Game Network Protocol__.
+Hi, I’m [Glenn Fiedler](/about) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
 
-In [previous articles](/categories/building-a-game-network-protocol) we've discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP.
+So far in this article series we've discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP.
 
 Now in this article we're going to bring everything together and build a client/server connection on top of UDP.
 
@@ -21,7 +21,7 @@ Developers from a web background often wonder why games go to such effort to bui
 
 The reason is that games send __time critical data__.
 
-So, why don't games use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP (which is unreliable, unordered) it holds more recent packets hostage in a queue while older packets are resent over the network. 
+Why don't games use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP (which is unreliable, unordered) it holds more recent packets hostage in a queue while older packets are resent over the network. 
 
 This is known as __head of line blocking__ and it's a _huuuuuge_ problem for games. To understand why, consider a game server broadcasting the state of the world to clients 10 times per-second. Each client advances time forward and wants to display the most recent state it receives from the server.
 
@@ -249,5 +249,4 @@ But it's still vulnerable to a sophisticated actors who can sniff packets:
 
 To solve this, we need to get serious with cryptography to encrypt and sign packets so they can't be read or modified by a third party.
 
-All this is covered in the next article: [Securing Dedicated Servers](http://patreon.com/gafferongames).
-
+__NEXT ARTICLE__: [Securing Dedicated Servers](http://patreon.com/gafferongames).

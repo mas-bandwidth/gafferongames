@@ -11,11 +11,15 @@ draft = false
 
 Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories/networked-physics/)**.
 
-In the <a href="http://gafferongames.com/networked-physics/deterministic-lockstep/">previous article</a> we networked a physics simulation using deterministic lockstep. Now, in this article we're going to network the same simulation with a completely different technique: **snapshot interpolation**.
+In the [previous article](/post/deterministic_lockstep/) we networked a physics simulation using deterministic lockstep. Now, in this article we're going to network the same simulation with a completely different technique: **snapshot interpolation**.
 
-Why a different technique? While deterministic lockstep is very efficient in terms of bandwidth, it's not always possible to make your simulation deterministic. Also, as the player count increases, deterministic lockstep becomes problematic: you can't simulate frame n until you receive input from _all_ players for that frame, so players end up waiting for the most lagged player. Because of this, I recommend deterministic lockstep for 2-4 players at most.
+## Background
 
-If your simulation is not deterministic or you want higher player counts then you need a different technique. Snapshot interpolation fits the bill nicely. It is in many ways the polar opposite of deterministic lockstep: instead of running two simulations, one on the left and one on the right, and using synchronized inputs and perfect determinism to make sure they stay in perfectly in sync... snapshot interpolation doesn't run any simulation on the right side at all!
+While deterministic lockstep is very efficient in terms of bandwidth, it's not always possible to make your simulation deterministic. Floating point determinism across platforms is [hard](/post/floating_point_determinism/).
+
+Also, as the player counts increase, deterministic lockstep becomes problematic: you can't simulate frame n until you receive input from _all_ players for that frame, so players end up waiting for the most lagged player. Because of this, I recommend deterministic lockstep for 2-4 players at most.
+
+So if your simulation is not deterministic or you want higher player counts then you need a different technique. Snapshot interpolation fits the bill nicely. It is in many ways the polar opposite of deterministic lockstep: instead of running two simulations, one on the left and one on the right, and using perfect determinism and synchronized inputs keep them in sync, snapshot interpolation doesn't run any simulation on the right side at all!
 
 ## Snapshots
 
@@ -43,7 +47,7 @@ Each frame we just render the most recent snapshot received on the right:
   <source src="http://new.gafferongames.com/videos/snapshot_interpolation_60pps_jitter.webm" type="video/webm"/>
 </video>
 
-Look closely though, and even though we're sending the data as rapidly as possible (one packet per-frame) you can still see hitches on the right side. This is because the internet makes no guarantee that packets sent 60 times per-second arrive nicely spaced 1/60th of a second apart. Packets are jittered. Some frames you receive two snapshot packets. Other frames you receive none.
+Look closely though, and even though we're sending the data as rapidly as possible (one packet per-frame) you can still see hitches on the right side. This is because the internet makes no guarantee that packets sent 60 times per-second arrive nicely spaced 1/60 of a second apart. Packets are jittered. Some frames you receive two snapshot packets. Other frames you receive none.
 
 # Jitter and Hitches
 

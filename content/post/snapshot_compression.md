@@ -11,7 +11,7 @@ draft = false
 
 Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories/networked-physics/)**.
 
-In the <a href="http://gafferongames.com/networked-physics/snapshots-and-interpolation/">previous article</a> we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.
+In the [previous article](/post/snapshot_interpolation/) we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.
 
 The problem with a low snapshot rate like 10HZ is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms. If protection against one or two lost packets in a row is desired, this blows out to 250ms or 350ms delay.
 

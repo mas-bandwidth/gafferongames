@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler and welcome to __Building a Game Network Protocol__.
+Hi, I’m [Glenn Fiedler](/about) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
 
 In the [previous article](/post/reading_and_writing_packets/), we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.
 
@@ -786,4 +786,4 @@ Now the packet looks something like this:
 
 This is great packet structure to use during development. 
 
-Please make sure you switch over to cryptographically secure primitives before you release your game For details on exactly how to do this, refer to my future article, __Securing Dedicated Servers__.
+__NEXT ARTICLE__: [Packet Fragmentation and Reassembly](/post/packet_fragmentation_and_reassembly)

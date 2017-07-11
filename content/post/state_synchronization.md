@@ -11,13 +11,17 @@ draft = false
 
 Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories/networked-physics/)**.
 
+In the [previous article](/post/snapshot_compression/) we discussed techniques for compressing snapshots.
+
 In this article we round out our discussion of networked physics strategies with **state synchronization**, the third and final strategy in this article series.
+
+## State Synchronization
 
 What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, _unlike_ deterministic lockstep, we don't just send input, we send both input <u>and</u> state.
 
-This gives state synchronization interesting properties. Because we send state, it doesn't need perfect determinism to stay in sync, and because the simulation runs on both sides, objects continue moving forward between updates.
+This gives state synchronization interesting properties. Because we send state, we don't need perfect determinism to stay in sync, and because the simulation runs on both sides, objects continue moving forward between updates.
 
-This let us approach state synchronization differently to snapshot interpolation. Instead of sending state updates for every object in each packet, we can now send updates for only a few, and if we're smart about how we select the objects for each packet, we can save bandwidth by concentrating updates on the most important objects.
+This lets us approach state synchronization differently to snapshot interpolation. Instead of sending state updates for every object in each packet, we can now send updates for only a few, and if we're smart about how we select the objects for each packet, we can save bandwidth by concentrating updates on the most important objects.
 
 So what's the catch? State synchronization is an approximate and lossy synchronization strategy. In practice, this means you'll spend a lot of time tracking down sources of extrapolation divergence and pops. But other than that, it's a quick and easy strategy to get started with.
 
@@ -35,7 +39,7 @@ Here's the state sent over the network per-object:
 };
 </pre>
 
-Notice that unlike snapshot interpolation, we're not just sending visual quantities like position and orientation, we're also sending _non-visual_ state such as linear and angular velocity. Why is this?
+Unlike snapshot interpolation, we're not just sending visual quantities like position and orientation, we're also sending _non-visual_ state such as linear and angular velocity. Why is this?
 
 The reason is that state synchronization runs the simulation on both sides, so it's _always extrapolating_ from the last state update applied to each object. If linear and angular velocity aren't synchronized, this extrapolation is done with incorrect velocities, leading to pops when objects are updated. 
 
