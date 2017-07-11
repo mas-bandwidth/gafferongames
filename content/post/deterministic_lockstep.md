@@ -21,9 +21,7 @@ While this sounds great in theory, in practice it's difficult to implement deter
 
 ## Determinism
 
-Let's drill down a bit more into this concept of determinism.
-
-In this context, determinism means that given the same initial condition and the same set of inputs your simulation gives exactly the same result. And I do mean *exactly* the same result. 
+Determinism means that given the same initial condition and the same set of inputs your simulation gives exactly the same result. And I do mean *exactly* the same result. 
 
 Not close. Not near enough. **Exactly the same**. Exact down to the bit-level. So exact, you could take a checksum of your entire physics state at the end of each frame and it would be identical.
 
@@ -34,7 +32,7 @@ Not close. Not near enough. **Exactly the same**. Exact down to the bit-level. S
 
 Above you can see a simulation that is *almost* deterministic. The simulation on the left is controlled by the player. The simulation on the right has exactly the same inputs applied with a two second delay starting from the same initial condition. Both simulations step forward with the same delta time (a necessary precondition to ensure exactly the same result) and both simulations apply the same inputs. Notice how after the smallest divergence the simulation gets further and further out of sync. This simulation is **non-deterministic**.
 
-What's going on is that the physics engine I'm using ([Open Dynamics Engine](http://opende.org)) uses a random number generator inside its solver to randomize the order of constraint processing to improve stability. It's open source. Take a look and see! Unfortunately this breaks determinism because the simulation on the left processes constraints in a different order to the simulation on the right, leading to slightly different results.
+What's going on is that the physics engine I'm using ([Open Dynamics Engine](http://www.ode.org/)) uses a random number generator inside its solver to randomize the order of constraint processing to improve stability. It's open source. Take a look and see! Unfortunately this breaks determinism because the simulation on the left processes constraints in a different order to the simulation on the right, leading to slightly different results.
 
 Luckily all that is required to make ODE deterministic on the same machine, with the same complied binary and on the same OS (is that enough qualifications?) is to set its internal random seed to the current frame number before running the simulation via dSetRandomSeed. Once this is done ODE gives exactly the same result and the left and right simulations stay in sync.
 
@@ -47,15 +45,15 @@ And now a word of warning. Even though the simulation above is deterministic on 
 
 Floating point determinism is a complicated subject and there's no silver bullet. 
 
-For more information please refer to this <a href="http://gafferongames.com/networking-for-game-programmers/floating-point-determinism/">article</a>.
+For more information please refer to this [article](/post/floating_point_determinism/).
 
 ## Networking Inputs
 
-Now that I have impressed upon you the complexity of perfect determinism, let's get down to implementation, assuming your simulation is in fact deterministic.
+Now let's get down to implementation.
 
-You may wonder what the input in our example simulation is and how we should network it. Well, our example physics simulation is driven by keyboard input: arrow keys apply forces to make the player cube move, holding space lifts the cube up and blows other cubes around, and holding 'z' enables katamari mode.
+Our example physics simulation is driven by keyboard input: arrow keys apply forces to make the player cube move, holding space lifts the cube up and blows other cubes around, and holding 'z' enables katamari mode.
 
-But how can we network these inputs? Must we send the entire state of the keyboard? No. It's not necessary to send the entire keyboard state, only the state of the keys that affect the simulation. What about key press and release events then? No. This is also not a good strategy. We need to ensure that exactly the same input is applied on the right side, at exactly the same time, so we can't just send 'key pressed', and 'key released' events over TCP.
+How can we network these inputs? Must we send the entire state of the keyboard? No. It's not necessary to send the entire keyboard state, only the state of the keys that affect the simulation. What about key press and release events then? No. This is also not a good strategy. We need to ensure that exactly the same input is applied on the right side, at exactly the same time, so we can't just send 'key pressed', and 'key released' events over TCP.
 
 What we do instead is represent the input with a struct and at the beginning of each simulation frame on the left side, sample this struct from the keyboard:
 
@@ -75,7 +73,7 @@ And here's the key part: the simulation on the right can only simulate frame n w
 
 For example, if you were sending across using TCP you could simply send the inputs and nothing else, and on the other side you could read the packets coming in, and each input received corresponds to one frame for the simulation to step forward. If no input arrives for a given render frame, the right side can't advance forward, it has to wait for the next input to arrive.
 
-Let's say you're using TCP, you've disabled [Nagle's Algorithm](http://en.wikipedia.org/wiki/Nagle's_algorithm), and you're sending inputs from the left to the right simulation once per-frame (60 times per-second).
+So let's move forward with TCP, you've disabled [Nagle's Algorithm](http://en.wikipedia.org/wiki/Nagle's_algorithm), and you're sending inputs from the left to the right simulation once per-frame (60 times per-second).
 
 Here it gets a little complicated. Since we can't simulate forward unless we have the input for the next frame, it's not enough to just take whatever inputs arrive over the network and then run the simulation on inputs as they arrive because the result would be very jittery. Data sent across the network at 60HZ doesn't typically arrive nicely spaced, 1/60th of a second between each packet.
 
@@ -103,7 +101,7 @@ In fact, It's a common thing out there on the Internet for pundits to say stuff 
 
 * <a href="https://thoughtstreams.io/glyph/your-game-doesnt-need-udp-yet/">Your game doesn't need UDP (yet)</a>
 
-But I'm here to tell you this kind of thinking is <u><b>dead wrong</b></u>.
+But I'm here to tell you this kind of thinking is __dead wrong__.
 
 <video autoplay preload="auto" loop="true" width="100%">
 <source src="http://new.gafferongames.com/videos/deterministic_lockstep_tcp_100ms_1pc.mp4" type="video/mp4"/>
@@ -119,7 +117,7 @@ That's not all. It gets significantly worse as latency and packet loss increase.
   <source src="http://new.gafferongames.com/videos/deterministic_lockstep_tcp_250ms_5pc.webm" type="video/webm"/>
 </video>
 
-Now I will concede that if you have no packet loss and/or a very small amount of latency then you very well may get acceptable results with TCP. But please be aware that if you use TCP to send time critical data it degrades <em><u>terribly</u></em> as packet loss and latency increase.
+Now I will concede that if you have no packet loss and/or a very small amount of latency then you very well may get acceptable results with TCP. But please be aware that if you use TCP it behaves _terribly_ under bad network conditions.
 
 ## Can we do better than TCP?
 
@@ -155,3 +153,5 @@ Let's take a look...
 The video above shows deterministic lockstep synchronized over UDP using this technique with <u>2 seconds</u> of latency and <u>25% packet loss</u>. Imagine how awful TCP would look under these conditions.
 
 So in conclusion, even where TCP should have the most advantage, in the only networking model I'll present to you in this article series that relies on reliable-ordered data, we can easily beat it with a simple protocol sent over UDP.
+
+__Up next:__ [Snapshots and Interpolation](/post/snapshots_and_interpolation/)
