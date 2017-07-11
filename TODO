@@ -66,6 +66,10 @@ TODO
 
     ------------------
 
+    Put patreon support links at the bottom of each article.
+
+    ------------------
+
     Update the about page. It can be much better.
 
     ------------------
@@ -77,7 +81,7 @@ TODO
     https://khan.github.io/KaTeX/
     https://www.cgbaker.net/2017/01/mathjax-support-for-rendering-equations/
     https://github.com/oblitum/hugo-theme-slim/commit/2726427d5899720447d90177824ab26996bb0750
-    
+
     ------------------
 
     Once new networked physics article is up, I can publish the source code for gafferongames.com on github.
