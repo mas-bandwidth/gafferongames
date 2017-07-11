@@ -26,8 +26,8 @@ Determinism means that given the same initial condition and the same set of inpu
 Not close. Not near enough. **Exactly the same**. Exact down to the bit-level. So exact, you could take a checksum of your entire physics state at the end of each frame and it would be identical.
 
 <video preload="auto" autoplay="autoplay" loop="loop" width="100%">
-  <source src="http://new.gafferongames.com/videos/deterministic_lockstep_desync.mp4" type="video/mp4"/>
-  <source src="http://new.gafferongames.com/videos/deterministic_lockstep_desync.webm" type="video/webm"/>
+  <source src="http://gafferongames.com/videos/deterministic_lockstep_desync.mp4" type="video/mp4"/>
+  <source src="http://gafferongames.com/videos/deterministic_lockstep_desync.webm" type="video/webm"/>
 </video>
 
 Above you can see a simulation that is *almost* deterministic. The simulation on the left is controlled by the player. The simulation on the right has exactly the same inputs applied with a two second delay starting from the same initial condition. Both simulations step forward with the same delta time (a necessary precondition to ensure exactly the same result) and both simulations apply the same inputs. Notice how after the smallest divergence the simulation gets further and further out of sync. This simulation is **non-deterministic**.
@@ -37,8 +37,8 @@ What's going on is that the physics engine I'm using ([Open Dynamics Engine](htt
 Luckily all that is required to make ODE deterministic on the same machine, with the same complied binary and on the same OS (is that enough qualifications?) is to set its internal random seed to the current frame number before running the simulation via dSetRandomSeed. Once this is done ODE gives exactly the same result and the left and right simulations stay in sync.
 
 <video preload="auto" autoplay="autoplay" loop="loop" width="100%">
-  <source src="http://new.gafferongames.com/videos/deterministic_lockstep.mp4" type="video/mp4"/>
-  <source src="http://new.gafferongames.com/videos/deterministic_lockstep.webm" type="video/webm"/>
+  <source src="http://gafferongames.com/videos/deterministic_lockstep.mp4" type="video/mp4"/>
+  <source src="http://gafferongames.com/videos/deterministic_lockstep.webm" type="video/webm"/>
 </video>
 
 And now a word of warning. Even though the simulation above is deterministic on the same machine, that does *not* necessarily mean it would also be deterministic across different compilers, a different OS or different machine architectures (eg. PowerPC vs. Intel). In fact, it's probably not even deterministic between debug and release builds due to floating point optimizations. 
@@ -104,8 +104,8 @@ In fact, It's a common thing out there on the Internet for pundits to say stuff 
 But I'm here to tell you this kind of thinking is __dead wrong__.
 
 <video autoplay preload="auto" loop="true" width="100%">
-<source src="http://new.gafferongames.com/videos/deterministic_lockstep_tcp_100ms_1pc.mp4" type="video/mp4"/>
-<source src="http://new.gafferongames.com/videos/deterministic_lockstep_tcp_100ms_1pc.webm" type="video/webm"/>
+<source src="http://gafferongames.com/videos/deterministic_lockstep_tcp_100ms_1pc.mp4" type="video/mp4"/>
+<source src="http://gafferongames.com/videos/deterministic_lockstep_tcp_100ms_1pc.webm" type="video/webm"/>
 </video>
 
 Above you can see the simulation networked using deterministic lockstep over TCP at 100ms latency and 1% packet loss. If you look closely on the right side you can see hitches every few seconds. What's happening here is that each time a packet is lost, TCP has to wait RTT*2 while it is resent (actually it can be much worse, but I'm being generous...). The hitches happen because with deterministic lockstep the right simulation can't simulate frame n without input n, so it has to pause to wait for input n to be resent!
@@ -113,8 +113,8 @@ Above you can see the simulation networked using deterministic lockstep over TCP
 That's not all. It gets significantly worse as latency and packet loss increase. Here is the same simulation networked using deterministic lockstep over TCP at 250ms latency and 5% packet loss:
 
 <video autoplay preload="auto" loop="true" width="100%">
-  <source src="http://new.gafferongames.com/videos/deterministic_lockstep_tcp_250ms_5pc.mp4" type="video/mp4"/>
-  <source src="http://new.gafferongames.com/videos/deterministic_lockstep_tcp_250ms_5pc.webm" type="video/webm"/>
+  <source src="http://gafferongames.com/videos/deterministic_lockstep_tcp_250ms_5pc.mp4" type="video/mp4"/>
+  <source src="http://gafferongames.com/videos/deterministic_lockstep_tcp_250ms_5pc.webm" type="video/webm"/>
 </video>
 
 Now I will concede that if you have no packet loss and/or a very small amount of latency then you very well may get acceptable results with TCP. But please be aware that if you use TCP it behaves _terribly_ under bad network conditions.
@@ -146,8 +146,8 @@ So exactly how much better is this approach than sending inputs over TCP?
 Let's take a look...
 
 <video autoplay preload="auto" loop="true" width="100%">
-  <source src="http://new.gafferongames.com/videos/deterministic_lockstep_udp_2sec_25pc.mp4" type="video/mp4"/>
-  <source src="http://new.gafferongames.com/videos/deterministic_lockstep_udp_2sec_25pc.webm" type="video/webm"/>
+  <source src="http://gafferongames.com/videos/deterministic_lockstep_udp_2sec_25pc.mp4" type="video/mp4"/>
+  <source src="http://gafferongames.com/videos/deterministic_lockstep_udp_2sec_25pc.webm" type="video/webm"/>
 </video>
 
 The video above shows deterministic lockstep synchronized over UDP using this technique with __2 seconds__ of latency and __25% packet loss__. Imagine how awful TCP would look under these conditions.

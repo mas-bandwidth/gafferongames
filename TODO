@@ -48,17 +48,19 @@ DONE
 
     If an older article or link is not converted across (eg. the content and so on), then redirect to front page.
 
-TODO
+    Setup redirects for old articles
 
-    Need a way to convert old article links (especially popular ones), to the new hugo based site.
+    Make new gafferongames.com live with DNS redirect
+
+    Save final backup of old gafferongames.com
+
+    Cancel wirenine.com account.
+
+TODO
 
     ------------------
 
     Fuck! I completely forgot about "Reliable Ordered Messages" in "Building a Game Network Protocol"!
-
-    ------------------
-
-    Make new gafferongames.com live with DNS redirect
 
     ------------------
 

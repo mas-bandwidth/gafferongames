@@ -16,8 +16,8 @@ In this article series we're going to network a physics simulation three differe
 But before we get to this, let's spend some time exploring the physics simulation we’re going to network in this article series:
 
 <video preload="auto" autoplay="autoplay" loop="loop" width="100%">
-<source src="http://new.gafferongames.com/videos/the_physics_simulation_cube.mp4" type="video/mp4" />
-<source src="http://new.gafferongames.com/videos/the_physics_simulation_cube.webm" type="video/webm" />
+<source src="http://gafferongames.com/videos/the_physics_simulation_cube.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/the_physics_simulation_cube.webm" type="video/webm" />
 Your browser does not support the video tag.
 </video>
 
@@ -32,8 +32,8 @@ Networked physics get interesting when the player interacts with other physicall
 So let's add some more cubes to the simulation:
 
 <video preload="auto" autoplay="autoplay" loop="loop" width="100%">
-<source src="http://new.gafferongames.com/videos/the_physics_simulation_cubes_roll.mp4" type="video/mp4" />
-<source src="http://new.gafferongames.com/videos/the_physics_simulation_cubes_roll.webm" type="video/webm" />
+<source src="http://gafferongames.com/videos/the_physics_simulation_cubes_roll.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/the_physics_simulation_cubes_roll.webm" type="video/webm" />
 Your browser does not support the video tag.
 </video>
 
@@ -42,8 +42,8 @@ When the player interacts with a cube it turns red. When that cube comes to rest
 While it’s cool to roll around and interact with other cubes, what I really wanted was a way to push _lots_ of cubes around. What I came up with is this:
 
 <video preload="auto" autoplay="autoplay" loop="loop" width="100%">
-<source src="http://new.gafferongames.com/videos/the_physics_simulation_cubes_blow.mp4" type="video/mp4" />
-<source src="http://new.gafferongames.com/videos/the_physics_simulation_cubes_blow.webm" type="video/webm" />
+<source src="http://gafferongames.com/videos/the_physics_simulation_cubes_blow.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/the_physics_simulation_cubes_blow.webm" type="video/webm" />
 Your browser does not support the video tag.
 </video>
 
@@ -56,8 +56,8 @@ I also wanted a very complex coupled motion between the player and non-player cu
 To implement this I thought it would be cool if the player could roll around and create a ball of cubes, like in one of my favorite games [Katamari Damacy](https://en.wikipedia.org/wiki/Katamari_Damacy).
 
 <video preload="auto" autoplay="autoplay" loop="loop" width="100%">
-<source src="http://new.gafferongames.com/videos/the_physics_simulation_cubes_katamari.mp4" type="video/mp4" />
-<source src="http://new.gafferongames.com/videos/the_physics_simulation_cubes_katamari.webm" type="video/webm" />
+<source src="http://gafferongames.com/videos/the_physics_simulation_cubes_katamari.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/the_physics_simulation_cubes_katamari.webm" type="video/webm" />
 Your browser does not support the video tag.
 </video>
 

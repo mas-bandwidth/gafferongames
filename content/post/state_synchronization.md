@@ -122,8 +122,8 @@ I recommend against trying to apply some smoothing between the state update and 
 Surprisingly, without any smoothing the result is already pretty good:
 
 <video preload="auto" controls="controls" width="100%">
-<source src="http://new.gafferongames.com/videos/state_synchronization_uncompressed.mp4" type="video/mp4" />
-<source src="http://new.gafferongames.com/videos/state_synchronization_uncompressed.webm" type="video/webm" />
+<source src="http://gafferongames.com/videos/state_synchronization_uncompressed.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/state_synchronization_uncompressed.webm" type="video/webm" />
 Your browser does not support the video tag.
 </video>
 
@@ -134,8 +134,8 @@ Of course we can do a lot better than this and each optimization we do lets us s
 But here it gets a bit more complex. We are extrapolating from those state updates so if we quantize these values over the network then the state that arrives on the right side is slightly different from the left side, leading to a slightly different extrapolation and a pop when the next state update arrives for that object.
 
 <video preload="auto" controls="controls" width="100%">
-<source src="http://new.gafferongames.com/videos/state_synchronization_compressed.mp4" type="video/mp4" />
-<source src="http://new.gafferongames.com/videos/state_synchronization_compressed.webm" type="video/webm" />
+<source src="http://gafferongames.com/videos/state_synchronization_compressed.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/state_synchronization_compressed.webm" type="video/webm" />
 Your browser does not support the video tag.
 </video>
 
@@ -146,8 +146,8 @@ The solution is to quantize the state on both sides. This means that on both sid
 Because these quantized values are being fed back into the simulation, you'll find that much more precision is required than snapshot interpolation where they were just visual quantities used for interpolation. In the cube simulation I found it necessary to have 4096 position values per-meter, up from 512 with snapshot interpolation, and a whopping 15 bits per-quaternion component in smallest three (up from 9). Without this extra precision significant popping occurs because the quantization forces physics objects into penetration with each other, fighting against the simulation which tries to keep the objects out of penetration. I also found that softening the constraints and reducing the maximum velocity which the simulation used to push apart penetrating objects also helped reduce the amount of popping.
 
 <video preload="auto" controls="controls" width="100%">
-<source src="http://new.gafferongames.com/videos/state_synchronization_quantize_both_sides.mp4" type="video/mp4" />
-<source src="http://new.gafferongames.com/videos/state_synchronization_quantize_both_sides.webm" type="video/webm" />
+<source src="http://gafferongames.com/videos/state_synchronization_quantize_both_sides.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/state_synchronization_quantize_both_sides.webm" type="video/webm" />
 Your browser does not support the video tag.
 </video>
 
@@ -170,8 +170,8 @@ The same process is then applied to the error quaternion (using multiplication b
 I find that using a single smoothing factor gives unacceptable results. A factor of 0.95 is perfect for small jitters because it smooths out high frequency jitter really well, but at the same time it is too slow for large position errors, like those that happen after multiple seconds of packet loss:
 
 <video preload="auto" controls="controls" width="100%">
-<source src="http://new.gafferongames.com/videos/state_synchronization_basic_smoothing.mp4" type="video/mp4" />
-<source src="http://new.gafferongames.com/videos/state_synchronization_basic_smoothing.webm" type="video/webm" />
+<source src="http://gafferongames.com/videos/state_synchronization_basic_smoothing.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/state_synchronization_basic_smoothing.webm" type="video/webm" />
 Your browser does not support the video tag.
 </video>
 
@@ -180,8 +180,8 @@ The solution I use is two different scale factors at different error distances, 
 The end result is smooth error reduction for small position and orientation errors combined with a tight error reduction for large pops. As you can see above you don't want to drag out correction of these large pops, they need to be fast and so they're over quickly otherwise they're really disorienting for players, but at the same time you want to have really smooth error reduction when the error is small hence the adaptive error reduction approach works really well.
 
 <video preload="auto" controls="controls" width="100%">
-<source src="http://new.gafferongames.com/videos/state_synchronization_adaptive_smoothing.mp4" type="video/mp4" />
-<source src="http://new.gafferongames.com/videos/state_synchronization_adaptive_smoothing.webm" type="video/webm" />
+<source src="http://gafferongames.com/videos/state_synchronization_adaptive_smoothing.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/state_synchronization_adaptive_smoothing.webm" type="video/webm" />
 Your browser does not support the video tag.
 </video>
 
