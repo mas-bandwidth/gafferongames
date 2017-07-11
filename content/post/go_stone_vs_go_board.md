@@ -183,3 +183,5 @@ In the end I settled on the simplest solution I could come up with: push the go 
 This seems counter-intuitive at first, but it has some nice parallels with other physical laws. Nature is lazy and always takes the shortest path. Nature does the *least amount of work*.
 
 We should probably do the same :)
+
+__NEXT ARTICLE:__ [Rotation and Inertia Tensors](/post/rotation_and_inertia_tensors/)

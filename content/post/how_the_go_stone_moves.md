@@ -13,7 +13,7 @@ Hi, I'm Glenn Fiedler. Welcome to [**Virtual Go**](/categories/virtual-go/), my 
 
 In previous articles we mathematically defined the shape of a go stone and tessellated its shape so it can be drawn with 3D graphics hardware.
 
-Now we want to make the go stone move, obeying Newton's laws of motion so the simulation is physically accurate. The stone should be accelerated by gravity and fall downwards. I also want the stone to rotate so it tumbles realistically as it falls through the air.
+Now we want to make the go stone move, obeying Newton's laws of motion so the simulation is physically accurate. The stone should be accelerated by gravity and fall downwards. I also want the stone to rotate so it tumbles as it falls through the air.
 
 ## The Rigid Body Assumption
 
@@ -27,7 +27,7 @@ Golf balls are pretty hard too, but if you look at a golf ball being hit by a cl
 
 The same thing happens to all objects in the real world to some degree. Nothing is truly rigid. No real material is so hard that it never deforms.
 
-But this is not the real world. This is Virtual Go. It's a simulation and here we are free to make whatever assumptions we want. And the smartest simplification we can make at this point is to assume that the go stone is perfectly rigid and does not deform under any circumstance.
+But this is not the real world. This is Virtual Go :) It's a simulation and here we are free to make whatever assumptions we want. And the smartest simplification we can make at this point is to assume that the go stone is perfectly rigid and does not deform under any circumstance.
 
 This is known as the <a href="https://en.wikipedia.org/wiki/Rigid_body">rigid body</a> assumption.
 
@@ -254,8 +254,6 @@ And here is the end result:
 frameborder="0" allowfullscreen class="video"></iframe>
 </div>
 
-I think this is fairly convincing. The go stone is moving quite realistically. 
+I think this is fairly convincing. The go stone is moving quite realistically!
 
-**Mission accomplished!**
-
-_todo: link to next article_
+__NEXT ARTICLE:__ [Go Stone vs. Go Board](/post/go_stone_vs_go_board/)

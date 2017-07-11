@@ -25,7 +25,7 @@ The concept is simple. To handle a collision we apply an impulse, an instantaneo
 
 ## Linear Collision Response
 
-We now pick up where we left off at the end of the [collision detection article](/post/collision_detection_go_stone_vs_go_board/).
+We now pick up where we left off at the end of the [collision detection article](/post/go_stone_vs_go_board/).
 
 <img src="/img/virtualgo/contact-point-linear.png" alt="contact point linear" width="100%"/>
 
@@ -159,7 +159,7 @@ Which gives the following result:
 frameborder="0" allowfullscreen class="video"></iframe>
 </div>
 
-This looks much more realistic!
+Which looks much more realistic!
 
 ## Rolling Friction
 
@@ -190,5 +190,3 @@ With a bit of tuning, it seems to work reasonably well:
 <iframe src="//www.youtube.com/embed/1eG2xTubRJY" 
 frameborder="0" allowfullscreen class="video"></iframe>
 </div>
-
-I'm pretty happy with this result :)

@@ -27,11 +27,11 @@ Consider the following case in two dimensions:
 
 <img src="/img/virtualgo/rotation-in-2d.png" alt="rotation in 2d" width="75%"/>
 
-It's easy because there is only one possible axis for rotation: clockwise or counter-clockwise.
+It's easy because there is only one possible axis for rotation around the center of mass: clockwise or counter-clockwise.
 
-It follows that as long as we are only rotating about the center of mass, we can represent the orientation of an object in 2D with a single theta value, angular velocity with a scalar radians per-second, and a scalar 'moment of inertia' that works just like an angular equivalent of mass: how hard it is to rotate that object.
+It follows that we can represent the orientation of an object in 2D around its center of mass with a single theta value, angular velocity with a scalar radians per-second, and a scalar 'moment of inertia' that works just like an angular equivalent of mass: how hard it is to rotate that object.
 
-When we move to three dimensions suddenly rotation can occur about any axis. Orientation becomes a quaternion, angular velocity a vector, and now for irregular shaped objects like go stones, we need a way to indicate that certain axes of rotation are easier to rotate about than others.
+But when we move to three dimensions suddenly rotation can occur about any axis. Orientation becomes a quaternion, angular velocity a vector, and now for irregular shaped objects like go stones, we need a way to indicate that certain axes of rotation are easier to rotate about than others.
 
 <img src="/img/virtualgo/rotation-in-3d.png" alt="rotation in 3d" width="75%"/>
 
@@ -156,3 +156,5 @@ Plugging in the values for a size 33 stone, we get 0.303588 which is close to th
 Verifying exact solutions against numeric ones is a fantastic way to check your calculations.
 
 Can <u>you</u> derive the equation for I<sub>x</sub>?
+
+__NEXT ARTICLE:__ [Collision Response and Coulomb Friction](/post/collision_response_and_coulomb_friction/)

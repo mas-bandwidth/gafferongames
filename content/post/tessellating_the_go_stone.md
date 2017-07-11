@@ -13,7 +13,7 @@ Hi, I'm Glenn Fiedler. Welcome to [**Virtual Go**](/categories/virtual-go/), my 
 
 In this article we want to draw the go stone using <a href="http://www.opengl.org">OpenGL</a>. 
 
-Unfortunately we can't just tell the graphics card, "Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r<sub>1</sub> and r<sub>2</sub>!". Modern 3D graphics cards work by drawing triangles, so we have to take our mathematical definition of the go stone and turn it into a set of triangles that the graphics card can render.
+Unfortunately we can't just tell the graphics card, "Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r<sub>1</sub> and r<sub>2</sub>!", because modern 3D graphics cards work by drawing triangles. We have to take our mathematical definition of the go stone and turn it into a set of triangles that the graphics card can render.
 
 This is called tessellation and there are several different ways to do it.
 
@@ -51,10 +51,12 @@ Now we need to tesselate the bevel. To do this I take the vertices which form th
 
 ## Vertex Welding
 
-Due to how recursive subdivision works a lot of duplicate vertices are generated. I'd rather not have the graphics card waste time transforming the same vertex over and over, so as I add vertices to the mesh I hash vertex positions into a 3D grid (~1mm cells) and reuse an existing vertex if the position and normals match within some small epsilon value.
+Due to how recursive subdivision works a lot of duplicate vertices are generated. 
 
-With vertex welding the reduction in vertices is dramatic: 53000 to just 6500. Fewer vertices means I can render more go stones, which is handy because there can be up to 361 of them on a 19x19 go board!
+I'd rather not have the graphics card waste time transforming the same vertex over and over, so as I add vertices to the mesh I hash vertex positions into a 3D grid (~1mm cells) and reuse an existing vertex if the position and normals match within some small epsilon value.
+
+With vertex welding the reduction in vertices is dramatic: 53000 to just 6500.
 
 For more information on vertex welding please refer to the discussion in <a href="http://www.amazon.com/Real-Time-Collision-Detection-Interactive-Technology/dp/1558607323/ref=sr_1_1?ie=UTF8&qid=1363029675&sr=8-1&keywords=real+time+collision+detection">Real-Time Collision Detection</a> by <a href="http://realtimecollisiondetection.net/blog/">Christer Ericson</a>.
 
-_todo: link to next article_
+__NEXT ARTICLE:__ [How The Go Stone Moves](/post/how_the_go_stone_moves/)

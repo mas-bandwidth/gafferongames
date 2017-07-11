@@ -66,3 +66,5 @@ It sounds simple but as you play Go you'll notice beautiful complexity emerging 
 So many beautiful properties from such simple rules. Truly an amazing game!
 
 Please visit [The Interactive Way To Go](http://playgo.to/iwtg/en/) if you would like to learn more.
+
+__NEXT ARTICLE:__ [Shape of The Go Stone](/post/shape_of_the_go_stone/)

@@ -11,9 +11,9 @@ draft = true
 
 Hi, I'm Glenn Fiedler. Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
 
-If you've ever played Go, you know that a biconvex go stone has an interesting wobble when it's placed on the board. This wobble is a direct consequence of its unique shape. 
+If you play Go, you know that a biconvex go stone has an interesting wobble when it's placed on the board. This wobble is a direct consequence of its unique shape. 
 
-I'd like to reproduce this wobble in Virtual Go, so let's to spend some time studying their shape, so we can capture and simulate it with a computer :)
+I'd like to reproduce this wobble in Virtual Go, so let's to spend some time studying go stone's shape, so we can capture this wobble and simulate it on a computer :)
 
 ## Slate And Shell
 
@@ -35,7 +35,9 @@ We can study this shape by looking at the intersection of two circles:
 
 I quickly noticed that by varying the radius of the circles and the distance between their centers, I could generate go stones of different sizes.
 
-This is interesting, but when creating a go stone I don't really want it to be parameterized this way. Instead I'd like to say, "Hey, I would like a stone of this width and height" and have a function that calculates the radius of the circles and how far apart they should be to generate that stone.
+But when creating a go stone I don't really want it to be parameterized this way. 
+
+Instead I'd like to say, "Hey, I would like a stone of this width and height" and have a function that calculates the radius of the circles and how far apart they should be to generate that stone.
 
 To write this function we first need to do some math:
 
@@ -85,7 +87,7 @@ In three dimensions the bevel is actually a torus (donut) around the edge of the
 
 The key to solving this is to realize that if the go stone and the bevel are to match perfectly then the tangent of the two circles must be equal at the point P.
 
-_*Update*: A few years later and it occurs to me that it would be even more beautiful if the second derivative matched at this intersection as well. Is this possible in general, or must the generating spheres become to ellipses to make this happen? I suspect this is the case. Mathematicians who play Go, [please let me know your thoughts](/contact)._
+_*Update*: A few years later and it occurs to me that it would be even more beautiful if the second derivative matched at this intersection as well. Is this possible in general, or must the generating spheres become to ellipses in order to make this happen? I suspect this is the case. Mathematicians who play Go, [let me know your thoughts](/contact)._
 
 <img src="/img/virtualgo/bevel-math-2.gif" alt="bevel math part 2" width="100%"/>
 
@@ -136,4 +138,4 @@ Now we have everything we need to write the function:
 
 Now we can calculate the bevel torus to round off any go stone we create as the intersection of two spheres.
 
-_todo: link to next article_
+__NEXT ARTICLE:__ [Tessellating The Go Stone](/post/tessellating_the_go_stone)
