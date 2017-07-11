@@ -13,11 +13,11 @@ Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories
 
 In the <a href="http://gafferongames.com/networked-physics/snapshots-and-interpolation/">previous article</a> we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.
 
-The problem with a low snapshot rate is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms. If protection against one or two lost packets in a row is desired, this blows out to 250ms or 350ms.
+The problem with a low snapshot rate like 10HZ is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms. If protection against one or two lost packets in a row is desired, this blows out to 250ms or 350ms delay.
 
 This is not an acceptable amount of delay for most games, but when the physics simulation is as unpredictable as ours, the only way to reduce it is to increase the packet send rate. Unfortunately, increasing the send rate also increases bandwidth. So what we're going to do in this article is work through every possible bandwidth optimization _(that I can think of at least)_ until we get bandwidth under control. 
 
-Our target bandwidth is **<u>256 kilobits per-second</u>**.
+Our target bandwidth is __256 kilobits per-second__.
 
 # Starting Point @ 60HZ
 
@@ -28,9 +28,7 @@ Life is rarely easy, and the life of a network programmer, even less so. As netw
   <source src="http://new.gafferongames.com/videos/snapshot_compression_uncompressed.webm" type="video/webm"/>
 </video>
 
-o_O
-
-That's a _LOT_ of bandwidth: **<u>17.37 megabits per-second!</u>**.
+That's a _LOT_ of bandwidth: **17.37 megabits per-second!**
 
 Let's break it down and see where all the bandwidth is going. 
 
@@ -85,7 +83,7 @@ This optimization reduces bandwidth by over 5 megabits per-second, and I think i
 
 ## Optimizing Linear Velocity
 
-What should we optimize next? It's a tie between linear velocity and position. Both are 96 bits. In my experience position is the harder quantity to compress so let's start with linear velocity.
+What should we optimize next? It's a tie between linear velocity and position. Both are 96 bits. In my experience position is the harder quantity to compress so let's start here.
 
 To compress linear velocity we need to bound its x,y,z components in some range so we don't need to send full float values. I found that a maximum speed of 32 meters per-second is a nice power of two and doesn't negatively affect the player experience in the cube simulation. Since we're really only using the linear velocity as a _hint_ to improve interpolation between position sample points we can be pretty rough with compression. 32 distinct values per-meter per-second provides acceptable precision.
 
@@ -93,7 +91,7 @@ Linear velocity has been bounded and quantized and is now three integers in the 
 
 11 bits per-component gives 33 bits total per-linear velocity. Just over 1/3 the original uncompressed size!
 
-We can do even better than this because most cubes are stationary. To take advantage of this we just write a single bit "at rest". If this bit is 1, then velocity is known zero and is not sent. Otherwise, the compressed velocity follows after the bit (33 bits). Cubes at rest now cost just 127 bits, while cubes that are moving cost one bit more than they previously did: 159 + 1 = 160 bits.
+We can do even better than this because most cubes are stationary. To take advantage of this we just write a single bit "at rest". If this bit is 1, then velocity is implicitly zero and is not sent. Otherwise, the compressed velocity follows after the bit (33 bits). Cubes at rest now cost just 127 bits, while cubes that are moving cost one bit more than they previously did: 159 + 1 = 160 bits.
 
 <video controls="controls" width="100%">
 <source src="http://new.gafferongames.com/videos/snapshot_compression_at_rest_flag.mp4" type="video/mp4" />
@@ -131,9 +129,9 @@ Now that we've compressed position and orientation we've run out of simple optim
 
 ## Delta Compression
 
-Can we optimize further? The answer is yes, but only if we embrace a completely new technique: <b><u>delta compression</u></b>.
+Can we optimize further? The answer is yes, but only if we embrace a completely new technique: __delta compression__.
 
-Delta compression sounds mysterious. Magical. Hard. Actually, it's not hard at all. Here's how it works: the left side sends packets to the right like this: "This is snapshot 110 encoded relative to snapshot 100". The snapshot being encoded relative to is called the baseline. How you do this encoding is up to you, there are many fancy tricks, but the basic, big order of magnitude win comes when you say: "Cube n in snapshot 110 is the same as the baseline. One bit: Not changed!".
+Delta compression sounds mysterious. Magical. Hard. Actually, it's not hard at all. Here's how it works: the left side sends packets to the right like this: "This is snapshot 110 encoded relative to snapshot 100". The snapshot being encoded relative to is called the baseline. How you do this encoding is up to you, there are many fancy tricks, but the basic, big order of magnitude win comes when you say: "Cube n in snapshot 110 is the same as the baseline. One bit: Not changed!"
 
 To implement delta encoding it is of course essential that the sender only encodes snapshots relative to baselines that the other side has received, otherwise they cannot decode the snapshot. Therefore, to handle packet loss the receiver has to continually send "ack" packets back to the sender saying: "the most recent snapshot I have received is snapshot n". The sender takes this most recent ack and if it is more recent than the previous ack updates the baseline snapshot to this value. The next time a packet is sent out the snapshot is encoded relative to this more recent baseline. This process happens continuously such that the steady state becomes the sender encoding snapshots relative to a baseline that is roughly RTT (round trip time) in the past.
 
@@ -145,7 +143,7 @@ There is one slight wrinkle: for one round trip time past initial connection the
 Your browser does not support the video tag.
 </video>
 
-As you can see above this is a big win. We can refine this approach and lock in more gains but we're not going to get another order of magnitude improvement like this past this point. From now on we're going to have to work pretty hard to get a number of small, cumulative gains to reach our goal of 256 kilobits per-second.
+As you can see above this is a big win. We can refine this approach and lock in more gains but we're not going to get another order of magnitude improvement past this point. From now on we're going to have to work pretty hard to get a number of small, cumulative gains to reach our goal of 256 kilobits per-second.
 
 ## Incremental Improvements
 
@@ -183,7 +181,7 @@ Next small improvement. Encoding position relative to (offset from) the baseline
 
 This gives a decent encoding but we can do better. If you think about it then there will be situations where one position component is large but the others are small. It would be nice if we could take advantage of this and send these small components using less bits.
 
-It's a statistical game and the best selection of small and large ranges per-component depend on the data set. I couldn't really tell looking at a noisy bandwidth meter if I was making any gains so I captured the position vs. position base data set and wrote it to a text file for analysis. The format is x,y,z,base_x,base_y,base_z with one cube per-line. The goal is to encode x,y,z relative to base x,y,z for each line. If you are interested, you can download this data set <a href="http://gafferongames.com/wp-content/uploads/2015/02/position_values.txt">here</a>.
+It's a statistical game and the best selection of small and large ranges per-component depend on the data set. I couldn't really tell looking at a noisy bandwidth meter if I was making any gains so I captured the position vs. position base data set and wrote it to a text file for analysis.
 
 I wrote a short ruby script to find the best encoding with a greedy search. The best bit-packed encoding I found for the data set works like this: 1 bit small per delta component followed by 5 bits if small [-16,+15] range, otherwise the delta component is in [-256,+255] range and is sent with 9 bits. If any component delta values are outside the large range, fallback to absolute position. Using this encoding I was able to obtain on average 26.1 bits for changed positions values.
 
@@ -193,7 +191,7 @@ Next I figured that relative orientation would be a similar easy big win. Proble
 
 I tried a bunch of stuff without good results. I tried encoding the 4D vector of the delta orientation directly and recomposing the largest component post delta using the same trick as smallest 3. I tried calculating the relative quaternion between orientation and base orientation, and since I knew that w would be large for this (rotation relative to identity) I could avoid sending 2 bits to identify the largest component, but in turn would need to send one bit for the sign of w because I don't want to negate the quaternion. The best compression I could find using this scheme was only 90% of the smallest three. Not very good.
 
-I was about to give up but I run some analysis over the smallest three representation. I found that 90% of orientations in the smallest three format had the same largest component index as their base orientation 100ms ago. This meant that it could be profitable to delta encode the smallest three format directly. What's more I found that there would be no additional precision loss with this method when reconstructing the orientation from its base. I exported the quaternion values from a typical run as a data set in smallest three format (available <a href="http://gafferongames.com/wp-content/uploads/2015/02/smallest_three_values.txt">here</a>) and got to work trying the same multi-level small/large range per-component greedy search that I used for position.
+I was about to give up but I run some analysis over the smallest three representation. I found that 90% of orientations in the smallest three format had the same largest component index as their base orientation 100ms ago. This meant that it could be profitable to delta encode the smallest three format directly. What's more I found that there would be no additional precision loss with this method when reconstructing the orientation from its base. I exported the quaternion values from a typical run as a data set in smallest three format and got to work trying the same multi-level small/large range per-component greedy search that I used for position.
 
 The best encoding found was: 5-8, meaning [-16,+15] small and [-128,+127] large. One final thing: as with position the large range can be extended a bit further by knowing that if the component value is not small the value cannot be in the [-16,+15] range. I leave the calculation of how to do this as an exercise for the reader. Be careful not to collapse two values onto zero.
 
@@ -217,4 +215,9 @@ And that's about as far as I can take it using traditional hand-rolled bit-packi
 
 It's possible to get even better compression using a different approach. Bit-packing is inefficient because not all bit values have equal probability of 0 vs 1. No matter how hard you tune your bit-packer a context aware arithmetic encoding can beat your result by more accurately modeling the probability of values that occur in your data set. This <a href="https://github.com/rygorous/gaffer_net/blob/master/main.cpp">implementation</a> by Fabian Giesen beat my best bit-packed result by 25%.
 
-It's also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly. Chris Doran from Geomerics wrote also wrote an excellent <a href="http://www.geomerics.com/wp-content/uploads/2015/04/rotation_blog_toprint.pdf">article</a> exploring the mathematics of quaternion compression that is worth reading.
+It's also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly. 
+
+Chris Doran from Geomerics wrote also wrote an excellent <a href="http://www.geomerics.com/wp-content/uploads/2015/04/rotation_blog_toprint.pdf">article</a> exploring the mathematics of relative quaternion compression that is worth reading.
+
+__NEXT ARTICLE:__ [State Synchronization](/post/state_synchronization/)
+

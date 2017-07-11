@@ -150,8 +150,8 @@ Let's take a look...
   <source src="http://new.gafferongames.com/videos/deterministic_lockstep_udp_2sec_25pc.webm" type="video/webm"/>
 </video>
 
-The video above shows deterministic lockstep synchronized over UDP using this technique with <u>2 seconds</u> of latency and <u>25% packet loss</u>. Imagine how awful TCP would look under these conditions.
+The video above shows deterministic lockstep synchronized over UDP using this technique with __2 seconds__ of latency and __25% packet loss__. Imagine how awful TCP would look under these conditions.
 
-So in conclusion, even where TCP should have the most advantage, in the only networking model I'll present to you in this article series that relies on reliable-ordered data, we can easily beat it with a simple protocol sent over UDP.
+So in conclusion, even where TCP should have the most advantage, in the only networking model that relies on reliable-ordered data, we can still easily whip its ass with a simple protocol built on top of UDP.
 
-__Up next:__ [Snapshots and Interpolation](/post/snapshots_and_interpolation/)
+__NEXT ARTICLE:__ [Snapshot Interpolation](/post/snapshot_interpolation/)

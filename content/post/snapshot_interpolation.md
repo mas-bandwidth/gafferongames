@@ -2,24 +2,24 @@
 categories = ["Networked Physics"]
 tags = ["physics","networking"]
 date = "2014-11-30"
-title = "Snapshots and Interpolation"
+title = "Snapshot Interpolation"
 description = "Interpolating between snapshots of visual state"
 draft = false
 +++
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories/networked-physics/)**, by article series about networking a physics simulation.
+Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories/networked-physics/)**.
 
 In the <a href="http://gafferongames.com/networked-physics/deterministic-lockstep/">previous article</a> we networked a physics simulation using deterministic lockstep. Now, in this article we're going to network the same simulation with a completely different technique: **snapshot interpolation**.
 
 Why a different technique? While deterministic lockstep is very efficient in terms of bandwidth, it's not always possible to make your simulation deterministic. Also, as the player count increases, deterministic lockstep becomes problematic: you can't simulate frame n until you receive input from _all_ players for that frame, so players end up waiting for the most lagged player. Because of this, I recommend deterministic lockstep for 2-4 players at most.
 
-If your simulation is not deterministic or you want higher player counts then you need a different technique. Snapshot interpolation fits the bill nicely. It is in many ways the polar opposite of deterministic lockstep: instead of running two simulations, one on the left and one on the right, and using synchronized inputs and perfect determinism to make sure they stay in perfectly in sync... _with snapshot interpolation we don't run any simulation on the right side at all!_
+If your simulation is not deterministic or you want higher player counts then you need a different technique. Snapshot interpolation fits the bill nicely. It is in many ways the polar opposite of deterministic lockstep: instead of running two simulations, one on the left and one on the right, and using synchronized inputs and perfect determinism to make sure they stay in perfectly in sync... snapshot interpolation doesn't run any simulation on the right side at all!
 
 ## Snapshots
 
-Instead, we capture a **snapshot** of all relevant state from the simulation on the left and transmit it to the right, and on the right side, use those snapshots to reconstruct a visual approximation of the simulation, all without running the simulation itself.
+Instead, we capture a **snapshot** of all relevant state from the simulation on the left and transmit it to the right, then on the right side we use those snapshots to reconstruct a visual approximation of the simulation, all without running the simulation itself.
 
 As a first pass, let's send across the state required to render each cube:
 
@@ -43,7 +43,7 @@ Each frame we just render the most recent snapshot received on the right:
   <source src="http://new.gafferongames.com/videos/snapshot_interpolation_60pps_jitter.webm" type="video/webm"/>
 </video>
 
-Look closely though, and even though we're sending the data as rapidly as possible (one packet per-frame) you can still see hitches on the right side. This is because the internet makes no guarantee that packets sent 60 times per-second nicely spaced 1/60th of a second apart. Packets are jittered. Some frames you receive two snapshot packets. Other frames you receive none.
+Look closely though, and even though we're sending the data as rapidly as possible (one packet per-frame) you can still see hitches on the right side. This is because the internet makes no guarantee that packets sent 60 times per-second arrive nicely spaced 1/60th of a second apart. Packets are jittered. Some frames you receive two snapshot packets. Other frames you receive none.
 
 # Jitter and Hitches
 
@@ -75,7 +75,7 @@ Look closely though and you can see some artifacts on the right side. The first 
 
 I find these artifacts unacceptable but I don't want to increase the packet send rate to fix them. Let's see what we can do to make it look better at the same send rate instead. One thing we can try is upgrading to a more accurate interpolation scheme for position, one that interpolates between position samples while considering the linear velocity at each sample point.
 
-A spline that can be used to perform this interpolation is the <a href="http://en.wikipedia.org/wiki/Hermite_interpolation">hermite spline</a>. 
+This can be done with an <a href="http://en.wikipedia.org/wiki/Hermite_interpolation">hermite spline</a> (pronounced "air-mitt")
 
 Unlike other splines with control points that affect the curve indirectly, the hermite spline is guaranteed to pass through the start and end points while matching the start and end velocities. This means that velocity is smooth across sample points and cubes in the katamari ball tend to rotate around the cube rather than interpolate through it at speed.
 
@@ -92,7 +92,9 @@ I believe this is because cubes in the simulation tend to have mostly constant a
 
 ## Handling Real World Conditions
 
-Now we have to deal with packet loss. After the discussion of UDP vs. TCP in the previous article I'm sure you can see why we would never consider sending snapshots over TCP. Snapshots are time critical but unlike inputs in deterministic lockstep snapshots don't need to be reliable. If a snapshot is lost we can just skip past it and interpolate towards a more recent snapshot in the interpolation buffer. We don't ever want to stop and wait for a lost snapshot packet to be resent. This is why you should always use UDP for sending snapshots.
+Now we have to deal with packet loss. After the discussion of UDP vs. TCP in the previous article I'm sure you can see why we would never consider sending snapshots over TCP. 
+
+Snapshots are time critical but unlike inputs in deterministic lockstep snapshots don't need to be reliable. If a snapshot is lost we can just skip past it and interpolate towards a more recent snapshot in the interpolation buffer. We don't ever want to stop and wait for a lost snapshot packet to be resent. This is why you should always use UDP for sending snapshots.
 
 I'll let you in on a secret. Not only were the linear and hermite interpolation videos above recorded at a send rate of 10 packets per-second, they were also recorded at 5% packet loss with +/- 2 frames of jitter @ 60fps. How I handled packet loss and jitter for those videos is by simply ensuring that snapshots are held in the interpolation buffer for an appropriate amount of time before interpolation.
 
@@ -117,4 +119,4 @@ How can we reduce the amount of delay added for interpolation? 350ms still seems
 
 In order to increase the send rate we're going to need some pretty good bandwidth optimizations. But don't worry, there's a _lot_ we can do to optimize bandwidth. So much so that there was too much stuff to fit in this article and I had to insert an extra unplanned article just to cover all of it!
 
-<strong>NEXT ARTICLE</strong>: <a href="http://gafferongames.com/networked-physics/snapshot-compression/">Snapshot Compression</a>
+__NEXT ARTICLE__: [Snapshot Compression](/post/snapshot_compression/)

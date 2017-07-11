@@ -65,4 +65,4 @@ Cubes within a certain distance of the player have a force applied towards the c
 
 This is a very difficult situation for networked physics!
 
-__Up next__: [Deterministic Lockstep](/post/deterministic_lockstep/)
+__NEXT ARTICLE:__ [Deterministic Lockstep](/post/deterministic_lockstep/)
