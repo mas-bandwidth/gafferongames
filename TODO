@@ -46,13 +46,11 @@ DONE
 
     Link together articles.
 
+    If an older article or link is not converted across (eg. the content and so on), then redirect to front page.
+
 TODO
 
-    ------------------
-
     Need a way to convert old article links (especially popular ones), to the new hugo based site.
-
-    If an older article or link is not converted across (eg. the content and so on), then redirect to front page.
 
     ------------------
 
