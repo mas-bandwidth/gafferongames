@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler and to the second article in __Game Physics__
+Hi, I'm [Glenn Fiedler](/about) and welcome to **[Game Physics](/categories/game-physics/)**.
 
 In the [previous article](/post/integration_basics/) we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it's just a way to advance the your physics simulation forward by some small amount of time called "delta time" (or dt for short).
 
@@ -186,6 +186,4 @@ This *looks* complicated but here is a simple way to think about it. Any remaind
 
 We can use this remainder value to get a blending factor between the previous and current physics state simply by dividing by dt. This gives an alpha value in the range [0,1] which is used to perform a linear interpolation between the two physics states to get the current state to render. This interpolation is easy to do for single values and for vector state values. You can even use it with full 3D rigid body dynamics if you store your orientation as a quaternion and use a spherical linear interpolation (slerp) to blend between the previous and current orientations.
 
-When we do this the jitter goes away and the physics simulation appears perfectly smooth. But did we just get something for free? __Not exactly__. 
-
-The cost is that the physics simulation is now rendered one frame in the past.
+__NEXT ARTICLE:__ [Physics in 3D](/post/physics_in_3d/)

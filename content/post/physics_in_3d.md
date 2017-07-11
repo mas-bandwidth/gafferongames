@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler and to the third article in __Game Physics__
+Hi, I'm [Glenn Fiedler](/about) and welcome to **[Game Physics](/categories/game-physics/)**.
 
 In the [previous article](/post/fix_your_timestep/) we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.
 
@@ -308,3 +308,5 @@ Where <b>p</b> is the point on the rigid body and <b>x</b> is the center of mass
 ## Conclusion
 
 We have covered the techniques required to simulate linear and rotational movement of a rigid body in three dimensions. By combining the linear and rotational physics into a single physics state and integrating, we can simulate the motion of a rigid body in three dimensions.
+
+__NEXT ARTICLE:__ [Spring Physics](/post/spring_physics/)

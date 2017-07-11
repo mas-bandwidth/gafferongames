@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler and welcome to the final article in __Game Physics__.
+Hi, I'm [Glenn Fiedler](/about) and welcome to **[Game Physics](/categories/game-physics/)**.
 
 In the [previous article](/post/spring_physics) we discussed how to use spring-like forces to model basic collision response, joints and motors.
 
@@ -148,7 +148,7 @@ When the user holds down the forward input it is only when that input makes a ro
 
 Client side prediction works by predicting physics ahead locally using the player's input, simulating ahead without waiting for the server round trip. The server periodically sends corrections to the client which are required to ensure that the client stays in sync with the server physics. At all times the server is authoritative over the physics of the character so even if the client attempts to cheat all they are doing is fooling themselves locally while the server physics remains unaffected. Seeing as all game logic runs on the server according to server physics state, client side movement cheating is basically eliminated.
 
-The most complicated part of client side prediction is handling the correction from the server. This is difficult, because the corrections from the server arrive <i>in the past</i> due to client/server communication latency. We need to apply this correction in the past, then calculate the resulting corrected position at present time on the client.
+The most complicated part of client side prediction is handling the correction from the server. This is difficult, because the corrections from the server arrive _in the past_ due to client/server communication latency. We need to apply this correction in the past, then calculate the resulting corrected position at present time on the client.
 
 The standard technique to do this is to store a circular buffer of saved moves on the client where each move in the buffer corresponds to an input rpc call sent from the client to the server:
 

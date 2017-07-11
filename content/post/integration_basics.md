@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler and to the first article in __Game Physics__
+Hi, I'm [Glenn Fiedler](/about) and welcome to **[Game Physics](/categories/game-physics/)**.
 
 If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.
 
@@ -347,3 +347,5 @@ Please take a moment to change it to this:
         position += velocity * dt;
 
 You'll be glad you did :)
+
+__NEXT ARTICLE:__ [Fix Your Timestep!](/post/fix_your_timestep/)
