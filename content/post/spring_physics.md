@@ -61,7 +61,7 @@ So lets get started with an actual concrete implementation of using springs a si
 
 <pre>    <strong>F</strong> = -k<strong>x</strong> -b<strong>v</strong></pre>
 
-Where x is the vector difference between the current target point and the attachment point on the object, and v is the point velocity at the attachment point on the object. The important thing is that this velocity v being the point velocity means that it incorporates both the linear motion of the object plus any velocity at the attachment point due to angular velocity. As was shown in the <a href="http://www.gafferongames.com/game-physics/physics-in-3d">previous article</a> we can calculate this point velocity at follows:
+Where x is the vector difference between the current target point and the attachment point on the object, and v is the point velocity at the attachment point on the object. The important thing is that this velocity v being the point velocity means that it incorporates both the linear motion of the object plus any velocity at the attachment point due to angular velocity. As was shown in the previous article we can calculate this point velocity at follows:
 
 <pre>    <strong>v</strong><sub>point</sub> = <strong>v</strong><sub>linear</sub> + <strong>v</strong><sub>angular</sub> <em>cross</em> (<strong>p</strong> - <strong>x</strong>)</pre>
 
