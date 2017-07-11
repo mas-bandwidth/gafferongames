@@ -32,7 +32,7 @@ That's a _LOT_ of bandwidth: **17.37 megabits per-second!**
 
 Let's break it down and see where all the bandwidth is going. 
 
-Here's the state sent per-cube in the snapshot:
+Here's the per-cube state sent in the snapshot:
 
         struct CubeState
         {
@@ -42,7 +42,7 @@ Here's the state sent per-cube in the snapshot:
             quat4f orientation;
         };
 
-And here's the size of each field sent over the network, uncompressed:
+And here's the size of each field:
 
 <ul>
     <li>quat orientation: <b>128 bits</b></li>

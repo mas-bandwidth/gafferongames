@@ -9,19 +9,17 @@ draft = false
 
 ## Introduction
 
-Hi, I’m Glenn Fiedler and welcome to <b>Networked Physics</b>, my article series about networking a physics simulation.
+Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories/networked-physics/)**.
 
-In this article we round out our discussion of networked physics strategies with **state synchronization**, the third and final strategy.
+In this article we round out our discussion of networked physics strategies with **state synchronization**, the third and final strategy in this article series.
 
 What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, _unlike_ deterministic lockstep, we don't just send input, we send both input <u>and</u> state.
 
 This gives state synchronization interesting properties. Because we send state, it doesn't need perfect determinism to stay in sync, and because the simulation runs on both sides, objects continue moving forward between updates.
 
-This let us approach state synchronization quite differently to snapshot interpolation. Instead of sending state updates for every object in each packet, we can now send updates for only a few, and if we're smart about how we select the objects for each packet, we can save bandwidth by concentrating updates on the most important objects.
+This let us approach state synchronization differently to snapshot interpolation. Instead of sending state updates for every object in each packet, we can now send updates for only a few, and if we're smart about how we select the objects for each packet, we can save bandwidth by concentrating updates on the most important objects.
 
-So what's the catch? It's this: state synchronization is an approximate and lossy synchronization strategy. What this means in practice is that you'll spend a lot of time tracking down sources of extrapolation divergence and pops. But other than that, it's a quick and easy strategy to get started with.
-
-So let's do exactly this and get started with practical implementation. 
+So what's the catch? State synchronization is an approximate and lossy synchronization strategy. In practice, this means you'll spend a lot of time tracking down sources of extrapolation divergence and pops. But other than that, it's a quick and easy strategy to get started with.
 
 ## Implementation
 
@@ -37,7 +35,7 @@ Here's the state sent over the network per-object:
 };
 </pre>
 
-Notice that unlike snapshot interpolation, we're not just sending just visual quantities like position and orientation, we're also sending _non-visual_ state such as linear and angular velocity. Why is this?
+Notice that unlike snapshot interpolation, we're not just sending visual quantities like position and orientation, we're also sending _non-visual_ state such as linear and angular velocity. Why is this?
 
 The reason is that state synchronization runs the simulation on both sides, so it's _always extrapolating_ from the last state update applied to each object. If linear and angular velocity aren't synchronized, this extrapolation is done with incorrect velocities, leading to pops when objects are updated. 
 
@@ -65,7 +63,7 @@ While we must send the velocities, there's no point wasting bandwidth sending (0
 }
 </pre>
 
-What you see above is a _serialize function_. It's a trick I like to use to unify packet read and write. I like it because it's expressive while at the same time it's difficult to desync read and write. If you would like to read and write packets like this in your own project, you can do that with my open source network library <a href="http://www.libyojimbo.com">yojimbo</a>.
+What you see above is a _serialize function_. It's a trick I like to use to unify packet read and write. I like it because it's expressive while at the same time it's difficult to desync read and write. You can read more about them [here](/post/serialization_strategies/).
 
 ## Packet Structure
 
@@ -113,7 +111,7 @@ All you do in a jitter buffer is hold packets before delivering them to the appl
 
 ## Applying State Updates
 
-Once the packet comes out of the jitter how do you apply state updates? My recommendation is that you should snap this state hard. Apply the values in the state update directly to the simulation. 
+Once the packet comes out of the jitter how do you apply state updates? My recommendation is that you should snap the physics state hard. This means you apply the values in the state update directly to the simulation. 
 
 I recommend against trying to apply some smoothing between the state update and the current state at the simulation level. This may sound counterintuitive but the reason for this is that the simulation extrapolates from the state update so you want to make sure it extrapolates from a valid physics state for that object rather than some smoothed, total bullshit made-up one. This is especially important when you are networking large stacks of objects.
 
@@ -127,7 +125,7 @@ Your browser does not support the video tag.
 
 As you can see it's already looking quite good and barely any bandwidth optimization has been performed. Contrast this with the first video for snapshot interpolation which was at 18mbit/sec and you can see that using the simulation to extrapolate between state updates is a great way to use less bandwidth.
 
-Of course we can do a lot better than this and each optimization we do lets us squeeze more state updates in the same amount of bandwidth. The next obvious thing we can do is to apply all the standard quantization compression techniques such as bounding and quantizing position, linear and angular velocity value and using the smallest three compression as described in <a href="http://gafferongames.com/networked-physics/snapshot-compression/">snapshot compression</a>.
+Of course we can do a lot better than this and each optimization we do lets us squeeze more state updates in the same amount of bandwidth. The next obvious thing we can do is to apply all the standard quantization compression techniques such as bounding and quantizing position, linear and angular velocity value and using the smallest three compression as described in [snapshot compression](/post/snapshot_compression/).
 
 But here it gets a bit more complex. We are extrapolating from those state updates so if we quantize these values over the network then the state that arrives on the right side is slightly different from the left side, leading to a slightly different extrapolation and a pop when the next state update arrives for that object.
 
@@ -149,13 +147,13 @@ Because these quantized values are being fed back into the simulation, you'll fi
 Your browser does not support the video tag.
 </video>
 
-With quantization applied to both sides you can see the result is perfect once again. It may look visually about the same as the uncompressed version but in fact we're able to fit much more state updates per-packet into the 256kbit/sec bandwidth limit. This means we are better able to handle packet loss because state updates for each object are sent more rapidly. If a packet is lost, it's less of a problem because state updates for those objects are being continually included in future packets.
+With quantization applied to both sides you can see the result is perfect once again. It may look visually about the same as the uncompressed version but in fact we're able to fit many more state updates per-packet into the 256kbit/sec bandwidth limit. This means we are better able to handle packet loss because state updates for each object are sent more rapidly. If a packet is lost, it's less of a problem because state updates for those objects are being continually included in future packets.
 
 Be aware that when a burst of packet loss occurs like 1/4 a second with no packets getting through, and this is inevitable that eventually something like this will happen, you will probably get a different result on the left and the right sides. We have to plan for this. In spite of all effort that we have made to ensure that the extrapolation is as close as possible (quantizing both sides and so on) pops can and will occur if the network stops delivering packets.
 
 ## Visual Smoothing
 
-We can cover up pops with smoothing.
+We can cover up these pops with smoothing.
 
 Remember how I said earlier that you should not apply smoothing at the simulation level because it ruins the extrapolation? What we're going to do for smoothing instead is calculating and maintaining position and orientation error offsets that we reduce over time. Then when we render the cubes in the right side we don't render them at the simulation position and orientation, we render them at the simulation position + error offset, and orientation * orientation error.
 
@@ -191,7 +189,7 @@ There is an easy compression that can be performed. Instead of encoding absolute
 
 Next, what if we do want to perform some sort of delta encoding for state synchronization? We can but it's quite different in this case than it is with snapshots because we're not including every cube in every packet, so we can't just track the most recent packet received and say, OK all these state updates in this packet are relative to packet X.
 
-What you actually have to do is per-object update keep track of the packet that includes the base for that update. You also need to keep track of exactly the set of packets received so that the sender knows which packets are valid bases to encode relative to. This is reasonably complicated and requires a bidirectional ack system over UDP. Such a system is designed for exactly this sort of situation where you need to know exactly which packets definitely got through. You can find a tutorial on how to implement this in <a href="http://gafferongames.com/networking-for-game-programmers/reliability-and-flow-control/">this article</a>.
+What you actually have to do is per-object update keep track of the packet that includes the base for that update. You also need to keep track of exactly the set of packets received so that the sender knows which packets are valid bases to encode relative to. This is reasonably complicated and requires a bidirectional ack system over UDP. Such a system is designed for exactly this sort of situation where you need to know exactly which packets definitely got through. You can find a tutorial on how to implement this in [this article](/post/reliability_and_flow_control/).
 
 So assuming that you have an ack system you know with packet sequence numbers get through. What you do then is per-state update write one bit if the update is relative or absolute, if absolute then encode with no base as before, otherwise if relative send the 16 bit sequence number per-state update of the base and then encode relative to the state update data sent in that packet. This adds 1 bit overhead per-update as well as 16 bits to identify the sequence number of the base per-object update. Can we do better?
 
