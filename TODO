@@ -40,8 +40,6 @@ DONE
 
 TODO
 
-    ------------------
-
     Pass over original "Game Networking" article series (quickly...)
 
     Link together "Game Networking" articles.
@@ -56,23 +54,7 @@ TODO
 
     ------------------
 
-    Write "Securing Dedicated Servers"
-
-        -- focus on the packet encryption, securing etc, HMAC, sequence # stuff, nonce, replay protection. not on the key exchange.
-
-        -- packet structure with AEAD. etc.
-
-    ------------------
-
     Update the about page. It can be much better.
-
-    ------------------
-
-    Get all articles cross-linked so they have next/prev, patreon links etc.
-
-    ------------------
-
-    Work out how to convert the math for the virtual go article series.
 
     ------------------
 
@@ -86,7 +68,7 @@ TODO
 
     ------------------
 
-    Any links that don't have a corresponding article should drop at the main page, eg. no 404 page anymore.
+    Make new gafferongames.com live with DNS redirect
 
     ------------------
 
