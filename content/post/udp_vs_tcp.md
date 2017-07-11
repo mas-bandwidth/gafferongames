@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/networking-for-game-programmers/).
+Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
 
 In this article we start with the most basic aspect of network programming: sending and receiving data over the network. This is perhaps the simplest and most basic part of what network programmers do, but still it is quite intricate and non-obvious as to what the best course of action is. 
 
@@ -39,7 +39,7 @@ Of course IP is in reality a little more complicated than this, since no one com
 
 This is because the internet is designed to be self-organizing and self-repairing, able to route around connectivity problems rather than relying on direct connections between computers. It's actually quite cool if you think about what's _really_ going on at the low level. You can read all about this in the classic book [TCP/IP Illustrated](http://www.cs.newpaltz.edu/~pletcha/NET_PY/the-protocols-tcp-ip-illustrated-volume-1.9780201633467.24290.pdf).
 
-<strong>UDP</strong>
+## UDP
 
 Instead of treating communications between computers like writing to files, what if we want to send and receive packets directly?
 
@@ -161,3 +161,6 @@ My recommendation is not only that you use UDP, but that you _only_ use UDP for 
 Of course, it is no problem to use HTTP to talk to some RESTful services while your game is running. I'm not saying you can't do that. A few TCP connections running while your game is running isn't going to bring everything down. The point is, don't split your _game protocol_ across UDP and TCP. Keep your game protocol running over UDP so you are fully in control of the data you send and receive and how reliability, ordering and congestion avoidance are implemented.
 
 The rest of this article series show you how to do this, from creating your own virtual connection on top of UDP, to creating your own reliability, flow control and congestion avoidance.
+
+__NEXT ARTICLE:__ [Sending and Receiving Packets](/post/sending_and_receiving_packets/)
+

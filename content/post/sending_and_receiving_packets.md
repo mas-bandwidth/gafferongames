@@ -9,9 +9,9 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/networking-for-game-programmers/).
+Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
 
-In the [previous article](/post/udp_vs_tcp) we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.
+In the [previous article](/post/udp_vs_tcp/) we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.
 
 In this article I am going to show you how to send and receive UDP packets.
 
@@ -391,3 +391,5 @@ As an added bonus the code is the same on all platforms because everything platf
 ## Conclusion
 
 You now have a platform independent way to send and receive packets. _Enjoy_ :)
+
+__NEXT ARTICLE:__ [Virtual Connection over UDP](/post/virtual_connection_over_udp/)

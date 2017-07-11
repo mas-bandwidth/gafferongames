@@ -9,9 +9,9 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/networking-for-game-programmers/).
+Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
 
-In the <a href="http://www.gafferongames.com/networking-for-game-programmers/virtual-connection-over-udp/">previous article</a>, we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.
+In the [previous article](/post/virtual_connection_over_udp/), we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.
 
 ## The Problem with TCP
 
@@ -37,7 +37,7 @@ This is actually quite a common technique. It's even used in TCP! These packet i
 
 Since UDP does not guarantee the order of packets, the 100th packet received is not necessarily the 100th packet sent. It follows that we need to insert the sequence number somewhere in the packet, so that the computer at the other side of the connection knows which packet it is.
 
-We already have a simple packet header for the virtual connection from the <a href="http://www.gafferongames.com/networking-for-game-programmers/virtual-connection-over-udp">previous article</a>, so we'll just add the sequence number in the header like this:
+We already have a simple packet header for the virtual connection from the previous article, so we'll just add the sequence number in the header like this:
 
 <pre>   [uint protocol id]
    [uint sequence]
@@ -227,3 +227,5 @@ You can also get much more <em>greedy</em> with congestion avoidance, and attemp
 ## Conclusion
 
 Our new reliability system let's us send a steady stream of packets and notifies us which packets are received. From this we can infer lost packets, and resend data that didn't get through if necessary. We also have a simple congestion avoidance system that drops from 30 packets per-second to 10 times a second so we don't flood the connection.
+
+__NEXT:__ [What Every Programmer Needs to Know About Game Networking](/post/what_every_programmer_needs_to_know_about_game_networking/)

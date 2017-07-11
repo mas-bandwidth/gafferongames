@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/networking-for-game-programmers/).
+Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
 
 Lately I've been doing some research into networking game physics simulations via deterministic lockstep methods.
 
@@ -37,7 +37,7 @@ If you would like to debate these points or add your own nuance, please [contact
 
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
 
-<u>Here are the resources that I have discovered in my search so far...</u>
+<u>Here are the resources I have discovered in my search so far...</u>
 
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
@@ -153,6 +153,9 @@ Where you usually run into problems in floating point is if you have a numerical
 <b>STREFLOP Library</b>
 <a href="http://nicolas.brodu.numerimoire.net/en/programmation/streflop/index.html">http://nicolas.brodu.numerimoire.net/en/programmation/streflop/index.html</a>
 
+<img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
+
 <blockquote>Floating Point (FP) Programming Objectives:
 
 • <b>Accuracy</b> - Produce results that are “close” to the correct value
@@ -165,6 +168,9 @@ These options usually conflict! Judicious use of compiler options lets you contr
 
 <b>Intel C++ Compiler: Floating Point Consistency</b>
 <a href="http://www.nccs.nasa.gov/images/FloatingPoint%5Fconsistency.pdf">http://www.nccs.nasa.gov/images/FloatingPoint%5Fconsistency.pdf</a>.
+
+<img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
+<img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
 
 <blockquote>If strict reproducibility and consistency are important do not change the floating point environment without also using either fp-model strict (Linux or Mac OS*) or /fp:strict (Windows*) option or pragma fenv_access.</blockquote>
 

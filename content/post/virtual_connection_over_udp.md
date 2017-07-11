@@ -9,11 +9,9 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/networking-for-game-programmers/).
+Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
 
-In the <a href="http://www.gafferongames.com/networking-for-game-programmers/sending-and-receiving-packets">previous article</a>, I showed you how to send and receive packets using UDP.
-
-Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.
+In the [previous article](/post/sending_and_receiving_packets) we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.
 
 As the first step towards a general connection system, we'll start with the simplest case possible: creating a virtual connection between two computers on top of UDP.
 
@@ -57,7 +55,7 @@ Take a look and you should be able to convince yourself pretty quickly that ther
 
 ## How Packets Get Delivered
 
-In the <a href="http://www.gafferongames.com/networking-for-game-programmers/udp-vs-tcp/">first article</a>, I presented a simple analogy for packet delivery, describing it as somewhat like a note being passed from person to person across a crowded room.
+In the [first article](/post/udp_vs_tcp/), I presented a simple analogy for packet delivery, describing it as somewhat like a note being passed from person to person across a crowded room.
 
 While this analogy gets the basic idea across, it is much too simple. The Internet is <u>not</u> a flat network of computers, it is a network of networks. And of course, we don't just need to pass letters around a small room, we need to be able to send them anywhere in the world.
 
@@ -148,3 +146,5 @@ And that's all it takes to setup a virtual connection: some way to establish con
 Our connection is as real as any TCP connection, and the steady stream of UDP packets it provides is a suitable starting point for a multiplayer action game.
 
 Now that you have your virtual connection over UDP, you can easily setup a client/server relationship for a two player multiplayer game without TCP.
+
+__NEXT ARTICLE:__ [Reliability and Congestion Avoidance over UDP](/post/reliability_ordering_and_congestion_avoidance_over_udp/)
