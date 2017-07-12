@@ -1,64 +1,8 @@
 DONE
 
-    Port across game physics articles.
-
-    Port across game networking articles.
-
-    Port across state synchronization article.
-
-    Found a good way to unify site layout. It's very article focused. Not suitable for blog-like posts.
-
-    Brought across building a game network protocol articles (first pass)
-
-    Pass over "Reading and Writing Packets"
-
-    Pass over "Serialization Strategies"
-
-    Pass over "Packet Fragmentation and Reassembly"
-
-    Pass over "Sending Large Blocks of Data"
-
-    Pass over "Client/Server Connection"
-
-    Pass over "Integration Basics" again.
-
-    Pass over "Fix your timestep!" again.
-
-    Pass over "Physics in 3D" article.
-
-    Pass over "Spring Physics" article.
-
-    Pass over "Networked Physics (2004)" article. (argh...)
-
-    Pass over "Networked Physics" article series again.
-
-    Linked together networked physics article series.
-
-    Link together "Building a Game Network Protocol" articles.
-
-    Link together "Game Physics" articles.
-
-    Pass over original "Game Networking" article series (quickly...)
-
-    Link together "Game Networking" articles.
-
-    Pass over "Virtual Go" articles.
-
-    Link together articles.
-
-    If an older article or link is not converted across (eg. the content and so on), then redirect to front page.
-
-    Setup redirects for old articles
-
-    Make new gafferongames.com live with DNS redirect
-
-    Save final backup of old gafferongames.com
-
-    Cancel wirenine.com account.
-
-    Remove new.gafferongames.com prefix for hugo and video links.
-
 TODO
+
+    Need to get email forwarding working again for thenetworkprotocolcompany.com
 
     ------------------
 
