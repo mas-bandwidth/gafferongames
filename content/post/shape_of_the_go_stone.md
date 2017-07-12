@@ -4,7 +4,7 @@ tags = ["physics","go/baduk/weiqi"]
 date = "2013-02-19"
 title = "Shape of The Go Stone"
 description = "Modelling the shape of a biconvex go stone"
-draft = true
+draft = false
 +++
 
 ## Introduction

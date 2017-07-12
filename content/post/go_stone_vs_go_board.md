@@ -4,7 +4,7 @@ tags = ["physics","go/baduk/weiqi"]
 date = "2013-02-22"
 title = "Go Stone vs. Go Board"
 description = "Collision detection between stones and the board"
-draft = true
+draft = false
 +++
 
 ## Introduction
