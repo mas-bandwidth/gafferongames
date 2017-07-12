@@ -14,6 +14,6 @@ Throughout my AAA career, I've always believed in _sharing information_. Paying 
 
 And now there is even more stuff I want to write about, but original research and writing quality articles takes _so much time_. Because of this, I rely on donations and sponsorships to carve time out from consulting to work on articles and open source code.
 
-If you enjoy my articles and open source code, please [support my work](http://www.patreon.com) on Patreon. Supporters also get access to exclusive content, like example source code for articles and early access to work in progress.
+If you enjoy my articles and open source code, please [support my work](http://www.patreon.com) on Patreon. Supporters get access to exclusive content, like example source code for articles and early access to work in progress.
 
 -- Glenn
