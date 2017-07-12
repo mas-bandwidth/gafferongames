@@ -67,6 +67,6 @@ This is a very difficult situation for networked physics!
 
 <hr>
 
-_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles. Patreon supporters also get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
+_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
 
 __NEXT ARTICLE:__ [Deterministic Lockstep](/post/deterministic_lockstep/)

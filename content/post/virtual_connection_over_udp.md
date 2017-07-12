@@ -149,6 +149,6 @@ Now that you have your virtual connection over UDP, you can easily setup a clien
 
 <hr>
 
-_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles. Patreon supporters also get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
+_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
 
 __NEXT ARTICLE:__ [Reliability and Congestion Avoidance over UDP](/post/reliability_ordering_and_congestion_avoidance_over_udp/)
