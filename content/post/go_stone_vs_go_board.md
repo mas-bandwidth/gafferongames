@@ -184,4 +184,8 @@ This seems counter-intuitive at first, but it has some nice parallels with other
 
 We should probably do the same :)
 
+<hr>
+
+_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles! Patreon supporters also get access to exclusive content, like example source code for articles_.
+
 __NEXT ARTICLE:__ [Rotation and Inertia Tensors](/post/rotation_and_inertia_tensors/)

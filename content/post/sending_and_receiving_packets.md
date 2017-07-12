@@ -392,4 +392,8 @@ As an added bonus the code is the same on all platforms because everything platf
 
 You now have a platform independent way to send and receive packets. _Enjoy_ :)
 
+<hr>
+
+_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles! Patreon supporters also get access to exclusive content, like example source code for articles_.
+
 __NEXT ARTICLE:__ [Virtual Connection over UDP](/post/virtual_connection_over_udp/)

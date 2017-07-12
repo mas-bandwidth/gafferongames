@@ -219,5 +219,8 @@ It's also possible to get a much better result for delta encoded orientations us
 
 Chris Doran from Geomerics wrote also wrote an excellent <a href="http://www.geomerics.com/wp-content/uploads/2015/04/rotation_blog_toprint.pdf">article</a> exploring the mathematics of relative quaternion compression that is worth reading.
 
-__NEXT ARTICLE:__ [State Synchronization](/post/state_synchronization/)
+<hr>
 
+_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles! Patreon supporters also get access to exclusive content, like example source code for articles_.
+
+__NEXT ARTICLE:__ [State Synchronization](/post/state_synchronization/)

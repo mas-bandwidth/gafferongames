@@ -97,4 +97,8 @@ This way the player appears to control their own character without any latency, 
 
 In other words, only when the player's character is affected by something external to the local player's input, which cannot possibly be predicted on the client, will the player's position need to be corrected. That and of course, if the player is attempting to cheat :)
 
+<hr>
+
+_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles! Patreon supporters also get access to exclusive content, like example source code for articles_.
+
 __NEXT:__ [Floating Point Determinism](/post/floating_point_determinism/)

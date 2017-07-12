@@ -219,4 +219,8 @@ This process continues until all slices of the chunk are received, at which poin
 
 The chunk system is simple in concept, but the implementation is certainly not. I encourage you to take a close look at the [source code](http://www.patreon.com/gafferongames) for this article for further details.
 
+<hr>
+
+_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles! Patreon supporters also get access to exclusive content, like example source code for articles_.
+
 __NEXT ARTICLE:__ [Client/Server Connection](/post/client_server_connection/)

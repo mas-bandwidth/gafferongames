@@ -730,19 +730,80 @@
 	],
 	"file_history":
 	[
-		"/Users/gaffer/git/gafferongames/webserver/Dockerfile",
-		"/Users/gaffer/git/gafferongames/webserver/webserver.go",
+		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
+		"/Users/gaffer/git/gafferongames/content/post/collision_response_and_coulomb_friction.md",
+		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
+		"/Users/gaffer/git/gafferongames/content/post/fix_your_timestep.md",
+		"/Users/gaffer/git/gafferongames/content/post/floating_point_determinism.md",
+		"/Users/gaffer/git/gafferongames/content/post/go_stone_vs_go_board.md",
+		"/Users/gaffer/git/gafferongames/content/post/how_the_go_stone_moves.md",
+		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
+		"/Users/gaffer/git/gafferongames/content/post/introduction_to_networked_physics.md",
+		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
+		"/Users/gaffer/git/gafferongames/content/post/networked_physics_2004.md",
+		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
+		"/Users/gaffer/git/gafferongames/content/post/packet_fragmentation_and_reassembly.md",
+		"/Users/gaffer/git/gafferongames/content/post/physics_in_3d.md",
+		"/Users/gaffer/git/gafferongames/content/post/reading_and_writing_packets.md",
+		"/Users/gaffer/git/gafferongames/content/post/reliability_ordering_and_congestion_avoidance_over_udp.md",
+		"/Users/gaffer/git/gafferongames/content/post/reliable_ordered_messages.md",
+		"/Users/gaffer/git/gafferongames/content/post/rotation_and_inertia_tensors.md",
+		"/Users/gaffer/git/gafferongames/content/post/sending_and_receiving_packets.md",
+		"/Users/gaffer/git/gafferongames/content/post/sending_large_blocks_of_data.md",
+		"/Users/gaffer/git/gafferongames/content/post/serialization_strategies.md",
+		"/Users/gaffer/git/gafferongames/content/post/shape_of_the_go_stone.md",
+		"/Users/gaffer/git/gafferongames/content/post/snapshot_compression.md",
+		"/Users/gaffer/git/gafferongames/content/post/snapshot_interpolation.md",
+		"/Users/gaffer/git/gafferongames/content/post/spring_physics.md",
+		"/Users/gaffer/git/gafferongames/content/post/state_synchronization.md",
+		"/Users/gaffer/git/gafferongames/content/post/tessellating_the_go_stone.md",
+		"/Users/gaffer/git/gafferongames/content/post/udp_vs_tcp.md",
+		"/Users/gaffer/git/gafferongames/content/post/virtual_connection_over_udp.md",
+		"/Users/gaffer/git/gafferongames/content/post/what_every_programmer_needs_to_know_about_game_networking.md",
+		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
 		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
+		"/Users/gaffer/git/gafferongames/config_upload.toml",
+		"/Users/gaffer/git/gafferongames/content/contact.md",
+		"/Users/gaffer/Desktop/SMB",
+		"/Users/gaffer/git/gafferongames/content/post/serialiation_strategies.md",
+		"/Users/gaffer/git/gafferongames/content/post/snapshots_and_interpolation.md",
+		"/Users/gaffer/git/gafferongames/source/game_physics/integration_basics.cpp",
+		"/Users/gaffer/Desktop/N+",
+		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/STUDY",
+		"/Users/gaffer/Desktop/GOAL",
+		"/Users/gaffer/Desktop/OFFER",
+		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/KARAOKE",
+		"/Users/gaffer/Desktop/CALL",
+		"/Users/gaffer/git/gafferongames/Makefile",
+		"/Users/gaffer/Desktop/STRATEGY",
+		"/Users/gaffer/git/gafferongames/RESEARCH",
+		"/Users/gaffer/git/gafferongames/PLANNING",
+		"/Users/gaffer/git/gafferongames/IDEAS",
+		"/Users/gaffer/git/gafferongames/CHANGES",
+		"/Users/gaffer/git/gafferongames/WHITEPAPER",
+		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/CONCERNS",
+		"/Users/gaffer/git/gafferongames/config_local.toml",
+		"/Users/gaffer/git/gafferongames/layouts/partials/header.html",
+		"/Users/gaffer/git/gafferongames/.gitignore",
+		"/Users/gaffer/git/gafferongames/layouts/about/single.html",
+		"/Users/gaffer/git/gafferongames/static/css/clean-blog.min.css",
+		"/Users/gaffer/git/gafferongames/layouts/post/summary.html",
+		"/Users/gaffer/git/gafferongames/config.toml",
+		"/Users/gaffer/git/gafferongames/layouts/_default/list.html",
+		"/Users/gaffer/git/gafferongames/layouts/partials/navbar.html",
+		"/Users/gaffer/git/gafferongames/layouts/index.html",
+		"/Users/gaffer/git/gafferongames/layouts/partials/footer.html",
+		"/Users/gaffer/git/gafferongames/layouts/post/archive.html",
+		"/Users/gaffer/git/gafferongames/layouts/_default/archive.html",
+		"/Users/gaffer/git/gafferongames/layouts/_default/single.html",
+		"/Users/gaffer/git/gafferongames/layouts/_default/terms.html",
+		"/Users/gaffer/git/gafferongames/content/post/the_physics_simulation.md",
+		"/Users/gaffer/git/gafferongames/webserver/Dockerfile",
+		"/Users/gaffer/git/gafferongames/webserver/webserver.go",
 		"/Users/gaffer/git/gafferongames/docker-compose.yml",
 		"/Users/gaffer/git/gafferongames/nginx/Dockerfile",
 		"/Users/gaffer/git/gafferongames/webserver/Makefile",
-		"/Users/gaffer/git/gafferongames/Makefile",
-		"/Users/gaffer/git/gafferongames/CHANGES",
-		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
-		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
-		"/Users/gaffer/git/gafferongames/content/post/the_physics_simulation.md",
-		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
 		"/Users/gaffer/.ssh/known_hosts",
 		"/Users/gaffer/git/gafferongames/content/post/untitled",
 		"/Users/gaffer/Desktop/README.txt",
@@ -755,21 +816,11 @@
 		"/Users/gaffer/git/gafferongames/nginx/nginx.sh",
 		"/Users/gaffer/git/gafferongames/nginx/Makefile",
 		"/Users/gaffer/libyojimbo/docker/Dockerfile",
-		"/Users/gaffer/git/gafferongames/config_local.toml",
-		"/Users/gaffer/git/gafferongames/IDEAS",
 		"/Users/gaffer/git/gafferongames/redis/Makefile",
-		"/Users/gaffer/git/gafferongames/PLANNING",
-		"/Users/gaffer/git/gafferongames/RESEARCH",
 		"/Users/gaffer/.Trash/webserver 10.57.05 AM/Makefile",
 		"/Users/gaffer/git/gafferongames/WHITE PAPER",
 		"/Users/gaffer/git/gafferongames/webserver/TODO",
 		"/Users/gaffer/git/gafferongames/redis/TODO",
-		"/Users/gaffer/git/gafferongames/.gitignore",
-		"/Users/gaffer/git/gafferongames/content/post/snapshot_compression.md",
-		"/Users/gaffer/git/gafferongames/content/post/snapshots_and_interpolation.md",
-		"/Users/gaffer/git/gafferongames/content/post/networked_physics_2004.md",
-		"/Users/gaffer/git/gafferongames/layouts/partials/header.html",
-		"/Users/gaffer/git/gafferongames/config.toml",
 		"/Users/gaffer/golang/webserver.go",
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/STUFF",
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/CHORES",
@@ -777,20 +828,9 @@
 		"/Users/gaffer/Desktop/Networked Physics/Assets/Scripts/Context.cs",
 		"/Users/gaffer/libyojimbo/premake5.lua",
 		"/Users/gaffer/git/gafferongames/.git/MERGE_MSG",
-		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
 		"/Users/gaffer/Desktop/CANCEL SURGERY",
 		"/Users/gaffer/Desktop/cloudflare.txt",
-		"/Users/gaffer/git/gafferongames/static/css/clean-blog.min.css",
 		"/Users/gaffer/git/gafferongames/static/css/bootstrap.min.css",
-		"/Users/gaffer/git/gafferongames/config_upload.toml",
-		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
-		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
-		"/Users/gaffer/git/gafferongames/content/post/go_stone_vs_go_board.md",
-		"/Users/gaffer/git/gafferongames/content/post/collision_response_and_coulomb_friction.md",
-		"/Users/gaffer/git/gafferongames/content/post/shape_of_the_go_stone.md",
-		"/Users/gaffer/git/gafferongames/content/post/rotation_and_inertia_tensors.md",
-		"/Users/gaffer/git/gafferongames/content/post/how_the_go_stone_moves.md",
-		"/Users/gaffer/git/gafferongames/content/post/tessellating_the_go_stone.md",
 		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/make",
 		"/Users/gaffer/netcode.io/Yojimbo usage",
@@ -798,35 +838,18 @@
 		"/Users/gaffer/git/gafferongames/scratch.md",
 		"/Users/gaffer/Desktop/devon.txt",
 		"/Users/gaffer/git/gafferongames/archetypes/post.md",
-		"/Users/gaffer/git/gafferongames/content/post/fix_your_timestep.md",
-		"/Users/gaffer/git/gafferongames/content/post/physics_in_3d.md",
-		"/Users/gaffer/git/gafferongames/content/post/spring_physics.md",
-		"/Users/gaffer/git/gafferongames/content/post/what_every_programmer_needs_to_know_about_game_networking.md",
-		"/Users/gaffer/git/gafferongames/content/post/reliability_ordering_and_congestion_avoidance_over_udp.md",
 		"/Users/gaffer/git/gafferongames/content/post/virtual_connection_over_udp",
 		"/Users/gaffer/git/gafferongames/content/post/collision_response_and_friction.md",
 		"/Users/gaffer/git/gafferongames/content/post/tesselating_the_go_stone.md",
 		"/Users/gaffer/git/gafferongames/content/post/the_go_stone.md",
 		"/Users/gaffer/Desktop/TODO",
-		"/Users/gaffer/git/gafferongames/content/post/sending_and_receiving_packets.md",
-		"/Users/gaffer/git/gafferongames/content/post/udp_vs_tcp.md",
-		"/Users/gaffer/git/gafferongames/layouts/_default/list.html",
-		"/Users/gaffer/git/gafferongames/layouts/post/archive.html",
 		"/Users/gaffer/git/gafferongames/bin/rk4_spring_damper.csv",
-		"/Users/gaffer/git/gafferongames/source/game_physics/integration_basics.cpp",
 		"/Users/gaffer/git/gafferongames/bin/implicit_euler_spring_damper.csv",
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_constant_acceleration_dt_1.0.txt",
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_constant_acceleration_dt_0.01.txt",
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_spring_damper.csv",
-		"/Users/gaffer/git/gafferongames/layouts/_default/terms.html",
-		"/Users/gaffer/git/gafferongames/layouts/_default/single.html",
-		"/Users/gaffer/git/gafferongames/layouts/_default/archive.html",
-		"/Users/gaffer/git/gafferongames/layouts/partials/navbar.html",
 		"/Users/gaffer/git/gafferongames/layouts/partials/ga.html",
-		"/Users/gaffer/git/gafferongames/layouts/partials/footer.html",
 		"/Users/gaffer/git/gafferongames/layouts/partials/categories.html",
-		"/Users/gaffer/git/gafferongames/layouts/post/summary.html",
-		"/Users/gaffer/git/gafferongames/layouts/about/single.html",
 		"/Users/gaffer/git/gafferongames/layouts/contact/single.html",
 		"/Users/gaffer/git/gafferongames/layouts/post/single.html",
 		"/Users/gaffer/git/gafferongames/layouts/partials/tags.html",
@@ -834,30 +857,7 @@
 		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/layouts/partials/header.html",
 		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/layouts/partials/footer.html",
 		"/Users/gaffer/git/gafferongames/README.md",
-		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/static/fonts/glyphicons-halflings-regular.svg",
-		"/Users/gaffer/git/gafferongames/config_deploy.toml",
-		"/Users/gaffer/git/gafferongames/content/post/old.md",
-		"/Users/gaffer/git/gafferongames/content/contact.md",
-		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/archetypes/post.md",
-		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/theme.toml",
-		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/static/css/clean-blog.min.css",
-		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/static/css/bootstrap.min.css",
-		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/layouts/index.html",
-		"/Users/gaffer/git/gafferongames/gafferongames",
-		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/static/js/clean-blog.js",
-		"/Users/gaffer/git/gafferongames/content/support.md",
-		"/Users/gaffer/oculus/HOURS",
-		"/Users/gaffer/oculus/LOG",
-		"/Users/gaffer/Desktop/GENNADIY",
-		"/Users/gaffer/git/sbcb-demo/themes/startbootstrap-clean-blog/layouts/partials/tags.html",
-		"/Users/gaffer/git/sbcb-demo/themes/startbootstrap-clean-blog/layouts/partials/navbar.html",
-		"/Users/gaffer/git/sbcb-demo/themes/startbootstrap-clean-blog/layouts/partials/header.html",
-		"/Users/gaffer/git/sbcb-demo/themes/startbootstrap-clean-blog/layouts/partials/ga.html",
-		"/Users/gaffer/git/sbcb-demo/themes/startbootstrap-clean-blog/layouts/partials/footer.html",
-		"/Users/gaffer/git/sbcb-demo/themes/startbootstrap-clean-blog/layouts/partials/categories.html",
-		"/Users/gaffer/git/sbcb-demo/content/post/packet fragmentation and reassembly.md",
-		"/Users/gaffer/git/sbcb-demo/content/post/serialization strategies.md",
-		"/Users/gaffer/git/sbcb-demo/themes/startbootstrap-clean-blog/layouts/index.html"
+		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/static/fonts/glyphicons-halflings-regular.svg"
 	],
 	"find":
 	{
@@ -908,6 +908,36 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"Contact",
+			"new.gafferongames.com",
+			"gafferongames.com/",
+			"This ",
+			"gafferongames.com/",
+			"gafferongames.com",
+			"gafferongames",
+			"<b>",
+			"object",
+			"**",
+			"__",
+			"reason",
+			"Large Blo",
+			"<pre",
+			"pre",
+			"an an",
+			"protocol2",
+			"at the sa",
+			"union",
+			"C++",
+			"Why is th",
+			"<strong",
+			"row",
+			"container",
+			"padding",
+			"%",
+			"page-heading",
+			"stiff con",
+			"it is",
+			"an state ",
 			"latency!",
 			"sudo",
 			"gaffer",
@@ -1005,37 +1035,7 @@
 			"it starts",
 			"pygment",
 			"and before",
-			"This applies",
-			"Connection",
-			"to be resent",
-			"times out",
-			"connection ",
-			"the world",
-			"wants to ",
-			"over the ",
-			"particular ",
-			"game_physics",
-			"Unlike",
-			"...",
-			"more rec",
-			"processInput",
-			"float t",
-			"lets",
-			"Lets",
-			"lets",
-			"Lets",
-			"rotation",
-			"ul",
-			"h2",
-			"consider",
-			"once per",
-			"simply ",
-			"You can",
-			"<em>",
-			"Lets",
-			"lets",
-			"y'",
-			"on this."
+			"This applies"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1140,6 +1140,346 @@
 		"selected_items":
 		[
 			[
+				"inte",
+				"content/post/integration_basics.md"
+			],
+			[
+				"con",
+				"nginx/nginx.conf"
+			],
+			[
+				"coll",
+				"content/post/collision_response_and_coulomb_friction.md"
+			],
+			[
+				"roation",
+				"content/post/rotation_and_inertia_tensors.md"
+			],
+			[
+				"go",
+				"content/post/go_stone_vs_go_board.md"
+			],
+			[
+				"howthe",
+				"content/post/how_the_go_stone_moves.md"
+			],
+			[
+				"tess",
+				"content/post/tessellating_the_go_stone.md"
+			],
+			[
+				"sh",
+				"content/post/shape_of_the_go_stone.md"
+			],
+			[
+				"int",
+				"content/post/introduction_to_virtual_go.md"
+			],
+			[
+				"todo",
+				"TODO"
+			],
+			[
+				"config",
+				"config_upload.toml"
+			],
+			[
+				"contact.md",
+				"content/contact.md"
+			],
+			[
+				"nginx",
+				"nginx/nginx.conf"
+			],
+			[
+				"conf",
+				"nginx/nginx.conf"
+			],
+			[
+				"reliab",
+				"content/post/reliability_ordering_and_congestion_avoidance_over_udp.md"
+			],
+			[
+				"collis",
+				"content/post/collision_response_and_coulomb_friction.md"
+			],
+			[
+				"rotation",
+				"content/post/rotation_and_inertia_tensors.md"
+			],
+			[
+				"gost",
+				"content/post/go_stone_vs_go_board.md"
+			],
+			[
+				"how",
+				"content/post/how_the_go_stone_moves.md"
+			],
+			[
+				"shapeof",
+				"content/post/shape_of_the_go_stone.md"
+			],
+			[
+				"introduction_to_virt",
+				"content/post/introduction_to_virtual_go.md"
+			],
+			[
+				"floating_point",
+				"content/post/floating_point_determinism.md"
+			],
+			[
+				"what",
+				"content/post/what_every_programmer_needs_to_know_about_game_networking.md"
+			],
+			[
+				"deterministic_lockstep.md",
+				"content/post/deterministic_lockstep.md"
+			],
+			[
+				"reliabi",
+				"content/post/reliability_ordering_and_congestion_avoidance_over_udp.md"
+			],
+			[
+				"vitual",
+				"content/post/virtual_connection_over_udp.md"
+			],
+			[
+				"udp",
+				"content/post/udp_vs_tcp.md"
+			],
+			[
+				"sending",
+				"content/post/sending_and_receiving_packets.md"
+			],
+			[
+				"netwo",
+				"content/post/networked_physics_2004.md"
+			],
+			[
+				"netw",
+				"content/post/networked_physics_in_virtual_reality.md"
+			],
+			[
+				"spr",
+				"content/post/spring_physics.md"
+			],
+			[
+				"phys",
+				"content/post/physics_in_3d.md"
+			],
+			[
+				"fix",
+				"content/post/fix_your_timestep.md"
+			],
+			[
+				"integra",
+				"content/post/integration_basics.md"
+			],
+			[
+				"reading",
+				"content/post/reading_and_writing_packets.md"
+			],
+			[
+				"det",
+				"content/post/deterministic_lockstep.md"
+			],
+			[
+				"snapshot_int",
+				"content/post/snapshot_interpolation.md"
+			],
+			[
+				"napshot",
+				"content/post/snapshot_compression.md"
+			],
+			[
+				"stat",
+				"content/post/state_synchronization.md"
+			],
+			[
+				"client_se",
+				"content/post/client_server_connection.md"
+			],
+			[
+				"sending_",
+				"content/post/sending_large_blocks_of_data.md"
+			],
+			[
+				"packet",
+				"content/post/packet_fragmentation_and_reassembly.md"
+			],
+			[
+				"serile",
+				"content/post/serialization_strategies.md"
+			],
+			[
+				"ser",
+				"content/post/serialiation_strategies.md"
+			],
+			[
+				"intro",
+				"content/post/introduction_to_networked_physics.md"
+			],
+			[
+				"read",
+				"content/post/reading_and_writing_packets.md"
+			],
+			[
+				"state",
+				"content/post/state_synchronization.md"
+			],
+			[
+				"snapshots",
+				"content/post/snapshots_and_interpolation.md"
+			],
+			[
+				"snap",
+				"content/post/snapshot_compression.md"
+			],
+			[
+				"intr",
+				"content/post/introduction_to_networked_physics.md"
+			],
+			[
+				"networ",
+				"content/post/networked_physics_2004.md"
+			],
+			[
+				"spring",
+				"content/post/spring_physics.md"
+			],
+			[
+				"physics",
+				"content/post/physics_in_3d.md"
+			],
+			[
+				"gamephys",
+				"source/game_physics/integration_basics.cpp"
+			],
+			[
+				"larg",
+				"content/post/sending_large_blocks_of_data.md"
+			],
+			[
+				"client_server_connection.md",
+				"content/post/client_server_connection.md"
+			],
+			[
+				"large_bloc",
+				"content/post/sending_large_blocks_of_data.md"
+			],
+			[
+				"se",
+				"content/post/serialiation_strategies.md"
+			],
+			[
+				"large",
+				"content/post/sending_large_blocks_of_data.md"
+			],
+			[
+				"seria",
+				"content/post/serialiation_strategies.md"
+			],
+			[
+				"snapshots_and",
+				"content/post/snapshots_and_interpolation.md"
+			],
+			[
+				"packe",
+				"content/post/packet_fragmentation_and_reassembly.md"
+			],
+			[
+				"network",
+				"content/post/networked_physics_in_virtual_reality.md"
+			],
+			[
+				"header",
+				"layouts/partials/header.html"
+			],
+			[
+				"css",
+				"static/css/clean-blog.min.css"
+			],
+			[
+				"client",
+				"content/post/client_server_connection.md"
+			],
+			[
+				"collision",
+				"content/post/collision_response_and_coulomb_friction.md"
+			],
+			[
+				"rotationand",
+				"content/post/rotation_and_inertia_tensors.md"
+			],
+			[
+				"gosto",
+				"content/post/go_stone_vs_go_board.md"
+			],
+			[
+				"shape",
+				"content/post/shape_of_the_go_stone.md"
+			],
+			[
+				"introduct",
+				"content/post/introduction_to_virtual_go.md"
+			],
+			[
+				"introd",
+				"content/post/introduction_to_virtual_go.md"
+			],
+			[
+				"conn",
+				"content/post/virtual_connection_over_udp.md"
+			],
+			[
+				"invi",
+				"content/post/networked_physics_in_virtual_reality.md"
+			],
+			[
+				"snapshotint",
+				"content/post/snapshots_and_interpolation.md"
+			],
+			[
+				"statesy",
+				"content/post/state_synchronization.md"
+			],
+			[
+				"odo",
+				"TODO"
+			],
+			[
+				"snapshot_com",
+				"content/post/snapshot_compression.md"
+			],
+			[
+				"make",
+				"Makefile"
+			],
+			[
+				"the",
+				"content/post/the_physics_simulation.md"
+			],
+			[
+				"floating",
+				"content/post/floating_point_determinism.md"
+			],
+			[
+				"relia",
+				"content/post/reliability_ordering_and_congestion_avoidance_over_udp.md"
+			],
+			[
+				"virtual",
+				"content/post/virtual_connection_over_udp.md"
+			],
+			[
+				"sendingand",
+				"content/post/sending_and_receiving_packets.md"
+			],
+			[
+				"net",
+				"content/post/networked_physics_2004.md"
+			],
+			[
 				"docker",
 				"webserver/Dockerfile"
 			],
@@ -1148,24 +1488,12 @@
 				"webserver/webserver.go"
 			],
 			[
-				"todo",
-				"TODO"
-			],
-			[
 				"dockerfile",
 				"nginx/Dockerfile"
 			],
 			[
 				"ngin",
 				"nginx/nginx.conf"
-			],
-			[
-				"nginx",
-				"nginx/nginx.conf"
-			],
-			[
-				"make",
-				"webserver/Makefile"
 			],
 			[
 				"webserver.go",
@@ -1182,22 +1510,6 @@
 			[
 				".go",
 				"webserver/webserver.go"
-			],
-			[
-				"netwo",
-				"content/post/networked_physics_in_virtual_reality.md"
-			],
-			[
-				"det",
-				"content/post/deterministic_lockstep.md"
-			],
-			[
-				"the",
-				"content/post/the_physics_simulation.md"
-			],
-			[
-				"net",
-				"content/post/networked_physics_in_virtual_reality.md"
 			],
 			[
 				"chang",
@@ -1248,15 +1560,7 @@
 				".gitignore"
 			],
 			[
-				"conf",
-				"config_local.toml"
-			],
-			[
 				"confi",
-				"config_local.toml"
-			],
-			[
-				"config",
 				"config_local.toml"
 			],
 			[
@@ -1276,10 +1580,6 @@
 				"content/post/networked_physics_in_virtual_reality.md"
 			],
 			[
-				"con",
-				"config.toml"
-			],
-			[
 				"toml",
 				"config_local.toml"
 			],
@@ -1296,44 +1596,12 @@
 				"content/about.md"
 			],
 			[
-				"tess",
-				"content/post/tessellating_the_go_stone.md"
-			],
-			[
-				"howthe",
-				"content/post/how_the_go_stone_moves.md"
-			],
-			[
-				"rotation",
-				"content/post/rotation_and_inertia_tensors.md"
-			],
-			[
 				"shap",
 				"content/post/shape_of_the_go_stone.md"
 			],
 			[
-				"coll",
-				"content/post/collision_response_and_coulomb_friction.md"
-			],
-			[
-				"gosto",
-				"content/post/go_stone_vs_go_board.md"
-			],
-			[
 				"vir",
 				"content/post/introduction_to_virtual_go.md"
-			],
-			[
-				"client",
-				"content/post/client_server_connection.md"
-			],
-			[
-				"css",
-				"static/css/clean-blog.min.css"
-			],
-			[
-				"snap",
-				"content/post/snapshots_and_interpolation.md"
 			],
 			[
 				"",
@@ -1356,10 +1624,6 @@
 				"content/post/snapshots_and_interpolation.md"
 			],
 			[
-				"snapshots",
-				"content/post/snapshots_and_interpolation.md"
-			],
-			[
 				"interpolation.md",
 				"content/post/snapshots_and_interpolation.md"
 			],
@@ -1376,14 +1640,6 @@
 				"content/post/networked_physics_2004.md"
 			],
 			[
-				"spr",
-				"content/post/spring_physics.md"
-			],
-			[
-				"int",
-				"content/post/integration_basics.md"
-			],
-			[
 				"fi",
 				"content/post/fix_your_timestep.md"
 			],
@@ -1392,264 +1648,8 @@
 				"content/post/physics_in_3d.md"
 			],
 			[
-				"phys",
-				"content/post/physics_in_3d.md"
-			],
-			[
-				"fix",
-				"content/post/fix_your_timestep.md"
-			],
-			[
 				"virtualconn",
 				"content/post/virtual_connection_over_udp.md"
-			],
-			[
-				"virtula",
-				"content/post/virtual_connection_over_udp.md"
-			],
-			[
-				"virtual",
-				"content/post/virtual_connection_over_udp"
-			],
-			[
-				"udp",
-				"content/post/udp_vs_tcp.md"
-			],
-			[
-				"todto",
-				"content/post/introduction_to_virtual_go.md"
-			],
-			[
-				"ud",
-				"content/post/udp_vs_tcp.md"
-			],
-			[
-				"about.md",
-				"content/about.md"
-			],
-			[
-				"gostonevs",
-				"content/post/go_stone_vs_go_board.md"
-			],
-			[
-				"iner",
-				"content/post/rotation_and_inertia_tensors.md"
-			],
-			[
-				"coulomb",
-				"content/post/collision_response_and_coulomb_friction.md"
-			],
-			[
-				"inertia",
-				"content/post/rotation_and_inertia_tensors.md"
-			],
-			[
-				"mov",
-				"content/post/how_the_go_stone_moves.md"
-			],
-			[
-				"moves",
-				"content/post/how_the_go_stone_moves.md"
-			],
-			[
-				"boot",
-				"static/css/bootstrap.min.css"
-			],
-			[
-				"sha",
-				"content/post/shape_of_the_go_stone.md"
-			],
-			[
-				"go",
-				"content/post/the_go_stone.md"
-			],
-			[
-				"go_stone.md",
-				"content/post/the_go_stone.md"
-			],
-			[
-				"virt",
-				"content/post/introduction_to_virtual_go.md"
-			],
-			[
-				"vi",
-				"content/post/introduction_to_virtual_go.md"
-			],
-			[
-				"integra",
-				"content/post/integration_basics.md"
-			],
-			[
-				"sending",
-				"content/post/sending_and_receiving_packets.md"
-			],
-			[
-				"v",
-				"content/post/introduction_to_virtual_go.md"
-			],
-			[
-				"rk",
-				"bin/rk4_spring_damper.csv"
-			],
-			[
-				"md",
-				"content/post/integration_basics.md"
-			],
-			[
-				"im",
-				"bin/implicit_euler_spring_damper.csv"
-			],
-			[
-				"clint",
-				"content/post/client_server_connection.md"
-			],
-			[
-				"upload",
-				"config_upload.toml"
-			],
-			[
-				"local",
-				"config_local.toml"
-			],
-			[
-				"upl",
-				"config_upload.toml"
-			],
-			[
-				"readme",
-				"README.md"
-			],
-			[
-				"makefi",
-				"Makefile"
-			],
-			[
-				"cahng",
-				"CHANGES"
-			],
-			[
-				"header",
-				"themes/startbootstrap-clean-blog/layouts/partials/header.html"
-			],
-			[
-				"fa-",
-				"themes/startbootstrap-clean-blog/static/fonts/glyphicons-halflings-regular.svg"
-			],
-			[
-				"conta",
-				"content/contact.md"
-			],
-			[
-				"hours",
-				"HOURS"
-			],
-			[
-				"log",
-				"LOG"
-			],
-			[
-				"notes",
-				"NOTES"
-			],
-			[
-				"test.cpp",
-				"GDC 2015 Example Source Code/external/ode/tests/UnitTest++/src/Test.cpp"
-			],
-			[
-				"bitpacket.h",
-				"developer/Platform/UnrealEngine4/OculusPlatformPlugin/Source/ThirdParty/Oculus/LibOVRPlatform/LibOVRPlatform/include/OVR_Packet.h"
-			],
-			[
-				"risk",
-				"RISKS"
-			],
-			[
-				"risks",
-				"RISKS"
-			],
-			[
-				"006",
-				"protocol2/006_reliable_ordered_messages.cpp"
-			],
-			[
-				"007",
-				"protocol2/007_messages_and_blocks.cpp"
-			],
-			[
-				"premake5.lua",
-				"protocol2/premake5.lua"
-			],
-			[
-				"msesages",
-				"protocol2/006_reliable_ordered_messages.cpp"
-			],
-			[
-				"008",
-				"protocol2/008_packet_encryption.cpp"
-			],
-			[
-				"messages",
-				"protocol2/007_messages_and_blocks.cpp"
-			],
-			[
-				"002",
-				"protocol2/002_serialization_strategies.cpp"
-			],
-			[
-				"blocks.cpp",
-				"protocol2/007_messages_and_blocks.cpp"
-			],
-			[
-				"network2.h",
-				"protocol2/network2.h"
-			],
-			[
-				"protocol2.h",
-				"protocol2/protocol2.h"
-			],
-			[
-				"client_server.cpp",
-				"protocol2/009_client_server.cpp"
-			],
-			[
-				"004",
-				"protocol2/004_sending_large_blocks_of_data.cpp"
-			],
-			[
-				"pre",
-				"protocol2/premake5.lua"
-			],
-			[
-				"009",
-				"protocol2/009_connect_tokens.cpp"
-			],
-			[
-				"encrypt",
-				"protocol2/007_packet_encryption.cpp"
-			],
-			[
-				"003",
-				"protocol2/003_packet_fragmentation_and_reassembly.cpp"
-			],
-			[
-				"005",
-				"protocol2/005_packet_aggregation.cpp"
-			],
-			[
-				"procesor.cpp",
-				"protocol2/yojimbo_packet_processor.cpp"
-			],
-			[
-				"packet_processor.cpp",
-				"protocol2/yojimbo_packet_processor.cpp"
-			],
-			[
-				"yoj",
-				"protocol2/yojimbo_crypto.h"
-			],
-			[
-				"encryp",
-				"protocol2/008_packet_encryption.cpp"
 			]
 		],
 		"width": 0.0

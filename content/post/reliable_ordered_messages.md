@@ -356,4 +356,8 @@ while ( true )
 
 I hope you're enjoyed the writing in this series so far. <a href="http://www.patreon.com/gafferongames">Please support my writing on patreon</a>, and I'll write new articles faster, plus you get access to example source code for this article under the BSD open source licence. <strong><span style="text-decoration: underline;">Thanks for your support</span>!</strong>
 
-<a href="http://www.patreon.com/gafferongames"><img src="http://i0.wp.com/gafferongames.com/wp-content/uploads/2014/12/donate.png" alt="" /></a>
+<hr>
+
+_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles! Patreon supporters also get access to exclusive content, like example source code for articles_.
+
+__NEXT ARTICLE:__ ...

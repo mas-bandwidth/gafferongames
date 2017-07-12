@@ -138,4 +138,8 @@ Now we have everything we need to write the function:
 
 Now we can calculate the bevel torus to round off any go stone we create as the intersection of two spheres.
 
+<hr>
+
+_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles! Patreon supporters also get access to exclusive content, like example source code for articles_.
+
 __NEXT ARTICLE:__ [Tessellating The Go Stone](/post/tessellating_the_go_stone)

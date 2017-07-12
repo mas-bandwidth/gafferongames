@@ -59,4 +59,8 @@ With vertex welding the reduction in vertices is dramatic: 53000 to just 6500.
 
 For more information on vertex welding please refer to the discussion in <a href="http://www.amazon.com/Real-Time-Collision-Detection-Interactive-Technology/dp/1558607323/ref=sr_1_1?ie=UTF8&qid=1363029675&sr=8-1&keywords=real+time+collision+detection">Real-Time Collision Detection</a> by <a href="http://realtimecollisiondetection.net/blog/">Christer Ericson</a>.
 
+<hr>
+
+_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles! Patreon supporters also get access to exclusive content, like example source code for articles_.
+
 __NEXT ARTICLE:__ [How The Go Stone Moves](/post/how_the_go_stone_moves/)
