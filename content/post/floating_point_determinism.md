@@ -280,4 +280,4 @@ Many programmers may not realize that even a program that uses only the numeric 
 
 <hr>
 
-_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles! Patreon supporters also get access to exclusive content, like example source code for articles_.
+_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles. Patreon supporters also get access to exclusive supporter content, like example source code for articles and previews of work in progress!_

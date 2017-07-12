@@ -221,6 +221,6 @@ The chunk system is simple in concept, but the implementation is certainly not.
 
 <hr>
 
-_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles! Patreon supporters also get access to exclusive content, like example source code for articles_.
+_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles. Patreon supporters also get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
 
 __NEXT ARTICLE:__ [Client/Server Connection](/post/client_server_connection/)

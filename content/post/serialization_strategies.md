@@ -788,6 +788,6 @@ This is great packet structure to use during development.
 
 <hr>
 
-_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles! Patreon supporters also get access to exclusive content, like example source code for articles_.
+_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles. Patreon supporters also get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
 
 __NEXT ARTICLE__: [Packet Fragmentation and Reassembly](/post/packet_fragmentation_and_reassembly)

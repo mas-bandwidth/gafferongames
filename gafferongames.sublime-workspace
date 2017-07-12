@@ -1140,6 +1140,10 @@
 		"selected_items":
 		[
 			[
+				"int",
+				"content/post/integration_basics.md"
+			],
+			[
 				"inte",
 				"content/post/integration_basics.md"
 			],
@@ -1170,10 +1174,6 @@
 			[
 				"sh",
 				"content/post/shape_of_the_go_stone.md"
-			],
-			[
-				"int",
-				"content/post/introduction_to_virtual_go.md"
 			],
 			[
 				"todo",
