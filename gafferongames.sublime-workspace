@@ -730,22 +730,23 @@
 	],
 	"file_history":
 	[
-		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
-		"/Users/gaffer/git/gafferongames/content/post/collision_response_and_coulomb_friction.md",
-		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
-		"/Users/gaffer/git/gafferongames/content/post/fix_your_timestep.md",
-		"/Users/gaffer/git/gafferongames/content/post/floating_point_determinism.md",
-		"/Users/gaffer/git/gafferongames/content/post/go_stone_vs_go_board.md",
-		"/Users/gaffer/git/gafferongames/content/post/how_the_go_stone_moves.md",
+		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
-		"/Users/gaffer/git/gafferongames/content/post/introduction_to_networked_physics.md",
-		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
-		"/Users/gaffer/git/gafferongames/content/post/networked_physics_2004.md",
-		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
-		"/Users/gaffer/git/gafferongames/content/post/packet_fragmentation_and_reassembly.md",
-		"/Users/gaffer/git/gafferongames/content/post/physics_in_3d.md",
-		"/Users/gaffer/git/gafferongames/content/post/reading_and_writing_packets.md",
+		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/content/post/reliability_ordering_and_congestion_avoidance_over_udp.md",
+		"/Users/gaffer/git/gafferongames/content/post/reading_and_writing_packets.md",
+		"/Users/gaffer/git/gafferongames/content/post/physics_in_3d.md",
+		"/Users/gaffer/git/gafferongames/content/post/packet_fragmentation_and_reassembly.md",
+		"/Users/gaffer/git/gafferongames/content/post/networked_physics_2004.md",
+		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
+		"/Users/gaffer/git/gafferongames/content/post/introduction_to_networked_physics.md",
+		"/Users/gaffer/git/gafferongames/content/post/how_the_go_stone_moves.md",
+		"/Users/gaffer/git/gafferongames/content/post/go_stone_vs_go_board.md",
+		"/Users/gaffer/git/gafferongames/content/post/floating_point_determinism.md",
+		"/Users/gaffer/git/gafferongames/content/post/fix_your_timestep.md",
+		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
+		"/Users/gaffer/git/gafferongames/content/post/collision_response_and_coulomb_friction.md",
+		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
 		"/Users/gaffer/git/gafferongames/content/post/reliable_ordered_messages.md",
 		"/Users/gaffer/git/gafferongames/content/post/rotation_and_inertia_tensors.md",
 		"/Users/gaffer/git/gafferongames/content/post/sending_and_receiving_packets.md",
@@ -760,8 +761,8 @@
 		"/Users/gaffer/git/gafferongames/content/post/udp_vs_tcp.md",
 		"/Users/gaffer/git/gafferongames/content/post/virtual_connection_over_udp.md",
 		"/Users/gaffer/git/gafferongames/content/post/what_every_programmer_needs_to_know_about_game_networking.md",
+		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
 		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
-		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
 		"/Users/gaffer/git/gafferongames/config_upload.toml",
 		"/Users/gaffer/git/gafferongames/content/contact.md",
@@ -831,7 +832,6 @@
 		"/Users/gaffer/Desktop/CANCEL SURGERY",
 		"/Users/gaffer/Desktop/cloudflare.txt",
 		"/Users/gaffer/git/gafferongames/static/css/bootstrap.min.css",
-		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/make",
 		"/Users/gaffer/netcode.io/Yojimbo usage",
 		"/Users/gaffer/Desktop/ROBLOX",
@@ -908,6 +908,9 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"also get access",
+			"<span",
+			"<strong>",
 			"Contact",
 			"new.gafferongames.com",
 			"gafferongames.com/",
@@ -1032,10 +1035,7 @@
 			"the state",
 			"The client",
 			"the client or",
-			"it starts",
-			"pygment",
-			"and before",
-			"This applies"
+			"it starts"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1140,6 +1140,34 @@
 		"selected_items":
 		[
 			[
+				"todo",
+				"TODO"
+			],
+			[
+				"integra",
+				"content/post/integration_basics.md"
+			],
+			[
+				"about",
+				"content/about.md"
+			],
+			[
+				"large",
+				"content/post/sending_large_blocks_of_data.md"
+			],
+			[
+				"client",
+				"content/post/client_server_connection.md"
+			],
+			[
+				"readingandwrit",
+				"content/post/reading_and_writing_packets.md"
+			],
+			[
+				"rel",
+				"content/post/reliable_ordered_messages.md"
+			],
+			[
 				"int",
 				"content/post/integration_basics.md"
 			],
@@ -1174,10 +1202,6 @@
 			[
 				"sh",
 				"content/post/shape_of_the_go_stone.md"
-			],
-			[
-				"todo",
-				"TODO"
 			],
 			[
 				"config",
@@ -1270,10 +1294,6 @@
 			[
 				"fix",
 				"content/post/fix_your_timestep.md"
-			],
-			[
-				"integra",
-				"content/post/integration_basics.md"
 			],
 			[
 				"reading",
@@ -1372,10 +1392,6 @@
 				"content/post/serialiation_strategies.md"
 			],
 			[
-				"large",
-				"content/post/sending_large_blocks_of_data.md"
-			],
-			[
 				"seria",
 				"content/post/serialiation_strategies.md"
 			],
@@ -1398,10 +1414,6 @@
 			[
 				"css",
 				"static/css/clean-blog.min.css"
-			],
-			[
-				"client",
-				"content/post/client_server_connection.md"
 			],
 			[
 				"collision",
@@ -1628,10 +1640,6 @@
 				"content/post/snapshots_and_interpolation.md"
 			],
 			[
-				"about",
-				"content/about.md"
-			],
-			[
 				"integrat",
 				"content/post/integration_basics.md"
 			],
@@ -1642,14 +1650,6 @@
 			[
 				"fi",
 				"content/post/fix_your_timestep.md"
-			],
-			[
-				"_3d",
-				"content/post/physics_in_3d.md"
-			],
-			[
-				"virtualconn",
-				"content/post/virtual_connection_over_udp.md"
 			]
 		],
 		"width": 0.0
