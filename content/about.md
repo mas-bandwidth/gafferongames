@@ -16,7 +16,7 @@ And now there's even more stuff I want to write about. But writing quality artic
 
 So far it's been working great, and each month around 180 supporters provide $2500 to support my work on [Patreon](http://www.patreon.com). This support _literally_ pays my rent and makes it possible for me to work on open source code like [libyojimbo](http://www.libyojimbo.com), [netcode.io](http://www.netcode.io) and [reliable.io](https://github.com/networkprotocol/reliable.io)
 
-If you enjoy my articles and open source code, please [support my work](http://www.patreon.com). Not only does your support encourage me to create more articles and open source code, you also get access to exclusive content like example source code for articles and early access to work in progress.
+If you enjoy my articles and open source code, please [support my work](http://www.patreon.com). Not only does your support encourage me to create more articles and open source code, you also get access to example source code for articles on gafferongames.com
 
 __Cheers and thanks for your support!__
 
