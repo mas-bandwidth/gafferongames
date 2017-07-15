@@ -12,7 +12,7 @@ These days I run [The Network Protocol Company](http://www.thenetworkprotocolcom
 
 Throughout my AAA career, I've always believed in _sharing information_. Writing articles, doing GDC talks and sharing example source code so people encounting the same problems don't have to learn everything from scratch.
 
-And now there is even more stuff I want to write about. But original research and writing quality articles takes _so much time_. I rely on donations and sponsorships to carve out time to work on articles and open source code.
+And now there is even more stuff I want to write about. But original research and writing quality articles takes _so much time_. Because of this, I rely on donations and sponsorships to carve out time to work on articles and open source code.
 
 So if you enjoy my articles and open source code, please [support my work](http://www.patreon.com) on Patreon. Supporters get access to exclusive content, like example source code for articles and early access to work in progress.
 
