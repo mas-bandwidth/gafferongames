@@ -17,16 +17,16 @@ buildDrafts = true
   Ganalytics = "UA-17769864-1"
 
 [[params.social]]
+    title = "linkedin"
+    url = "https://www.linkedin.com/in/glennfiedler/"
+
+[[params.social]]
     title = "twitter"
     url = "https://twitter.com/gafferongames"
 
 [[params.social]]
     title = "github"
     url = "https://github.com/gafferongames"
-
-[[params.social]]
-    title = "facebook"
-    url = "https://www.facebook.com/gafferongames"
 
 [[menu.main]]
   name = "Support gafferongames.com"
