@@ -730,9 +730,9 @@
 	],
 	"file_history":
 	[
+		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
-		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/content/post/reliability_ordering_and_congestion_avoidance_over_udp.md",
 		"/Users/gaffer/git/gafferongames/content/post/reading_and_writing_packets.md",
 		"/Users/gaffer/git/gafferongames/content/post/physics_in_3d.md",
@@ -1140,16 +1140,16 @@
 		"selected_items":
 		[
 			[
+				"about",
+				"content/about.md"
+			],
+			[
 				"todo",
 				"TODO"
 			],
 			[
 				"integra",
 				"content/post/integration_basics.md"
-			],
-			[
-				"about",
-				"content/about.md"
 			],
 			[
 				"large",
