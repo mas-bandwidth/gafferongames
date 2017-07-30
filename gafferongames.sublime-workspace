@@ -730,8 +730,14 @@
 	],
 	"file_history":
 	[
-		"/Users/gaffer/git/gafferongames/content/about.md",
+		"/Users/gaffer/Desktop/JASON PANG",
+		"/Users/gaffer/Desktop/RONNIE",
+		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
+		"/Users/gaffer/git/gafferongames/layouts/partials/footer.html",
+		"/Users/gaffer/git/gafferongames/config_upload.toml",
+		"/Users/gaffer/git/gafferongames/config_local.toml",
 		"/Users/gaffer/git/gafferongames/TODO",
+		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
 		"/Users/gaffer/git/gafferongames/content/post/reliability_ordering_and_congestion_avoidance_over_udp.md",
 		"/Users/gaffer/git/gafferongames/content/post/reading_and_writing_packets.md",
@@ -763,8 +769,6 @@
 		"/Users/gaffer/git/gafferongames/content/post/what_every_programmer_needs_to_know_about_game_networking.md",
 		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
 		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
-		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
-		"/Users/gaffer/git/gafferongames/config_upload.toml",
 		"/Users/gaffer/git/gafferongames/content/contact.md",
 		"/Users/gaffer/Desktop/SMB",
 		"/Users/gaffer/git/gafferongames/content/post/serialiation_strategies.md",
@@ -784,7 +788,6 @@
 		"/Users/gaffer/git/gafferongames/CHANGES",
 		"/Users/gaffer/git/gafferongames/WHITEPAPER",
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/CONCERNS",
-		"/Users/gaffer/git/gafferongames/config_local.toml",
 		"/Users/gaffer/git/gafferongames/layouts/partials/header.html",
 		"/Users/gaffer/git/gafferongames/.gitignore",
 		"/Users/gaffer/git/gafferongames/layouts/about/single.html",
@@ -794,7 +797,6 @@
 		"/Users/gaffer/git/gafferongames/layouts/_default/list.html",
 		"/Users/gaffer/git/gafferongames/layouts/partials/navbar.html",
 		"/Users/gaffer/git/gafferongames/layouts/index.html",
-		"/Users/gaffer/git/gafferongames/layouts/partials/footer.html",
 		"/Users/gaffer/git/gafferongames/layouts/post/archive.html",
 		"/Users/gaffer/git/gafferongames/layouts/_default/archive.html",
 		"/Users/gaffer/git/gafferongames/layouts/_default/single.html",
@@ -855,9 +857,7 @@
 		"/Users/gaffer/git/gafferongames/layouts/partials/tags.html",
 		"/Users/gaffer/git/gafferongames/content/post/old.txt",
 		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/layouts/partials/header.html",
-		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/layouts/partials/footer.html",
-		"/Users/gaffer/git/gafferongames/README.md",
-		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/static/fonts/glyphicons-halflings-regular.svg"
+		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/layouts/partials/footer.html"
 	],
 	"find":
 	{
@@ -908,6 +908,7 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"rss",
 			"also get access",
 			"<span",
 			"<strong>",
@@ -1034,8 +1035,7 @@
 			"do)_",
 			"the state",
 			"The client",
-			"the client or",
-			"it starts"
+			"the client or"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1140,12 +1140,32 @@
 		"selected_items":
 		[
 			[
-				"about",
-				"content/about.md"
+				"ronnie",
+				"~/Desktop/RONNIE"
+			],
+			[
+				"ngin",
+				"nginx/nginx.conf"
 			],
 			[
 				"todo",
 				"TODO"
+			],
+			[
+				"footer",
+				"layouts/partials/footer.html"
+			],
+			[
+				"loca",
+				"config_local.toml"
+			],
+			[
+				"upl",
+				"config_upload.toml"
+			],
+			[
+				"about",
+				"content/about.md"
 			],
 			[
 				"integra",
@@ -1504,10 +1524,6 @@
 				"nginx/Dockerfile"
 			],
 			[
-				"ngin",
-				"nginx/nginx.conf"
-			],
-			[
 				"webserver.go",
 				"webserver/webserver.go"
 			],
@@ -1634,22 +1650,6 @@
 			[
 				"snapshots_",
 				"content/post/snapshots_and_interpolation.md"
-			],
-			[
-				"interpolation.md",
-				"content/post/snapshots_and_interpolation.md"
-			],
-			[
-				"integrat",
-				"content/post/integration_basics.md"
-			],
-			[
-				"2004",
-				"content/post/networked_physics_2004.md"
-			],
-			[
-				"fi",
-				"content/post/fix_your_timestep.md"
 			]
 		],
 		"width": 0.0

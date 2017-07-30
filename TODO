@@ -8,7 +8,23 @@ DONE
 
     Improved the about page. I can update it again later if the situation changes.
 
+    Make sure RSS feed is working
+
 TODO
+
+    Get https://netcode.io
+
+    ------------------
+
+    Need to get email forwarding working again for glenn@thenetworkprotocolcompany.com
+
+    To do this I think I just need to open the correct ports in iptables firewall on my linode box.
+
+    ------------------
+
+    Get the network protocol company website back up in some form
+
+    ------------------
 
     Research solutions for Latex for Virtual Go article series.
 
@@ -17,10 +33,6 @@ TODO
     https://khan.github.io/KaTeX/
     https://www.cgbaker.net/2017/01/mathjax-support-for-rendering-equations/
     https://github.com/oblitum/hugo-theme-slim/commit/2726427d5899720447d90177824ab26996bb0750
-
-    ------------------
-
-    Need to get email forwarding working again for glenn@thenetworkprotocolcompany.com
 
     ------------------
 

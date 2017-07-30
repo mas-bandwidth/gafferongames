@@ -196,12 +196,12 @@ One solution would be for Google to make it _significantly_ easier for game deve
 
 Alternatively, [netcode.io](http://netcode.io) provides a much simpler 'WebSockets for UDP'-like approach, which would also solve the problem, if it were standardized and incorporated into browsers.
 
+**UPDATE:** netcode.io is now [available in browsers](https://github.com/RedpointGames/netcode.io-browser)!
+
 ----- 
 
 <i>
 **Glenn Fiedler** is the founder and president of [The Network Protocol Company](http://thenetworkprotocolcompany.com) where he helps clients network their games. Prior to starting his own company he was a senior programmer at Respawn Entertainment working on Titanfall 1 and 2.
-
-Glenn is also the author of several popular series of articles on game networking and physics at [gafferongames.com](http://www.gafferongames.com), and is the author of the open source network libraries [libyojimbo](http://www.libyojimbo.com) and [netcode.io](http://netcode.io)
 
 If you would like to support Glenn's work, you can do that on [patreon.com](http://www.patreon.com/gafferongames)
 </i>
