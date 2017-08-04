@@ -12,7 +12,7 @@ These days I run [The Network Protocol Company](http://www.thenetworkprotocolcom
 
 Throughout my AAA career, I've always believed in _sharing information_. Paying it forward. I've been doing this for the past 15 years. Writing articles, talking at GDC and basically doing whatever I can do to share knowledge. It makes me so happy when I meet people who learned their trade as a network programmer reading articles I that wrote 10 years ago.
 
-And now there's even more stuff I want to write about. But writing quality articles takes _so much time_ and I need to earn enough money to pay rent, feed my wife and kids and pay for health insurance. Because of this, I rely on sponsorship to carve out time to work on new articles and open source code.
+And now there's even more stuff I want to write about. But writing quality articles takes _so much time_ and I need to earn enough money to pay rent and health insurance. Because of this, I rely on sponsorship to carve out time to work on new articles and open source code.
 
 This support _literally_ pays my rent and makes it possible for me to work on open source code like [yojimbo](http://www.libyojimbo.com), [netcode.io](http://www.netcode.io) and [reliable.io](https://github.com/networkprotocol/reliable.io)
 
