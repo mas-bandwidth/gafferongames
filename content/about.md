@@ -14,9 +14,9 @@ Throughout my AAA career, I've always believed in _sharing information_. Paying 
 
 And now there's even more stuff I want to write about. But writing quality articles takes _so much time_ and I need to earn enough money to pay rent, feed my wife and kids and pay for health insurance. Because of this, I rely on sponsorship to carve out time to work on new articles and open source code.
 
-So far it's been working out great. Each month around 180 supporters provide $2500 to support my work on [Patreon](http://www.patreon.com). This support _literally_ pays my rent and makes it possible for me to work on open source code like [libyojimbo](http://www.libyojimbo.com), [netcode.io](http://www.netcode.io) and [reliable.io](https://github.com/networkprotocol/reliable.io)
+This support _literally_ pays my rent and makes it possible for me to work on open source code like [yojimbo](http://www.libyojimbo.com), [netcode.io](http://www.netcode.io) and [reliable.io](https://github.com/networkprotocol/reliable.io)
 
-If you enjoy my articles and open source code, please [support my work](http://www.patreon.com). Not only does your support encourage me to create more articles and open source code, you also get access to [example source code](http://www.patreon.com/gafferongames) for articles on gafferongames.com
+So if you enjoy my articles and open source code, please [sponsor my work](http://www.patreon.com). Not only does your support encourage me to create more articles and open source code, you also get access to [example source code](http://www.patreon.com/gafferongames) for articles on gafferongames.com
 
 __Cheers and thanks for your support!__
 

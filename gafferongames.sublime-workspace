@@ -730,13 +730,14 @@
 	],
 	"file_history":
 	[
+		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
+		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
+		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/Desktop/JASON PANG",
 		"/Users/gaffer/Desktop/RONNIE",
-		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
 		"/Users/gaffer/git/gafferongames/layouts/partials/footer.html",
 		"/Users/gaffer/git/gafferongames/config_upload.toml",
 		"/Users/gaffer/git/gafferongames/config_local.toml",
-		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
 		"/Users/gaffer/git/gafferongames/content/post/reliability_ordering_and_congestion_avoidance_over_udp.md",
@@ -768,7 +769,6 @@
 		"/Users/gaffer/git/gafferongames/content/post/virtual_connection_over_udp.md",
 		"/Users/gaffer/git/gafferongames/content/post/what_every_programmer_needs_to_know_about_game_networking.md",
 		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
-		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
 		"/Users/gaffer/git/gafferongames/content/contact.md",
 		"/Users/gaffer/Desktop/SMB",
 		"/Users/gaffer/git/gafferongames/content/post/serialiation_strategies.md",
@@ -1140,16 +1140,20 @@
 		"selected_items":
 		[
 			[
-				"ronnie",
-				"~/Desktop/RONNIE"
-			],
-			[
 				"ngin",
 				"nginx/nginx.conf"
 			],
 			[
+				"whycan",
+				"content/post/why_cant_i_send_udp_packets_from_a_browser.md"
+			],
+			[
 				"todo",
 				"TODO"
+			],
+			[
+				"ronnie",
+				"~/Desktop/RONNIE"
 			],
 			[
 				"footer",
@@ -1646,10 +1650,6 @@
 			[
 				"changes",
 				"CHANGES"
-			],
-			[
-				"snapshots_",
-				"content/post/snapshots_and_interpolation.md"
 			]
 		],
 		"width": 0.0
