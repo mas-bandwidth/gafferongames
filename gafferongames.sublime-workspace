@@ -730,6 +730,8 @@
 	],
 	"file_history":
 	[
+		"/Users/gaffer/Desktop/NETWORK NEXT",
+		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
 		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
 		"/Users/gaffer/git/gafferongames/TODO",
@@ -738,7 +740,6 @@
 		"/Users/gaffer/git/gafferongames/layouts/partials/footer.html",
 		"/Users/gaffer/git/gafferongames/config_upload.toml",
 		"/Users/gaffer/git/gafferongames/config_local.toml",
-		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
 		"/Users/gaffer/git/gafferongames/content/post/reliability_ordering_and_congestion_avoidance_over_udp.md",
 		"/Users/gaffer/git/gafferongames/content/post/reading_and_writing_packets.md",
@@ -856,8 +857,7 @@
 		"/Users/gaffer/git/gafferongames/layouts/post/single.html",
 		"/Users/gaffer/git/gafferongames/layouts/partials/tags.html",
 		"/Users/gaffer/git/gafferongames/content/post/old.txt",
-		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/layouts/partials/header.html",
-		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/layouts/partials/footer.html"
+		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/layouts/partials/header.html"
 	],
 	"find":
 	{
@@ -1139,6 +1139,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"about.md",
+				"content/about.md"
+			],
 			[
 				"ngin",
 				"nginx/nginx.conf"
@@ -1646,10 +1650,6 @@
 			[
 				"id",
 				"IDEAS"
-			],
-			[
-				"changes",
-				"CHANGES"
 			]
 		],
 		"width": 0.0

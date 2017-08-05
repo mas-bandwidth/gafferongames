@@ -12,13 +12,21 @@ DONE
 
 TODO
 
-    Get https://netcode.io
+    ------------------
+
+    Work hard to purchase reliable.io. Not owning this domain is frustrating!
+
+    ------------------
+
+    Get https://netcode.io working
 
     ------------------
 
     Need to get email forwarding working again for glenn@thenetworkprotocolcompany.com
 
     To do this I think I just need to open the correct ports in iptables firewall on my linode box.
+
+    *OR* complete domain name migration from networksolutions.com to namecheap.com
 
     ------------------
 
