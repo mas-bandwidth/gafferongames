@@ -8,7 +8,7 @@ weight = -190
 
 Hi, I’m [Glenn Fiedler](https://www.linkedin.com/in/glennfiedler) the author of **gafferongames.com**
 
-These days I run [The Network Protocol Company](http://www.thenetworkprotocolcompany.com) where I consult and help peolpe network there games, but before this I was a network programmer in the AAA game industry. I lead the team that networked God of War, helped out with the networking on Journey, and worked as a network programmer on Titanfall 1 and 2.
+These days I run [The Network Protocol Company](http://www.thenetworkprotocolcompany.com) where I consult and help people network their games, but before this I was a network programmer in the AAA game industry. I lead the team that networked God of War, helped out with the networking on Journey, and worked as a network programmer on Titanfall 1 and 2.
 
 Throughout my AAA career, I've always believed in _sharing information_. Paying it forward. I've been doing this for the past 15 years. Writing articles, talking at GDC and basically doing whatever I can do to share knowledge. It makes me _so happy_ when I meet people who learned their trade as a network programmer reading articles I that wrote 10 years ago.
 
