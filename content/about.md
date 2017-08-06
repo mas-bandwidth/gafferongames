@@ -14,8 +14,8 @@ Throughout my AAA career, I've always believed in _sharing information_. Paying 
 
 And now there's even more stuff I want to write about. But writing quality articles takes _so much time_ and I need to earn enough money each month to pay rent and health insurance. Because of this, I rely on sponsorship to carve out time to work on articles and open source code.
 
-So if you enjoy my articles and open source code, please [sponsor my work](http://www.patreon.com). Not only does your support encourage me to create more articles and open source code, you also get access to [example source code](http://www.patreon.com/gafferongames) for articles on gafferongames.com
+So if you enjoy my articles and open source code, please [sponsor my work](http://www.patreon.com). Not only does your support encourage me to create more articles and open source code, you also get access to [example source code](http://www.patreon.com/gafferongames) for articles on gafferongames.com!
 
-__Cheers and thanks for your support!__
+__Cheers and thanks for your support__
 
 _-- Glenn_
