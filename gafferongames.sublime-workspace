@@ -730,11 +730,13 @@
 	],
 	"file_history":
 	[
-		"/Users/gaffer/Desktop/NETWORK NEXT",
 		"/Users/gaffer/git/gafferongames/content/about.md",
+		"/Users/gaffer/git/gafferongames/IDEAS",
+		"/Users/gaffer/Desktop/SONY",
+		"/Users/gaffer/git/gafferongames/TODO",
+		"/Users/gaffer/Desktop/NETWORK NEXT",
 		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
 		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
-		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/Desktop/JASON PANG",
 		"/Users/gaffer/Desktop/RONNIE",
 		"/Users/gaffer/git/gafferongames/layouts/partials/footer.html",
@@ -785,7 +787,6 @@
 		"/Users/gaffer/Desktop/STRATEGY",
 		"/Users/gaffer/git/gafferongames/RESEARCH",
 		"/Users/gaffer/git/gafferongames/PLANNING",
-		"/Users/gaffer/git/gafferongames/IDEAS",
 		"/Users/gaffer/git/gafferongames/CHANGES",
 		"/Users/gaffer/git/gafferongames/WHITEPAPER",
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/CONCERNS",
@@ -856,8 +857,7 @@
 		"/Users/gaffer/git/gafferongames/layouts/contact/single.html",
 		"/Users/gaffer/git/gafferongames/layouts/post/single.html",
 		"/Users/gaffer/git/gafferongames/layouts/partials/tags.html",
-		"/Users/gaffer/git/gafferongames/content/post/old.txt",
-		"/Users/gaffer/git/gafferongames/themes/startbootstrap-clean-blog/layouts/partials/header.html"
+		"/Users/gaffer/git/gafferongames/content/post/old.txt"
 	],
 	"find":
 	{
@@ -1144,16 +1144,20 @@
 				"content/about.md"
 			],
 			[
+				"",
+				"IDEAS"
+			],
+			[
+				"todo",
+				"TODO"
+			],
+			[
 				"ngin",
 				"nginx/nginx.conf"
 			],
 			[
 				"whycan",
 				"content/post/why_cant_i_send_udp_packets_from_a_browser.md"
-			],
-			[
-				"todo",
-				"TODO"
 			],
 			[
 				"ronnie",
@@ -1638,10 +1642,6 @@
 			[
 				"vir",
 				"content/post/introduction_to_virtual_go.md"
-			],
-			[
-				"",
-				"PLANNING"
 			],
 			[
 				"cha",

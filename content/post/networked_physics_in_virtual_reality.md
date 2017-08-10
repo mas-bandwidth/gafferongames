@@ -1,7 +1,7 @@
 +++
 categories = ["Networked Physics"]
 tags = ["physics", "networking", "vr"]
-date = "2017-03-31"
+date = "2017-09-10"
 title = "Networked Physics in Virtual Reality"
 description = "Networking a stack of cubes with Unity and PhysX"
 draft = true
@@ -9,29 +9,29 @@ draft = true
 
 # Introduction
 
-Hi, I'm Glenn Fiedler, and for the last few months I've been researching networked physics in virtual reality. This research was generously sponsored by [Oculus](https://www.oculus.com/), which turned out to be a great fit because the Oculus touch controller and Avatar SDK provide a fantastic way to _interact_ with a physics simulation in virtual reality.
+Hi, I'm Glenn Fiedler. For the last few months I've been researching networked physics in virtual reality. This research was generously sponsored by [Oculus](https://www.oculus.com/) and was implemented in the [Unity](https://unity3d.com/get-unity/download) game engine.
 
-[<img src="/img/networked-physics-in-vr/touch.png" width="100%"/>](http://www.oculus.com)
+My primary goal for this project was to network a world of physically simulated cubes in virtual reality, such that players would feel no latency when picking up, moving, placing and throwing cubes. 
 
-My goal for this project was to network a world of physically simulated cubes in virtual reality, such that players would feel no latency when picking up, moving, placing and throwing cubes. My stretch goal: players should be able to construct stable stacks of cubes, stacks that network without any jitter or instability.
+My stretch goal: players should be able to construct stable stacks of cubes, stacks that network without any jitter or instability.
 
 <img src="/img/networked-physics-in-vr/stack-of-cubes.jpg" width="100%"/>
 
-I'm happy to report this work was a success, and thanks to the generosity of Oculus, the full source code of my implementation in Unity is available [here](...). 
+I'm happy to report that this work was a success, and thanks to Oculus, the full source code of my implementation in Unity is available as [open source](...).
 
-Please try this demo in virtual reality before continuing. While the rest of this whitepaper explains how it was implemented, like most things in VR, it's no substitute for actually getting in there in there and experiencing it.
+If possible please try this demo in virtual reality before continuing. While the rest of this whitepaper explains how it was implemented, like most things in VR, it's no substitute for actually getting in there in there and experiencing it.
 
 # Background
 
-Previously, I've [presented talks at GDC](http://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking) about networked physics. And yes, I've even networked worlds of physicaly simulated cubes before. But it's something completely different to be _inside_ that world and interact with it. This is something that at least to me, feels really exciting and new.
+There are many different networking techniques:
 
-So when considering the best approach for networked physics in virtual reality, this seemed the most important factor. That the player is actually _in there_. Networked objects are right in front of the player's face. Any artifacts or glitches would be obvious and jarring, and any delay on a player's actions would be unacceptable. Perhaps it would even make players feel sick?
+1. Deterministic lockstep
+2. Client-side prediction
+3. Distributed simulation (e.g. authority techniques)
 
-It seems obvious then that for any networking approach to work in virtual reality, it must allow players to interact with the world without any perception of latency. This makes a lot of sense considering how much effort has gone into VR platforms to reduce latency for tracking and player input. It would be a real shame to build something on top of this that adds latency due to networking.
+But which is the best one for networking physics in virtual reality?
 
-So let's start by focusing on this aspect: _latency hiding_. How are multiplayer games networked and how do they hide latency? Can we use these techniques to network a physics simulation in VR with Unity and PhysX?
-
-# Deterministic Lockstep
+## Deterministic Lockstep
 
 Deterministic lockstep is a technique where multiple simulations are kept in sync by sending across just the inputs. It's attractive because the amount of bandwidth used is independent of the number of objects in the world.  
 
@@ -47,9 +47,9 @@ It's also used in the networking of fighting games like **Street Fighter**, and 
 
 What all these games have in common is that they're built on top of an engine that is _deterministic_. This means it gives exactly the same result given the same inputs. Exact down to the bit-level so you could checksum the game state at the end of each frame and it would the same across all player's machines.
 
-So will deterministic lockstep work for the networked physics demo? Unfortunately the answer is _no_. The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic.
+So will deterministic lockstep work for the networked physics demo? Unfortunately the answer is _not in this case_. The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic :(
 
-# Client-Side Prediction
+## Client-Side Prediction
 
 Another networking concept many people are familiar with is client-side prediction. This technique is used by first person shooters like **Counterstrike**, **Call of Duty**, **Titanfall** and **Overwatch**.
 
@@ -59,37 +59,33 @@ Client side prediction works by predicting the local player on each client forwa
 
 <img src="/img/networked-physics-in-vr/overwatch.jpg" width="100%"/>
 
-The key benefit of client-side prediction is that the client feels no latency while the server remains authoritative over the simulation. This is achieved by continuously sending corrections from the server to the client, in effect telling the client, at this time I think you were _here_ and doing _this_.
-
-Here's where it gets complicated. The client can't just apply the server corrections as-is, because by the time they arrive they're _in the past_, so the client (invisibly) rolls the local player back in time, applies the correction from the server, then replays local inputs to bring the corrected player state back up to present time on the client.
-
-This happens all the time in first person shooters but you rarely notice, because the local player state and the corrected state almost always agree. When they don't, it's usually because something happened on the server that can't be predicted from your inputs alone (another player shot you), or... because you were cheating :)
+The key benefit of client-side prediction is that the client feels no latency while the server remains authoritative over the simulation. This is achieved by continuously sending corrections from the server to the client, in effect telling the client, at this time I think you were _here_ and doing _this_. The client rolls back these corrected objects, applies the correction, and invisibly resimulates them back up to present time on the client.
 
 <img src="/img/networked-physics-in-vr/titanfall.jpg" width="100%"/>
 
-Client side prediction works _great_ for first person shooters, hiding latency while keeping the game secure against cheaters. But is it a good technique for networking a physics simulation?
+Client side prediction works _great_ for first person shooters - hiding latency while keeping the game secure against cheaters. But is it a good technique for networking a physics simulation?
 
 <img src="/img/networked-physics-in-vr/callofduty.png" width="100%"/>
 
-Unfortunately the answer is no. Why?
+Unfortunately the answer is _probably not_. Why?
 
-First person shooters apply prediction to your local player character, objects you are carrying like items and weapons, and depending on the game, projectiles like grenades and missiles. This works well because only a small subset of objects need to be rolled back and resimulated on each client.
+First person shooters apply prediction to your local player character, objects you are carrying like items and weapons, and depending on the game, projectiles like grenades and missiles. It well because only a _small subset_ of objects need to be rolled back and resimulated on each client.
 
-But what if you wanted to throw an object at a stack of objects, and have the stack react without latency? What would need to be predicted and rolled back in this case? The answer is not only the object you throw, but also any objects it collides with, plus any objects they collide with and so on! 
+But what if you wanted to throw an object at a stack of objects, and have the stack react without latency? What would need to be rolled back in this case? The answer is not only the object you throw, but also any objects it collides with, plus any objects they collide with and so on! 
 
-While this could _theoretically_ work, the worst case is a client predicting the _entire simulation_ when all objects are in a big stack. This quickly becomes impractical because physics simulation is expensive. We simply can't afford to rollback and resimulate 10-15 frames of simulation just to hide latency.
+This is a problem because physics simulation is _very expensive_. We simply can't afford to rollback and resimulate large parts of the physics simulation just to hide latency :(
 
-# Distributed Simulation
+## Distributed Simulation
 
 The third technique is distributed simulation. The basic idea is that instead of having the server be authoritative over the whole simulation, authority is _distributed_ across player machines, such that players take authority over different parts of the world, in effect _becoming the server_ for those objects.
 
 <img src="/img/networked-physics-in-vr/gta5.jpg" width="100%"/>
 
-Distributed simulation is used in open world games like **Grand Theft Auto** because it distributes the cost of simulating a large world across player's machines. Latency is hidden by giving players authority over their own character and vehicles they are driving.
+Distributed simulation is often used in open world games like **Grand Theft Auto** because it distributes the cost of simulating a large world across player's machines. Latency is hidden by giving players authority over their own character and vehicles they are driving.
 
 <img src="/img/networked-physics-in-vr/destiny.jpg" width="100%"/>
 
-**Destiny** also uses a distributed simulation technique, distributing the cost of player and AI simulation across player machines, while keeping important aspects of mission scripting running on [lightweight dedicated servers](http://www.gdcvault.com/play/1022247/Shared-World-Shooter-Destiny-s). This significantly reduces server costs and makes it possible for Destiny to present the illusion of a seamless world.
+**Destiny** also uses a distributed simulation technique, distributing the cost of player and AI simulation while keeping important aspects of mission scripting running on [lightweight dedicated servers](http://www.gdcvault.com/play/1022247/Shared-World-Shooter-Destiny-s). This significantly reduces server cost and makes it possible for Destiny to present the illusion of a seamless world.
 
 <img src="/img/networked-physics-in-vr/darksouls.jpg" width="100%"/>
 
@@ -98,6 +94,10 @@ Distributed simulation is used in open world games like **Grand Theft Auto** bec
 <img src="/img/networked-physics-in-vr/thedivision.jpg" width="100%"/>
 
 **The Division** also uses a distributed simulation approach. Each player runs the simulation for their player character locally, sending their position and actions to a dedicated server. This hides latency for the local player, while allowing the game to scale up to high player counts. However, this approach is not without controversy, as it has caused [serious cheating problems](https://www.theguardian.com/technology/2016/apr/26/hackers-cheats-ruined-the-division-pc-ubisoft) on PC.
+
+## Network Model: Conclusion
+
+So which is best? In this case we're going with _distributed simulation_ because the PhysX engine is not deterministic, and we don't have hard anti-cheat requirements for this demo because it's a cooperative experience.
 
 # The Authority Scheme
 
