@@ -1,7 +1,7 @@
 +++
 categories = ["Networked Physics"]
 tags = ["physics", "networking", "vr"]
-date = "2017-09-10"
+date = "2017-08-10"
 title = "Networked Physics in Virtual Reality"
 description = "Networking a stack of cubes with Unity and PhysX"
 draft = true
@@ -9,7 +9,7 @@ draft = true
 
 # Introduction
 
-Hi, I'm Glenn Fiedler. For the last few months I've been researching networked physics in virtual reality. This research was generously sponsored by [Oculus](https://www.oculus.com/) and was implemented in the [Unity](https://unity3d.com/get-unity/download) game engine.
+Hi, I'm Glenn Fiedler. For the last few months I've been researching networked physics in virtual reality. This research was generously sponsored by [Oculus](https://www.oculus.com/).
 
 My primary goal for this project was to network a world of physically simulated cubes in virtual reality, such that players would feel no latency when picking up, moving, placing and throwing cubes. 
 
@@ -19,17 +19,17 @@ My stretch goal: players should be able to construct stable stacks of cubes, sta
 
 I'm happy to report that this work was a success, and thanks to Oculus, the full source code of my implementation in Unity is available as [open source](...).
 
-If possible please try this demo in virtual reality before continuing. While the rest of this whitepaper explains how it was implemented, like most things in VR, it's no substitute for actually getting in there in there and experiencing it.
+Please try this demo in virtual reality before continuing if possible (you'll need a rift and touch controllers). While the rest of this whitepaper explains how the demo was implemented, like most things in VR, it's no substitute for actually getting in there in there and experiencing it.
 
 # Background
 
-There are many different networking techniques:
+There are three main techniques used in game networking:
 
 1. Deterministic lockstep
 2. Client-side prediction
 3. Distributed simulation (e.g. authority techniques)
 
-But which is the best one for networking physics in virtual reality?
+Which is the best technique for networked physics in virtual reality?
 
 ## Deterministic Lockstep
 
@@ -37,17 +37,17 @@ Deterministic lockstep is a technique where multiple simulations are kept in syn
 
 <img src="/img/networked-physics-in-vr/starcraft2.jpg" width="100%"/>
 
-Most people know this technique from old school real-time strategy games like **Command and Conquer**, **Age of Empires** and **StarCraft**. It's a smart way to network these games because sending across the state for thousands of units is impractical.
+You can see technique in old school real-time strategy games like **Command and Conquer**, **Age of Empires** and **StarCraft**. It's a smart way to network these games because sending across the state for thousands of units is impractical.
 
 <img src="/img/networked-physics-in-vr/streetfighter.jpg" width="100%"/>
 
-It's also used in the networking of fighting games like **Street Fighter**, and physics-based platformers like **Little Big Planet**. These games implement latency hiding techniques so the local player feels no lag on their own actions by predicting ahead a copy of the simulation with the local player's inputs.
+It's also used in fighting games like **Street Fighter**, and physics-based platformers like **Little Big Planet**. These games implement latency hiding techniques so the local player feels no lag on their own actions by predicting ahead a copy of the simulation with the local player's inputs.
 
 <img src="/img/networked-physics-in-vr/littlebigplanet.jpg" width="100%"/>
 
 What all these games have in common is that they're built on top of an engine that is _deterministic_. This means it gives exactly the same result given the same inputs. Exact down to the bit-level so you could checksum the game state at the end of each frame and it would the same across all player's machines.
 
-So will deterministic lockstep work for the networked physics demo? Unfortunately the answer is _not in this case_. The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic :(
+So will deterministic lockstep work for the networked physics demo? Unfortunately the answer is _no_. The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic :(
 
 ## Client-Side Prediction
 
@@ -59,25 +59,19 @@ Client side prediction works by predicting the local player on each client forwa
 
 <img src="/img/networked-physics-in-vr/overwatch.jpg" width="100%"/>
 
-The key benefit of client-side prediction is that the client feels no latency while the server remains authoritative over the simulation. This is achieved by continuously sending corrections from the server to the client, in effect telling the client, at this time I think you were _here_ and doing _this_. The client rolls back these corrected objects, applies the correction, and invisibly resimulates them back up to present time on the client.
+The key benefit of client-side prediction is that the client feels no latency while the server remains authoritative over the simulation. This is achieved by continuously sending corrections from the server to the client, in effect telling the client, at this time I think you were _here_ and doing _this_. The client rolls back corrected objects, applies the correction, then invisibly resimulates them back up to present time.
 
 <img src="/img/networked-physics-in-vr/titanfall.jpg" width="100%"/>
 
-Client side prediction works _great_ for first person shooters - hiding latency while keeping the game secure against cheaters. But is it a good technique for networking a physics simulation?
+First person shooters apply prediction to your local player character, objects you are carrying like items and weapons, and depending on the game, projectiles like grenades and missiles. It well because only a _small subset_ of objects need to be rolled back and resimulated on each client, and these objects don't tend to directly interact with other objects in the scene.
 
 <img src="/img/networked-physics-in-vr/callofduty.png" width="100%"/>
 
-Unfortunately the answer is _probably not_. Why?
-
-First person shooters apply prediction to your local player character, objects you are carrying like items and weapons, and depending on the game, projectiles like grenades and missiles. It well because only a _small subset_ of objects need to be rolled back and resimulated on each client.
-
-But what if you wanted to throw an object at a stack of objects, and have the stack react without latency? What would need to be rolled back in this case? The answer is not only the object you throw, but also any objects it collides with, plus any objects they collide with and so on! 
-
-This is a problem because physics simulation is _very expensive_. We simply can't afford to rollback and resimulate large parts of the physics simulation just to hide latency :(
+In networked physics, if you throw an object at a stack of objects, you want the stack to react without latency. Now you've just committed to rolling back and resimulating that entire stack. This is a problem because physics simulation is _expensive_. We simply can't afford to roll back and resimulate large parts of a physics simulation :(
 
 ## Distributed Simulation
 
-The third technique is distributed simulation. The basic idea is that instead of having the server be authoritative over the whole simulation, authority is _distributed_ across player machines, such that players take authority over different parts of the world, in effect _becoming the server_ for those objects.
+The third technique is distributed simulation. The idea is that instead of having a server which is authoritative over the whole simulation, authority is _distributed_ across player machines, such that players take authority over different parts of the world, in effect _becoming the server_ for those objects.
 
 <img src="/img/networked-physics-in-vr/gta5.jpg" width="100%"/>
 
@@ -85,7 +79,7 @@ Distributed simulation is often used in open world games like **Grand Theft Auto
 
 <img src="/img/networked-physics-in-vr/destiny.jpg" width="100%"/>
 
-**Destiny** also uses a distributed simulation technique, distributing the cost of player and AI simulation while keeping important aspects of mission scripting running on [lightweight dedicated servers](http://www.gdcvault.com/play/1022247/Shared-World-Shooter-Destiny-s). This significantly reduces server cost and makes it possible for Destiny to present the illusion of a seamless world.
+**Destiny** also uses a distributed simulation technique, distributing the cost of player and AI simulation while running mission scripting on [lightweight dedicated servers](http://www.gdcvault.com/play/1022247/Shared-World-Shooter-Destiny-s). This significantly reduces server cost and makes it possible for Destiny to present the illusion of a seamless world.
 
 <img src="/img/networked-physics-in-vr/darksouls.jpg" width="100%"/>
 
@@ -95,13 +89,13 @@ Distributed simulation is often used in open world games like **Grand Theft Auto
 
 **The Division** also uses a distributed simulation approach. Each player runs the simulation for their player character locally, sending their position and actions to a dedicated server. This hides latency for the local player, while allowing the game to scale up to high player counts. However, this approach is not without controversy, as it has caused [serious cheating problems](https://www.theguardian.com/technology/2016/apr/26/hackers-cheats-ruined-the-division-pc-ubisoft) on PC.
 
-## Network Model: Conclusion
-
-So which is best? In this case we're going with _distributed simulation_ because the PhysX engine is not deterministic, and we don't have hard anti-cheat requirements for this demo because it's a cooperative experience.
+Because we don't have any anti-cheating requirements for the networked physics demo, my decision was to use _distributed simulation_ because it lets me hide latency without rollback and resimulation.
 
 # The Authority Scheme
 
-(segway, conclusion, we're going to use distributed authority).
+In order to use a distributed simulation approach we have to decide exactly how to distribute authority. I call the method of doing this the _authority scheme_.
+
+(something something turn...)
 
 The host can takes authority over objects they interact with, turning the stack blue. 
 
