@@ -730,10 +730,12 @@
 	],
 	"file_history":
 	[
+		"/Users/gaffer/git/gafferongames/TODO",
+		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
+		"/Users/gaffer/git/gafferongames/Makefile",
 		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/IDEAS",
 		"/Users/gaffer/Desktop/SONY",
-		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/Desktop/NETWORK NEXT",
 		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
 		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
@@ -771,7 +773,6 @@
 		"/Users/gaffer/git/gafferongames/content/post/udp_vs_tcp.md",
 		"/Users/gaffer/git/gafferongames/content/post/virtual_connection_over_udp.md",
 		"/Users/gaffer/git/gafferongames/content/post/what_every_programmer_needs_to_know_about_game_networking.md",
-		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
 		"/Users/gaffer/git/gafferongames/content/contact.md",
 		"/Users/gaffer/Desktop/SMB",
 		"/Users/gaffer/git/gafferongames/content/post/serialiation_strategies.md",
@@ -783,7 +784,6 @@
 		"/Users/gaffer/Desktop/OFFER",
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/KARAOKE",
 		"/Users/gaffer/Desktop/CALL",
-		"/Users/gaffer/git/gafferongames/Makefile",
 		"/Users/gaffer/Desktop/STRATEGY",
 		"/Users/gaffer/git/gafferongames/RESEARCH",
 		"/Users/gaffer/git/gafferongames/PLANNING",
@@ -1140,16 +1140,24 @@
 		"selected_items":
 		[
 			[
+				"network",
+				"content/post/networked_physics_in_virtual_reality.md"
+			],
+			[
+				"todo",
+				"TODO"
+			],
+			[
+				"make",
+				"Makefile"
+			],
+			[
 				"about.md",
 				"content/about.md"
 			],
 			[
 				"",
 				"IDEAS"
-			],
-			[
-				"todo",
-				"TODO"
 			],
 			[
 				"ngin",
@@ -1436,10 +1444,6 @@
 				"content/post/packet_fragmentation_and_reassembly.md"
 			],
 			[
-				"network",
-				"content/post/networked_physics_in_virtual_reality.md"
-			],
-			[
 				"header",
 				"layouts/partials/header.html"
 			],
@@ -1494,10 +1498,6 @@
 			[
 				"snapshot_com",
 				"content/post/snapshot_compression.md"
-			],
-			[
-				"make",
-				"Makefile"
 			],
 			[
 				"the",

@@ -188,6 +188,6 @@ We can use this remainder value to get a blending factor between the previous an
 
 <hr>
 
-_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
+_If you enjoyed this article, please [support my work](http://www.patreon.com/gafferongames) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
 
 __NEXT ARTICLE:__ [Physics in 3D](/post/physics_in_3d/)

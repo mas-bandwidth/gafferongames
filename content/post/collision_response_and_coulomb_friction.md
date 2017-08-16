@@ -193,4 +193,4 @@ frameborder="0" allowfullscreen class="video"></iframe>
 
 <hr>
 
-_If you enjoyed this article, please [support my work](http://www.patreon.com) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
+_If you enjoyed this article, please [support my work](http://www.patreon.com/gafferongames) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
