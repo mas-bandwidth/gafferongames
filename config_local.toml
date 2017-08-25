@@ -7,7 +7,7 @@ copyright = "© The Network Protocol Company, Inc."
 buildDrafts = true
 
 [author]
-    name = "Glenn Fiedler"
+  name = "Glenn Fiedler"
 
 [params]
   DateForm = "Monday, January 2, 2006"
@@ -17,16 +17,16 @@ buildDrafts = true
   Ganalytics = "UA-17769864-1"
 
 [[params.social]]
-    title = "linkedin"
-    url = "https://www.linkedin.com/in/glennfiedler/"
+  title = "linkedin"
+  url = "https://www.linkedin.com/in/glennfiedler/"
 
 [[params.social]]
-    title = "twitter"
-    url = "https://twitter.com/gafferongames"
+  title = "twitter"
+  url = "https://twitter.com/gafferongames"
 
 [[params.social]]
-    title = "github"
-    url = "https://github.com/gafferongames"
+  title = "github"
+  url = "https://github.com/gafferongames"
 
 [[menu.main]]
   name = "Support gafferongames.com"

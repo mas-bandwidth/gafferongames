@@ -730,35 +730,31 @@
 	],
 	"file_history":
 	[
+		"/Users/gaffer/Desktop/RON MILLER ADVICE",
+		"/Users/gaffer/Desktop/SUPERBIT PROPOSAL",
 		"/Users/gaffer/git/gafferongames/TODO",
-		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
-		"/Users/gaffer/git/gafferongames/Makefile",
+		"/Users/gaffer/Desktop/GOOGLE EDGE",
+		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Network Next/NETWORK NEXT.txt",
+		"/etc/hosts",
+		"/Users/gaffer/Desktop/SNAPROUTE",
 		"/Users/gaffer/git/gafferongames/content/about.md",
-		"/Users/gaffer/git/gafferongames/IDEAS",
-		"/Users/gaffer/Desktop/SONY",
-		"/Users/gaffer/Desktop/NETWORK NEXT",
-		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
-		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
-		"/Users/gaffer/Desktop/JASON PANG",
-		"/Users/gaffer/Desktop/RONNIE",
-		"/Users/gaffer/git/gafferongames/layouts/partials/footer.html",
-		"/Users/gaffer/git/gafferongames/config_upload.toml",
 		"/Users/gaffer/git/gafferongames/config_local.toml",
-		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
-		"/Users/gaffer/git/gafferongames/content/post/reliability_ordering_and_congestion_avoidance_over_udp.md",
-		"/Users/gaffer/git/gafferongames/content/post/reading_and_writing_packets.md",
-		"/Users/gaffer/git/gafferongames/content/post/physics_in_3d.md",
-		"/Users/gaffer/git/gafferongames/content/post/packet_fragmentation_and_reassembly.md",
-		"/Users/gaffer/git/gafferongames/content/post/networked_physics_2004.md",
-		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
-		"/Users/gaffer/git/gafferongames/content/post/introduction_to_networked_physics.md",
-		"/Users/gaffer/git/gafferongames/content/post/how_the_go_stone_moves.md",
-		"/Users/gaffer/git/gafferongames/content/post/go_stone_vs_go_board.md",
-		"/Users/gaffer/git/gafferongames/content/post/floating_point_determinism.md",
-		"/Users/gaffer/git/gafferongames/content/post/fix_your_timestep.md",
-		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
-		"/Users/gaffer/git/gafferongames/content/post/collision_response_and_coulomb_friction.md",
+		"/Users/gaffer/git/gafferongames/config_upload.toml",
 		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
+		"/Users/gaffer/git/gafferongames/content/post/collision_response_and_coulomb_friction.md",
+		"/Users/gaffer/git/gafferongames/content/post/fix_your_timestep.md",
+		"/Users/gaffer/git/gafferongames/content/post/floating_point_determinism.md",
+		"/Users/gaffer/git/gafferongames/content/post/go_stone_vs_go_board.md",
+		"/Users/gaffer/git/gafferongames/content/post/how_the_go_stone_moves.md",
+		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
+		"/Users/gaffer/git/gafferongames/content/post/introduction_to_networked_physics.md",
+		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
+		"/Users/gaffer/git/gafferongames/content/post/networked_physics_2004.md",
+		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
+		"/Users/gaffer/git/gafferongames/content/post/packet_fragmentation_and_reassembly.md",
+		"/Users/gaffer/git/gafferongames/content/post/physics_in_3d.md",
+		"/Users/gaffer/git/gafferongames/content/post/reading_and_writing_packets.md",
+		"/Users/gaffer/git/gafferongames/content/post/reliability_ordering_and_congestion_avoidance_over_udp.md",
 		"/Users/gaffer/git/gafferongames/content/post/reliable_ordered_messages.md",
 		"/Users/gaffer/git/gafferongames/content/post/rotation_and_inertia_tensors.md",
 		"/Users/gaffer/git/gafferongames/content/post/sending_and_receiving_packets.md",
@@ -773,6 +769,16 @@
 		"/Users/gaffer/git/gafferongames/content/post/udp_vs_tcp.md",
 		"/Users/gaffer/git/gafferongames/content/post/virtual_connection_over_udp.md",
 		"/Users/gaffer/git/gafferongames/content/post/what_every_programmer_needs_to_know_about_game_networking.md",
+		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
+		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
+		"/Users/gaffer/git/gafferongames/Makefile",
+		"/Users/gaffer/git/gafferongames/IDEAS",
+		"/Users/gaffer/Desktop/SONY",
+		"/Users/gaffer/Desktop/NETWORK NEXT",
+		"/Users/gaffer/git/gafferongames/nginx/nginx.conf",
+		"/Users/gaffer/Desktop/JASON PANG",
+		"/Users/gaffer/Desktop/RONNIE",
+		"/Users/gaffer/git/gafferongames/layouts/partials/footer.html",
 		"/Users/gaffer/git/gafferongames/content/contact.md",
 		"/Users/gaffer/Desktop/SMB",
 		"/Users/gaffer/git/gafferongames/content/post/serialiation_strategies.md",
@@ -851,13 +857,7 @@
 		"/Users/gaffer/git/gafferongames/bin/implicit_euler_spring_damper.csv",
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_constant_acceleration_dt_1.0.txt",
 		"/Users/gaffer/git/gafferongames/bin/explicit_euler_constant_acceleration_dt_0.01.txt",
-		"/Users/gaffer/git/gafferongames/bin/explicit_euler_spring_damper.csv",
-		"/Users/gaffer/git/gafferongames/layouts/partials/ga.html",
-		"/Users/gaffer/git/gafferongames/layouts/partials/categories.html",
-		"/Users/gaffer/git/gafferongames/layouts/contact/single.html",
-		"/Users/gaffer/git/gafferongames/layouts/post/single.html",
-		"/Users/gaffer/git/gafferongames/layouts/partials/tags.html",
-		"/Users/gaffer/git/gafferongames/content/post/old.txt"
+		"/Users/gaffer/git/gafferongames/bin/explicit_euler_spring_damper.csv"
 	],
 	"find":
 	{
@@ -908,6 +908,8 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"patreon.com)",
+			"patreon.com",
 			"rss",
 			"also get access",
 			"<span",
@@ -1033,9 +1035,7 @@
 			"Lets",
 			"lets",
 			"do)_",
-			"the state",
-			"The client",
-			"the client or"
+			"the state"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1140,12 +1140,12 @@
 		"selected_items":
 		[
 			[
-				"network",
-				"content/post/networked_physics_in_virtual_reality.md"
-			],
-			[
 				"todo",
 				"TODO"
+			],
+			[
+				"network",
+				"content/post/networked_physics_in_virtual_reality.md"
 			],
 			[
 				"make",
