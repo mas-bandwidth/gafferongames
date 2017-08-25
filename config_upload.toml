@@ -1,4 +1,4 @@
-baseurl = "http://gafferongames.com"
+baseurl = "gafferongames.com"
 title = "Gaffer On Games"
 canonifyurls = true
 paginate = 1000
