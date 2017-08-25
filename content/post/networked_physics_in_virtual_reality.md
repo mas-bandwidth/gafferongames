@@ -321,7 +321,7 @@ High quality networked physics with stable stacks of objects is possible with Un
 <i>
 **Glenn Fiedler** is the founder and president of [The Network Protocol Company](http://thenetworkprotocolcompany.com) where he helps clients network their games. Prior to starting his own company he worked at Respawn Entertainment on Titanfall 1 and 2.
 
-Glenn is also the author of several popular series of articles on game networking and physics at [gafferongames.com](http://www.gafferongames.com), and is the author of the open source network libraries [libyojimbo](http://www.libyojimbo.com) and [netcode.io](http://netcode.io)
+Glenn is also the author of several popular series of articles on game networking and physics at [gafferongames.com](https://gafferongames.com), and is the author of the open source network libraries [libyojimbo](http://www.libyojimbo.com) and [netcode.io](http://netcode.io)
 
 If you would like to support Glenn's work, you can do that on [patreon.com](http://www.patreon.com/gafferongames)
 </i>

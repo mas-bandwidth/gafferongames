@@ -30,4 +30,4 @@ buildDrafts = true
 
 [[menu.main]]
   name = "Support gafferongames.com"
-  url = "http://www.patreon.com/gafferongames"
+  url = "https://www.patreon.com/gafferongames"

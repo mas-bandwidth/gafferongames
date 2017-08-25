@@ -1,4 +1,4 @@
-baseurl = "http://gafferongames.com"
+baseurl = "https://gafferongames.com"
 title = "Gaffer On Games"
 canonifyurls = true
 paginate = 1000
@@ -29,4 +29,4 @@ copyright = "© The Network Protocol Company, Inc."
 
 [[menu.main]]
   name = "Support gafferongames.com"
-  url = "http://www.patreon.com/gafferongames"
+  url = "https://www.patreon.com/gafferongames"
