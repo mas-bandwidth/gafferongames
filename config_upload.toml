@@ -3,7 +3,7 @@ title = "Gaffer On Games"
 canonifyurls = true
 paginate = 1000
 languageCode = "en-us"
-copyright = "© Glenn Fiedler"
+copyright = "Copyright © Glenn Fiedler, 2004 - 2017"
 
 [author]
   name = "Glenn Fiedler"
