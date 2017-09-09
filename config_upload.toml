@@ -3,7 +3,7 @@ title = "Gaffer On Games"
 canonifyurls = true
 paginate = 1000
 languageCode = "en-us"
-copyright = "© The Network Protocol Company, Inc."
+copyright = "© Glenn Fiedler"
 
 [author]
   name = "Glenn Fiedler"
@@ -26,7 +26,3 @@ copyright = "© The Network Protocol Company, Inc."
 [[params.social]]
   title = "github"
   url = "https://github.com/gafferongames"
-
-[[menu.main]]
-  name = "Support gafferongames.com"
-  url = "https://www.patreon.com/gafferongames"
