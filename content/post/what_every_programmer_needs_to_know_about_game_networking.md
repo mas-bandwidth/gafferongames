@@ -96,9 +96,3 @@ This way the player appears to control their own character without any latency, 
 <blockquote>... the best of both worlds: In all cases, the server remains completely authoritative. Nearly all the time, the client movement simulation exactly mirrors the client movement carried out by the server, so the client's position is seldom corrected. Only in the rare case, such as a player getting hit by a rocket, or bumping into an enemy, will the client's location need to be corrected.</blockquote>
 
 In other words, only when the player's character is affected by something external to the local player's input, which cannot possibly be predicted on the client, will the player's position need to be corrected. That and of course, if the player is attempting to cheat :)
-
-<hr>
-
-_If you enjoyed this article, please [support my work](http://www.patreon.com/gafferongames) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
-
-__NEXT:__ [Floating Point Determinism](/post/floating_point_determinism/)

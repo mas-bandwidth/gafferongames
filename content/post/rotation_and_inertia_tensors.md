@@ -157,8 +157,4 @@ Verifying exact solutions against numeric ones is a fantastic way to check your 
 
 Can <u>you</u> derive the equation for I<sub>x</sub>?
 
-<hr>
-
-_If you enjoyed this article, please [support my work](http://www.patreon.com/gafferongames) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
-
 __NEXT ARTICLE:__ [Collision Response and Coulomb Friction](/post/collision_response_and_coulomb_friction/)

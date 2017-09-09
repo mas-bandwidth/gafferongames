@@ -67,8 +67,4 @@ So many beautiful properties from such simple rules. Truly an amazing game!
 
 Please visit [The Interactive Way To Go](http://playgo.to/iwtg/en/) if you would like to learn more.
 
-<hr>
-
-_If you enjoyed this article, please [support my work](http://www.patreon.com/gafferongames) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
-
 __NEXT ARTICLE:__ [Shape of The Go Stone](/post/shape_of_the_go_stone/)

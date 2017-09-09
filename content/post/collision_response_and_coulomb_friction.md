@@ -190,7 +190,3 @@ With a bit of tuning, it seems to work reasonably well:
 <iframe src="//www.youtube.com/embed/1eG2xTubRJY" 
 frameborder="0" allowfullscreen class="video"></iframe>
 </div>
-
-<hr>
-
-_If you enjoyed this article, please [support my work](http://www.patreon.com/gafferongames) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_

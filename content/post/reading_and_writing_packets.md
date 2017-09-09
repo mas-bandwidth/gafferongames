@@ -626,8 +626,4 @@ struct PacketB
 
 If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. _You want it to be automatic_.
 
-<hr>
-
-_If you enjoyed this article, please [support my work](http://www.patreon.com/gafferongames) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
-
 __NEXT ARTICLE:__ [Serialization Strategies](/post/serialization_strategies/)

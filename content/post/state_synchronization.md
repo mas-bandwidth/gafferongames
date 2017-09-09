@@ -208,7 +208,3 @@ We can fix this by tracking objects which have recently come to rest and bumping
 ## Conclusion
 
 And that's really about it for this technique. Without anything fancy it's already pretty good, and on top of that another order of magnitude improvement is available with delta compression, at the cost of significant complexity!
-
-<hr>
-
-_If you enjoyed this article, please [support my work](http://www.patreon.com/gafferongames) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_

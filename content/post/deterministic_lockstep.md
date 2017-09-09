@@ -154,8 +154,4 @@ The video above shows deterministic lockstep synchronized over UDP using this te
 
 So in conclusion, even where TCP should have the most advantage, in the only networking model that relies on reliable-ordered data, we can still easily whip its ass with a simple protocol built on top of UDP.
 
-<hr>
-
-_If you enjoyed this article, please [support my work](http://www.patreon.com/gafferongames) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
-
 __NEXT ARTICLE:__ [Snapshot Interpolation](/post/snapshot_interpolation/)

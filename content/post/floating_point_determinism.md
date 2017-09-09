@@ -277,7 +277,3 @@ Many programmers may not realize that even a program that uses only the numeric 
 
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
-
-<hr>
-
-_If you enjoyed this article, please [support my work](http://www.patreon.com/gafferongames) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_

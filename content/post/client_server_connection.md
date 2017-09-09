@@ -249,8 +249,4 @@ But it's still vulnerable to a sophisticated actors who can sniff packets:
 
 To solve this, we need to get serious with cryptography to encrypt and sign packets so they can't be read or modified by a third party.
 
-<hr>
-
-_If you enjoyed this article, please [support my work](http://www.patreon.com/gafferongames) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
-
 __NEXT ARTICLE__: [Securing Dedicated Servers](http://patreon.com/gafferongames).

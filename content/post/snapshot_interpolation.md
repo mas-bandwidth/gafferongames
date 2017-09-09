@@ -123,8 +123,4 @@ How can we reduce the amount of delay added for interpolation? 350ms still seems
 
 In order to increase the send rate we're going to need some pretty good bandwidth optimizations. But don't worry, there's a _lot_ we can do to optimize bandwidth. So much so that there was too much stuff to fit in this article and I had to insert an extra unplanned article just to cover all of it!
 
-<hr>
-
-_If you enjoyed this article, please [support my work](http://www.patreon.com/gafferongames) on Patreon and encourage me to write more articles. Patreon supporters get access to exclusive supporter content, like example source code for articles and previews of work in progress!_
-
 __NEXT ARTICLE__: [Snapshot Compression](/post/snapshot_compression/)
