@@ -731,6 +731,9 @@
 	"file_history":
 	[
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Network Next/ELEVATOR PITCH.txt",
+		"/Users/gaffer/git/gafferongames/config_local.toml",
+		"/Users/gaffer/git/gafferongames/config_upload.toml",
+		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/content/post/what_every_programmer_needs_to_know_about_game_networking.md",
 		"/Users/gaffer/Desktop/RON MILLER ADVICE",
 		"/Users/gaffer/Desktop/SAMULI",
@@ -743,13 +746,10 @@
 		"/Users/gaffer/git/gafferongames/content/post/deterministic_lockstep.md",
 		"/Users/gaffer/git/gafferongames/content/post/collision_response_and_coulomb_friction.md",
 		"/Users/gaffer/git/gafferongames/content/post/client_server_connection.md",
-		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/WHITEPAPER",
 		"/Users/gaffer/git/gafferongames/RESEARCH",
 		"/Users/gaffer/git/gafferongames/PLANNING",
 		"/Users/gaffer/git/gafferongames/Makefile",
-		"/Users/gaffer/git/gafferongames/config_local.toml",
-		"/Users/gaffer/git/gafferongames/config_upload.toml",
 		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
 		"/Users/gaffer/git/gafferongames/content/post/reliable_ordered_messages.md",
 		"/Users/gaffer/git/gafferongames/content/post/snapshot_compression.md",
@@ -1089,7 +1089,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 22.0
+		"height": 26.0
 	},
 	"input":
 	{
@@ -1130,7 +1130,7 @@
 	"project": "gafferongames.sublime-project",
 	"replace":
 	{
-		"height": 40.0
+		"height": 48.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1139,6 +1139,18 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"config",
+				"config_upload.toml"
+			],
+			[
+				"",
+				"config_upload.toml"
+			],
+			[
+				"about",
+				"content/about.md"
+			],
 			[
 				"what",
 				"content/post/what_every_programmer_needs_to_know_about_game_networking.md"
@@ -1150,10 +1162,6 @@
 			[
 				"config_local",
 				"config_local.toml"
-			],
-			[
-				"config",
-				"config_upload.toml"
 			],
 			[
 				"todo",
@@ -1170,10 +1178,6 @@
 			[
 				"about.md",
 				"content/about.md"
-			],
-			[
-				"",
-				"IDEAS"
 			],
 			[
 				"ngin",
@@ -1198,10 +1202,6 @@
 			[
 				"upl",
 				"config_upload.toml"
-			],
-			[
-				"about",
-				"content/about.md"
 			],
 			[
 				"integra",

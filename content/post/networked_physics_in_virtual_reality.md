@@ -1,7 +1,7 @@
 +++
 categories = ["Networked Physics"]
 tags = ["physics", "networking", "vr"]
-date = "2017-08-10"
+date = "2018-02-12"
 title = "Networked Physics in Virtual Reality"
 description = "Networking a stack of cubes with Unity and PhysX"
 draft = true
@@ -9,7 +9,49 @@ draft = true
 
 # Introduction
 
-Hi, I'm Glenn Fiedler. For the last few months I've been researching networked physics in virtual reality. This research was generously sponsored by [Oculus](https://www.oculus.com/).
+Way back in 2015, I presented a tutorial at GDC about how to network a physics simulation. It was fairly popular and was rated well, and if you [watch the video](https://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking), I hope you'll be happy to hear that I've lost around 40 pounds since this video was recorded. I watch it today and think, _who is this person?_
+
+So anyway, in this tutorial, a much heavier me covered three different techniques for networking a physics simulation:
+
+1. Deterministic Lockstep
+2. Snapshots and Interpolation
+3. State Synchronization
+
+After the talk, I published an article series to go into more depth, which you can read [here](https://gafferongames.com/post/introduction_to_networked_physics/). I was covered topics like bandwidth optimization and delta-encoding and I even got into a friendly [network compression rivalry](https://gafferongames.com/post/snapshot_compression/) with some programmer friends, who in the end, totally kicked my ass. For example, see Fabian Giesen's [entry](https://github.com/rygorous/gaffer_net), which I think beat my best effort by around 25%, and I don't think he even broke a sweat.
+
+In the end, while my talk and article series were well received, afterwards I was slightly unsatisfied. Due to length (just one hour), I was only able to focus on one small aspect of the entire problem: how to synchronize a simulation running on one machine, so that it could be _viewed_ it on another.
+
+While this is an important aspect of networked physics, what was missing from my talk was a discussion of _latency hiding_. In short, how to make it so that multiple players could interact with the same simulation, while feeling that their interactions with the simulation are lag free. Of course many other things were missing as well, a discussion of network topology, client/server vs. peer-to-peer. Also missing were much larger discussions of different _network models_ for example, client/server with client side prediction, vs. distributed simulation, vs. GGPO style deterministic lockstep.
+
+Since giving this talk, I've had many people ask me questions along these lines, and I've always wished I could write another article series or give another talk on the subject...
+
+# A New Hope
+
+And then one day after leaving my job at Respawn, Oculus approached me and offered to sponsor my research. They asked me, effectively: "Hey Glenn, there's a lot of interest in networked physics. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?". 
+
+I thought "Sure. This could be a lot of fun". But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD 3-Clause) so it could create the most good, two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.
+
+Oculus agreed. Welcome to that article! Also, you can find the full source code [here](https://github.com/OculusVR/oculus-networked-physics-sample), wherein the code I wrote is released under a BSD licence. I hope the next generation of programmers can learn from my research into networked physics and create some really cool things. Good luck!
+
+----------
+
+...
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------
+
+For the last few months I've been researching networked physics in virtual reality. This research was generously sponsored by [Oculus](https://www.oculus.com/).
 
 My primary goal for this project was to network a world of physically simulated cubes in virtual reality, such that players would feel no latency when picking up, moving, placing and throwing cubes. 
 
