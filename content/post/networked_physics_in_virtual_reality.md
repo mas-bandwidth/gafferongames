@@ -9,161 +9,61 @@ draft = true
 
 # Introduction
 
-Way back in 2015, I presented a tutorial at GDC about how to network a physics simulation. It was fairly popular and was rated well, and if you [watch the video](https://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking), I hope you'll be happy to hear that I've lost around 40 pounds since this video was recorded. I watch it today and think, _who is this person?_
+Way back in 2015, I presented a tutorial at GDC about how to network a physics simulation. It was fairly popular and was rated well, and if you [watch the video](https://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking), I hope you'll be happy to hear that I've lost around 50 pounds since this video was recorded. I watch it today and think, _who the f*** is this person?_
 
-So anyway, in this tutorial, a much heavier me covered three different techniques for networking a physics simulation:
+So anyway, in this tutorial, a _much heavier me_ covered three different techniques for networking a physics simulation:
 
 1. Deterministic Lockstep
 2. Snapshots and Interpolation
 3. State Synchronization
 
-After the talk, I published an article series to go into more depth, which you can read [here](https://gafferongames.com/post/introduction_to_networked_physics/). I was covered topics like bandwidth optimization and delta-encoding and I even got into a friendly [network compression rivalry](https://gafferongames.com/post/snapshot_compression/) with some programmer friends, who in the end, totally kicked my ass. For example, see Fabian Giesen's [entry](https://github.com/rygorous/gaffer_net), which I think beat my best effort by around 25%, and I don't think he even broke a sweat.
+After the talk, I published an [article series](https://gafferongames.com/post/introduction_to_networked_physics/) to go into more depth, covering topics like bandwidth optimization and delta-encoding. I even got into a friendly [network compression rivalry](https://gafferongames.com/post/snapshot_compression/) with some programmer friends, who in the end, totally kicked my ass. For example, see Fabian Giesen's [entry](https://github.com/rygorous/gaffer_net), which I think beat my best effort by around 25%, and I don't even think he worked that hard.
 
-In the end, while my talk and article series were well received, afterwards I was slightly unsatisfied. Due to length (just one hour), I was only able to focus on one small aspect of the entire problem: how to synchronize a simulation running on one machine, so that it could be _viewed_ it on another.
+While my talk and articles were well received, afterwards I was slightly unsatisfied. Due to length available for my talk (just one hour), and ow deep I went into detail in the article series, I was only able to focus on one small aspect of the problem: how to synchronize a simulation running on one machine, so that it could be _viewed_ it on another.
 
-While this is an important aspect of networked physics, what was missing from my talk was a discussion of _latency hiding_. In short, how to make it so that multiple players could interact with the same simulation, while feeling that their interactions with the simulation are lag free. Of course many other things were missing as well, a discussion of network topology, client/server vs. peer-to-peer. Also missing were much larger discussions of different _network models_ for example, client/server with client side prediction, vs. distributed simulation, vs. GGPO style deterministic lockstep.
+Crucially, what was missing was a discussion of _latency hiding_. How to make it so that multiple players can interact with a physics simulation, while feeling that their interactions with the simulation were lag free. Of course many other things were also missing such as a discussion of network topology: client/server vs. peer-to-peer, dedicated vs. integrated servers. Also missing discussions of _network models_. For example, client/server with client-side prediction, vs. distributed simulation (authority scheme), vs. GGPO style deterministic lockstep.
 
 Since giving this talk, I've had many people ask me questions along these lines, and I've always wished I could write another article series or give another talk on the subject...
 
 # A New Hope
 
-And then one day after leaving my job at Respawn, Oculus approached me and offered to sponsor my research. They asked me, effectively: "Hey Glenn, there's a lot of interest in networked physics. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?". 
+And then one day after leaving my job at Respawn, Oculus approached me and offered to sponsor my research. They asked me, effectively: "Hey Glenn, there's a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?". 
 
-I thought "Sure. This could be a lot of fun". But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD 3-Clause) so it could create the most good, two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.
+I thought "Sure. This could be a lot of fun". But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good, and two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.
 
-Oculus agreed. Welcome to that article! Also, you can find the full source code [here](https://github.com/OculusVR/oculus-networked-physics-sample), wherein the code I wrote is released under a BSD licence. I hope the next generation of programmers can learn from my research into networked physics and create some really cool things. Good luck!
+Oculus agreed. Welcome to that article! Also, you can find the full source for the networked physics sample [here](https://github.com/OculusVR/oculus-networked-physics-sample), wherein the code I wrote is released under a BSD licence. I hope the next generation of programmers can learn from my research into networked physics and create some really cool things. Good luck!
 
-----------
+# What are we building?
 
-...
+When I first had discussions with Oculus, we imagined building something like a table where four players could sit around and interact with physically simulated cubes on a table. For example, throwing, catching and stacking cubes, maybe knocking over each other's stacks with a swipe of their hand. Maybe we could make a little toy or game out of it?
 
+But after a few day spent learning Unity and C#, I found myself actually _inside_ the Rift. In VR, scale is _so important_. When the cubes were small, everything felt much less interesting, but when the cubes were scaled up to around a meter squared, everything had this really cool sense of scale. You could make _huge_ stacks of cubes, up to 20 or 30 meters high. This felt really cool!
 
-
-
-
-
-
-
-
-
-
-
-
--------
-
-For the last few months I've been researching networked physics in virtual reality. This research was generously sponsored by [Oculus](https://www.oculus.com/).
-
-My primary goal for this project was to network a world of physically simulated cubes in virtual reality, such that players would feel no latency when picking up, moving, placing and throwing cubes. 
-
-My stretch goal: players should be able to construct stable stacks of cubes, stacks that network without any jitter or instability.
+It's impossible to communicate visually what this feels like outside of VR (so please [download](https://github.com/OculusVR/oculus-networked-physics-sample), build and run the sample in VR to see for yourself!), but it looks something like this...
 
 <img src="/img/networked-physics-in-vr/stack-of-cubes.jpg" width="100%"/>
 
-I'm happy to report that this work was a success, and thanks to Oculus, the full source code of my implementation in Unity is available as [open source](...).
+... where you can select, grab and throw cubes using the touch controller, and any cubes you release from your hand interact with the other cubes. You can throw a cube in your hand at a stack of cubes and knock them over. You can pick up two cubes and try to juggle. You can build a stack of cubes and see how high you can make your stack go.
 
-Please try this demo in virtual reality before continuing if possible (you'll need a rift and touch controllers). While the rest of this whitepaper explains how the demo was implemented, like most things in VR, it's no substitute for actually getting in there in there and experiencing it.
+So now we had the vision. Moving forward, I suggested three criteria we would use to define success:
 
-# Background
+1. Players should be able to pick up and throw and catch cubes without latency.
 
-There are three main techniques used in game networking:
+2. Players should be able to stack cubes, and these stacks should be stable (eg. come to rest) and be without visible jitter.
 
-1. Deterministic lockstep
-2. Client-side prediction
-3. Distributed simulation (e.g. authority techniques)
+3. When thrown cubes interact with the simulation, wherever possible (for example, collision with other cubes, and when cubes hit by the thrown cube in turn interact with the rest of the simulation) it should be without latency.
 
-Which is the best technique for networked physics in virtual reality?
+Now that you know what we are building, lets get started with how I built it.
 
-## Deterministic Lockstep
+First up, we have to pick a network model!
 
-Deterministic lockstep is a technique where multiple simulations are kept in sync by sending across just the inputs. It's attractive because the amount of bandwidth used is independent of the number of objects in the world.  
+# Network Models
 
-<img src="/img/networked-physics-in-vr/starcraft2.jpg" width="100%"/>
+...
 
-You can see technique in old school real-time strategy games like **Command and Conquer**, **Age of Empires** and **StarCraft**. It's a smart way to network these games because sending across the state for thousands of units is impractical.
+# Authority Scheme
 
-<img src="/img/networked-physics-in-vr/streetfighter.jpg" width="100%"/>
-
-It's also used in fighting games like **Street Fighter**, and physics-based platformers like **Little Big Planet**. These games implement latency hiding techniques so the local player feels no lag on their own actions by predicting ahead a copy of the simulation with the local player's inputs.
-
-<img src="/img/networked-physics-in-vr/littlebigplanet.jpg" width="100%"/>
-
-What all these games have in common is that they're built on top of an engine that is _deterministic_. This means it gives exactly the same result given the same inputs. Exact down to the bit-level so you could checksum the game state at the end of each frame and it would the same across all player's machines.
-
-So will deterministic lockstep work for the networked physics demo? Unfortunately the answer is _no_. The physics engine used by Unity is PhysX, and PhysX is not guaranteed to be deterministic :(
-
-## Client-Side Prediction
-
-Another networking concept many people are familiar with is client-side prediction. This technique is used by first person shooters like **Counterstrike**, **Call of Duty**, **Titanfall** and **Overwatch**.
-
-<img src="/img/networked-physics-in-vr/counterstrike.jpg" width="100%"/>
-
-Client side prediction works by predicting the local player on each client forward with local inputs. This lets players move and shoot without feeling any latency in their own actions, while the rest of the world is synchronized from server to client and rendered as an interpolation between keyframes.
-
-<img src="/img/networked-physics-in-vr/overwatch.jpg" width="100%"/>
-
-The key benefit of client-side prediction is that the client feels no latency while the server remains authoritative over the simulation. This is achieved by continuously sending corrections from the server to the client, in effect telling the client, at this time I think you were _here_ and doing _this_. The client rolls back corrected objects, applies the correction, then invisibly resimulates them back up to present time.
-
-<img src="/img/networked-physics-in-vr/titanfall.jpg" width="100%"/>
-
-First person shooters apply prediction to your local player character, objects you are carrying like items and weapons, and depending on the game, projectiles like grenades and missiles. It well because only a _small subset_ of objects need to be rolled back and resimulated on each client, and these objects don't tend to directly interact with other objects in the scene.
-
-<img src="/img/networked-physics-in-vr/callofduty.png" width="100%"/>
-
-In networked physics, if you throw an object at a stack of objects, you want the stack to react without latency. Now you've just committed to rolling back and resimulating that entire stack. This is a problem because physics simulation is _expensive_. We simply can't afford to roll back and resimulate large parts of a physics simulation :(
-
-## Distributed Simulation
-
-The third technique is distributed simulation. The idea is that instead of having a server which is authoritative over the whole simulation, authority is _distributed_ across player machines, such that players take authority over different parts of the world, in effect _becoming the server_ for those objects.
-
-<img src="/img/networked-physics-in-vr/gta5.jpg" width="100%"/>
-
-Distributed simulation is often used in open world games like **Grand Theft Auto** because it distributes the cost of simulating a large world across player's machines. Latency is hidden by giving players authority over their own character and vehicles they are driving.
-
-<img src="/img/networked-physics-in-vr/destiny.jpg" width="100%"/>
-
-**Destiny** also uses a distributed simulation technique, distributing the cost of player and AI simulation while running mission scripting on [lightweight dedicated servers](http://www.gdcvault.com/play/1022247/Shared-World-Shooter-Destiny-s). This significantly reduces server cost and makes it possible for Destiny to present the illusion of a seamless world.
-
-<img src="/img/networked-physics-in-vr/darksouls.jpg" width="100%"/>
-
-**Dark Souls** has no dedicated gameplay servers but allows players to invade other player's games. In this case, the invading player has authority over their own character, allowing them to move and attack without latency, while the host player has authority over the rest of the world.
-
-<img src="/img/networked-physics-in-vr/thedivision.jpg" width="100%"/>
-
-**The Division** also uses a distributed simulation approach. Each player runs the simulation for their player character locally, sending their position and actions to a dedicated server. This hides latency for the local player, while allowing the game to scale up to high player counts. However, this approach is not without controversy, as it has caused [serious cheating problems](https://www.theguardian.com/technology/2016/apr/26/hackers-cheats-ruined-the-division-pc-ubisoft) on PC.
-
-Because we don't have any anti-cheating requirements for the networked physics demo, my decision was to use _distributed simulation_ because it lets me hide latency without rollback and resimulation.
-
-# The Authority Scheme
-
-In order to use a distributed simulation approach we have to decide exactly how to distribute authority. I call the method of doing this the _authority scheme_.
-
-(something something turn...)
-
-The host can takes authority over objects they interact with, turning the stack blue. 
-
-<img src="/img/networked-physics-in-vr/temp.jpg" width="100%"/>
-
-The host broadcasts state for all cubes to guests at some rate, like 10 times per-second:
-
-<img src="/img/networked-physics-in-vr/quad.jpg" width="100%"/>
-
-When objects come to rest, the return to default authority (white):
-
-<img src="/img/networked-physics-in-vr/temp.jpg" width="100%"/>
-
-Guests can also take authority over objects, for example player 1 turns cubes red:
-
-<img src="/img/networked-physics-in-vr/temp2.jpg" width="100%"/>
-
-While cubes are red, the player 1 ignores updates from the server for these objects and sends their state to the host:
-
-<img src="/img/networked-physics-in-vr/quad2.jpg" width="100%"/>
-
-The host accepts these state updates, applies them to its own simulation, and broadcasts them back out to all guests:
-
-<img src="/img/networked-physics-in-vr/quad2.jpg" width="100%"/>
-
-(Something something conclusion, what about conflicts? We will cover conflict resolution later, but in short, what we are doing is creating a distributed system that is eventually consistent).
+...
 
 # State Synchronization
 
