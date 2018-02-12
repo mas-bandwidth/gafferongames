@@ -43,7 +43,7 @@ It's impossible to communicate visually what this feels like outside of VR (so p
 
 <img src="/img/networked-physics-in-vr/stack-of-cubes.jpg" width="100%"/>
 
-... where you can select, grab and throw cubes using the touch controller, and any cubes you release from your hand interact with the other cubes in the simulation. You can throw a cube in your hand at a stack of cubes and knock them over. You can pick up two cubes and juggle them. You can build a stack of cubes and see how high you can make it go.
+... where you can select, grab and throw cubes using the touch controller, and any cubes you release from your hand interact with the other cubes in the simulation. You can throw a cube at a stack of cubes and knock them over. You can pick up two cubes and juggle them. You can build a stack of cubes and see how high you can make it go.
 
 Of course, working with Oculus as a client, I had to define tasks and deliverables, before I could actually start the work.
 
@@ -57,7 +57,7 @@ I suggested three criteria we would use to define success:
 
 Now you know what we are building, lets get started with how I built it :)
 
-First up, we have to pick a network model!
+First, we have to pick a network model!
 
 # Network Models
 
@@ -103,9 +103,9 @@ This __proves__ that a state synchronization based approach for networking can w
 
 # Bandwidth Optimization
 
-To make sure the networked physics sample is playable over the internet, I needed to get bandwidth under control. It's a bit of a dark art, but is really not that complicated. Let's dive in!
+To make sure the networked physics sample is playable over the internet, I needed to get bandwidth under control. It's a bit of a dark art, but it's not that complicated when you go step by step. Let's dive in!
 
-The easiest gain I found was by simply recognizing when cubes are at rest, and encoding the state for those cubes more efficiently. For example, instead of repeatedly sending (0,0,0) for linear velocity and (0,0,0) for angular velocity for at rest cubes, I send just one bit:
+The easiest gain I found was to simply encode the state for at rest cubes more efficiently. For example, instead of repeatedly sending (0,0,0) for linear velocity and (0,0,0) for angular velocity for at rest cubes, I send just one bit:
 
     [position] (vector3)
     [rotation] (quaternion)
@@ -120,7 +120,7 @@ This is _lossless_ technique because it doesn't change the state sent over the n
 
 To optimize bandwidth further we need to use _lossy techniques_. For example, we can reduce the precision of the physics state sent over the network by bounding position in some min/max range and quantizing it to a resolution of 1/1000th of a centimeter and sending that quantized position as an integer value in some known range. The same basic approach can be used linear and angular velocity. For rotation we use the _smallest three representation_ of a quaternion.
 
-But while this saves bandwidth, it also adds risk. My concern was that if we are networking a stack of cubes (for example, 10 or 20 cubes placed on top of each other), maybe the quantization would create errors that add jitter to that stack. Perhaps it even would cause the stack to become _unstable_, but in a particularly annoying and hard to debug way, where the stack looks fine for you, and is only unstable in the remote view (eg. the non-authority simulation), where another player is watching what you do.
+But while this saves bandwidth, it also adds risk. My concern was that if we are networking a stack of cubes (for example, 10 or 20 cubes placed on top of each other), maybe the quantization would create errors that add jitter to that stack. Perhaps it would even cause the stack to become _unstable_, but in a particularly annoying and hard to debug way, where the stack looks fine for you, and is only unstable in the remote view (eg. the non-authority simulation), where another player is watching what you do.
 
 The best solution to this problem that I found was to quantize the state on _both sides_. This means that before each physics simulation step, I capture and quantize the physics state _exactly the same way_ as when it's sent over the network, then I apply this quantized state back to the local simulation.
 
@@ -128,7 +128,7 @@ Now the extrapolation from quantized state on the non-authority side _exactly_ m
 
 # Coming To ~~America~~ Rest
 
-But quantizing the physics state creates some _very interesting_ side-effects!
+But quantizing the physics state created some _very interesting_ side-effects!
 
 1. PhysX doesn't really like you forcing the state of each rigid body at the start of every frame and makes sure you know by taking up a bunch of CPU.
 
@@ -146,7 +146,7 @@ This might seem like a hack, but short of actually getting in the PhysX source c
 
 # Priority Accumulator
 
-The next big bandwidth optimization I did was to send only a subset of cubes in each packet. This gave me fine control over the amount of bandwidth send, by setting a maximum packet size and sending only the set of updates that fit in each packet.
+The next big bandwidth optimization I did was to send only a subset of cubes in each packet. This gave me fine control over the amount of bandwidth sent, by setting a maximum packet size and sending only the set of updates that fit in each packet.
 
 Here's how it works in practice:
 
@@ -164,7 +164,7 @@ Here's how it works in practice:
 
 For this demo I found some value in boosting priority for cubes recently involved in high energy collisions, since high energy collision was the largest source of divergence due to non-deterministic results. I also boosted priority for cubes recently thrown by players.
 
-Somewhat counter-intuitively, reducing priority for at rest cubes gave bad results. My theory is that since the simulation runs on both sides, at rest cubes would get slightly out of sync and not be corrected quickly enough, causing further divergence when other cubes collide with them.
+Somewhat counter-intuitively, reducing priority for at rest cubes gave bad results. My theory is that since the simulation runs on both sides, at rest cubes would get slightly out of sync and not be corrected quickly enough, causing divergence when other cubes collided with them.
 
 # Delta Compression
 
@@ -174,25 +174,25 @@ I had once last trick remaining: __delta compression__.
 
 First person shooters often implement delta compression by compressing the entire state of the world relative to a previous state. In this technique, a previous complete world state or 'snapshot' acts as the _baseline_, and a set of differences, or _delta_, between the _baseline_ and the _current_ snapshot is generated and sent down to the client.
 
-This technique is (relatively) easy to implement because the state for all objects are included in each snapshot, thus all the server needs to do is track the most recent snapshot received by each client, and generate deltas from that snapshot to the current. However, when a priority accumulator is used, packets don't contain updates for all objects and delta encoding becomes more complicated.
+This technique is (relatively) easy to implement because the state for all objects are included in each snapshot, thus all the server needs to do is track the most recent snapshot received by each client, and generate deltas from that snapshot to the current. 
 
-Now the server (or authority-side) can't simply encode cubes relative to a previous snapshot number, because not all cubes are included in each packet. Instead, the baseline must be specified _per-cube_, so the receiver knows which state each cube is encoded relative to.
+However, when a priority accumulator is used, packets don't contain updates for all objects and delta encoding becomes more complicated. Now the server (or authority-side) can't simply encode cubes relative to a previous snapshot number. Instead, the baseline must be specified _per-cube_, so the receiver knows which state each cube is encoded relative to.
 
 The supporting systems and data structures are also much more complicated:
 
 1. A reliability system is required that can report back to the sender which packets were received, not just the most recently received snapshot #.
 
-2. The sender needs to track the states included in each packet sent, so it can map packet level acks to sent states and update the most recently acked state per-cube.
+2. The sender needs to track the states included in each packet sent, so it can map packet level acks to sent states and update the most recently acked state per-cube. The next time a cube is sent, its delta is encoded relative to this state as a baseline.
 
-3. The receiver needs to store a ring-buffer of received states per-cube, so it can reconstruct the current cube state from a delta.
+3. The receiver needs to store a ring-buffer of received states per-cube, so it can reconstruct the current cube state from a delta by looking up the baseline in this ring-buffer.
 
 But ultimately, it's worth the extra complexity, because this system combines the flexibility of being able to dynamically adjust bandwidth usage, with the orders of magnitude bandwidth improvement you get from delta encoding.
 
 # Delta Encoding
 
-Now that I have the supporting structures in place, I actually have to encode the different of a cube relative to a previous baseline state. How is this done?
+Now that I have the supporting structures in place, I actually have to encode the difference of a cube relative to a previous baseline state. How is this done?
 
-The simplest way is to encode cubes that haven't changed from the baseline value as just one bit: _not changed_. This is also the easiest gain you'll ever see, because at any time most cubes are at rest, and therefore aren't changing state. This is sort of the delta encoding version of the 'at rest' bit described above.
+The simplest way is to encode cubes that haven't changed from the baseline value as just one bit: _not changed_. This is also the easiest gain you'll ever see, because at any time most cubes are at rest, and therefore aren't changing state.
 
 A more advanced strategy is to encode the _difference_ between the current and baseline values, aiming to encode small differences with fewer bits. For example, delta position could be (-1,+2,+5) from baseline. I found this works well for linear values, but breaks down for deltas of the smallest three quaternion representation, as the largest component of a quaternion is often different between the baseline and current rotation.
 
@@ -200,35 +200,35 @@ Furthermore, while encoding the difference gives some gains, it's didn't provide
 
 Prediction was complicated by the fact that the predictor must be written in fixed point, because floating point calculations are not necessarily guaranteed to be deterministic. But after a few days of tweaking and experimentation, I was able to write a ballistic predictor for position, linear and angular velocity that matched the PhysX integrator within quantize resolution about 90% of the time. 
 
-These lucky cubes get encoded with another bit: _perfect prediction_, leading to another order of magnitude improvement! For cases where the prediction doesn't match exactly, I encoded small error offset relative to the prediction.
+These lucky cubes get encoded with another bit: _perfect prediction_, leading to another order of magnitude improvement. For cases where the prediction doesn't match exactly, I encoded small error offset relative to the prediction.
 
 In the time I had to spend, I not able to get a good predictor for rotation. I blame this on the smallest three representation, which is highly numerically unstable, especially in fixed point. In the future, I would not use the smallest three representation for quantized rotations.
 
-It was also painfully obvious while encoding differences and error offsets that using a bitpacker was not the best way to read and write these quantities. Something like a range coder or arithmetic compressor that can represent fractional bits, and dynamically adjust a its model to the differences would give much better results, but I was already within my bandwidth budget at this point and couldn't justify any further noodling :)
+It was also painfully obvious while encoding differences and error offsets that using a bitpacker was not the best way to read and write these quantities. I'm certain that something like a range coder or arithmetic compressor that can represent fractional bits, and dynamically adjust a its model to the differences would give much better results, but I was already within my bandwidth budget at this point and couldn't justify any further noodling :)
 
 # Synchronizing Avatars
 
 After several months of work, I made the following progress:
 
-* Proof that state synchronization works with Unity and PhysX
-* Stable stacks in the remote view (while quantizing both sides)
+* Proof that state synchronization works with Unity and PhysX.
+* Stable stacks in the remote view while quantizing state on both sides.
 * Bandwidth reduced to the point where all four players can fit in 1mbps.
 
-The next thing I needed to implement was interaction with the simulation via the touch controllers. This part was a lot of fun, and in fact was my favorite part of the project. 
+The next thing I needed to implement was interaction with the simulation via the touch controllers. This part was a lot of fun, was my favorite part of the project. 
 
 I hope you enjoy these interactions. There was a lot of experimentation and tuning to make simple things like picking up, throwing, passing from hand to hand feel good, even crazy adjustments to ensure throwing worked great, while placing objects on top of high stacks could still be done with high accuracy.
 
-But when it comes to networking, in this case the game code doesn't count. All the networking cares about is that avatars are represented by a head and two hands driven by the tracked headset and touch controllers. 
+But when it comes to networking, in this case the game code doesn't count. All the networking cares about is that avatars are represented by a head and two hands driven by the tracked headset and touch controller positions and orientations.
 
-To synchronize this I captured the position and rotations of the avatar components in _FixedUpdate_ along the rest of the physics state, and started applying these positions in the remote view.
+To synchronize this I captured the position and orientation of the avatar components in _FixedUpdate_ along the rest of the physics state, and started applying these positions in the remote view.
 
 But when I first networked this, it looked _absolutely awful_. Why?
 
-After a bunch of debugging I worked out that the avatar state was sampled from the touch hardware at render framerate in _Update_, and was applied on the other machine at _FixedUpdate_, causing jitter because the avatar sample time didn't line up with _FixedUpdate_ on the remote machine.
+After a bunch of debugging I worked out that the avatar state was sampled from the touch hardware at render framerate in _Update_, and was applied on the other machine at _FixedUpdate_, causing jitter because the avatar sample time didn't line up with the current time in the remote view.
 
-To fix this I stored the difference between physics and render time when sampling avatar state, and included this offset in the avatar state in each packet. Then I added a jitter buffer with 100ms delay to received packets, solving network jitter from time variance in packet delivery and enabling interpolation between avatar states to get a sample at the correct time.
+To fix this I stored the difference between physics and render time when sampling avatar state, and included this in the avatar state in each packet. Then I added a jitter buffer with 100ms delay to received packets, solving network jitter from time variance in packet delivery and enabling interpolation between avatar states to get a sample at the correct time.
 
-To synchronize cubes held by avatars, while a cube is parented to an avatar hand, I set the cube's _priority factor_ to -1, stopping it from being sent with regular physics state updates. While a cube is attached to a hand, I include its cube id and relative position and rotation as part of the avatar state. In the remote view, cubes are attached to the avatar hand when the first avatar state arrives with that cube parented to it, and detached when regular physics state updates resume, corresponding to the cube being thrown or released.
+To synchronize cubes held by avatars, while a cube is parented to an avatar hand, I set the cube's _priority factor_ to -1, stopping it from being sent with regular physics state updates. While a cube is attached to a hand, I include its id and relative position and rotation as part of the avatar state. In the remote view, cubes are attached to the avatar hand when the first avatar state arrives with that cube parented to it, and detached when regular physics state updates resume, corresponding to the cube being thrown or released.
 
 # Bidirectional Flow
 
