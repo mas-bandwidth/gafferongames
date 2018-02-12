@@ -208,27 +208,27 @@ It was also painfully obvious while encoding differences and error offsets that 
 
 # Synchronizing Avatars
 
-After several months of work, I made the following progress:
+After several months of work, I had made the following progress:
 
 * Proof that state synchronization works with Unity and PhysX.
 * Stable stacks in the remote view while quantizing state on both sides.
 * Bandwidth reduced to the point where all four players can fit in 1mbps.
 
-The next thing I needed to implement was interaction with the simulation via the touch controllers. This part was a lot of fun, was my favorite part of the project. 
+The next thing I needed to implement was interaction with the simulation via the touch controllers. This part was a lot of fun, was my favorite part of the project :)
 
 I hope you enjoy these interactions. There was a lot of experimentation and tuning to make simple things like picking up, throwing, passing from hand to hand feel good, even crazy adjustments to ensure throwing worked great, while placing objects on top of high stacks could still be done with high accuracy.
 
 But when it comes to networking, in this case the game code doesn't count. All the networking cares about is that avatars are represented by a head and two hands driven by the tracked headset and touch controller positions and orientations.
 
-To synchronize this I captured the position and orientation of the avatar components in _FixedUpdate_ along the rest of the physics state, and started applying these positions in the remote view.
+To synchronize this I captured the position and orientation of the avatar components in _FixedUpdate_ along the rest of the physics state, and applied this state to the avatar components in the remote view.
 
-But when I first networked this, it looked _absolutely awful_. Why?
+But when I first tried this it looked _absolutely awful_. Why?
 
 After a bunch of debugging I worked out that the avatar state was sampled from the touch hardware at render framerate in _Update_, and was applied on the other machine at _FixedUpdate_, causing jitter because the avatar sample time didn't line up with the current time in the remote view.
 
 To fix this I stored the difference between physics and render time when sampling avatar state, and included this in the avatar state in each packet. Then I added a jitter buffer with 100ms delay to received packets, solving network jitter from time variance in packet delivery and enabling interpolation between avatar states to get a sample at the correct time.
 
-To synchronize cubes held by avatars, while a cube is parented to an avatar hand, I set the cube's _priority factor_ to -1, stopping it from being sent with regular physics state updates. While a cube is attached to a hand, I include its id and relative position and rotation as part of the avatar state. In the remote view, cubes are attached to the avatar hand when the first avatar state arrives with that cube parented to it, and detached when regular physics state updates resume, corresponding to the cube being thrown or released.
+To synchronize cubes held by avatars, while a cube is parented to an avatar's hand, I set the cube's _priority factor_ to -1, stopping it from being sent with regular physics state updates. While a cube is attached to a hand, I include its id and relative position and rotation as part of the avatar state. In the remote view, cubes are attached to the avatar hand when the first avatar state arrives with that cube parented to it, and detached when regular physics state updates resume, corresponding to the cube being thrown or released.
 
 # Bidirectional Flow
 
