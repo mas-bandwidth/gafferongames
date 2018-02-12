@@ -156,7 +156,7 @@ Here's how it works in practice:
 
 3. Negative priority factors clear the priority accumulator to -1.0.
 
-4. When a packet is sent, cubes are sorted in order of highest priority accumulator to lowest. The first n cubes are and become the set of cubes to potentially include in the packet. Objects with negative priority accumulator values are excluded.
+4. When a packet is sent, cubes are sorted in order of highest priority accumulator to lowest. The first n cubes become the set of cubes to potentially include in the packet. Objects with negative priority accumulator values are excluded.
 
 5. The packet is written and cubes are serialized to the packet in order of importance. Not all state updates will necessarily fit in the packet, since cube updates have a variable encoding depending on their current state (at rest vs. not at rest and so on). Therefore, packet serialization returns a flag per-cube indicating whether it was included in the packet.
 
