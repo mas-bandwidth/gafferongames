@@ -21,7 +21,7 @@ After the talk, I published an [article series](https://gafferongames.com/post/i
 
 While my talk and articles were well received, afterwards I was slightly unsatisfied. Due to length available for my talk (just one hour), and how deep I went into detail in the article series, I was only able to focus on one small aspect of the problem: how to synchronize a simulation running on one machine, so that it could be _viewed_ it on another.
 
-Crucially, what I felt was missing was a discussion of _latency hiding_. How to make it so that multiple players can interact with a physics simulation, while feeling that their interactions with the simulation were lag free. Of course many other things were also missing such as a discussion of network topology: client/server vs. peer-to-peer, dedicated vs. integrated servers. Also missing was discussion of _network models_. For example, client/server with client-side prediction, vs. distributed simulation (authority scheme), vs. GGPO style deterministic lockstep.
+Crucially, what I felt was missing was a discussion of _latency hiding_. Having multiple players interact with a physics simulation, feeling that their interactions with the simulation are lag free. Of course many other things were also missing such as a discussion of network topology: client/server vs. peer-to-peer, dedicated vs. integrated servers. Also missing was discussion of _network models_. For example, client/server with client-side prediction, vs. distributed simulation (authority scheme), vs. GGPO style deterministic lockstep.
 
 Since giving this talk, I've had many people ask me questions along these lines, and I've always wished I could write another article series or give another talk on the subject...
 
@@ -35,7 +35,7 @@ Oculus agreed. Welcome to that article! Also, you can find the full source for t
 
 # What are we building?
 
-When I first started discussions with Oculus, we imagined creating something like a table where four players could sit around and interact with physically simulated cubes on the table. For example, throwing, catching and stacking cubes, maybe knocking over each other's stacks with a swipe of their hand. Maybe we could make a little toy or game out of it?
+When I first started discussions with Oculus, we imagined creating something like a table where four players could sit around and interact with physically simulated cubes on the table. For example, throwing, catching and stacking cubes, maybe knocking each other's stacks over with a swipe of their hand. Maybe we could make a little toy or game out of it?
 
 But after a few day spent learning Unity and C#, I found myself actually _inside_ the Rift. In VR, scale is _so important_. When the cubes were small, everything felt much less interesting, but when the cubes were scaled up to around a meter squared, everything had this really cool sense of scale. You could make these _huge_ stacks of cubes, up to 20 or 30 meters high. This felt really cool!
 
@@ -93,9 +93,9 @@ The state we grab from each cube looks like this:
         Vector3 angular_velocity;
     };
 
-When we apply this state to the simulation on the right side, we simply _snap_ the position, rotation, linear and angular velocity of each cube to the state we captured from the left side.
+When we apply this state to the simulation on the right side, we simply _snap_ the position, rotation, linear and angular velocity of each cube to the state captured from the left side.
 
-This simple change is enough to keep the left and right simulations in sync. Interestingly enough, PhysX doesn't diverge enough in the 1/10th of a second between updates to show any noticeable pops.
+This simple change is enough to keep the left and right simulations in sync. PhysX doesn't even diverge enough in the 1/10th of a second between updates to show any noticeable pops.
 
 <img src="/img/networked-physics-in-vr/in-sync.png" width="100%"/>
 
@@ -103,9 +103,9 @@ This __proves__ that a state synchronization based approach for networking can w
 
 # Bandwidth Optimization
 
-To make sure the networked physics sample is playable over the internet, we need to get bandwidth under control. It's a bit of a dark art, but is really not that complicated. Let's dive in!
+To make sure the networked physics sample is playable over the internet, I needed to get bandwidth under control. It's a bit of a dark art, but is really not that complicated. Let's dive in!
 
-The easiest gains can be had by simply recognizing when cubes are at rest, and encoding the state for these cubes more efficiently. For example, instead of repeatedly sending (0,0,0) for linear velocity and (0,0,0) for angular velocity for at rest cubes, we can send one bit:
+The easiest gain I found was by simply recognizing when cubes are at rest, and encoding the state for those cubes more efficiently. For example, instead of repeatedly sending (0,0,0) for linear velocity and (0,0,0) for angular velocity for at rest cubes, I send just one bit:
 
     [position] (vector3)
     [rotation] (quaternion)
@@ -116,9 +116,9 @@ The easiest gains can be had by simply recognizing when cubes are at rest, and e
         [angular_velocity] (vector3)
     }
 
-This is _lossless_ technique because it doesn't change the state sent over the network in any way. Unfortunately, we can't make much more progress sending positions, velocities and orientations using 32 bit float values per-component. To optimize bandwidth further we need to use _lossy techniques_. 
+This is _lossless_ technique because it doesn't change the state sent over the network in any way. It's also extremely effective, since statistically speaking, most of the time the majority of cubes in the scene are at rest.
 
-For example, we can reduce the precision of the physics state sent over the network by bounding position in some min/max range and quantizing it to a resolution of 1/1000th of a centimeter and sending that quantized position as an integer value in some known range. The same basic approach can be used linear and angular velocity. For rotation we use the _smallest three representation_ of a quaternion.
+To optimize bandwidth further we need to use _lossy techniques_. For example, we can reduce the precision of the physics state sent over the network by bounding position in some min/max range and quantizing it to a resolution of 1/1000th of a centimeter and sending that quantized position as an integer value in some known range. The same basic approach can be used linear and angular velocity. For rotation we use the _smallest three representation_ of a quaternion.
 
 But while this saves bandwidth, it also adds risk. My concern was that if we are networking a stack of cubes (for example, 10 or 20 cubes placed on top of each other), maybe the quantization would create errors that add jitter to that stack. Perhaps it even would cause the stack to become _unstable_, but in a particularly annoying and hard to debug way, where the stack looks fine for you, and is only unstable in the remote view (eg. the non-authority simulation), where another player is watching what you do.
 
@@ -128,7 +128,7 @@ Now the extrapolation from quantized state on the non-authority side _exactly_ m
 
 # Coming To ~~America~~ Rest
 
-But quantizing the physics state like this has some _very interesting_ side-effects!
+But quantizing the physics state creates some _very interesting_ side-effects!
 
 1. PhysX doesn't really like you forcing the state of each rigid body at the start of every frame and makes sure you know by taking up a bunch of CPU.
 
@@ -138,15 +138,15 @@ But quantizing the physics state like this has some _very interesting_ side-effe
 
 4. Although cubes in large stacks _seem_ to be at rest, close inspection in the editor reveals that they are actually jittering by tiny amounts, as cubes are quantized just above surface and falling towards it.
 
-There's not much we can do much about PhysX CPU usage, but the solution I found for the depenetration is to set _maxDepenetrationVelocity_ on each rigid body, limiting the velocity that cubes are pushed apart with. I found that one meter per-second works very well.
+There's not much I could do about the PhysX CPU usage, but the solution I found for the depenetration was to set _maxDepenetrationVelocity_ on each rigid body, limiting the velocity that cubes are pushed apart with. I found that one meter per-second works very well.
 
-Getting cubes to come to rest reliably was much harder. The solution I found was to disable the PhysX at rest calculation and replace it with a ring-buffer of positions and rotations per-cube. If a cube has not moved or rotated significantly in the last 16 frames, I force it to rest. Boom. Perfectly stable stacks _with_ quantization.
+Getting cubes to come to rest reliably was much harder. The solution I found was to disable the PhysX at rest calculation entirely and replace it with a ring-buffer of positions and rotations per-cube. If a cube has not moved or rotated significantly in the last 16 frames, I force it to rest. Boom. Perfectly stable stacks _with_ quantization.
 
 This might seem like a hack, but short of actually getting in the PhysX source code and rewriting the PhysX solver and at rest calculations, which I'm certainly not qualified to do, I didn't see any other option. I'm happy to be proven wrong though, so if you find a better way to do this, please let me know :)
 
 # Priority Accumulator
 
-The next big bandwidth optimization is to send only a subset of cubes in each packet. This gives us fine control over the amount of bandwidth we send, by setting a maximum packet size and sending only the set of updates that fit in each packet.
+The next big bandwidth optimization I did was to send only a subset of cubes in each packet. This gave me fine control over the amount of bandwidth send, by setting a maximum packet size and sending only the set of updates that fit in each packet.
 
 Here's how it works in practice:
 
@@ -164,17 +164,17 @@ Here's how it works in practice:
 
 For this demo I found some value in boosting priority for cubes recently involved in high energy collisions, since high energy collision was the largest source of divergence due to non-deterministic results. I also boosted priority for cubes recently thrown by players.
 
-Somewhat counter-intuitively, reducing priority for at rest cubes gave bad results. My theory is that since the simulation runs on both sides, at rest cubes would get slightly out of sync and not be corrected quickly enough, causing further divergence when other cubes collided with them.
+Somewhat counter-intuitively, reducing priority for at rest cubes gave bad results. My theory is that since the simulation runs on both sides, at rest cubes would get slightly out of sync and not be corrected quickly enough, causing further divergence when other cubes collide with them.
 
 # Delta Compression
 
-And now the king of bandwidth optimization: __delta compression__.
+Even with all the techniques so far, it still wasn't optimized enough. With four players I really wanted to get the cost per-player down under 256kbps, so the entire simulation could fit into 1mbps for the host player.
 
-First person shooters often implement this by compressing the entire state of the world relative to a previous state. In this technique, a previous complete world state or 'snapshot' acts as the _baseline_, and a set of differences, or _delta_, between the _baseline_ and the _current_ snapshot is generated and sent down to the client.
+I had once last trick remaining: __delta compression__.
 
-This technique is (relatively) easy to implement because all the server needs to do is track the most recent snapshot received by each client, and generate deltas from that snapshot to the current. Similarly, all the client needs to do is keep a buffer of the last n snapshots received, so it can reconstruct snapshots by applying deltas on top of its copy of the baseline.
+First person shooters often implement delta compression by compressing the entire state of the world relative to a previous state. In this technique, a previous complete world state or 'snapshot' acts as the _baseline_, and a set of differences, or _delta_, between the _baseline_ and the _current_ snapshot is generated and sent down to the client.
 
-When a priority accumulator is used delta encoding becomes more complicated.
+This technique is (relatively) easy to implement because the state for all objects are included in each snapshot, thus all the server needs to do is track the most recent snapshot received by each client, and generate deltas from that snapshot to the current. However, when a priority accumulator is used, packets don't contain updates for all objects and delta encoding becomes more complicated.
 
 Now the server (or authority-side) can't simply encode cubes relative to a previous snapshot number, because not all cubes are included in each packet. Instead, the baseline must be specified _per-cube_, so the receiver knows which state each cube is encoded relative to.
 
@@ -190,39 +190,51 @@ But ultimately, it's worth the extra complexity, because this system combines th
 
 # Delta Encoding
 
-How do we actually encode the delta between cube states?
+Now that I have the supporting structures, I actually have to encode the different of a cube relative to a previous baseline state. How is this done?
 
 The simplest way is to encode cubes that haven't changed from the baseline value as just one bit: _not changed_. This is also the easiest gain you'll ever see, because at any time most cubes are at rest, and therefore aren't changing state.
 
 A more advanced strategy is to encode the _difference_ between the current and baseline values, aiming to encode small differences with fewer bits. For example, delta position could be (-1,+2,+5) from baseline. This works well for linear values, but breaks down somewhat for deltas of the smallest three quaternion representation, as the largest component of a quaternion is often different between the baseline and current rotation.
 
-So while encoding the difference gives some gains, it's not another order of magnitude improvement I had hoped for. This is because in many cases cubes move quickly, so the difference in their values becomes large enough to negate most gains. This is especially true in the case where cubes are falling from the sky, which is arguably where bandwidth reductions are needed the most.
+While encoding the difference gives some gains, it's didn't provide another order of magnitude improvement that I was hoping for. To compress further I came up with a delta encoding strategy that included _prediction_. In this approach, I predict the current state from the baseline state assuming the cube is moving ballistically under acceleration due to gravity. 
 
-To compress further the most advanced strategy I came up with is to use prediction. In this approach, I predict the current state from the baseline state assuming the cube is moving ballistically under acceleration due to gravity. This is complicated somewhat by the fact that the predictor must be written in fixed point, because floating point calculations are not necessarily guaranteed to be deterministic, but after a few days of tweaking and experimentation, I was able to write a ballistic predictor for position, linear and angular velocity that matched the PhysX integrator within quantize resolution about 90% of the time. 
+Prediction was complicated somewhat by the fact that the predictor must be written in fixed point, because floating point calculations are not necessarily guaranteed to be deterministic, but after a few days of tweaking and experimentation, I was able to write a ballistic predictor for position, linear and angular velocity that matched the PhysX integrator within quantize resolution about 90% of the time. 
 
-These lucky cubes are encoded with another bit: _perfect prediction_. Another order of magnitude improvement. For cases where the prediction doesn't match exactly, a small error offset is sent.
+These lucky cubes get encoded with another bit: _perfect prediction_, leading to another order of magnitude improvement! For cases where the prediction doesn't match exactly, a small error offset is sent relative to the prediction.
 
-Unfortunately, in the time I had to spend, I not able to get a good predictor for rotation. I blame this on the smallest three representation, which is highly numerically unstable, especially in fixed point. In the future, I would not use the smallest three representation for quantized rotations.
+In the time I had to spend, I not able to get a good predictor for rotation. I blame this on the smallest three representation, which is highly numerically unstable, especially in fixed point. In the future, I would not use the smallest three representation for quantized rotations.
 
-It was also painfully obvious while encoding differences and error offsets that a bitpacker was not the best way to read and write these quantities. Something like a range coder or arithmetic compressor that can represent fractional bits, and dynamically adjust to the average size of differences in the scene would have given much better results.
-
-# Something
-
-... Turn and a rest ...
+It was also painfully obvious while encoding differences and error offsets that using a bitpacker was not the best way to read and write these quantities. Something like a range coder or arithmetic compressor that can represent fractional bits, and dynamically adjust a its model to the differences would give much better results.
 
 # Synchronizing Avatars
 
-Now that bandwidth is under control, how can we synchronize avatars?
+After several months of work, I had made the following progress:
 
-Avatars are represented by a head and two hands driven by the tracked headset and touch controllers. We capture the position and rotations of the avatar components in _FixedUpdate_ along the rest of the physics state, but avatar state is actually sampled from the hardware at render framerate in _Update_.
+* Proof that state synchronization works with Unity and PhysX
+* Stable stacks in the remote view (while quantizing both sides)
+* Bandwidth reduced to the point where all four players can fit in 1mbps.
 
-This causes jitter when the avatar state is applied on the other side, because the sample time doesn't line up with _FixedUpdate_ on that machine. To fix this, we store the difference between physics and render time when we sample avatar state, so we can reconstruct the time of the avatar sample on the other side. 
+The next thing I needed to implement was interaction with the simulation via the touch controllers. This was a lot of fun, and in fact was my favorite part of the project. 
+
+Writing game and control code is just so much fun. I hope you enjoy these interactions. There was a lot of experimentation and tuning to make simple things like picking up, throwing, passing from hand to hand feel well, even crazy adjustments to ensure throwing worked great, while placing objects on top of high stacks could still be done with high accuracy.
+
+But when it comes to networking, most of this game code doesn't count. All the networking cares about is that avatars are represented by a head and two hands driven by the tracked headset and touch controllers. I captured the position and rotations of the avatar components in _FixedUpdate_ along the rest of the physics state, and started applying these positions in the remote view.
+
+When I first networked this, it looked _awful_. Why?
+
+After a bunch of debugging I worked out that what was going on is that avatar state got sampled from the hardware at render framerate in _Update_, and then I applied it on the other machine at _FixedUpdate_. This caused jitter because the sample time didn't line up with _FixedUpdate_ on the remote machine.
+
+To fix this I stored the difference between physics and render time when we sample avatar state, and I sent this over the network with the avatar state in each packet.
 
 Next, a jitter buffer with 100ms delay is applied to received packets, solving network jitter from time variance in packet delivery and enabling interpolation between avatar states. Physics state is applied to the simulation in _FixedUpdate_, while avatar state is applied at render time in _Update_ by interpolating between the two nearest samples in the jitter buffer.
 
 While a cube is parented to an avatar hand, its _priority factor_ is set to -1, stopping it from being sent with regular physics state updates. Instead, its cube id and relative position and rotation are sent as part of the avatar state. Cubes are attached to the avatar hands in the remote view when the first avatar state arrives with that cube parented to a hand, and detached when regular physics state updates resume, corresponding to the cube being thrown or released.
 
 # Bidirectional Flow
+
+Up until this point, left to right (more)
+
+(need a turn here).
 
 Now lets add another player on the right:
 
