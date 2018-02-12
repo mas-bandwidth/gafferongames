@@ -1,4 +1,4 @@
-.PHONY: public local upload commit clean nginx redis webserver wordpress build up down
+.PHONY: public local upload commit clean nginx redis webserver build up down
 
 public:
 	rm -rf public
@@ -51,12 +51,6 @@ webserver:
 	-docker rm webserver > /dev/null 2>&1; exit 0
 	docker build -t gafferongames:webserver webserver
 	docker run --name webserver --depends redis -ti -p 8080:8080 -v ~/gafferongames/videos:/go/bin/videos:ro gafferongames:webserver
-
-wordpress:
-	-docker kill wordpress > /dev/null 2>&1; exit 0
-	-docker rm wordpress > /dev/null 2>&1; exit 0
-	docker build -t gafferongames:wordpress wordpress
-	docker run --name wordpress -ti -p 8000:80 gafferongames:wordpress
 
 build: public
 	docker-compose build
