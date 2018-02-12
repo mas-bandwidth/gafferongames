@@ -9,7 +9,7 @@ draft = true
 
 # Introduction
 
-Way back in 2015, I presented a tutorial at GDC about how to network a physics simulation. It was fairly popular and was rated well, and if you [watch the video](https://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking), I hope you'll be happy to hear that I've lost around 50 pounds since this video was recorded. I watch it today and think, _who the f*** is this person?_
+Way back in 2015, I presented a tutorial at GDC about how to network a physics simulation. It was fairly popular and was rated well, and if you [watch the video](https://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking), I hope you'll be happy to hear that I've lost around 50 pounds since this video was recorded. I watch it today and think, _who the hell is this person?_
 
 So anyway, in this tutorial, a _much heavier me from the past_ covered three different techniques for networking a physics simulation:
 
