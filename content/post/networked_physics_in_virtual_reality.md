@@ -11,7 +11,7 @@ draft = true
 
 Way back in 2015, I presented a tutorial at GDC about how to network a physics simulation. It was fairly popular and was rated well, and if you [watch the video](https://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking), I hope you'll be happy to hear that I've lost around 50 pounds since this video was recorded. I watch it today and think, _who the f*** is this person?_
 
-So anyway, in this tutorial, a _much heavier me_ covered three different techniques for networking a physics simulation:
+So anyway, in this tutorial, a _much heavier me from the past_ covered three different techniques for networking a physics simulation:
 
 1. Deterministic Lockstep
 2. Snapshots and Interpolation
@@ -19,9 +19,9 @@ So anyway, in this tutorial, a _much heavier me_ covered three different techniq
 
 After the talk, I published an [article series](https://gafferongames.com/post/introduction_to_networked_physics/) to go into more depth, covering topics like bandwidth optimization and delta-encoding. I even got into a friendly [network compression rivalry](https://gafferongames.com/post/snapshot_compression/) with some programmer friends, who in the end, totally kicked my ass. For example, see Fabian Giesen's [entry](https://github.com/rygorous/gaffer_net), which I think beat my best effort by around 25%, and I don't even think he worked that hard.
 
-While my talk and articles were well received, afterwards I was slightly unsatisfied. Due to length available for my talk (just one hour), and ow deep I went into detail in the article series, I was only able to focus on one small aspect of the problem: how to synchronize a simulation running on one machine, so that it could be _viewed_ it on another.
+While my talk and articles were well received, afterwards I was slightly unsatisfied. Due to length available for my talk (just one hour), and how deep I went into detail in the article series, I was only able to focus on one small aspect of the problem: how to synchronize a simulation running on one machine, so that it could be _viewed_ it on another.
 
-Crucially, what was missing was a discussion of _latency hiding_. How to make it so that multiple players can interact with a physics simulation, while feeling that their interactions with the simulation were lag free. Of course many other things were also missing such as a discussion of network topology: client/server vs. peer-to-peer, dedicated vs. integrated servers. Also missing discussions of _network models_. For example, client/server with client-side prediction, vs. distributed simulation (authority scheme), vs. GGPO style deterministic lockstep.
+Crucially, what I felt was missing was a discussion of _latency hiding_. How to make it so that multiple players can interact with a physics simulation, while feeling that their interactions with the simulation were lag free. Of course many other things were also missing such as a discussion of network topology: client/server vs. peer-to-peer, dedicated vs. integrated servers. Also missing was discussion of _network models_. For example, client/server with client-side prediction, vs. distributed simulation (authority scheme), vs. GGPO style deterministic lockstep.
 
 Since giving this talk, I've had many people ask me questions along these lines, and I've always wished I could write another article series or give another talk on the subject...
 
@@ -29,7 +29,7 @@ Since giving this talk, I've had many people ask me questions along these lines,
 
 And then one day after leaving my job at Respawn, Oculus approached me and offered to sponsor my research. They asked me, effectively: "Hey Glenn, there's a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?". 
 
-I thought "Sure. This could be a lot of fun". But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good, and two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.
+I thought ~~"Fuck yes!"~~ **cough** "Sure. This could be a lot of fun!". But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good, and two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.
 
 Oculus agreed. Welcome to that article! Also, you can find the full source for the networked physics sample [here](https://github.com/OculusVR/oculus-networked-physics-sample), wherein the code I wrote is released under a BSD licence. I hope the next generation of programmers can learn from my research into networked physics and create some really cool things. Good luck!
 
@@ -43,9 +43,9 @@ It's impossible to communicate visually what this feels like outside of VR (so p
 
 <img src="/img/networked-physics-in-vr/stack-of-cubes.jpg" width="100%"/>
 
-... where you can select, grab and throw cubes using the touch controller, and any cubes you release from your hand interact with the other cubes. You can throw a cube in your hand at a stack of cubes and knock them over. You can pick up two cubes and try to juggle. You can build a stack of cubes and see how high you can make your stack go.
+... where you can select, grab and throw cubes using the touch controller, and any cubes you release from your hand interact with the other cubes. You can throw a cube in your hand at a stack of cubes and knock them over. You can pick up two cubes and juggle them. You can build a stack of cubes and see how high you can make it go.
 
-So now we had the vision. Moving forward, I suggested three criteria we would use to define success:
+Now we had the vision. Moving forward, I suggested three criteria we would use to define success:
 
 1. Players should be able to pick up and throw and catch cubes without latency.
 
@@ -67,21 +67,21 @@ First up, we have to pick a network model!
 
 # State Synchronization
 
-Trusting that I could implement the rules described above, my first task was to prove that synchronizing physics in one direction of flow could actually work with Unity and PhysX.
+Trusting I could implement the rules described above, my first task was to prove that synchronizing physics in one direction of flow could actually work with Unity and PhysX.
 
-To do this I setup a simple loopback scene in Unity where physically simulated cubes fall from the sky into a pile in front of the player. These cubes represent the authority side, and an identical set of cubes on the right act as the non-authority side.
+To do this, I setup a loopback scene in Unity where cubes fall into a pile in front of the player. There are two sets of cubes. The cubes on the left represent the authority side. The cubes on the right are the non-authority side, which we want to be in sync with the cubes on the left.
 
 <img src="/img/networked-physics-in-vr/authority-and-non-authority-cubes.png" width="100%"/>
 
-As expected, with nothing keeping the two sets of cubes in sync, even though they both start from exactly the same initial state and run through exactly the same simulation steps, they give different end results:
+At the start, without anything in place to keep them in sync, even though both sets of cubes start from the same initial state, they give different end results. Here you can see the configuration of the stack on the right is quite different to the left, once all cubes have come to rest:
 
 <img src="/img/networked-physics-in-vr/out-of-sync.png" width="100%"/>
 
-This is not exactly surprising because PhysX is non-deterministic. To fight this non-determinism, we'll grab state from the authority side and apply it to the non-authority side 10 times per-second. 
+This happens because PhysX is non-deterministic. To fight this non-determinism, we grab state from the authority side (left) and apply it to the non-authority side (right) 10 times per-second:
 
 <img src="/img/networked-physics-in-vr/left-to-right.png" width="100%"/>
 
-The state grabbed from each cube looks like this:
+The state we grab from each cube looks like this:
 
     struct CubeState
     {
@@ -91,17 +91,19 @@ The state grabbed from each cube looks like this:
         Vector3 angular_velocity;
     };
 
-When we apply this state to the simulation on the right side, we force the position, rotation, linear and angular velocity of each rigid body to the state grabbed from the authority simulation. 
+We apply this state to the simulation on the right side, we simply _snap_ the position, rotation, linear and angular velocity of each object to the state we captured from the left side.
 
-This simple change is enough to keep the simulations in sync, and PhysX doesn't diverge enough in the 1/10th of a second between updates to show any noticeable pops:
+This simple change is enough to keep the left and right simulations in sync. Interestingly enough, PhysX doesn't diverge enough in the 1/10th of a second between updates to show any noticeable pops.
 
 <img src="/img/networked-physics-in-vr/in-sync.png" width="100%"/>
 
-This is actually a big step, because it proves that a _state synchronization_ based approach for networking can work with PhysX. The only problem is, sending uncompressed physics state uses too much bandwidth.
+This __proves__ that a state synchronization based approach for networking can work with PhysX. The only problem is that sending uncompressed physics state like this uses way too much bandwidth...
 
 # Bandwidth Optimization
 
-The first step towards reduce bandwidth is to recognize when objects are at rest, and instead of sending (0,0,0) for linear and angular velocity, send just one bit: "at rest".
+The easiest way to reduce bandwidth is to recognize when cubes are at rest. In this case, instead of repeatedly sending (0,0,0) for linear velocity, and (0,0,0) for and angular velocity as float values, we just send one bit: __at rest__.
+
+Now when we transmit state over the network, it is encoded like this:
 
     [position] (vector3)
     [rotation] (quaternion)
@@ -112,31 +114,35 @@ The first step towards reduce bandwidth is to recognize when objects are at rest
         [angular_velocity] (vector3)
     }
 
-This is a straightforward optimization that saves bandwidth in the common case because at any time most objects are at rest. It's also a _lossless_ technique because it doesn't change the state sent over the network in any way.
+This saves a lot of bandwidth because at any time _most_ cubes are at rest. It's also a _lossless_ technique because it doesn't change the state sent over the network in any way.
 
-To optimize bandwidth further we need to use _lossy techniques_. This means we reduce the precision of the physics state when it's sent over the network. For example, we could bound position in some min/max range and quantize it to a precision of 1/1000th of a centimeter. We can use the same approach for linear and angular velocity, and for rotation we can use the _smallest three representation_ of a quaternion.
+To optimize bandwidth further we need to use _lossy techniques_. 
 
-While this saves a bunch of bandwidth, the extrapolation on the non-authority side is now slightly different. What we want is an extrapolation that matches the authority side of the simulation as closely as possible. But how can we do this, and still use lossy compression? 
+This means we reduce the precision of the physics state when it's sent over the network. For example, we could bound position in some min/max range and quantize it to a precision of 1/1000th of a centimeter. We can use the same approach for linear and angular velocity, and for rotation we can use the _smallest three representation_ of a quaternion.
 
-The solution is to quantize the state on _both sides_. What this means in practice is that before each physics simulation step, the physics state is sampled and quantized _exactly the same way_ as when it's sent over the network, then applied back to the local simulation. 
+While this saves bandwidth, it also adds risk. My concern is that if we are networking a stack of objects (for example, 10 cubes placed on top of each other), maybe the quantization will create errors that add jitter to that stack? Maybe the stack would become _unstable_.
 
-This is done on both the authority and non-authority sides. Now the extrapolation from quantized state on the non-authority side matches the authority side as closely as possible, because both simulations and network packets are quantized exactly the same way.
+The best solution to this problem that I found was to quantize the state on _both sides_. What this means is that before each physics simulation step, the physics state is sampled and quantized _exactly the same way_ as when it's sent over the network, then applied back to the local simulation. 
+
+I do this on both the authority and non-authority sides, and now the extrapolation from quantized state on the non-authority side matches the authority side as closely as possible, because the simulation and network packets are quantized exactly the same way.
 
 # Coming To Rest
 
-But quantizing the state has some _very interesting_ side-effects...
+But quantizing the physics state like this has some _very interesting_ side-effects...
 
-1. PhysX doesn't really like you forcing the state of each rigid body at the start of every frame and lets you know by taking up a bunch of CPU.
+1. PhysX doesn't really like you forcing the state of each rigid body at the start of every frame and makes sure you know by taking up a bunch of CPU.
 
 2. Quantization adds error to position which PhysX tries very hard to correct, snapping objects immediately out of penetration.
 
-3. Rotations can't be represented exactly either, again causing penetration. Interestingly in this case, objects can get stuck in a feedback loop where they slide across the floor.
+3. Rotations can't be represented exactly either, again causing penetration. Interestingly in this case, objects can get stuck in a feedback loop where they slowly slide across the floor.
 
-4. Although objects in large stacks _seem_ to be at rest, they are actually jittering by small amounts, visible only in the editor as tiny fluctuations in state values as objects repeatedly try to resolve penetration due to quantization, or are quantized just above a resting surface and fall towards it.
+4. Although objects in large stacks _seem_ to be at rest, close inspection in the editor reveals that they are actually jittering by tiny amounts, as objects are quantized just above a resting surface and fall towards it.
 
-While we can't do much about PhysX CPU usage, the solution for penetration is to set _maxDepenetrationVelocity_ on each rigid body, limiting the velocity that objects are pushed apart with. 1 meter per-second seems to work well.
+While we can't do much about PhysX CPU usage, the solution I found for the depenetration is to set _maxDepenetrationVelocity_ on each rigid body, limiting the velocity that objects are pushed apart with. I found that setting it to one meter per-second works very well.
 
-To get objects to come to rest, disable the PhysX at rest calculation and replace it with a ring-buffer of positions and rotations for each object. If an object has not moved or rotated significantly in the last 16 frames, force it to rest.
+To get objects to come to rest, I disabled the PhysX at rest calculation and replaced it with a ring-buffer of positions and rotations for each object. If an object has not moved or rotated significantly in the last 16 frames, I forced it to rest. Boom. Perfectly stable stacks with quantization.
+
+This might seem like a hack, but short of actually getting in there with source code and rewritig the PhysX solver and at rest calculations, I didn't see any other option. I'm happy to be proven wrong though, so if you find a better way to do this, please let me know :)
 
 # Priority Accumulator
 
