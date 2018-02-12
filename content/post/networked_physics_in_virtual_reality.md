@@ -21,7 +21,7 @@ After the talk, I published an [article series](https://gafferongames.com/post/i
 
 While my talk and articles were well received, afterwards I was slightly unsatisfied. Due to length available for my talk (just one hour), and how deep I went into detail in the article series, I was only able to focus on one small aspect of the problem: how to synchronize a simulation running on one machine, so that it could be _viewed_ it on another.
 
-Crucially, what I felt was missing was a discussion of _latency hiding_. Having multiple players interact with a physics simulation, feeling that their interactions with the simulation are lag free. Of course many other things were also missing such as a discussion of network topology: client/server vs. peer-to-peer, dedicated vs. integrated servers. Also missing was discussion of _network models_. For example, client/server with client-side prediction, vs. distributed simulation (authority scheme), vs. GGPO style deterministic lockstep.
+Crucially, what I felt was missing was a discussion of _latency hiding_. How to have multiple players interact with a physics simulation, while feeling that their interactions are lag free. Of course many other things were also missing such as a discussion of network topology: client/server vs. peer-to-peer, dedicated vs. integrated servers. Also missing was discussion of _network models_. For example, client/server with client-side prediction, vs. distributed simulation (authority scheme), vs. GGPO style deterministic lockstep.
 
 Since giving this talk, I've had many people ask me questions along these lines, and I've always wished I could write another article series or give another talk on the subject...
 
@@ -186,49 +186,49 @@ The supporting systems and data structures are also much more complicated:
 
 3. The receiver needs to store a ring-buffer of received states per-cube, so it can reconstruct the current cube state from a delta.
 
-But ultimately, it's worth the extra complexity, because this system combines the flexibility of being able to dynamically adjust bandwidth usage, with the orders of magnitude bandwidth improvements you get from delta encoding.
+But ultimately, it's worth the extra complexity, because this system combines the flexibility of being able to dynamically adjust bandwidth usage, with the orders of magnitude bandwidth improvement you get from delta encoding.
 
 # Delta Encoding
 
-Now that I have the supporting structures, I actually have to encode the different of a cube relative to a previous baseline state. How is this done?
+Now that I have the supporting structures in place, I actually have to encode the different of a cube relative to a previous baseline state. How is this done?
 
-The simplest way is to encode cubes that haven't changed from the baseline value as just one bit: _not changed_. This is also the easiest gain you'll ever see, because at any time most cubes are at rest, and therefore aren't changing state.
+The simplest way is to encode cubes that haven't changed from the baseline value as just one bit: _not changed_. This is also the easiest gain you'll ever see, because at any time most cubes are at rest, and therefore aren't changing state. This is sort of the delta encoding version of the 'at rest' bit described above.
 
-A more advanced strategy is to encode the _difference_ between the current and baseline values, aiming to encode small differences with fewer bits. For example, delta position could be (-1,+2,+5) from baseline. This works well for linear values, but breaks down somewhat for deltas of the smallest three quaternion representation, as the largest component of a quaternion is often different between the baseline and current rotation.
+A more advanced strategy is to encode the _difference_ between the current and baseline values, aiming to encode small differences with fewer bits. For example, delta position could be (-1,+2,+5) from baseline. I found this works well for linear values, but breaks down for deltas of the smallest three quaternion representation, as the largest component of a quaternion is often different between the baseline and current rotation.
 
-While encoding the difference gives some gains, it's didn't provide another order of magnitude improvement that I was hoping for. To compress further I came up with a delta encoding strategy that included _prediction_. In this approach, I predict the current state from the baseline state assuming the cube is moving ballistically under acceleration due to gravity. 
+Furthermore, while encoding the difference gives some gains, it's didn't provide another order of magnitude improvement that I was hoping for. In a desperate, last hope, I came up with a delta encoding strategy that included _prediction_. In this approach, I predict the current state from the baseline assuming the cube is moving ballistically under acceleration due to gravity. 
 
-Prediction was complicated somewhat by the fact that the predictor must be written in fixed point, because floating point calculations are not necessarily guaranteed to be deterministic, but after a few days of tweaking and experimentation, I was able to write a ballistic predictor for position, linear and angular velocity that matched the PhysX integrator within quantize resolution about 90% of the time. 
+Prediction was complicated by the fact that the predictor must be written in fixed point, because floating point calculations are not necessarily guaranteed to be deterministic. But after a few days of tweaking and experimentation, I was able to write a ballistic predictor for position, linear and angular velocity that matched the PhysX integrator within quantize resolution about 90% of the time. 
 
-These lucky cubes get encoded with another bit: _perfect prediction_, leading to another order of magnitude improvement! For cases where the prediction doesn't match exactly, a small error offset is sent relative to the prediction.
+These lucky cubes get encoded with another bit: _perfect prediction_, leading to another order of magnitude improvement! For cases where the prediction doesn't match exactly, I encoded small error offset relative to the prediction.
 
 In the time I had to spend, I not able to get a good predictor for rotation. I blame this on the smallest three representation, which is highly numerically unstable, especially in fixed point. In the future, I would not use the smallest three representation for quantized rotations.
 
-It was also painfully obvious while encoding differences and error offsets that using a bitpacker was not the best way to read and write these quantities. Something like a range coder or arithmetic compressor that can represent fractional bits, and dynamically adjust a its model to the differences would give much better results.
+It was also painfully obvious while encoding differences and error offsets that using a bitpacker was not the best way to read and write these quantities. Something like a range coder or arithmetic compressor that can represent fractional bits, and dynamically adjust a its model to the differences would give much better results, but I was already within my bandwidth budget at this point and couldn't justify any further noodling :)
 
 # Synchronizing Avatars
 
-After several months of work, I had made the following progress:
+After several months of work, I made the following progress:
 
 * Proof that state synchronization works with Unity and PhysX
 * Stable stacks in the remote view (while quantizing both sides)
 * Bandwidth reduced to the point where all four players can fit in 1mbps.
 
-The next thing I needed to implement was interaction with the simulation via the touch controllers. This was a lot of fun, and in fact was my favorite part of the project. 
+The next thing I needed to implement was interaction with the simulation via the touch controllers. This part was a lot of fun, and in fact was my favorite part of the project. 
 
-Writing game and control code is just so much fun. I hope you enjoy these interactions. There was a lot of experimentation and tuning to make simple things like picking up, throwing, passing from hand to hand feel well, even crazy adjustments to ensure throwing worked great, while placing objects on top of high stacks could still be done with high accuracy.
+I hope you enjoy these interactions. There was a lot of experimentation and tuning to make simple things like picking up, throwing, passing from hand to hand feel good, even crazy adjustments to ensure throwing worked great, while placing objects on top of high stacks could still be done with high accuracy.
 
-But when it comes to networking, most of this game code doesn't count. All the networking cares about is that avatars are represented by a head and two hands driven by the tracked headset and touch controllers. I captured the position and rotations of the avatar components in _FixedUpdate_ along the rest of the physics state, and started applying these positions in the remote view.
+But when it comes to networking, in this case the game code doesn't count. All the networking cares about is that avatars are represented by a head and two hands driven by the tracked headset and touch controllers. 
 
-When I first networked this, it looked _awful_. Why?
+To synchronize this I captured the position and rotations of the avatar components in _FixedUpdate_ along the rest of the physics state, and started applying these positions in the remote view.
 
-After a bunch of debugging I worked out that what was going on is that avatar state got sampled from the hardware at render framerate in _Update_, and then I applied it on the other machine at _FixedUpdate_. This caused jitter because the sample time didn't line up with _FixedUpdate_ on the remote machine.
+But when I first networked this, it looked _absolutely awful_. Why?
 
-To fix this I stored the difference between physics and render time when we sample avatar state, and I sent this over the network with the avatar state in each packet.
+After a bunch of debugging I worked out that the avatar state was sampled from the touch hardware at render framerate in _Update_, and was applied on the other machine at _FixedUpdate_, causing jitter because the avatar sample time didn't line up with _FixedUpdate_ on the remote machine.
 
-Next, a jitter buffer with 100ms delay is applied to received packets, solving network jitter from time variance in packet delivery and enabling interpolation between avatar states. Physics state is applied to the simulation in _FixedUpdate_, while avatar state is applied at render time in _Update_ by interpolating between the two nearest samples in the jitter buffer.
+To fix this I stored the difference between physics and render time when sampling avatar state, and included this offset in the avatar state in each packet. Then I added a jitter buffer with 100ms delay to received packets, solving network jitter from time variance in packet delivery and enabling interpolation between avatar states to get a sample at the correct time.
 
-While a cube is parented to an avatar hand, its _priority factor_ is set to -1, stopping it from being sent with regular physics state updates. Instead, its cube id and relative position and rotation are sent as part of the avatar state. Cubes are attached to the avatar hands in the remote view when the first avatar state arrives with that cube parented to a hand, and detached when regular physics state updates resume, corresponding to the cube being thrown or released.
+To synchronize cubes held by avatars, while a cube is parented to an avatar hand, I set the cube's _priority factor_ to -1, stopping it from being sent with regular physics state updates. While a cube is attached to a hand, I include its cube id and relative position and rotation as part of the avatar state. In the remote view, cubes are attached to the avatar hand when the first avatar state arrives with that cube parented to it, and detached when regular physics state updates resume, corresponding to the cube being thrown or released.
 
 # Bidirectional Flow
 
