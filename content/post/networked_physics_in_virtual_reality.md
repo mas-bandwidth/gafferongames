@@ -9,7 +9,7 @@ draft = true
 
 # Introduction
 
-Way back in 2015, I presented a tutorial at GDC about how to network a physics simulation. It was fairly popular and was rated well, and if you [watch the video](https://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking), I hope you'll be happy to hear that I've lost around 50 pounds since this video was recorded. I watch it today and think, _who the hell is this person?_
+Way back in 2015, I presented a tutorial at GDC about how to network a physics simulation. It was fairly popular and was rated well, and if you [watch the video of the talk](https://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking), I hope you'll be happy to hear that I've lost around 50 pounds since this video was recorded. I watch it today and think, _who the hell is this person?_
 
 So anyway, in this tutorial, a _much heavier me from the past_ covered three different techniques for networking a physics simulation:
 
@@ -31,7 +31,7 @@ And then one day after leaving my job at Respawn, Oculus approached me and offer
 
 I replied ~~"F*** yes!"~~ **cough** "Sure. This could be a lot of fun!". But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good. Two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.
 
-Oculus agreed. Welcome to that article! Also, you can find the full source for the networked physics sample [here](https://github.com/OculusVR/oculus-networked-physics-sample), wherein the code I wrote is released under a BSD licence. I hope the next generation of programmers can learn from my research into networked physics and create some really cool things. Good luck!
+Oculus agreed. Welcome to that article! Also, the source for the networked physics sample is [here](https://github.com/OculusVR/oculus-networked-physics-sample), wherein the code that I wrote is released under a BSD licence. I hope the next generation of programmers can learn from my research into networked physics and create some really cool things. Good luck!
 
 # What are we building?
 
@@ -39,13 +39,13 @@ When I first started discussions with Oculus, we imagined creating something lik
 
 But after a few day spent learning Unity and C#, I found myself actually _inside_ the Rift. In VR, scale is _so important_. When the cubes were small, everything felt much less interesting, but when the cubes were scaled up to around a meter squared, everything had this really cool sense of scale. You could make these _huge_ stacks of cubes, up to 20 or 30 meters high. This felt really cool!
 
-It's impossible to communicate visually what this feels like outside of VR (so please [download](https://github.com/OculusVR/oculus-networked-physics-sample), build and run the sample in VR to see for yourself!), but it looks something like this...
+It's impossible to communicate visually what this feels like outside of VR, but it looks something like this...
 
 <img src="/img/networked-physics-in-vr/stack-of-cubes.jpg" width="100%"/>
 
-... where you can select, grab and throw cubes using the touch controller, and any cubes you release from your hand interact with the other cubes in the simulation. You can throw a cube at a stack of cubes and knock them over. You can pick up two cubes and juggle them. You can build a stack of cubes and see how high you can make it go.
+... where you can select, grab and throw cubes using the touch controller, and any cubes you release from your hand interact with the other cubes in the simulation. You can throw a cube at a stack of cubes and knock them over. You can pick up a cube in each hand and juggle them. You can build a stack of cubes and see how high you can make it go.
 
-Of course, working with Oculus as a client, I had to define tasks and deliverables, before I could actually start the work.
+Working with Oculus as a client, I of course had to define tasks and deliverables, before I could actually start the work.
 
 I suggested three criteria we would use to define success:
 
@@ -53,7 +53,7 @@ I suggested three criteria we would use to define success:
 
 2. Players should be able to stack cubes, and these stacks should be stable (eg. come to rest) and be without visible jitter.
 
-3. When thrown cubes interact with the simulation, wherever possible, these interactions should be without latency.
+3. When cubes thrown by any player interact with the simulation, wherever possible, these interactions should be without latency.
 
 Now you know what we are building, lets get started with how I built it :)
 
@@ -254,7 +254,7 @@ Despite this, it's possible for two players to predictively take authority or ow
 
 # Resolving Conflicts
 
-In the networked physics sample, all packets flow through the host, making the host the _arbiter_. In other words, the host decides which state updates to accept, and which to ignore and subsequently correct.
+In the networked physics sample, all packets flow through the host, making the host the _arbiter_. In other words, the host decides which updates to accept, and which updates to ignore and subsequently correct.
 
 To apply these corrections we need some way for the host to override guests and say, no, you don't have authority or ownership over this cube, and you should accept this update. We also need some way for the host to determine _ordering_ for guest interactions with the world, so if one client experiences a burst of lag and delivers a bunch of packets late, these packets won't take precedence over more recent actions from other guests.
 
@@ -276,6 +276,10 @@ In my experience working on this demo I found these rules to be sufficient to re
 High quality networked physics with stable stacks of cubes is possible with Unity and PhysX using a distributed simulation network model. 
 
 This approach is best used for _cooperative experiences only_, as it does not provide the security of a server-authoritative network model.
+
+Thanks to Oculus for sponsoring my work and making this research possible!
+
+IMPORTANT: __Source code for the networked physics sample is available [here](https://github.com/OculusVR/oculus-networked-physics-sample).__
 
 ----- 
 
