@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Physics on Gaffer On Games</title>
+    <link>http://127.0.0.1:1313/tags/physics/</link>
+    <description>Recent content in Physics on Gaffer On Games</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2018</copyright>
+    <lastBuildDate>Mon, 05 Jan 2015 00:00:00 +0000</lastBuildDate>
+    
+	<atom:link href="http://127.0.0.1:1313/tags/physics/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>State Synchronization</title>
+      <link>http://127.0.0.1:1313/post/state_synchronization/</link>
+      <pubDate>Mon, 05 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/state_synchronization/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In the previous article we discussed techniques for compressing snapshots.
+In this article we round out our discussion of networked physics strategies with state synchronization, the third and final strategy in this article series.
+State Synchronization What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, unlike deterministic lockstep, we don&amp;rsquo;t just send input, we send both input and state.</description>
+    </item>
+    
+    <item>
+      <title>Snapshot Compression</title>
+      <link>http://127.0.0.1:1313/post/snapshot_compression/</link>
+      <pubDate>Sun, 04 Jan 2015 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/snapshot_compression/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In the previous article we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.
+The problem with a low snapshot rate like 10HZ is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms.</description>
+    </item>
+    
+    <item>
+      <title>Snapshot Interpolation</title>
+      <link>http://127.0.0.1:1313/post/snapshot_interpolation/</link>
+      <pubDate>Sun, 30 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/snapshot_interpolation/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In the previous article we networked a physics simulation using deterministic lockstep. Now, in this article we&amp;rsquo;re going to network the same simulation with a completely different technique: snapshot interpolation.
+Background While deterministic lockstep is very efficient in terms of bandwidth, it&amp;rsquo;s not always possible to make your simulation deterministic. Floating point determinism across platforms is hard.
+Also, as the player counts increase, deterministic lockstep becomes problematic: you can&amp;rsquo;t simulate frame n until you receive input from all players for that frame, so players end up waiting for the most lagged player.</description>
+    </item>
+    
+    <item>
+      <title>Deterministic Lockstep</title>
+      <link>http://127.0.0.1:1313/post/deterministic_lockstep/</link>
+      <pubDate>Sat, 29 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/deterministic_lockstep/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In the previous article we explored the physics simulation we&amp;rsquo;re going to network in this article series. In this article specifically, we&amp;rsquo;re going to network this physics simulation using deterministic lockstep.
+Deterministic lockstep is a method of networking a system from one computer to another by sending only the inputs that control that system, rather than the state of that system.</description>
+    </item>
+    
+    <item>
+      <title>Introduction to Networked Physics</title>
+      <link>http://127.0.0.1:1313/post/introduction_to_networked_physics/</link>
+      <pubDate>Fri, 28 Nov 2014 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/introduction_to_networked_physics/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to the first article in Networked Physics.
+In this article series we&amp;rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.
+But before we get to this, let&amp;rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:
+Your browser does not support the video tag.  Here I’ve setup a simple simulation of a cube in the open source physics engine ODE.</description>
+    </item>
+    
+    <item>
+      <title>Collision Response and Coulomb Friction</title>
+      <link>http://127.0.0.1:1313/post/collision_response_and_coulomb_friction/</link>
+      <pubDate>Sun, 24 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/collision_response_and_coulomb_friction/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+So far in this series, we have mathematically defined the go stone, rendered it, determined how it moves and rotates, and discussed how its shape affects how it responds to collisions.
+Now in this article we reach our first milestone:
+A go stone bouncing and coming to rest on the go board.</description>
+    </item>
+    
+    <item>
+      <title>Rotation &amp; Inertia Tensors</title>
+      <link>http://127.0.0.1:1313/post/rotation_and_inertia_tensors/</link>
+      <pubDate>Sat, 23 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/rotation_and_inertia_tensors/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+In the previous article we detected collision between the go stone and the go board. Now we&amp;rsquo;re working up to calculating collision response so the stone bounces and wobbles before coming to rest on the board.
+But in order to reach this goal we first need to lay some groundwork.</description>
+    </item>
+    
+    <item>
+      <title>Go Stone vs. Go Board</title>
+      <link>http://127.0.0.1:1313/post/go_stone_vs_go_board/</link>
+      <pubDate>Fri, 22 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/go_stone_vs_go_board/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+In this series so far we&amp;rsquo;ve defined the shape of a go stone, rendered it using 3D graphics hardware and simulated how it moves in three dimensions.
+Our next goal is for the go stone to bounce and come to rest on the go board.</description>
+    </item>
+    
+    <item>
+      <title>How The Go Stone Moves</title>
+      <link>http://127.0.0.1:1313/post/how_the_go_stone_moves/</link>
+      <pubDate>Thu, 21 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/how_the_go_stone_moves/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+In previous articles we mathematically defined the shape of a go stone and tessellated its shape so it can be drawn with 3D graphics hardware.
+Now we want to make the go stone move, obeying Newton&amp;rsquo;s laws of motion so the simulation is physically accurate. The stone should be accelerated by gravity and fall downwards.</description>
+    </item>
+    
+    <item>
+      <title>Tessellating The Go Stone</title>
+      <link>http://127.0.0.1:1313/post/tessellating_the_go_stone/</link>
+      <pubDate>Wed, 20 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/tessellating_the_go_stone/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+In this article we want to draw the go stone using OpenGL.
+Unfortunately we can&amp;rsquo;t just tell the graphics card, &amp;ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r1 and r2!&amp;ldquo;, because modern 3D graphics cards work by drawing triangles.</description>
+    </item>
+    
+    <item>
+      <title>Shape of The Go Stone</title>
+      <link>http://127.0.0.1:1313/post/shape_of_the_go_stone/</link>
+      <pubDate>Tue, 19 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/shape_of_the_go_stone/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+If you play Go, you know that a biconvex go stone has an interesting wobble when it&amp;rsquo;s placed on the board. This wobble is a direct consequence of its unique shape.
+I&amp;rsquo;d like to reproduce this wobble in Virtual Go, so let&amp;rsquo;s to spend some time studying go stone&amp;rsquo;s shape, so we can capture this wobble and simulate it on a computer :)</description>
+    </item>
+    
+    <item>
+      <title>Introduction to Virtual Go</title>
+      <link>http://127.0.0.1:1313/post/introduction_to_virtual_go/</link>
+      <pubDate>Mon, 18 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/introduction_to_virtual_go/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+I&amp;rsquo;m a professional game programmer with 15 years experience in the game industry. Over the years I&amp;rsquo;ve worked for Irrational Games, Team Bondi, Pandemic Studios, Sony Santa Monica and most recently Respawn Entertainment. During my career I&amp;rsquo;m extremely proud to have worked on such games as &amp;lsquo;Freedom Force&amp;rsquo;, &amp;lsquo;L.</description>
+    </item>
+    
+    <item>
+      <title>Networked Physics (2004)</title>
+      <link>http://127.0.0.1:1313/post/networked_physics_2004/</link>
+      <pubDate>Sat, 04 Sep 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/networked_physics_2004/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to use spring-like forces to model basic collision response, joints and motors.
+In this article we&amp;rsquo;re going to discuss how to network a physics simulation.
+First Person Shooters First person shooter physics are usually very simple. The world is static and players are limited to running around and jumping and shooting.
+Because of cheating, first person shooters typically operate on a client-server model where the server is authoritative over physics.</description>
+    </item>
+    
+    <item>
+      <title>Spring Physics</title>
+      <link>http://127.0.0.1:1313/post/spring_physics/</link>
+      <pubDate>Fri, 03 Sep 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/spring_physics/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to simulate the motion of rigid bodies in 3D. Now we&amp;rsquo;re going to discuss how to implement spring physics.
+The physics behind springs is simple but extremely versatile and useful. You can use springs to link points together to model rope and string, cloth, and even blobs of jelly. Springs can also be used to implement basic collision response, and to create joints that constrain the motion of rigid bodies.</description>
+    </item>
+    
+    <item>
+      <title>Physics in 3D</title>
+      <link>http://127.0.0.1:1313/post/physics_in_3d/</link>
+      <pubDate>Thu, 02 Sep 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/physics_in_3d/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.
+In this article we are going to simulate motion in three dimensions.
+Rigid Bodies We will concentrate on a type of object called a rigid body. Rigid bodies cannot bend, compress or deform in any way. This makes their motion much easier to calculate.</description>
+    </item>
+    
+    <item>
+      <title>Fix Your Timestep!</title>
+      <link>http://127.0.0.1:1313/post/fix_your_timestep/</link>
+      <pubDate>Thu, 10 Jun 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/fix_your_timestep/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&amp;rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &amp;ldquo;delta time&amp;rdquo; (or dt for short).
+But how to choose this delta time value? This may seem like a trivial subject but in fact there are many different ways to do it, each with their own strengths and weaknesses - so read on!</description>
+    </item>
+    
+    <item>
+      <title>Integration Basics</title>
+      <link>http://127.0.0.1:1313/post/integration_basics/</link>
+      <pubDate>Tue, 01 Jun 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/integration_basics/</guid>
+      <description>Introduction Hi, I&amp;rsquo;m Glenn Fiedler and welcome to Game Physics.
+If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.
+A physics simulation works by making many small predictions based on the laws of physics.</description>
+    </item>
+    
+  </channel>
+</rss>

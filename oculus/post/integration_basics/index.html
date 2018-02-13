@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Integration Basics | Gaffer On Games</title>
+
+    
+    <link href="http://127.0.0.1:1313/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://127.0.0.1:1313/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://127.0.0.1:1313">Gaffer On Games</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://127.0.0.1:1313/img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Integration Basics</h1>
+               <h2 class="subheading">How to integrate the equations of motion</h2>
+               <span class="meta">Posted by <a href="http://127.0.0.1:1313/about">Glenn Fiedler</a> on Tuesday, June 1, 2004
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Hi, I&rsquo;m <a href="http://127.0.0.1:1313/about">Glenn Fiedler</a> and welcome to <strong><a href="http://127.0.0.1:1313/categories/game-physics/">Game Physics</a></strong>.</p>
+
+<p>If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.</p>
+
+<p>A physics simulation works by making many small predictions based on the laws of physics. These predictions are actually quite simple, and basically boil down to something like &ldquo;the object is here, and is traveling this fast in that direction, so in a short amount of time it should be over there&rdquo;. We perform these predictions using a mathematical technique called integration.</p>
+
+<p>Exactly how to implement this integration is the subject of this article.</p>
+
+<h2 id="integrating-the-equations-of-motion">Integrating the Equations of Motion</h2>
+
+<p>You may remember from high school or university physics that force equals mass times acceleration.</p>
+
+<pre><code>    F = ma
+</code></pre>
+
+<p>We can switch this around to see that acceleration is force divided by mass. This makes intuitive sense because heavier objects are harder to throw.</p>
+
+<pre><code>    a = F/m
+</code></pre>
+
+<p>Acceleration is the rate of change in velocity over time:</p>
+
+<pre><code>    dv/dt = a = F/m
+</code></pre>
+
+<p>Similarly, velocity is the rate of change in position over time:</p>
+
+<pre><code>    dx/dt = v
+</code></pre>
+
+<p>This means if we know the current position and velocity of an object, and the forces that will be applied to it, we can integrate to find its position and velocity at some point in the future.</p>
+
+<h2 id="numerical-integration">Numerical Integration</h2>
+
+<p>For those who have not formally studied differential equations at university, take heart for you are in almost as good a position as those who have. This is because we&rsquo;re not going to analytically solve the differential equations as you would do in first year mathematics. Instead, we are going to <strong>numerically integrate</strong> to find the solution.</p>
+
+<p>Here is how numerical integration works. First, start at an initial position and velocity, then take a small step forward to find the velocity and position at a future time. Then repeat this, moving forward in small time steps, using the result of the previous calculation as the starting point for the next.</p>
+
+<p>But how do we find the change in velocity and position at each step?</p>
+
+<p>The answer lies in the <strong>equations of motion</strong>.</p>
+
+<p>Let&rsquo;s call our current time <strong>t</strong>, and the time step <strong>dt</strong> or &lsquo;delta time&rsquo;.</p>
+
+<p>We can now put the equations of motion in a form that anyone can understand:</p>
+
+<pre><code>    acceleration = force / mass
+    change in position = velocity * dt
+    change in velocity = acceleration * dt
+</code></pre>
+
+<p>This makes intuitive sense because if you&rsquo;re in a car traveling 60 kilometers per-hour, in one hour you&rsquo;ll be 60 kilometers further down the road. Similarly, a car accelerating 10 kilometers per-hour-per-second will be moving 100 kilometers per-hour faster after 10 seconds.</p>
+
+<p>Of course this logic only holds when acceleration and velocity are constant. But even when they&rsquo;re not, it&rsquo;s still a pretty decent approximation to start with.</p>
+
+<p>Let&rsquo;s put this into code. Starting with a stationary object at the origin weighing one kilogram, we apply a constant force of 10 newtons and step forward with time steps of one second:</p>
+
+<pre><code>    double t = 0.0;
+    float dt = 1.0f;
+
+    float velocity = 0.0f;
+    float position = 0.0f;
+    float force = 10.0f;
+    float mass = 1.0f;
+
+    while ( t &lt;= 10.0 )
+    {
+        position = position + velocity * dt;
+        velocity = velocity + ( force / mass ) * dt;
+        t += dt;
+    }
+</code></pre>
+
+<p>Here is the result:</p>
+
+<pre><code>    t=0:    position = 0      velocity = 0
+    t=1:    position = 0      velocity = 10
+    t=2:    position = 10     velocity = 20
+    t=3:    position = 30     velocity = 30
+    t=4:    position = 60     velocity = 40
+    t=5:    position = 100    velocity = 50
+    t=6:    position = 150    velocity = 60
+    t=7:    position = 210    velocity = 70
+    t=8:    position = 280    velocity = 80
+    t=9:    position = 360    velocity = 90
+    t=10:   position = 450    velocity = 100
+</code></pre>
+
+<p>As you can see, at at each step we know both the position and velocity of the object. This is numerical integration.</p>
+
+<h2 id="explicit-euler">Explicit Euler</h2>
+
+<p>What we just did is a type of integration called <strong>explicit euler</strong>.</p>
+
+<p>To save you future embarrassment, I must point out now that Euler is pronounced &ldquo;Oiler&rdquo; not &ldquo;yew-ler&rdquo; as it is the last name of the Swiss mathematician <a href="https://en.wikipedia.org/wiki/Leonhard_Euler">Leonhard Euler</a> who first discovered this technique.</p>
+
+<p>Euler integration is the most basic numerical integration technique. It is only 100% accurate when the rate of change is constant over the timestep.</p>
+
+<p>Since acceleration is constant in the example above, the integration of velocity is without error. However, we are also integrating velocity to get position, and velocity is increasing due to acceleration. This means there is error in the integrated position.</p>
+
+<p>Just how large is this error? Let&rsquo;s find out!</p>
+
+<p>There is a closed form solution for how an object moves under constant acceleration. We can use this to compare our numerically integrated position with the exact result:</p>
+
+<pre><code>    s = ut + 0.5at^2
+    s = 0.0*t + 0.5at^2
+    s = 0.5(10)(10^2)
+    s = 0.5(10)(100)
+    s = 500 meters
+</code></pre>
+
+<p>After 10 seconds, the object should have moved 500 meters, but explicit euler gives a result of 450 meters. That&rsquo;s 50 meters off after just 10 seconds!</p>
+
+<p>This sounds really, really bad, but it&rsquo;s not common for games to step physics forward with such large time steps. In fact, physics usually steps forward at something closer to the display framerate.</p>
+
+<p>Stepping forward with <strong>dt</strong> = <sup>1</sup>&frasl;<sub>100</sub> yields a much better result:</p>
+
+<pre><code>    t=9.90:     position = 489.552155     velocity = 98.999062
+    t=9.91:     position = 490.542145     velocity = 99.099060
+    t=9.92:     position = 491.533142     velocity = 99.199059
+    t=9.93:     position = 492.525146     velocity = 99.299057
+    t=9.94:     position = 493.518127     velocity = 99.399055
+    t=9.95:     position = 494.512115     velocity = 99.499054
+    t=9.96:     position = 495.507111     velocity = 99.599052
+    t=9.97:     position = 496.503113     velocity = 99.699051
+    t=9.98:     position = 497.500092     velocity = 99.799049
+    t=9.99:     position = 498.498077     velocity = 99.899048
+    t=10.00:    position = 499.497070     velocity = 99.999046
+</code></pre>
+
+<p>As you can see, this is a pretty good result. Certainly good enough for a game.</p>
+
+<h2 id="why-explicit-euler-is-not-always-so-great">Why explicit euler is not (always) so great</h2>
+
+<p>With a small enough timestep explicit euler gives decent results for constant acceleration, but what about the case where acceleration isn&rsquo;t constant?</p>
+
+<p>A good example of non-constant acceleration is a <a href="https://ccrma.stanford.edu/CCRMA/Courses/152/vibrating_systems.html">spring damper system</a>.</p>
+
+<p>In this system a mass is attached to a spring and its motion is damped by some kind of friction. There is a force proportional to the distance of the object that pulls it towards the origin, and a force proportional to the velocity of the object, but in the opposite direction, which slows it down.</p>
+
+<p>Now the acceleration is definitely not constant throughout the timestep, but is a continously changing function that is a combination of the position and velocity, which are themselves changing continuously over the timestep.</p>
+
+<p>This is an example of a <a href="https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator">damped harmonic oscillator</a>. It&rsquo;s a well studied problem and there&rsquo;s a closed form solution that we can use to check our numerically integrated result.</p>
+
+<p>Let&rsquo;s start with an underdamped system where the mass oscillates about the origin while slowing down.</p>
+
+<p>Here are the input parameters to the mass spring system:</p>
+
+<ul>
+<li>Mass: 1 kilogram</li>
+<li>Initial position: 1000 meters from origin</li>
+<li>Hooke&rsquo;s law spring coefficient: k = 15</li>
+<li>Hooke&rsquo;s law damping coefficient: b = 0.1</li>
+</ul>
+
+<p>And here is a graph of the exact solution:</p>
+
+<p><img src="http://127.0.0.1:1313/img/game-physics/integration_basics_damped_exact_solution.png" width="100%"/></p>
+
+<p>When we apply explicit euler to integrate this system, we get the following result, which has been scaled down vertically to fit:</p>
+
+<p><img src="http://127.0.0.1:1313/img/game-physics/integration_basics_damped_explicit_euler.png" width="100%"/></p>
+
+<p>Instead of damping and converging on the origin, it gains energy over time!</p>
+
+<p>This system is unstable when integrated with explicit euler and <strong>dt</strong>=<sup>1</sup>&frasl;<sub>100</sub>.</p>
+
+<p>Unfortunately, since we&rsquo;re already integrating with a small timestep, we don&rsquo;t have a lot of practical options to improve the accuracy. Even you we do reduce the timestep, there&rsquo;s always a spring tightness k above which you&rsquo;ll see this behavior.</p>
+
+<h2 id="semi-implicit-euler">Semi-implicit Euler</h2>
+
+<p>Another integrator to consider is <a href="https://en.wikipedia.org/wiki/Semi-implicit_Euler_method">semi-implicit euler</a>.</p>
+
+<p>Most commercial game physics engines use this integrator.</p>
+
+<p>Switching from explicit to semi-implicit euler is as simple as changing:</p>
+
+<pre><code>    position += velocity * dt;
+    velocity += acceleration * dt;
+</code></pre>
+
+<p>to:</p>
+
+<pre><code>    velocity += acceleration * dt;
+    position += velocity * dt;
+</code></pre>
+
+<p>Applying the semi-implicit euler integrator with <strong>dt</strong> = <sup>1</sup>&frasl;<sub>100</sub> to the spring damper system gives a stable result that is very close to the exact solution:</p>
+
+<p><img src="http://127.0.0.1:1313/img/game-physics/integration_basics_damped_semi_implicit_euler.png" width="100%"/></p>
+
+<p>Even though semi-implicit euler has the same order of accuracy as explicit euler (order 1), we get a much better result when integrating the equations of motion because it is <a href="https://en.wikipedia.org/wiki/Symplectic_integrator">symplectic</a>.</p>
+
+<h2 id="many-different-integration-methods-exist">Many different integration methods exist</h2>
+
+<p>And now for something completely different.</p>
+
+<p><a href="http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html">Implicit euler</a> is an integration technique that is well suited for simulating stiff equations that become unstable with other methods. The drawback is that it requires solving a system of equations per-timestep.</p>
+
+<p><a href="https://en.wikipedia.org/wiki/Verlet_integration">Verlet integration</a> provides greater accuracy than implicit euler and less memory usage when simulating a large number of particles is. This is a second order integrator which is also symplectic.</p>
+
+<p>There is a whole family of integrators called the <strong>Runge-Kutta methods</strong>. In fact, explicit euler is considered part of this family, but it also includes higher order integrators, the most classic of these being the Runge Kutta order 4 or simply <strong>RK4</strong>.</p>
+
+<p>This family of integrators is named for the German physicists who discovered them: <a href="https://en.wikipedia.org/wiki/Carl_David_Tolmé_Runge">Carl Runge</a> and <a href="https://en.wikipedia.org/wiki/Martin_Wilhelm_Kutta">Martin Kutta</a>. This means the &lsquo;g&rsquo; is hard and the &lsquo;u&rsquo; is a short &lsquo;oo&rsquo; sound. I am sorry to inform but this means we are talking about the <em>&lsquo;roon-geh koo-ta&rsquo;</em> methods and not a <em>&lsquo;runge cutter&rsquo;</em>, whatever that is :)</p>
+
+<p>The RK4 is a fourth order integrator, which means its accumulated error is on the order of the fourth derivative. This makes it very accurate. Much more accurate than explicit and implicit euler which are only first order.</p>
+
+<p>But although it&rsquo;s more accurate, that&rsquo;s not to say RK4 is automatically &ldquo;the best&rdquo; integrator, or even that it is better than semi-implicit euler. It&rsquo;s much more complicated than this. Regardless, it&rsquo;s an interesting integrator and is well worth studying.</p>
+
+<h2 id="implementing-rk4">Implementing RK4</h2>
+
+<p>There are many great explanations of the mathematics behind RK4 already. For example: <a href="https://en.wikipedia.org/wiki/Runge–Kutta_methods">here</a>, <a href="http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node5.html">here</a> and <a href="https://www.researchgate.net/publication/49587610_A_Simplified_Derivation_and_Analysis_of_Fourth_Order_Runge_Kutta_Method">here</a>. I highly encourage you to follow the derivation and understand how and why it works at a mathematical level. But, seeing as the target audience for this article are programmers, not mathematicians, we&rsquo;re all about implementation here. So let&rsquo;s get started.</p>
+
+<p>Before we go any further let&rsquo;s define the state of an object as a struct in C++ so we have both position and velocity stored conveniently in one place:</p>
+
+<pre><code>    struct State
+    {
+        float x;      // position
+        float v;      // velocity
+    };
+</code></pre>
+
+<p>We also need a struct to store the derivatives of the state values:</p>
+
+<pre><code>    struct Derivative
+    {
+        float dx;      // dx/dt = velocity
+        float dv;      // dv/dt = acceleration
+    };
+</code></pre>
+
+<p>Next we need a function to advance the physics state ahead from t to t+dt using one set of derivatives, and once there, recalculate the derivatives at this new state:</p>
+
+<pre><code>    Derivative evaluate( const State &amp; initial, 
+                         double t, 
+                         float dt, 
+                         const Derivative &amp; d )
+    {
+        State state;
+        state.x = initial.x + d.dx*dt;
+        state.v = initial.v + d.dv*dt;
+
+        Derivative output;
+        output.dx = state.v;
+        output.dv = acceleration( state, t+dt );
+        return output;
+    }
+</code></pre>
+
+<p>The acceleration function is what drives the entire simulation. Let&rsquo;s set it to the spring damper system and return the acceleration assuming unit mass:</p>
+
+<pre><code>    float acceleration( const State &amp; state, double t )
+    {
+        const float k = 15.0f;
+        const float b = 0.1f;
+        return -k * state.x - b * state.v;
+    }
+</code></pre>
+
+<p>What you write here is of course simulation dependent, but you must structure your simulation so you can calculate the acceleration inside this method given the current state and time, otherwise it won&rsquo;t work with the RK4 integrator.</p>
+
+<p>Finally we get to the integration routine itself:</p>
+
+<pre><code>    void integrate( State &amp; state, 
+                    double t, 
+                    float dt )
+    {
+        Derivative a,b,c,d;
+
+        a = evaluate( state, t, 0.0f, Derivative() );
+        b = evaluate( state, t, dt*0.5f, a );
+        c = evaluate( state, t, dt*0.5f, b );
+        d = evaluate( state, t, dt, c );
+
+        float dxdt = 1.0f / 6.0f * 
+            ( a.dx + 2.0f * ( b.dx + c.dx ) + d.dx );
+
+        float dvdt = 1.0f / 6.0f * 
+            ( a.dv + 2.0f * ( b.dv + c.dv ) + d.dv );
+
+        state.x = state.x + dxdt * dt;
+        state.v = state.v + dvdt * dt;
+    }
+</code></pre>
+
+<p>The RK4 integrator samples the derivative at four points to detect curvative. Notice how derivative a is used when calculating b, b is used when calculating c, and c into d. This feedback of the current derivative into the calculation of the next is what gives the RK4 integrator its accuracy.</p>
+
+<p>Importantly, each of these derivatives a,b,c and d will be <em>different</em> when the rate of change in these quantities is a function of time or a function of the state itself. For example, in our spring damper system acceleration is a function of the current position and velocity which change throughout the timestep.</p>
+
+<p>Once the four derivatives have been evaluated, the best overall derivative is calculated as a weighted sum derived from the <a href="https://en.wikipedia.org/wiki/Taylor_series">taylor series</a> expansion. This combined derivative is used to advance the position and velocity forward, just as we did with the explicit euler integrator.</p>
+
+<h2 id="semi-implicit-euler-vs-rk4">Semi-implicit euler vs. RK4</h2>
+
+<p>Let&rsquo;s put the RK4 integrator to the test.</p>
+
+<p>Obviously, since it is a higher order integrator (4th order vs. 1st order) it will be visibly more accurate than semi-implicit euler, right?</p>
+
+<p><img src="http://127.0.0.1:1313/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler.png" width="100%"/></p>
+
+<p><strong>Wrong</strong>. Both integrators are so close to the exact result that it&rsquo;s impossible to make out any difference at this scale. Both integrators are stable and track the exact solution very well with <strong>dt</strong>=<sup>1</sup>&frasl;<sub>100</sub>.</p>
+
+<p><img src="http://127.0.0.1:1313/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler_zoomed_in.png" width="100%"/></p>
+
+<p>Zooming in confirms that RK4 <em>is</em> more accurate than semi-implicit euler, but is it really worth the complexity and extra runtime cost of RK4? It&rsquo;s hard to say.</p>
+
+<p>Let&rsquo;s push a bit harder and see if we can find a significant difference between the two integrators. Unfortunately, we can&rsquo;t look at this system for long periods of time because it quickly damps down to zero, so let&rsquo;s switch to a <a href="https://en.wikipedia.org/wiki/Harmonic_oscillator#Simple_harmonic_oscillator">simple harmonic oscillator</a> which oscillates forever without any damping.</p>
+
+<p>Here&rsquo;s the exact result we&rsquo;re aiming for:</p>
+
+<p><img src="http://127.0.0.1:1313/img/game-physics/integration_basics_undamped_exact_solution.png" width="100%"/></p>
+
+<p>To make it harder on the integrators, let&rsquo;s increase delta time to 0.1 seconds.</p>
+
+<p>Next, we let the integrators run for 90 seconds and zoom in:</p>
+
+<p><img src="http://127.0.0.1:1313/img/game-physics/integration_basics_undamped_rk4_vs_semi_implicit_euler.png" width="100%"/></p>
+
+<p>After 90 seconds the semi-implicit euler solution (orange) has drifted out of phase with the exact solution because it has a slightly different frequency, while the green line of RK4 matches the frequency, but is losing energy!</p>
+
+<p>We can see this more clearly by increasing the time step to 0.25 seconds.</p>
+
+<p>RK4 maintains the correct frequency but loses energy:</p>
+
+<p><img src="http://127.0.0.1:1313/img/game-physics/integration_basics_undamped_rk4_5fps.png" width="100%"/></p>
+
+<p>While semi-implicit euler does a better job at conserving energy, on average:</p>
+
+<p><img src="http://127.0.0.1:1313/img/game-physics/integration_basics_undamped_semi_implicit_euler_5fps.png" width="100%"/></p>
+
+<p>But drifts out of phase. What an interesting result! As you can see it&rsquo;s not simply the case that RK4 has a higher order of accuracy and is &ldquo;better&rdquo;. It&rsquo;s much more nuanced than this.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>We&rsquo;ve implemented three different integrators and compared their results.</p>
+
+<ol>
+<li>Explicit euler</li>
+<li>Semi-implicit euler</li>
+<li>Runge Kutta order 4 (RK4)</li>
+</ol>
+
+<p>So which integrator should you use in your game?</p>
+
+<p>My recommendation is <strong>semi-implicit euler</strong>. It&rsquo;s cheap and easy to implement, it&rsquo;s much more stable than explicit euler, and it tends to preserve energy on average even when pushed near its limit.</p>
+
+<p>If you really do need more accuracy than semi-implicit euler, I recommend you look into higher order <a href="https://en.wikipedia.org/wiki/Symplectic_integrator">symplectic integrators</a> designed for <a href="https://en.wikipedia.org/wiki/Hamiltonian_system">hamiltonian systems</a>. This way you&rsquo;ll discover more modern higher order integration techniques that are better suited to your simulation than RK4.</p>
+
+<p>And finally, if you are still doing this in your game:</p>
+
+<pre><code>    position += velocity * dt;
+    velocity += acceleration * dt;
+</code></pre>
+
+<p>Please take a moment to change it to this:</p>
+
+<pre><code>    velocity += acceleration * dt;
+    position += velocity * dt;
+</code></pre>
+
+<p>You&rsquo;ll be glad you did :)</p>
+
+<p><strong>NEXT ARTICLE:</strong> <a href="http://127.0.0.1:1313/post/fix_your_timestep/">Fix Your Timestep!</a></p>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    
+                    <li>
+                      <a href="https://www.linkedin.com/in/glennfiedler/">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://twitter.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted">Copyright © Glenn Fiedler, 2004 - 2018</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://127.0.0.1:1313/js/jquery.min.js"></script>
+
+    
+    <script src="http://127.0.0.1:1313/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://127.0.0.1:1313/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

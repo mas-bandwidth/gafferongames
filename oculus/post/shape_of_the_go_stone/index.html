@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Shape of The Go Stone | Gaffer On Games</title>
+
+    
+    <link href="http://127.0.0.1:1313/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://127.0.0.1:1313/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://127.0.0.1:1313">Gaffer On Games</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://127.0.0.1:1313/img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Shape of The Go Stone</h1>
+               <h2 class="subheading">Modelling the shape of a biconvex go stone</h2>
+               <span class="meta">Posted by <a href="http://127.0.0.1:1313/about">Glenn Fiedler</a> on Tuesday, February 19, 2013
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Hi, I&rsquo;m Glenn Fiedler. Welcome to <a href="http://127.0.0.1:1313/categories/virtual-go/"><strong>Virtual Go</strong></a>, my project to create a physically accurate computer simulation of a Go board and stones.</p>
+
+<p>If you play Go, you know that a biconvex go stone has an interesting wobble when it&rsquo;s placed on the board. This wobble is a direct consequence of its unique shape.</p>
+
+<p>I&rsquo;d like to reproduce this wobble in Virtual Go, so let&rsquo;s to spend some time studying go stone&rsquo;s shape, so we can capture this wobble and simulate it on a computer :)</p>
+
+<h2 id="slate-and-shell">Slate And Shell</h2>
+
+<p>In Japan, Go stones are traditionally made out of slate and clam shell.</p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/slate-and-shell-in-ko.jpg" alt="slate and shell in ko" width="100%"/></p>
+
+<p>Clam shell stones come in several grades of quality. The highest being yuki or &ldquo;snow&rdquo; grade with fine, regularly spaced lines.</p>
+
+<p>Go stones also come in different sizes. In general, the thicker the stone, the more expensive it is, as only a small portion of the clam shell is suitable for making them.</p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/go-stone-side-profile-sizes.png" alt="go stone side profile sizes" width="100%"/></p>
+
+<p>At first glance the go stone looks like an ellipse, but side-on you can see this is not the case. This shape is called a <em>biconvex solid</em>. I find this shape interesting because it is the intersection of two spheres.</p>
+
+<p>We can study this shape by looking at the intersection of two circles:</p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/biconvex.gif" alt="biconvex" width="75%"/></p>
+
+<p>I quickly noticed that by varying the radius of the circles and the distance between their centers, I could generate go stones of different sizes.</p>
+
+<p>But when creating a go stone I don&rsquo;t really want it to be parameterized this way.</p>
+
+<p>Instead I&rsquo;d like to say, &ldquo;Hey, I would like a stone of this width and height&rdquo; and have a function that calculates the radius of the circles and how far apart they should be to generate that stone.</p>
+
+<p>To write this function we first need to do some math:</p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/biconvex-unknowns.png" alt="biconvex unknowns" width="75%"/></p>
+
+<p>First notice that the point Q lies on the generating circle, so the line CQ has length r:</p>
+
+<p><em>todo: obviously I have a bunch of work to get the latex equations ported across to Hugo. I&rsquo;m researching different options&hellip;</em></p>
+
+<p>[latex size=&ldquo;2&rdquo;]d + h/2 = r[/latex]
+[latex size=&ldquo;2&rdquo;]d = r - h/2[/latex]</p>
+
+<p>The point P is also on the generating circle so the green line CP has length r as well. Using Pythagoras theorem and substituting for d:</p>
+
+<p>[latex size=&ldquo;2&rdquo;]r^2 = d^2 + (w/2)^2[/latex]
+[latex size=&ldquo;2&rdquo;]r^2 = ( r - h/2 )^2 + (w/2)^2[/latex]
+[latex size=&ldquo;2&rdquo;]r^2 = ( h^<sup>2</sup>&frasl;<sub>4</sub> - hr + r^2 ) + w^<sup>2</sup>&frasl;<sub>4</sub>[/latex]
+[latex size=&ldquo;2&rdquo;]r^2 = h^<sup>2</sup>&frasl;<sub>4</sub> - hr + r^2 + w^<sup>2</sup>&frasl;<sub>4</sub>[/latex]
+[latex size=&ldquo;2&rdquo;]0 = h^<sup>2</sup>&frasl;<sub>4</sub> - hr + 0 + w^<sup>2</sup>&frasl;<sub>4</sub>[/latex]
+[latex size=&ldquo;2&rdquo;]hr = h^<sup>2</sup>&frasl;<sub>4</sub> + w^<sup>2</sup>&frasl;<sub>4</sub>[/latex]
+[latex size=&ldquo;2&rdquo;]r = ( h^2 + w^2 ) / 4h[/latex]</p>
+
+<p>Which gives us everything we need to write the function:</p>
+
+<pre><code>    void calculateBiconvex( float w,  
+                            float h, 
+                            float &amp; r, 
+                            float &amp; d )
+    {
+        r = ( w*w + h*h ) / ( 4*h );
+        d = r - h/2;
+    }
+</code></pre>
+
+<p>Now we can mathematically define a go stone parameterized by its width and height. There is just one problem: the edge is very sharp!</p>
+
+<p>To make our stone aesthetically pleasing, lets round the edge with a bevel. Otherwise, you might cut yourself virtually when you play with it:</p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/go-stone-smooth-bevel.jpg" alt="go stone smooth bevel" width="100%"/></p>
+
+<p>Let&rsquo;s parameterize the bevel by its height b:</p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/bevel-b.gif" alt="torus bevel height b" width="75%"/></p>
+
+<p>In three dimensions the bevel is actually a torus (donut) around the edge of the go stone. We need to calculate the major and minor radii r<sub>1</sub> and r<sub>2</sub> of the torus as a function of b and the dimensions of the go stone:</p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/bevel-math-1.gif" alt="bevel math part 1" width="100%"/></p>
+
+<p>The key to solving this is to realize that if the go stone and the bevel are to match perfectly then the tangent of the two circles must be equal at the point P.</p>
+
+<p><em><em>Update</em>: A few years later and it occurs to me that it would be even more beautiful if the second derivative matched at this intersection as well. Is this possible in general, or must the generating spheres become to ellipses in order to make this happen? I suspect this is the case. Mathematicians who play Go, <a href="http://127.0.0.1:1313/contact">let me know your thoughts</a>.</em></p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/bevel-math-2.gif" alt="bevel math part 2" width="100%"/></p>
+
+<p>If the tangent is equal then the normal must be equal as well. This means that the center of the bevel circle lies at the intersection of the line CP and the x axis.</p>
+
+<p>We already know C so if we can find the point P then we can find this intersection point. Once we know the intersection point we can find r<sub>1</sub> and r<sub>2</sub>.</p>
+
+<p>Since P is at the start of the bevel:</p>
+
+<p>[latex size=&ldquo;2&rdquo;]P_y = b/2[/latex]</p>
+
+<p>Because P lies on the biconvex circle with center C and radius r we can use the equation of the circle to find x as a function of y:</p>
+
+<p>[latex size=&ldquo;2&rdquo;]x^2 + y^2 = r^2[/latex]
+[latex size=&ldquo;2&rdquo;]x = \sqrt{ r^2 - y^2 }[/latex]</p>
+
+<p>We need y relative to the circle center C, not in go stone coordinates, so we add d and substitute y&rsquo; for y:</p>
+
+<p>[latex size=&ldquo;2&rdquo;]y&rsquo; = b/2 + d[/latex]
+[latex size=&ldquo;2&rdquo;]P_x = \sqrt{ r^2 - ( b/2 + d )^2 }[/latex]</p>
+
+<p>We can now find r<sub>1</sub> by similar triangles:</p>
+
+<p>[latex size=&ldquo;2&rdquo;]r_1/P_x = d / ( d + b/2 )[/latex]
+[latex size=&ldquo;2&rdquo;]r_1 = P_x d / ( d + b/2 )[/latex]</p>
+
+<p>and q by Pythagoras theorem:</p>
+
+<p>[latex size=&ldquo;2&rdquo;]q^2 = d^2 + r_1^2[/latex]
+[latex size=&ldquo;2&rdquo;]q = \sqrt{ d^2 + r_1^2 }[/latex]</p>
+
+<p>Because line CP has length r and substituting for q:</p>
+
+<p>[latex size=&ldquo;2&rdquo;]q + r_2 = r[/latex]
+[latex size=&ldquo;2&rdquo;]r_2 = r - q[/latex]
+[latex size=&ldquo;2&rdquo;]r_2 = r - \sqrt{ d^2 + r_1^2 }[/latex]</p>
+
+<p>Now we have everything we need to write the function:</p>
+
+<pre><code>    void calculate_bevel( float r, float d, float b, 
+                          float &amp; r1, float &amp; r2 )
+    {
+        const float y = b/2 + d;
+        const float px = sqrt( r*r - y*y );
+        r1 = px * d / ( d + b/2 ); 
+        r2 = r - sqrt( d*d + r1*r1 );
+    }
+</code></pre>
+
+<p>Now we can calculate the bevel torus to round off any go stone we create as the intersection of two spheres.</p>
+
+<p><strong>NEXT ARTICLE:</strong> <a href="http://127.0.0.1:1313/post/tessellating_the_go_stone">Tessellating The Go Stone</a></p>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    
+                    <li>
+                      <a href="https://www.linkedin.com/in/glennfiedler/">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://twitter.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted">Copyright © Glenn Fiedler, 2004 - 2018</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://127.0.0.1:1313/js/jquery.min.js"></script>
+
+    
+    <script src="http://127.0.0.1:1313/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://127.0.0.1:1313/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

@@ -3,7 +3,7 @@
 public:
 	rm -rf public
 	rm -f config.toml
-	cp config_upload.toml config.toml
+	cp config_local.toml config.toml
 	hugo
 
 local:

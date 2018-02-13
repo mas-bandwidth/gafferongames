@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Introduction to Virtual Go | Gaffer On Games</title>
+
+    
+    <link href="http://127.0.0.1:1313/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://127.0.0.1:1313/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://127.0.0.1:1313">Gaffer On Games</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://127.0.0.1:1313/img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Introduction to Virtual Go</h1>
+               <h2 class="subheading">My project to simulate a go board and stones</h2>
+               <span class="meta">Posted by <a href="http://127.0.0.1:1313/about">Glenn Fiedler</a> on Monday, February 18, 2013
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Hi, I&rsquo;m Glenn Fiedler. Welcome to <a href="http://127.0.0.1:1313/categories/virtual-go/"><strong>Virtual Go</strong></a>, my project to create a physically accurate computer simulation of a Go board and stones.</p>
+
+<p>I&rsquo;m a professional game programmer with 15 years experience in the game industry. Over the years I&rsquo;ve worked for Irrational Games, Team Bondi, Pandemic Studios, Sony Santa Monica and most recently Respawn Entertainment. During my career I&rsquo;m extremely proud to have worked on such games as &lsquo;Freedom Force&rsquo;, &lsquo;L.A. Noire&rsquo;, &lsquo;Journey&rsquo;, &lsquo;God of War: Ascension&rsquo; and &lsquo;Titanfall&rsquo;.</p>
+
+<p>In my spare time I&rsquo;m also an avid player of the board game <a href="https://en.wikipedia.org/wiki/Go_(game)">Go</a>.</p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/go-board-outside-cafe.jpg" width="100%"/></a></p>
+
+<p>A personal project I&rsquo;ve always dreamed of combines the things I love: the game of Go, graphics programming, physics simulation and network programming.</p>
+
+<p>The end result I hope to achieve is a beautiful real-time computer rendering of a go board and stones with photorealistic visuals and the laws of physics defining all interactions between the go stones and the board. To Go players reading this, yes, I do aim to reproduce that unique &lsquo;wobble&rsquo; and feel you are familiar with when placing a stone on the board.</p>
+
+<p>During the course of this article series I&rsquo;m going to build this project entirely from scratch and include <u>you</u> in on all the details of building it as a tutorial. I believe in sharing knowledge and my hope is you can follow this project and understand the passion I bring to it and perhaps learn a few things along the way.</p>
+
+<p>If you already play Go and want to get right in to the details of building the simulation, I would recommend skipping ahead to the next article in the series: <a href="http://127.0.0.1:1313/post/shape_of_the_go_stone/">Shape Of The Go Stone</a>.</p>
+
+<p>Otherwise, if you would like a quick introduction to Go, please read on!</p>
+
+<h2 id="the-game-of-go">The Game of Go</h2>
+
+<p>Go is a board game that originated in ancient China.</p>
+
+<p>Today it is played worldwide but has a particularly strong following in China, Japan and Korea. It is not particularly well known in the West, although it has featured in popular culture in the movie &ldquo;A Beautiful Mind&rdquo;.</p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/old-men-playing-go.jpg" width="100%"/></a></p>
+
+<p>Go is played on a grid with black and white stones. It is played by two people, each taking turns to place a stone of their color at one of the intersection points on the grid. Once placed on the board, stones do not move.</p>
+
+<p>Each stone on the board has a number of liberties equal to the number of lines radiating out from it on the grid. A stone in the middle of the board has four liberties, a stone on the side has three, a stone in the corner has just two.</p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/go-board-liberties-9x9.jpg" width="100%"/></a></p>
+
+<p>If the opponent is able to surround all the liberties with stones of the opposite color, the stone is removed from the board.</p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/capture-stones-9x9.jpg" width="100%"/></a></p>
+
+<p>When stones of the same color are placed horizontally or vertically next to each other they become logically connected and form a &ldquo;group&rdquo; with its own set of liberties. For example, a group of two stones in the center has 6 liberties, while the same group on the side has only 4.</p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/go-board-group-of-two-liberties-9x9.jpg" width="100%"/></a></p>
+
+<p>A group may be captured if all of its liberties are blocked with stones of the opposite color. When a group is captured it is removed from the board as a unit.</p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/capture-groups-of-two-9x9.jpg" width="100%"/></a></p>
+
+<p>Of course it is not so easy to surround your opponents stones because they get to place stones too :)</p>
+
+<p>For example, a single black stone in the center with just one liberty remaining is in a situation known as &ldquo;Atari&rdquo;, but black can escape by extending to form a group of two stones. Now the black group has three liberties and can extend to create more liberties faster than they can be taken away.</p>
+
+<p><img src="http://127.0.0.1:1313/img/virtualgo/atari-run-away-9x9.jpg" width="100%"/></a></p>
+
+<p>It follows that it&rsquo;s not really possible to capture all of your opponents stones or for them to capture all of yours. Instead, you must coexist on the board with stones of the other color and find a way to surround more points of territory than your opponent.</p>
+
+<p>It sounds simple but as you play Go you&rsquo;ll notice beautiful complexity emerging like a fractal: life and death - stones living even though surrounded, liberty races, seki or &ldquo;dual life&rdquo;, the ladder, ko, the snapback, playing under the stones, the monkey jump, the bamboo joint, the tiger mouth.</p>
+
+<p>So many beautiful properties from such simple rules. Truly an amazing game!</p>
+
+<p>Please visit <a href="http://playgo.to/iwtg/en/">The Interactive Way To Go</a> if you would like to learn more.</p>
+
+<p><strong>NEXT ARTICLE:</strong> <a href="http://127.0.0.1:1313/post/shape_of_the_go_stone/">Shape of The Go Stone</a></p>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    
+                    <li>
+                      <a href="https://www.linkedin.com/in/glennfiedler/">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://twitter.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted">Copyright © Glenn Fiedler, 2004 - 2018</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://127.0.0.1:1313/js/jquery.min.js"></script>
+
+    
+    <script src="http://127.0.0.1:1313/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://127.0.0.1:1313/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+

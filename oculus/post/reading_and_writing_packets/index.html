@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Reading and Writing Packets | Gaffer On Games</title>
+
+    
+    <link href="http://127.0.0.1:1313/css/bootstrap.min.css" rel="stylesheet">
+
+    
+    <link href="http://127.0.0.1:1313/css/clean-blog.min.css" rel="stylesheet">
+
+    
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+    <link href='//fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+    <link href='//fonts.googleapis.com/css?family=Open+Sans:300italic,400italic,600italic,700italic,800italic,400,300,600,700,800' rel='stylesheet' type='text/css'>
+
+    
+    
+    
+
+</head>
+
+<body>
+
+    
+    <nav class="navbar navbar-default navbar-custom navbar-fixed-top">
+        <div class="container-fluid">
+            
+            <div class="navbar-header page-scroll">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="http://127.0.0.1:1313">Gaffer On Games</a>
+            </div>
+
+                       
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav navbar-right">
+                    
+                  </ul>
+            </div>
+           
+
+        </div>
+        
+    </nav>
+
+
+    
+    
+    <header class="intro-header" style="background-image: url('http://127.0.0.1:1313/img/post-bg.jpg')">
+    
+      <div class="container">
+        <div class="row">
+           <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+             <div class="post-heading">
+               <h1>Reading and Writing Packets</h1>
+               <h2 class="subheading">Best practices for reading and writing packets</h2>
+               <span class="meta">Posted by <a href="http://127.0.0.1:1313/about">Glenn Fiedler</a> on Thursday, September 1, 2016
+               </span>
+             </div>
+           </div>
+        </div>
+      </div>
+    </header>
+
+    
+    <article>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Hi, I’m <a href="http://127.0.0.1:1313/about">Glenn Fiedler</a> and welcome to <strong><a href="http://127.0.0.1:1313/categories/building-a-game-network-protocol/">Building a Game Network Protocol</a></strong>.</p>
+
+<p>In this article we&rsquo;re going to explore how AAA multiplayer games like first person shooters read and write packets. We&rsquo;ll start with text based formats then move into binary hand-coded binary formats and bitpacking.</p>
+
+<p>At the end of this article and the next, you should understand exactly how to implement your own packet read and write the same way the pros do it.</p>
+
+<h2 id="background">Background</h2>
+
+<p>Consider a web server. It listens for requests, does some work asynchronously and sends responses back to clients. It’s stateless and generally not real-time, although a fast response time is great. Web servers are most often IO bound.</p>
+
+<p>Game server are different. They&rsquo;re a headless version of the game running in the cloud. As such they are stateful and CPU bound. The traffic patterns are different too. Instead of infrequent request/response from tens of thousands of clients, a game server has far fewer clients, but processes a continuous stream of input packets sent from each client 60 times per-second, and broadcasts out the state of the world to clients 10, 20 or even 60 times per-second.</p>
+
+<p>And this state is <strong>huge</strong>. Thousands of objects with hundreds of properties each. Game network programmers spend a lot of their time optimizing exactly how this state is sent over the network with crazy bit-packing tricks, hand-coded binary formats and delta encoding.</p>
+
+<p>What would happen if we just encoded this world state as XML?</p>
+
+<pre>&lt;world_update world_time="0.0"&gt;
+  &lt;object id="1" class="player"&gt;
+    &lt;property name="position" value="(0,0,0)"&lt;/property&gt;
+    &lt;property name="orientation" value="(1,0,0,0)"&lt;/property&gt;
+    &lt;property name="velocity" value="(10,0,0)"&lt;/property&gt;
+    &lt;property name="health" value="100"&gt;&lt;/property&gt;
+    &lt;property name="weapon" value="110"&gt;&lt;/property&gt;
+    ... 100s more properties per-object ...
+ &lt;/object&gt;
+ &lt;object id="100" class="grunt"&gt;
+   &lt;property name="position" value="(100,100,0)"&lt;/property&gt;
+   &lt;property name="health" value="10"&lt;/property&gt;
+ &lt;/object&gt;
+ &lt;object id="110" class="weapon"&gt;
+   &lt;property type="semi-automatic"&gt;&lt;/property&gt;
+   &lt;property ammo_in_clip="8"&gt;&lt;/property&gt;
+   &lt;property round_in_chamber="true"&gt;&lt;/property&gt;
+ &lt;/object&gt;
+ ... 1000s more objects ...
+&lt;/world_update&gt;
+</pre>
+
+<p>Pretty verbose&hellip; it&rsquo;s hard to see how this would be practical for a large world.</p>
+
+<p>JSON is a bit more compact:</p>
+
+<pre>
+{
+  "world_time": 0.0,
+  "objects": {
+    1: {
+      "class": "player",
+      "position": "(0,0,0)",
+      "orientation": "(1,0,0,0)",
+      "velocity": "(10,0,0)",
+      "health": 100,
+      "weapon": 110
+    }
+    100: {
+      "class": "grunt",
+      "position": "(100,100,0)",
+      "health": 10
+    }
+    110: {
+      "class": "weapon",
+      "type: "semi-automatic"
+      "ammo_in_clip": 8,
+      "round_in_chamber": 1 
+    }
+    // etc...
+  }
+}
+</pre>
+
+<p>But it still suffers from the same problem: the description of the data is larger than the data itself. What if instead of fully describing the world state in each packet, we split it up into two parts?</p>
+
+<ol>
+<li><p>A schema that describes the set of object classes and properties per-class, <strong>sent only once</strong> when a client connects to the server.</p></li>
+
+<li><p>Data sent rapidly from server to client, <strong>which is encoded relative to the schema</strong>.</p></li>
+</ol>
+
+<p>The schema could look something like this:</p>
+
+<pre>{
+  "classes": {
+    0: "player" {
+      "properties": {
+        0: {
+          "name": "position",
+          "type": "vec3f"
+        }
+        1: {
+          "name": "orientation",
+          "type": "quat4f"
+        }
+        2: {
+          "name": "velocity",
+          "type": "vec3f"
+        }
+        3: {
+          "name": "health",
+          "type": "float"
+        }
+        4: {
+          "name": "weapon",
+          "type": "object", 
+        }
+      }
+    }
+    1: "grunt": {
+      "properties": {
+        0: {
+          "name": "position",
+          "type": "vec3f"
+        }
+        1: {
+          "name": "health",
+          "type": "float"
+        }
+      }
+    }
+    2: "weapon": {
+      "properties": {
+        0: {
+          "name": "type",
+          "type": "enum",
+          "enum_values": [ "revolver", "semi-automatic" ]
+        }
+        1: {
+          "name": "ammo_in_clip",
+          "type": "integer",
+          "range": "0..9",
+        }
+        2: {
+          "name": "round_in_chamber",
+          "type": "integer",
+          "range": "0..1"
+        }
+      }
+    }  
+  }
+}</pre>
+
+<p>The schema is quite big, but that&rsquo;s beside the point. It&rsquo;s sent only once, and now the client knows the set of classes in the game world and the number, name, type and range of properties per-class.</p>
+
+<p>With this knowledge we can make the rapidly sent portion of the world state much more compact:</p>
+
+<pre>
+{
+  "world_time": 0.0,
+  "objects": {
+    1: [0,"(0,0,0)","(1,0,0,0)","(10,0,0)",100,110],
+    100: [1,"(100,100,0)",10],
+    110: [2,1,8,1]
+  }
+}
+</pre>
+
+<p>And we can compress it even further by switching to a custom text format:</p>
+
+<pre>
+0.0
+1:0,0,0,0,1,0,0,0,10,0,0,100,110
+100:1,100,100,0,10
+110:2,1,8,1
+</pre>
+
+<p>As you can see, it’s much more about what you <strong>don’t send</strong> than what you do.</p>
+
+<h2 id="the-inefficiencies-of-text">The Inefficiencies of Text</h2>
+
+<p>We’ve made good progress on our text format so far, moving from a highly attributed stream that fully describes the data (more description than actual data) to an unattributed text format that&rsquo;s an order of magnitude more efficient.</p>
+
+<p>But there are inherent inefficiencies when using text format for packets:</p>
+
+<ul>
+<li><p>We are most often sending data in the range <strong>A-Z</strong>, <strong>a-z</strong> and <strong>0-1</strong>, plus a few other symbols. This wastes the remainder of the <strong>0-255</strong> range for each character sent. From an information theory standpoint, this is an inefficient encoding.</p></li>
+
+<li><p>The text representation of integer values are in the general case much less efficient than the binary format. For example, in text format the worst case unsigned 32 bit integer <strong>4294967295</strong> takes 10 bytes, but in binary format it takes just four.</p></li>
+
+<li><p>In text, even the smallest numbers in <strong>0-9</strong> range require at least one byte, but in binary, smaller values like <strong>0, 11, 31, 100</strong> can be sent with fewer than 8 bits if we know their range ahead of time.</p></li>
+
+<li><p>If an integer value is negative, you have to spend a whole byte on <strong>&rsquo;-&rsquo;</strong> to indicate that.</p></li>
+
+<li><p>Floating point numbers waste one byte specifying the decimal point.</p></li>
+
+<li><p>The text representation of numerical values are variable length: <strong>“5”</strong>, <strong>“12345”</strong>, <strong>“3.141593”. </strong>Because of this we need to spend one byte on a separator after each value so we know when it ends.</p></li>
+
+<li><p>Newlines <strong>&lsquo;\n&rsquo;</strong> or some other separator are required to distinguish between the set of variables belonging to one object and the next. When you have thousands of objects, this really adds up.</p></li>
+</ul>
+
+<p>In short, if we wish to optimize any further, it&rsquo;s necessary to switch to a binary format.</p>
+
+<h2 id="switching-to-a-binary-format">Switching to a Binary Format</h2>
+
+<p>In the web world there are some really great libraries that read and write binary formats like <a href="http://bjson.org">BJSON</a>, <a href="https://developers.google.com/protocol-buffers/">Protocol Buffers</a>, <a href="https://google.github.io/flatbuffers/">Flatbuffers</a>, <a href="https://thrift.apache.org">Thrift</a>, <a href="https://capnproto.org">Cap’n Proto</a> and <a href="http://msgpack.org/index.html">MsgPack</a>.</p>
+
+<p>In manay cases, these libraries are great fit for building your game network protocol. But in the fast-paced world of first person shooters where efficiency is paramount, a hand-tuned binary protocol is still the gold standard.</p>
+
+<p>There are a few reasons for this. Web binary formats are designed for situations where versioning of data is <em>extremely</em> important. If you upgrade your backend, older clients should be able to keep talking to it with the old format. Data formats are also expected to be language agnostic. A backend written in Golang should be able to talk with a web client written in JavaScript and other server-side components written in Python or Java.</p>
+
+<p>Game servers are completely different beasts. The client and server are almost always written in the same language (C++), and versioning is much simpler. If a client with an incompatible version tries to connect, that connection is simply rejected. There&rsquo;s simply no need for compatibility across different versions.</p>
+
+<p>So if you don’t need versioning and you don’t need cross-language support what are the benefits for these libraries? Convenience. Ease of use. Not needing to worry about creating, testing and debugging your own binary format.</p>
+
+<p>But this convenience is offset by the fact that these libraries are less efficient and less flexible than a binary protocol we can roll ourselves. So while I encourage you to evaluate these libraries and see if they suit your needs, for the rest of this article, we&rsquo;re going to move forward with a custom binary protocol.</p>
+
+<h2 id="getting-started-with-a-binary-format">Getting Started with a Binary Format</h2>
+
+<p>One option for creating a custom binary protocol is to use the in-memory format of your data structures in C/C++ as the over-the-wire format. People often start here, so although I don’t recommend this approach, lets explore it for a while before we poke holes in it.</p>
+
+<p>First define the set of packets, typically as a union of structs:</p>
+
+<pre>
+struct Packet
+{
+    enum PacketTypeEnum { PACKET_A, PACKET_B, PACKET_C };
+
+    uint8_t packetType;
+ 
+    union
+    {
+        struct PacketA
+        {
+            int x,y,z;
+        } a;
+
+        struct PacketB
+        {
+            int numElements;
+            int elements[MaxElements];
+        } b;
+
+        struct PacketC
+        {
+            bool x;
+            short y;
+            int z;
+        } c;
+    }; 
+};
+</pre>
+
+<p>When writing the packet, set the first byte in the packet to the packet type number (0, 1 or 2). Then depending on the packet type, memcpy the appropriate union struct into the packet. On read do the reverse: read in the first byte, then according to the packet type, copy the packet data to the corresponding struct.</p>
+
+<p>It couldn’t get simpler. So why do most games avoid this approach?</p>
+
+<p>The first reason is that different compilers and platforms provide different packing of structs. If you go this route you’ll spend a lot of time with <strong>#pragma pack</strong> trying to make sure that different compilers and different platforms lay out the structures in memory exactly the same way.</p>
+
+<p>The next one is endianness. Most computers are mostly <a href="https://en.wikipedia.org/wiki/Endianness#Little-endian">little endian</a> these days but historically some architectures like PowerPC were <a href="https://en.wikipedia.org/wiki/Endianness#Big-endian">big endian</a>. If you need to support communication between little endian and big endian machines, the memcpy the struct in and out of the packet approach simply won’t work. At minimum you need to write a function to swap bytes between host and network byte order on read and write for each variable in your struct.</p>
+
+<p>There are other issues as well. If a struct contains pointers you can’t just serialize that value over the network and expect a valid pointer on the other side. Also, if you have variable sized structures, such as an array of 32 elements, but most of the time it’s empty or only has a few elements, it&rsquo;s wasteful to always send the array at worst case size. A better approach would support a variable length encoding that only sends the actual number of elements in the array.</p>
+
+<p>But ultimately, what really drives a stake into the heart of this approach is <strong>security</strong>. It’s a <em>massive</em> security risk to take data coming in over the network and trust it, and that&rsquo;s exactly what you do if you just copy a block of memory sent over the network into your struct. Wheee! What if somebody constructs a malicious <strong>PacketB</strong> and sends it to you with <strong>numElements</strong> = 0xFFFFFFFF?</p>
+
+<p>You should, no you <em>must</em>, at minimum do some sort of per-field checking that values are in range vs. blindly accepting what is sent to you. This is why the memcpy struct approach is rarely used in professional games.</p>
+
+<h2 id="read-and-write-functions">Read and Write Functions</h2>
+
+<p>The next level of sophistication is read and write functions per-packet.</p>
+
+<p>Start with the following simple operations:</p>
+
+<pre>
+void WriteInteger( Buffer &amp; buffer, uint32_t value );
+void WriteShort( Buffer &amp; buffer, uint16_t value );
+void WriteChar( Buffer &amp; buffer, uint8_t value );
+
+uint32_t ReadInteger( Buffer &amp; buffer );
+uint16_t ReadShort( Buffer &amp; buffer );
+uint8_t ReadByte( Buffer &amp; buffer );
+</pre>
+
+<p>These operate on a structure which keeps track of the current position:</p>
+
+<pre>
+struct Buffer
+{
+    uint8_t * data;     // pointer to buffer data
+    int size;           // size of buffer data (bytes)
+    int index;          // index of next byte to be read/written
+};
+</pre>
+
+<p>The write integer function looks something like this:</p>
+
+<pre>
+void WriteInteger( Buffer &amp; buffer, uint32_t value )
+{
+    assert( buffer.index + 4 &lt;= size );
+#ifdef BIG_ENDIAN
+    *((uint32_t*)(buffer.data+buffer.index)) = bswap( value ); 
+#else // #ifdef BIG_ENDIAN
+    *((uint32_t*)(buffer.data+buffer.index)) = value; 
+#endif // #ifdef BIG_ENDIAN
+    buffer.index += 4;
+}
+</pre>
+
+<p>And the read integer function looks like this:</p>
+
+<pre>
+uint32_t ReadInteger( Buffer &amp; buffer )
+{
+    assert( buffer.index + 4 &lt;= size );
+    uint32_t value;
+#ifdef BIG_ENDIAN
+    value = bswap( *((uint32_t*)(buffer.data+buffer.index)) );
+#else // #ifdef BIG_ENDIAN
+    value = *((uint32_t*)(buffer.data+buffer.index));
+#endif // #ifdef BIG_ENDIAN
+    buffer.index += 4;
+    return value;
+}
+</pre>
+
+<p>Now, instead of copying across packet data in and out of structs, we implement read and write functions for each packet type:</p>
+
+<pre>
+struct PacketA
+{
+    int x,y,z;
+
+    void Write( Buffer &amp; buffer )
+    {
+        WriteInteger( buffer, x );
+        WriteInteger( buffer, y );
+        WriteInteger( buffer, z );
+    }
+
+    void Read( Buffer &amp; buffer )
+    {
+        ReadInteger( buffer, x );
+        ReadInteger( buffer, y );
+        ReadInteger( buffer, z ); 
+    }
+};
+
+struct PacketB
+{
+    int numElements;
+    int elements[MaxElements];
+
+    void Write( Buffer &amp; buffer )
+    {
+        WriteInteger( buffer, numElements );
+        for ( int i = 0; i &lt; numElements; ++i )
+            WriteInteger( buffer, elements[i] );
+    }
+
+    void Read( Buffer &amp; buffer )
+    {
+        ReadInteger( buffer, numElements );
+        for ( int i = 0; i &lt; numElements; ++i )
+            ReadInteger( buffer, elements[i] );
+    }
+};
+
+struct PacketC
+{
+    bool x;
+    short y;
+    int z;
+
+    void Write( Buffer &amp; buffer )
+    {
+        WriteByte( buffer, x );
+        WriteShort( buffer, y );
+        WriteInt( buffer, z );
+    }
+
+    void Read( Buffer &amp; buffer )
+    {
+        ReadByte( buffer, x );
+        ReadShort( buffer, y );
+        ReadInt( buffer, z );
+    }
+};
+</pre>
+
+<p>When reading and writing packets, start the packet with a byte specifying the packet type via ReadByte/WriteByte, then according to the packet type, call the read/write on the corresponding packet struct in the union.</p>
+
+<p>Now we have a system that allows machines with different endianness to communicate and supports variable length encoding of elements.</p>
+
+<h2 id="bitpacking">Bitpacking</h2>
+
+<p>What if we have a value in the range [0,1000] we really only need 10 bits to represent all possible values. Wouldn&rsquo;t it be nice if we could write just 10 bits, instead of rounding up to 16? What about boolean values? It would be nice to send these as one bit instead of 8!</p>
+
+<p>One way to implement this is to manually organize your C++ structures into packed integers with bitfields and union tricks, such as grouping all bools together into one integer type via bitfield and serializing them as a group. But this is tedious and error prone and there’s no guarantee that different C++ compilers pack bitfields in memory exactly the same way.</p>
+
+<p>A much more flexible way that trades a small amount of CPU on packet read and write for convenience is a <strong>bitpacker</strong>. This is code that reads and writes non-multiples of 8 bits to a buffer.</p>
+
+<h2 id="writing-bits">Writing Bits</h2>
+
+<p>Many people write bitpackers that work at the byte level. This means they flush bytes to memory as they are filled. This is simpler to code, but the ideal is to read and write words at a time, because modern machines are optimized to work this way instead of farting across a buffer at byte level like it’s 1985.</p>
+
+<p>If you want to write 32 bits at a time, you&rsquo;ll need a scratch word twice that size, eg. uint64_t. The reason is that you need the top half for overflow. For example, if you have just written a value 30 bits long into the scratch buffer, then write another value that is 10 bits long you need somewhere to store 30 + 10 = 40 bits.</p>
+
+<pre>
+uint64_t scratch;
+int scratch_bits;
+int word_index;
+uint32_t * buffer;
+</pre>
+
+<p>When we start writing with the bitpacker, all these variables are cleared to zero except <strong>buffer</strong> which points to the start of the packet we are writing to. Because we&rsquo;re accessing this packet data at a word level, not byte level, make sure packet buffers lengths are a multiple of 4 bytes.</p>
+
+<p>Let’s say we want to write 3 bits followed by 10 bits, then 24. Our goal is to pack this tightly in the scratch buffer and flush that out to memory, 32 bits at a time. Note that 3 + 10 + 24 = 37. We have to handle this case where the total number of bits don’t evenly divide into 32. This is actually the <em>common case</em>.</p>
+
+<p>At the first step, write the 3 bits to <strong>scratch</strong> like this:</p>
+
+<pre>xxx</pre>
+
+<p><strong>scratch_bits</strong> is now 3.</p>
+
+<p>Next, write 10 bits:</p>
+
+<pre>yyyyyyyyyyxxx</pre>
+
+<p><strong>scratch_bits</strong> is now 13 (3+10).</p>
+
+<p>Next write 24 bits:</p>
+
+<pre>zzzzzzzzzzzzzzzzzzzzzzzzyyyyyyyyyyxxx</pre>
+
+<p><strong>scratch_bits</strong> is now 37 (3+10+24). We’re straddling the 32 bit word boundary in our 64 bit <strong>scratch</strong> variable and have 5 bits in the upper 32 bits (overflow). Flush the lower 32 bits of <strong>scratch</strong> to memory, advance <strong>word_index</strong> by one, shift <strong>scratch</strong> right by 32 and subtract 32 from <strong>scratch_bits</strong>.</p>
+
+<p><strong>scratch</strong> now looks like this:</p>
+
+<pre>zzzzz</pre>
+
+<p>We&rsquo;ve finished writing bits but we still have data in scratch that&rsquo;s not flushed to memory. For this data to be included in the packet we need to make sure to flush any remaining bits in <strong>scratch</strong> to memory at the end of writing.</p>
+
+<p>When we flush a word to memory it is converted to little endian byte order. To see why this is important consider what happens if we flush bytes to memory in big endian order:</p>
+
+<pre>DCBA000E</pre>
+
+<p>Since we fill bits in the word from right to left, the last byte in the packet E is actually on the right. If we try to send this buffer in a packet of 5 bytes (the actual amount of data we have to send) the packet catches 0 for the last byte instead of E. Ouch!</p>
+
+<p>But when we write to memory in little endian order, bytes are reversed back out in memory like this:</p>
+
+<pre>ABCDE000</pre>
+
+<p>And we can write 5 bytes to the network and catch E at the end. Et voilà!</p>
+
+<h2 id="reading-bits">Reading Bits</h2>
+
+<p>To read the bitpacked data, start with the buffer sent over the network:</p>
+
+<pre>ABCDE</pre>
+
+<p>The bit reader has the following state:</p>
+
+<pre>
+uint64_t scratch;
+int scratch_bits;
+int total_bits;
+int num_bits_read;
+int word_index;
+uint32_t * buffer;
+</pre>
+
+<p>To start all variables are cleared to zero except <strong>total_bits</strong> which is set to the size of the packet as bytes * 8, and <strong>buffer</strong> which points to the start of the packet.</p>
+
+<p>The user requests a read of 3 bits. Since <strong>scratch_bits</strong> is zero, it’s time to read in the first word. Read in the word to <strong>scratch</strong>, shifted left by <strong>scratch_bits</strong> (0). Add 32 to <strong>scratch_bits</strong>.</p>
+
+<p>The value of <strong>scratch</strong> is now:</p>
+
+<pre>zzzzzzzzzzzzzzzzzzzyyyyyyyyyyxxx</pre>
+
+<p>Read off the low 3 bits, giving the expected value of:</p>
+
+<pre>xxx</pre>
+
+<p>Shift <strong>scratch</strong> to the right 3 bits and subtract 3 from <strong>scratch_bits</strong>:</p>
+
+<pre>zzzzzzzzzzzzzzzzzzzyyyyyyyyyy</pre>
+
+<p>Read off another 10 bits in the same way, giving the expected value of:</p>
+
+<pre>yyyyyyyyyy</pre>
+
+<p>Scratch now looks like:</p>
+
+<pre>zzzzzzzzzzzzzzzzzzz</pre>
+
+<p>The next read asks for 24 bits but <strong>scratch_bits</strong> is only 19 (=32-10-3).</p>
+
+<p>It’s time to read in the next word. Shifting the word in memory left by <strong>scratch_bits</strong> (19) and or it on top of <strong>scratch</strong>.</p>
+
+<p>Now we have all the bits necessary for z in <strong>scratch</strong>:</p>
+
+<pre>zzzzzzzzzzzzzzzzzzzzzzzz</pre>
+
+<p>Read off 24 bits and shift <strong>scratch</strong> right by 24. <strong>scratch</strong> is now all zeros.</p>
+
+<p>We&rsquo;re done!</p>
+
+<h2 id="beyond-bitpacking">Beyond Bitpacking</h2>
+
+<p>Reading and writing integer values into a packet by specifying the number of bits to read/write is not the most user friendly option.</p>
+
+<p>Consider this example:</p>
+
+<pre>
+const int MaxElements = 32;
+
+struct PacketB
+{
+    int numElements;
+    int elements[MaxElements];
+
+    void Write( BitWriter &amp; writer )
+    {
+        WriteBits( writer, numElements, 6 );
+        for ( int i = 0; i &lt; numElements; ++i )
+            WriteBits( writer, elements[i] );
+    }
+
+    void Read( BitReader &amp; reader )
+    {
+        ReadBits( reader, numElements, 6 );
+        for ( int i = 0; i &lt; numElements; ++i )
+            ReadBits( reader, elements[i] );
+    }
+};
+</pre>
+
+<p>This code looks fine at first glance, but let’s assume that some time later you, or somebody else on your team, increases <strong>MaxElements</strong> from 32 to 200 but forget to update the number of bits required to <strong>7</strong>. Now the high bit of <strong>numElements</strong> are being silently truncated on send. It&rsquo;s pretty hard to track something like this down after the fact.</p>
+
+<p>The simplest option is to just turn it around and define the maximum number of elements in terms of the number of bits sent:</p>
+
+<pre>
+const int MaxElementBits = 7;
+const int MaxElements = ( 1 &lt;&lt; MaxElementBits ) - 1;
+</pre>
+
+<p>Another option is to get fancy and work out the number of bits required at compile time:</p>
+
+<pre>
+template &lt;uint32_t x&gt; struct PopCount
+{
+    enum { a = x - ( ( x &gt;&gt; 1 ) &amp; 0x55555555 ),
+           b = ( ( ( a &gt;&gt; 2 ) &amp; 0x33333333 ) + ( a &amp; 0x33333333 ) ),
+           c = ( ( ( b &gt;&gt; 4 ) + b ) &amp; 0x0f0f0f0f ),
+           d = c + ( c &gt;&gt; 8 ),
+           e = d + ( d &gt;&gt; 16 ),
+    result = e &amp; 0x0000003f }; 
+};
+
+template &lt;uint32_t x&gt; struct Log2
+{
+    enum { a = x | ( x &gt;&gt; 1 ),
+           b = a | ( a &gt;&gt; 2 ),
+           c = b | ( b &gt;&gt; 4 ),
+           d = c | ( c &gt;&gt; 8 ),
+           e = d | ( d &gt;&gt; 16 ),
+           f = e &gt;&gt; 1,
+    result = PopCount&lt;f&gt;::result };
+};
+
+template &lt;int64_t min, int64_t max&gt; struct BitsRequired
+{
+    static const uint32_t result = 
+        ( min == max ) ? 0 : ( Log2&lt;uint32_t(max-min)&gt;::result + 1 );
+};
+
+#define BITS_REQUIRED( min, max ) BitsRequired&lt;min,max&gt;::result
+</pre>
+
+<p>Now you can’t mess up the number of bits, and you can specify non-power of two maximum values and it everything works out.</p>
+
+<pre>
+const int MaxElements = 32;
+const int MaxElementBits = BITS_REQUIRED( 0, MaxElements );
+</pre>
+
+<p>But be careful when array sizes aren&rsquo;t a power of two! In the example above <strong>MaxElements</strong> is 32, so <strong>MaxElementBits</strong> is 6. This seems fine because all values in [0,32] fit in 6 bits. The problem is that there are additional values within 6 bits that are <em>outside</em> our array bounds: [33,63]. An attacker can use this to construct a malicious packet that corrupts memory!</p>
+
+<p>This leads to the <em>inescapable</em> conclusion that it’s not enough to just specify the number of bits required when reading and writing a value, we must also check that it is within the valid range: [min,max]. This way if a value is outside of the expected range we can detect that and abort read.</p>
+
+<p>I used to implement this using C++ exceptions, but when I profiled, I found it to be incredibly slow. In my experience, it’s much faster to take one of two approaches: set a flag on the bit reader that it should abort, or return false from read functions on failure. But now, in order to be completely safe on read you must to check for error on every read operation.</p>
+
+<pre>
+const int MaxElements = 32;
+const int MaxElementBits = BITS_REQUIRED( 0, MaxElements );
+
+struct PacketB
+{
+    int numElements;
+    int elements[MaxElements];
+
+    void Write( BitWriter &amp; writer )
+    {
+        WriteBits( writer, numElements, MaxElementBits );
+        for ( int i = 0; i &lt; numElements; ++i )
+        {
+            WriteBits( writer, elements[i], 32 );
+        }
+    }
+
+    void Read( BitReader &amp; reader )
+    {
+        ReadBits( reader, numElements, MaxElementBits );
+        
+        if ( numElements &gt; MaxElements )
+        {
+            reader.Abort();
+            return;
+        }
+        
+        for ( int i = 0; i &lt; numElements; ++i )
+        {
+            if ( reader.IsOverflow() )
+                break;
+
+            ReadBits( buffer, elements[i], 32 );
+        }
+    }
+};
+</pre>
+
+<p>If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. <em>You want it to be automatic</em>.</p>
+
+<p><strong>NEXT ARTICLE:</strong> <a href="http://127.0.0.1:1313/post/serialization_strategies/">Serialization Strategies</a></p>
+
+                </div>
+            </div>
+        </div>
+    </article>
+
+    <hr>
+    
+    <footer>
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8 col-lg-offset-2 col-md-10 col-md-offset-1">
+                  <ul class="list-inline text-center">
+                    
+                    <li>
+                      <a href="https://www.linkedin.com/in/glennfiedler/">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-linkedin fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://twitter.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-twitter fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                    <li>
+                      <a href="https://github.com/gafferongames">
+                        <span class="fa-stack fa-lg">
+                          <i class="fa fa-circle fa-stack-2x"></i>
+                          <i class="fa fa-github fa-stack-1x fa-inverse"></i>
+                        </span>
+                      </a>
+                    </li>
+                    
+                  </ul>
+                  <p class="copyright text-muted">Copyright © Glenn Fiedler, 2004 - 2018</p>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    
+    <script src="http://127.0.0.1:1313/js/jquery.min.js"></script>
+
+    
+    <script src="http://127.0.0.1:1313/js/bootstrap.min.js"></script>
+
+    
+    <script src="http://127.0.0.1:1313/js/clean-blog.js"></script>
+
+    
+
+</body>
+
+</html>
+
