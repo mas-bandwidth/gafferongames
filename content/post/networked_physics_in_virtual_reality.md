@@ -110,11 +110,11 @@ At the start, without anything in place to keep the cubes in sync, even though b
 
 <img src="/img/networked-physics-in-vr/out-of-sync.png" width="100%"/>
 
-This happens because PhysX is non-deterministic. Now, rather than tilting at non-determinstic windmills, we _fight_ non-determinism by grabbing state from the left side (authority) and applying it to the right side (non-authority) 10 times per-second:
+This happens because PhysX is non-deterministic. Rather than tilting at non-determinstic windmills, I _fight_ non-determinism by grabbing state from the left side (authority) and applying it to the right side (non-authority) 10 times per-second:
 
 <img src="/img/networked-physics-in-vr/left-to-right.png" width="100%"/>
 
-The state we grab from each cube looks like this:
+The state I grab from each cube looks like this:
 
     struct CubeState
     {
@@ -124,17 +124,17 @@ The state we grab from each cube looks like this:
         Vector3 angular_velocity;
     };
 
-When we apply this state to the simulation on the right side, we simply _snap_ the position, rotation, linear and angular velocity of each cube to the state captured from the left side.
+And when I apply this state to the simulation on the right side, I simply _snap_ the position, rotation, linear and angular velocity of each cube to the state captured from the left side.
 
 This simple change is enough to keep the left and right simulations in sync. PhysX doesn't even diverge enough in the 1/10th of a second between updates to show any noticeable pops.
 
 <img src="/img/networked-physics-in-vr/in-sync.png" width="100%"/>
 
-This __proves__ that a state synchronization based approach for networking can work with PhysX. *(Sigh of relief)*. The only problem of course, is that sending uncompressed physics state like this uses way too much bandwidth...
+This __proves__ that a state synchronization based approach for networking can work with PhysX. *(Sigh of relief)*. The only problem of course, is that sending uncompressed physics state uses way too much bandwidth...
 
 # Bandwidth Optimization
 
-To make sure the networked physics sample is playable over the internet, I needed to get bandwidth under control. It's a bit of a dark art, but it's not that complicated when you go step by step. Let's dive in!
+To make sure the networked physics sample is playable over the internet, I needed to get bandwidth under control.
 
 The easiest gain I found was to simply encode the state for at rest cubes more efficiently. For example, instead of repeatedly sending (0,0,0) for linear velocity and (0,0,0) for angular velocity for at rest cubes, I send just one bit:
 
@@ -199,7 +199,7 @@ Somewhat counter-intuitively, reducing priority for at rest cubes gave bad resul
 
 # Delta Compression
 
-Even with all the techniques so far, it still wasn't optimized enough. With four players I really wanted to get the cost per-player down under 256kbps, so the entire simulation could fit into 1mbps for the host player.
+Even with all the techniques so far, it still wasn't optimized enough. With four players I really wanted to get the cost per-player down under 256kbps, so the entire simulation could fit into 1mbps for the host.
 
 I had once last trick remaining: __delta compression__.
 
@@ -269,19 +269,13 @@ To do this without going insane switching between two headsets all the time (!!!
 
 I called the first player the "host" and the second player the "guest". In this model, the host is the "real" simulation, and by default synchronizes all cubes to the guest player, but as the guest interacts with the world, it takes authority over these objects and can send state for them back to the host player. 
 
-To make this work without inducing obvious conflicts the host and guest both check the local state of cubes before taking authority and ownership. For example, the host won't take authority over a cube already under authority of the guest, and players can't grab cubes already held by another player.
+To make this work without inducing obvious conflicts the host and guest both check the local state of cubes before taking authority and ownership. For example, the host won't take ownership over a cube already under ownership of the guest, and vice versa, while authority is allowed to be taken, players to throw cubes at somebody else's stack and knock it over while it's being built.
 
-Despite this, it's possible for two players to predictively take authority or ownership over the same cube under latency, when each player acquires the cube before seeing the other player's action. Because of this, we need a way to resolve conflicts after the fact.
+Generalizing further to four players, in the networked physics sample, all packets flow through the host player, making the host the _arbiter_. In effect, rather than being truly peer-to-peer, a topology is chosen that all guests in the game communicate only with the host player, instead of directly with each other. This lets the host decides which updates to accept, and which updates to ignore and subsequently correct.
 
-# Resolving Conflicts
+To apply these corrections I needed some way for the host to override guests and say, no, you don't have authority /ownership over this cube, and you should accept this update. I also needed some way for the host to determine _ordering_ for guest interactions with the world, so if one client experiences a burst of lag and delivers a bunch of packets late, these packets won't take precedence over more recent actions from other guests.
 
-In the networked physics sample, all packets flow through the host player, making the host the _arbiter_. This is true for the context of two three of four players. In effect, rather than being truly peer-to-peer, a topology is chosen that all guests in the game communicate only with the host player, instead of directly with each other. 
-
-This lets the host decides which updates to accept, and which updates to ignore and subsequently correct.
-
-To apply these corrections I needed some way for the host to override guests and say, no, you don't have authority or ownership over this cube, and you should accept this update. I also needed some way for the host to determine _ordering_ for guest interactions with the world, so if one client experiences a burst of lag and delivers a bunch of packets late, these packets won't take precedence over more recent actions from other guests.
-
-As per my hunch, this was achieved with two sequence numbers per-cube:
+As per my hunch early, this was achieved with two sequence numbers per-cube:
 
 1. Authority sequence
 2. Ownership sequence
