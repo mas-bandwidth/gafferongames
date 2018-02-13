@@ -17,13 +17,13 @@ So anyway, in this tutorial, a _much heavier me_ covers three different techniqu
 2. Snapshots and Interpolation
 3. State Synchronization
 
-After the talk, I published an [article series](https://gafferongames.com/post/introduction_to_networked_physics/) that goes into more depth into topics like bandwidth optimization and delta-encoding. I even got into a friendly [network compression rivalry](https://gafferongames.com/post/snapshot_compression/) with some programmer friends, who in the end, totally kicked my ass. For example, see Fabian Giesen's [entry](https://github.com/rygorous/gaffer_net), which I think beat my best effort by around 25%, and I don't even think he worked that hard.
+After the talk, I published an [article series](https://gafferongames.com/post/introduction_to_networked_physics/) that goes into more depth into topics like bandwidth optimization and delta-encoding. I even got into a friendly [network compression rivalry](https://gafferongames.com/post/snapshot_compression/) with some programmer friends, who in the end, totally kicked my ass. For example, see Fabian Giesen's [entry](https://github.com/rygorous/gaffer_net), which I think beat my best effort by around 25%, and I don't think he even worked that hard.
 
 But while my talk and articles were well received, afterwards I was slightly unsatisfied. Due to time available for my GDC talk (just one hour), and how deep I went into details in the article series, I was only able to focus on one small aspect of the problem: how to synchronize a simulation running on one machine, so it can be _viewed_ on another.
 
 Crucially, what I felt was missing was a discussion of _latency hiding_. How multiple players can interact with a physics simulation, while feeling that their interactions are lag free. Of course many other things were also missing such as a discussion of network topology: client/server vs. peer-to-peer, dedicated vs. integrated servers. Also missing was discussion of _network models_. For example, client/server with client-side prediction, vs. distributed simulation (authority scheme), vs. GGPO style deterministic lockstep.
 
-Since giving this talk, I've had many people ask me questions along these lines, and I've always wished I could write another article series or give another talk on the subject...
+Since giving this talk, many people have asked me questions along these lines, and I've always wished I could write another article series or give another talk on the subject...
 
 # A New Hope
 
@@ -59,13 +59,31 @@ At the same time I created a set of tasks to work in order of greatest risk to l
 
 # Network Models
 
-First up, we have to pick a network model.
+First up, we had to pick a network model. A network model is basically a strategy, basically it's _how_ we are going to hide latency and keep the simulations in sync.
 
-...
+There are three main network models to choose from:
+
+1. Deterministic lockstep
+2. Client/server with client-side prediction
+3. Distributed simulation with authority scheme
+
+I was instantly confident of the correct network model: a distributed simulation model where players take over authority of cubes they interact with. But let me share with you my reasoning behind this.
+
+First, I could trivially rule out a deterministic lockstep network model, since the physics engine inside Unity (PhysX) is not deterministic. Furthermore, even if PhysX was deterministic I could _still_ rule it out because of the requirement that player interactions with the simulation be without latency. 
+
+The reason for this is that to hide latency with deterministic lockstep I would have to maintain two copies of the simulation and predict the authoritative simulation ahead with local inputs prior to render (GGPO style). At 90HZ simulation rate and with up to 250ms of latency to hide, this meant 25 physics simulation steps for each visual render frame. 25X cost is simply not realistic for a CPU intensive physics simulation.
+
+The next choice is between a client/server network model with client-side prediction (perhaps with dedicated server) and a less secure distributed simulation network model.
+
+Since this was a non-competitive sample, there was little justification to incur the cost of running dedicated servers. Therefore, whether I implemented a client/server model with client-side prediction or distributed simulation model, the security would be effectively the same, since one of the player's machines would act as the server. The only difference would be if only one of the players in the game could theoretically cheat, or _all_ of them would.
+
+For this reason, a distributed simulation model made the most sense. It had effectively the same amount of security, and would not require any expensive rollback and resimulation, since players simply take authority over cubes they interact with and send the state for those cubes to other players.
 
 # Authority Scheme
 
-...
+But while it makes intuitive sense that taking authority over (acting like the server for) objects you interact with can hide latency, what's not obvious immediately is how to resolve conflicts.
+
+How to handle situations where two players, masked by lag, interact with the same stack. Or two players grab the same cube at the same time. Who wins, and who gets corrected and ultimately, how is this decided?
 
 # State Synchronization
 
