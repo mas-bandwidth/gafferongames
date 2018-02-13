@@ -11,7 +11,7 @@ draft = true
 
 Way back in 2015, I presented a tutorial at GDC about how to network a physics simulation. It was fairly popular and was rated well, and if you [watch the video of the talk](https://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking), I hope you'll be happy to hear that I've lost around 50 pounds since this video was recorded. I watch it today and think, _who the hell is this person?_
 
-So anyway, in this tutorial, a _much heavier me from the past_ covers three different techniques for networking a physics simulation:
+So anyway, in this tutorial, a _much heavier me_ covers three different techniques for networking a physics simulation:
 
 1. Deterministic Lockstep
 2. Snapshots and Interpolation
@@ -19,9 +19,9 @@ So anyway, in this tutorial, a _much heavier me from the past_ covers three diff
 
 After the talk, I published an [article series](https://gafferongames.com/post/introduction_to_networked_physics/) that goes into more depth into topics like bandwidth optimization and delta-encoding. I even got into a friendly [network compression rivalry](https://gafferongames.com/post/snapshot_compression/) with some programmer friends, who in the end, totally kicked my ass. For example, see Fabian Giesen's [entry](https://github.com/rygorous/gaffer_net), which I think beat my best effort by around 25%, although I don't even think he worked that hard.
 
-But while my talk and articles were well received, afterwards I was slightly unsatisfied. Due to time available for my talk (just one hour), and how deep I went into details in the article series, I was only able to focus on one small aspect of the problem: how to synchronize a simulation running on one machine, so that it could be _viewed_ it on another.
+But while my talk and articles were well received, afterwards I was slightly unsatisfied. Due to time available for my GDC talk (just one hour), and how deep I went into details in the article series, I was only able to focus on one small aspect of the problem: how to synchronize a simulation running on one machine, so that it could be _viewed_ on another.
 
-Crucially, what I felt was missing was a discussion of _latency hiding_. How multiple players could interact with a physics simulation, while feeling that their interactions were lag free. Of course many other things were also missing such as a discussion of network topology: client/server vs. peer-to-peer, dedicated vs. integrated servers. Also missing was discussion of _network models_. For example, client/server with client-side prediction, vs. distributed simulation (authority scheme), vs. GGPO style deterministic lockstep.
+Crucially, what I felt was missing was a discussion of _latency hiding_. How multiple players can interact with a physics simulation, while feeling that their interactions are lag free. Of course many other things were also missing such as a discussion of network topology: client/server vs. peer-to-peer, dedicated vs. integrated servers. Also missing was discussion of _network models_. For example, client/server with client-side prediction, vs. distributed simulation (authority scheme), vs. GGPO style deterministic lockstep.
 
 Since giving this talk, I've had many people ask me questions along these lines, and I've always wished I could write another article series or give another talk on the subject...
 
@@ -45,21 +45,21 @@ It's impossible to communicate visually what this feels like outside of VR, but 
 
 ... where you can select, grab and throw cubes using the touch controller, and any cubes you release from your hand interact with the other cubes in the simulation. You can throw a cube at a stack of cubes and knock them over. You can pick up a cube in each hand and juggle them. You can build a stack of cubes and see how high you can make it go.
 
-Working with Oculus as a client, we had to define tasks and deliverables before I could actually start the work.
+Even though this was a lot of fun, it's not all rainbows and unicorns. Working with Oculus as a client, I had to define tasks and deliverables before I could actually start the work.
 
-I suggested three criteria we would use to define success:
+I suggested the following criteria we would use to define success:
 
 1. Players should be able to pick up, throw and catch cubes without latency.
 
-2. Players should be able to stack cubes, and these stacks should be stable (eg. come to rest) and without visible jitter.
+2. Players should be able to stack cubes, and these stacks should be stable (eg. come to rest) and be without visible jitter.
 
 3. When cubes thrown by any player interact with the simulation, wherever possible, these interactions should be without latency.
 
-Now you know what we are building, lets get started with how I built it :)
-
-First, we have to pick a network model!
+At the same time I created a set of tasks to work in order of greatest risk to least, since this was R&D, there was no guarantee we would actually succeed at what we were trying to do. I simply didn't know if it was possible yet!
 
 # Network Models
+
+First up, we have to pick a network model.
 
 ...
 
