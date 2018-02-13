@@ -51,7 +51,7 @@ I suggested the following criteria we would use to define success:
 
 1. Players should be able to pick up, throw and catch cubes without latency.
 
-2. Players should be able to stack cubes, and these stacks should be stable (eg. come to rest) and be without visible jitter.
+2. Players should be able to stack cubes, and these stacks should be stable (come to rest) and be without visible jitter.
 
 3. When cubes thrown by any player interact with the simulation, wherever possible, these interactions should be without latency.
 
@@ -59,7 +59,7 @@ At the same time I created a set of tasks to work in order of greatest risk to l
 
 # Network Models
 
-First up, we had to pick a network model. A network model is basically a strategy, basically it's _how_ we are going to hide latency and keep the simulations in sync.
+First up, we had to pick a network model. A network model is basically a strategy, exactly _how_ we are going to hide latency and keep the simulation in sync.
 
 There are three main network models to choose from:
 
@@ -71,19 +71,23 @@ I was instantly confident of the correct network model: a distributed simulation
 
 First, I could trivially rule out a deterministic lockstep network model, since the physics engine inside Unity (PhysX) is not deterministic. Furthermore, even if PhysX was deterministic I could _still_ rule it out because of the requirement that player interactions with the simulation be without latency. 
 
-The reason for this is that to hide latency with deterministic lockstep I would have to maintain two copies of the simulation and predict the authoritative simulation ahead with local inputs prior to render (GGPO style). At 90HZ simulation rate and with up to 250ms of latency to hide, this meant 25 physics simulation steps for each visual render frame. 25X cost is simply not realistic for a CPU intensive physics simulation.
+The reason for this is that to hide latency with deterministic lockstep I needed to maintain two copies of the simulation and predict the authoritative simulation ahead with local inputs prior to render (GGPO style). At 90HZ simulation rate and with up to 250ms of latency to hide, this meant 25 physics simulation steps for each visual render frame. 25X cost is simply not realistic for a CPU intensive physics simulation.
 
 The next choice is between a client/server network model with client-side prediction (perhaps with dedicated server) and a less secure distributed simulation network model.
 
-Since this was a non-competitive sample, there was little justification to incur the cost of running dedicated servers. Therefore, whether I implemented a client/server model with client-side prediction or distributed simulation model, the security would be effectively the same, since one of the player's machines would act as the server. The only difference would be if only one of the players in the game could theoretically cheat, or _all_ of them would.
+Since this was a non-competitive sample, there was little justification to incur the cost of running dedicated servers. Therefore, whether I implemented a client/server model with client-side prediction or distributed simulation model, the security would be effectively the same. The only difference would be if only one of the players in the game could theoretically cheat, or _all_ of them would.
 
 For this reason, a distributed simulation model made the most sense. It had effectively the same amount of security, and would not require any expensive rollback and resimulation, since players simply take authority over cubes they interact with and send the state for those cubes to other players.
 
 # Authority Scheme
 
-But while it makes intuitive sense that taking authority over (acting like the server for) objects you interact with can hide latency, what's not obvious immediately is how to resolve conflicts.
+While it makes intuitive sense that taking authority (acting like the server) for objects you interact with can hide latency, and that for example, one player interacting with their own stack of cubes while another player has authority over their stack of cubes could work perfectly, what's not immediately obvious is how to resolve conflicts.
 
-How to handle situations where two players, masked by lag, interact with the same stack. Or two players grab the same cube at the same time. Who wins, and who gets corrected and ultimately, how is this decided?
+What if two players interact with the same stack? What if two players, masked by latency, grab the same cube at the same time? In other words, in the case of conflict: who wins, who gets corrected, and how is this decided?
+
+My intuition at this point was ...
+
+...
 
 # State Synchronization
 
@@ -136,7 +140,7 @@ The easiest gain I found was to simply encode the state for at rest cubes more e
 
 This is _lossless_ technique because it doesn't change the state sent over the network in any way. It's also extremely effective, since statistically speaking, most of the time the majority of cubes in the scene are at rest.
 
-To optimize bandwidth further we need to use _lossy techniques_. For example, we can reduce the precision of the physics state sent over the network by bounding position in some min/max range and quantizing it to a resolution of 1/1000th of a centimeter and sending that quantized position as an integer value in some known range. The same basic approach can be used linear and angular velocity. For rotation we use the _smallest three representation_ of a quaternion.
+To optimize bandwidth further we need to use _lossy techniques_. For example, we can reduce the precision of the physics state sent over the network by bounding position in some min/max range and quantizing it to a resolution of 1/1000th of a centimeter and sending that quantized position as an integer value in some known range. The same basic approach can be used for linear and angular velocity. For rotation I used the _smallest three representation_ of a quaternion.
 
 But while this saves bandwidth, it also adds risk. My concern was that if we are networking a stack of cubes (for example, 10 or 20 cubes placed on top of each other), maybe the quantization would create errors that add jitter to that stack. Perhaps it would even cause the stack to become _unstable_, but in a particularly annoying and hard to debug way, where the stack looks fine for you, and is only unstable in the remote view (eg. the non-authority simulation), where another player is watching what you do.
 
@@ -160,7 +164,7 @@ There's not much I could do about the PhysX CPU usage, but the solution I found 
 
 Getting cubes to come to rest reliably was much harder. The solution I found was to disable the PhysX at rest calculation entirely and replace it with a ring-buffer of positions and rotations per-cube. If a cube has not moved or rotated significantly in the last 16 frames, I force it to rest. Boom. Perfectly stable stacks _with_ quantization.
 
-This might seem like a hack, but short of actually getting in the PhysX source code and rewriting the PhysX solver and at rest calculations, which I'm certainly not qualified to do, I didn't see any other option. I'm happy to be proven wrong though, so if you find a better way to do this, please let me know :)
+Now this might seem like a hack, but short of actually getting in the PhysX source code and rewriting the PhysX solver and at rest calculations, which I'm certainly not qualified to do, I didn't see any other option. I'm happy to be proven wrong though, so if you find a better way to do this, please let me know :)
 
 # Priority Accumulator
 
@@ -228,9 +232,9 @@ It was also painfully obvious while encoding differences and error offsets that 
 
 After several months of work, I had made the following progress:
 
-* Proof that state synchronization works with Unity and PhysX.
-* Stable stacks in the remote view while quantizing state on both sides.
-* Bandwidth reduced to the point where all four players can fit in 1mbps.
+* Proof that state synchronization works with Unity and PhysX
+* Stable stacks in the remote view while quantizing state on both sides
+* Bandwidth reduced to the point where all four players can fit in 1mbps
 
 The next thing I needed to implement was interaction with the simulation via the touch controllers. This part was a lot of fun, was my favorite part of the project :)
 
@@ -244,7 +248,7 @@ But when I first tried this it looked _absolutely awful_. Why?
 
 After a bunch of debugging I worked out that the avatar state was sampled from the touch hardware at render framerate in _Update_, and was applied on the other machine at _FixedUpdate_, causing jitter because the avatar sample time didn't line up with the current time in the remote view.
 
-To fix this I stored the difference between physics and render time when sampling avatar state, and included this in the avatar state in each packet. Then I added a jitter buffer with 100ms delay to received packets, solving network jitter from time variance in packet delivery and enabling interpolation between avatar states to get a sample at the correct time.
+To fix this I stored the difference between physics and render time when sampling avatar state, and included this in the avatar state in each packet. Then I added a jitter buffer with 100ms delay to received packets, solving network jitter from time variance in packet delivery and enabling interpolation between avatar states to reconstruct a sample at the correct time.
 
 To synchronize cubes held by avatars, while a cube is parented to an avatar's hand, I set the cube's _priority factor_ to -1, stopping it from being sent with regular physics state updates. While a cube is attached to a hand, I include its id and relative position and rotation as part of the avatar state. In the remote view, cubes are attached to the avatar hand when the first avatar state arrives with that cube parented to it, and detached when regular physics state updates resume, corresponding to the cube being thrown or released.
 
@@ -285,19 +289,19 @@ These sequence numbers are sent along with each state update and included in ava
 
 Authority sequence increments each time a player takes authority over a cube and when a cube under authority of a player comes to rest. When a cube has authority on a guest machine, it holds authority on that machine until it receives _confirmation_ from the host before returning to default authority. This ensures that the final at rest state for cubes under guest authority are committed back to the host, even under significant packet loss.
 
-Ownership sequence increments each time a player grabs a cube. Ownership is stronger that authority, such that an increase in ownership sequence wins over an increase in authority sequence number. For example, if a player interacts with a cube just before another player grabs it, the player who grabbed it wins.
+Ownership sequence increments each time a player grabs a cube. Ownership is stronger than authority, such that an increase in ownership sequence wins over an increase in authority sequence number. For example, if a player interacts with a cube just before another player grabs it, the player who grabbed it wins.
 
 In my experience working on this demo I found these rules to be sufficient to resolve conflicts, while letting host and guest players interact with the world lag free. Conflicts requiring corrections are rare in practice even under significant latency, and when they do occur, the simulation quickly converges to a consistent state.
 
 # Conclusion
 
-High quality networked physics with stable stacks of cubes is possible with Unity and PhysX using a distributed simulation network model. 
+High quality networked physics with stable stacks of cubes _is_ possible with Unity and PhysX using a distributed simulation network model. 
 
-This approach is best used for _cooperative experiences only_, as it does not provide the security of a server-authoritative network model.
+This approach is best used for _cooperative experiences only_, as it does not provide the security of a server-authoritative network model with dedicated servers and client-side prediction.
 
 Thanks to Oculus for sponsoring my work and making this research possible!
 
-IMPORTANT: __Source code for the networked physics sample is available [here](https://github.com/OculusVR/oculus-networked-physics-sample).__
+__The source code for the networked physics sample can be downloaded [here](https://github.com/OculusVR/oculus-networked-physics-sample).__
 
 ----- 
 
