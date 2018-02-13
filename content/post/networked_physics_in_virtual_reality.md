@@ -11,15 +11,15 @@ draft = true
 
 Way back in 2015, I presented a tutorial at GDC about how to network a physics simulation. It was fairly popular and was rated well, and if you [watch the video of the talk](https://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking), I hope you'll be happy to hear that I've lost around 50 pounds since this video was recorded. I watch it today and think, _who the hell is this person?_
 
-So anyway, in this tutorial, a _much heavier me from the past_ covered three different techniques for networking a physics simulation:
+So anyway, in this tutorial, a _much heavier me from the past_ covers three different techniques for networking a physics simulation:
 
 1. Deterministic Lockstep
 2. Snapshots and Interpolation
 3. State Synchronization
 
-After the talk, I published an [article series](https://gafferongames.com/post/introduction_to_networked_physics/) that goes into more depth, covering topics like bandwidth optimization and delta-encoding. I even got into a friendly [network compression rivalry](https://gafferongames.com/post/snapshot_compression/) with some programmer friends, who in the end, totally kicked my ass. For example, see Fabian Giesen's [entry](https://github.com/rygorous/gaffer_net), which I think beat my best effort by around 25%, and I don't even think he worked that hard.
+After the talk, I published an [article series](https://gafferongames.com/post/introduction_to_networked_physics/) that goes into more depth into topics like bandwidth optimization and delta-encoding. I even got into a friendly [network compression rivalry](https://gafferongames.com/post/snapshot_compression/) with some programmer friends, who in the end, totally kicked my ass. For example, see Fabian Giesen's [entry](https://github.com/rygorous/gaffer_net), which I think beat my best effort by around 25%, and I don't even think he worked that hard.
 
-But while my talk and articles were well received, afterwards I was slightly unsatisfied. Due to time available for my talk (just one hour), and how deep I went into detail in the article series, I was only able to focus on one small aspect of the problem: how to synchronize a simulation running on one machine, so it could be _viewed_ it on another.
+But while my talk and articles were well received, afterwards I was slightly unsatisfied. Due to time available for my talk (just one hour), and how deep I went into details in the article series, I was only able to focus on one small aspect of the problem: how to synchronize a simulation running on one machine, so it could be _viewed_ it on another.
 
 Crucially, what I felt was missing was a discussion of _latency hiding_. How multiple players could interact with a physics simulation, while feeling that their interactions were lag free. Of course many other things were also missing such as a discussion of network topology: client/server vs. peer-to-peer, dedicated vs. integrated servers. Also missing was discussion of _network models_. For example, client/server with client-side prediction, vs. distributed simulation (authority scheme), vs. GGPO style deterministic lockstep.
 
