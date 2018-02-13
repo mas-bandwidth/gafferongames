@@ -37,7 +37,7 @@ Oculus agreed. Welcome to that article! Also, the source for the networked physi
 
 When I first started discussions with Oculus, we imagined creating something like a table where four players could sit around and interact with physically simulated cubes on the table. For example, throwing, catching and stacking cubes, maybe knocking each other's stacks over with a swipe of their hand. Maybe we could make a little toy or game out of it?
 
-But after a few day spent learning Unity and C#, I found myself actually _inside_ the Rift. In VR, scale is _so important_. When the cubes were small, everything felt much less interesting, but when the cubes were scaled up to around a meter squared, everything had this really cool sense of scale. You could make these _huge_ stacks of cubes, up to 20 or 30 meters high. This felt really cool!
+But after a few days spent learning Unity and C#, I found myself actually _inside_ the Rift. In VR, scale is _so important_. When the cubes were small, everything felt much less interesting, but when the cubes were scaled up to around a meter squared, everything had this really cool sense of scale. You could make these _huge_ stacks of cubes, up to 20 or 30 meters high. This felt really cool!
 
 It's impossible to communicate visually what this feels like outside of VR, but it looks something like this...
 
@@ -55,7 +55,7 @@ I suggested the following criteria we would use to define success:
 
 3. When cubes thrown by any player interact with the simulation, wherever possible, these interactions should be without latency.
 
-At the same time I created a set of tasks to work in order of greatest risk to least, since this was R&D, there was no guarantee we would actually succeed at what we were trying to do. I simply didn't know if it was possible yet!
+At the same time I created a set of tasks to work in order of greatest risk to least, since this was R&D, there was no guarantee we would actually succeed at what we were trying to do. I simply didn't know if it was possible or not!
 
 # Network Models
 
@@ -73,21 +73,30 @@ First, I could trivially rule out a deterministic lockstep network model, since 
 
 The reason for this is that to hide latency with deterministic lockstep I needed to maintain two copies of the simulation and predict the authoritative simulation ahead with local inputs prior to render (GGPO style). At 90HZ simulation rate and with up to 250ms of latency to hide, this meant 25 physics simulation steps for each visual render frame. 25X cost is simply not realistic for a CPU intensive physics simulation.
 
-The next choice is between a client/server network model with client-side prediction (perhaps with dedicated server) and a less secure distributed simulation network model.
+This leaves two options: a client/server network model with client-side prediction (perhaps with dedicated server) and a less secure distributed simulation network model.
 
 Since this was a non-competitive sample, there was little justification to incur the cost of running dedicated servers. Therefore, whether I implemented a client/server model with client-side prediction or distributed simulation model, the security would be effectively the same. The only difference would be if only one of the players in the game could theoretically cheat, or _all_ of them would.
 
-For this reason, a distributed simulation model made the most sense. It had effectively the same amount of security, and would not require any expensive rollback and resimulation, since players simply take authority over cubes they interact with and send the state for those cubes to other players.
+For this reason, a distributed simulation model made the most sense. It had effectively the same amount of security, and would not require any expensive rollback and resimulation, since players simply take authority over cubes they interact with and send the state for those cubes to other players rather than using client-side prediction to hide latency.
 
 # Authority Scheme
 
-While it makes intuitive sense that taking authority (acting like the server) for objects you interact with can hide latency, and that for example, one player interacting with their own stack of cubes while another player has authority over their stack of cubes could work perfectly, what's not immediately obvious is how to resolve conflicts.
+While it makes intuitive sense that taking authority (acting like the server) for objects you interact can hide latency -- since, well if you're the server, you don't experience any lag, right? -- what's not immediately obvious is how to resolve conflicts.
 
-What if two players interact with the same stack? What if two players, masked by latency, grab the same cube at the same time? In other words, in the case of conflict: who wins, who gets corrected, and how is this decided?
+What if two players interact with the same stack? What if two players, masked by latency, grab the same cube? In the case of conflict: who wins, who gets corrected, and how is this decided?
 
-My intuition at this point was ...
+My intuition at this point was that because I would be exchanging state for objects rapidly (up to 60 times per-second), that it would be best to implement this as an encoding in the state exchanged between players over my network protocol, rather than as events.
 
-...
+I thought about this for a while and came up with two key concepts:
+
+1. Authority
+2. Ownership
+
+Each cube would have authority, either set to default (white), or to whatever color of the player that last interacted with it. If another player interacted with an object, authority would switch and update to that player. I planned to use authority for interactions of thrown objects with the scene. I imagined that a cube throw by player 2 could take authority over any objects it interacted with, and in turn any objects those objects interacted with, recursively.
+
+Ownership was a bit different. Once a cube is owned by a player, no other player could take ownership until that player reliquished ownership. I planned to use ownership for players grabbing cubes, because I didn't want to make it possible for players to grab cubes out of other player's hands after they picked them up.
+
+I had an intuition that I could represent and communicate authority and ownership as state by including two different sequence numbers per-cube as I sent them: an authority sequence, and an ownership sequence number. This intuition ultimately proved correct, but turned out to be much more complicated in implementation than I expected. More on this later.
 
 # State Synchronization
 
