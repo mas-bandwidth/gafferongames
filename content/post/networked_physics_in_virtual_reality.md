@@ -254,33 +254,25 @@ To synchronize cubes held by avatars, while a cube is parented to an avatar's ha
 
 # Bidirectional Flow
 
-Up until this point, left to right (more)
+Now that I had player interaction with the scene working with the touch controllers, it was time to start thinking about how the second player can interact with the scene as well.
 
-(need a turn here).
+To do this without going insane switching between two headsets all the time (!!!), I extended my Unity test scene to be able to switch between the context of player one (left) and player two (right). 
 
-Now lets add another player on the right:
+I called the first player the "host" and the second player the "guest". In this model, the host is the "real" simulation, and by default synchronizes all cubes to the guest player, but as the guest interacts with the world, it takes authority over these objects and can send state for them back to the host player. 
 
-_(diagram showing loopback scene with player on right)_
-
-We'll call the this player the _guest_, and the original player the _host_.
-
-The guest takes authority and ownership of cubes without waiting for acknowledgement from the host, which allows the guest to interact with the simulation with no latency. 
-
-Of course the host needs to see what the guest does, so the guest sends state for cubes it interacts with (has authority over) back to the host, plus the state for its avatar, which implicitly includes state for cubes held by the guest.
-
-_(diagram showing flow from guest -> host)_
-
-The host and guest both check the local state of cubes before taking authority and ownership. For example, the host won't take authority over a cube already under authority of the guest and vice-versa, and players can't grab cubes already held by another player.
+To make this work without inducing obvious conflicts the host and guest both check the local state of cubes before taking authority and ownership. For example, the host won't take authority over a cube already under authority of the guest, and players can't grab cubes already held by another player.
 
 Despite this, it's possible for two players to predictively take authority or ownership over the same cube under latency, when each player acquires the cube before seeing the other player's action. Because of this, we need a way to resolve conflicts after the fact.
 
 # Resolving Conflicts
 
-In the networked physics sample, all packets flow through the host, making the host the _arbiter_. In other words, the host decides which updates to accept, and which updates to ignore and subsequently correct.
+In the networked physics sample, all packets flow through the host player, making the host the _arbiter_. This is true for the context of two three of four players. In effect, rather than being truly peer-to-peer, a topology is chosen that all guests in the game communicate only with the host player, instead of directly with each other. 
 
-To apply these corrections we need some way for the host to override guests and say, no, you don't have authority or ownership over this cube, and you should accept this update. We also need some way for the host to determine _ordering_ for guest interactions with the world, so if one client experiences a burst of lag and delivers a bunch of packets late, these packets won't take precedence over more recent actions from other guests.
+This lets the host decides which updates to accept, and which updates to ignore and subsequently correct.
 
-This is achieved with two sequence numbers per-cube:
+To apply these corrections I needed some way for the host to override guests and say, no, you don't have authority or ownership over this cube, and you should accept this update. I also needed some way for the host to determine _ordering_ for guest interactions with the world, so if one client experiences a burst of lag and delivers a bunch of packets late, these packets won't take precedence over more recent actions from other guests.
+
+As per my hunch, this was achieved with two sequence numbers per-cube:
 
 1. Authority sequence
 2. Ownership sequence
