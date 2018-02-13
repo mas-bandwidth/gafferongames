@@ -4,7 +4,6 @@ tags = ["physics", "networking", "vr"]
 date = "2018-02-19"
 title = "Networked Physics in Virtual Reality"
 description = "Networking a stack of cubes with Unity and PhysX"
-draft = true
 +++
 
 # Introduction
