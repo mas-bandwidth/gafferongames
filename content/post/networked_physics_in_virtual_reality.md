@@ -1,7 +1,7 @@
 +++
 categories = ["Networked Physics"]
 tags = ["physics", "networking", "vr"]
-date = "2018-02-12"
+date = "2018-02-19"
 title = "Networked Physics in Virtual Reality"
 description = "Networking a stack of cubes with Unity and PhysX"
 draft = true
@@ -17,9 +17,9 @@ So anyway, in this tutorial, a _much heavier me_ covers three different techniqu
 2. Snapshots and Interpolation
 3. State Synchronization
 
-After the talk, I published an [article series](https://gafferongames.com/post/introduction_to_networked_physics/) that goes into more depth into topics like bandwidth optimization and delta-encoding. I even got into a friendly [network compression rivalry](https://gafferongames.com/post/snapshot_compression/) with some programmer friends, who in the end, totally kicked my ass. For example, see Fabian Giesen's [entry](https://github.com/rygorous/gaffer_net), which I think beat my best effort by around 25%, although I don't even think he worked that hard.
+After the talk, I published an [article series](https://gafferongames.com/post/introduction_to_networked_physics/) that goes into more depth into topics like bandwidth optimization and delta-encoding. I even got into a friendly [network compression rivalry](https://gafferongames.com/post/snapshot_compression/) with some programmer friends, who in the end, totally kicked my ass. For example, see Fabian Giesen's [entry](https://github.com/rygorous/gaffer_net), which I think beat my best effort by around 25%, and I don't even think he worked that hard.
 
-But while my talk and articles were well received, afterwards I was slightly unsatisfied. Due to time available for my GDC talk (just one hour), and how deep I went into details in the article series, I was only able to focus on one small aspect of the problem: how to synchronize a simulation running on one machine, so that it could be _viewed_ on another.
+But while my talk and articles were well received, afterwards I was slightly unsatisfied. Due to time available for my GDC talk (just one hour), and how deep I went into details in the article series, I was only able to focus on one small aspect of the problem: how to synchronize a simulation running on one machine, so it can be _viewed_ on another.
 
 Crucially, what I felt was missing was a discussion of _latency hiding_. How multiple players can interact with a physics simulation, while feeling that their interactions are lag free. Of course many other things were also missing such as a discussion of network topology: client/server vs. peer-to-peer, dedicated vs. integrated servers. Also missing was discussion of _network models_. For example, client/server with client-side prediction, vs. distributed simulation (authority scheme), vs. GGPO style deterministic lockstep.
 
