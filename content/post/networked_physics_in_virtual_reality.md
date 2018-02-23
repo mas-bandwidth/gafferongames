@@ -8,25 +8,7 @@ description = "Networking a stack of cubes with Unity and PhysX"
 
 # Introduction
 
-Way back in 2015, I presented a tutorial at GDC about how to network a physics simulation. It was fairly popular and was rated well, and if you [watch the video of the talk](https://www.gdcvault.com/play/1022195/Physics-for-Game-Programmers-Networking), I hope you'll be happy to hear that I've lost around 50 pounds since this video was recorded. I watch it today and think, _who the hell is this person?_
-
-So anyway, in this tutorial, a _much heavier me_ covers three different techniques for networking a physics simulation:
-
-1. Deterministic Lockstep
-2. Snapshots and Interpolation
-3. State Synchronization
-
-After the talk, I published an [article series](https://gafferongames.com/post/introduction_to_networked_physics/) that goes into more depth into topics like bandwidth optimization and delta-encoding. I even got into a friendly [network compression rivalry](https://gafferongames.com/post/snapshot_compression/) with some programmer friends, who in the end, totally kicked my ass. For example, see Fabian Giesen's [entry](https://github.com/rygorous/gaffer_net), which I think beat my best effort by around 25%, and I don't think he even worked that hard.
-
-But while my talk and articles were well received, afterwards I was slightly unsatisfied. Due to time available for my GDC talk (just one hour), and how deep I went into details in the article series, I was only able to focus on one small aspect of the problem: how to synchronize a simulation running on one machine, so it can be _viewed_ on another.
-
-Crucially, what I felt was missing was a discussion of _latency hiding_. How multiple players can interact with a physics simulation, while feeling that their interactions are lag free. Of course many other things were also missing such as a discussion of network topology: client/server vs. peer-to-peer, dedicated vs. integrated servers. Also missing was discussion of _network models_. For example, client/server with client-side prediction, vs. distributed simulation (authority scheme), vs. GGPO style deterministic lockstep.
-
-Since giving this talk, many people have asked me questions along these lines, and I've always wished I could write another article series or give another talk on the subject...
-
-# A New Hope
-
-And then one day after leaving my job at Respawn, Oculus approached me and offered to sponsor my research. They asked me, effectively: "Hey Glenn, there's a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?" 
+About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: "Hey Glenn, there's a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?" 
 
 I replied ~~"F*** yes!"~~ **cough** "Sure. This could be a lot of fun!". But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good. Two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.
 
@@ -34,9 +16,9 @@ Oculus agreed. Welcome to that article! Also, the source for the networked physi
 
 # What are we building?
 
-When I first started discussions with Oculus, we imagined creating something like a table where four players could sit around and interact with physically simulated cubes on the table. For example, throwing, catching and stacking cubes, maybe knocking each other's stacks over with a swipe of their hand. Maybe we could make a little toy or game out of it?
+When I first started discussions with Oculus, we imagined creating something like a table where four players could sit around and interact with physically simulated cubes on the table. For example, throwing, catching and stacking cubes, maybe knocking each other's stacks over with a swipe of their hand.
 
-But after a few days spent learning Unity and C#, I found myself actually _inside_ the Rift. In VR, scale is _so important_. When the cubes were small, everything felt much less interesting, but when the cubes were scaled up to around a meter squared, everything had this really cool sense of scale. You could make these _huge_ stacks of cubes, up to 20 or 30 meters high. This felt really cool!
+But after a few days spent learning Unity and C#, I found myself actually _inside_ the Rift. In VR, scale is _so important_. When the cubes were small, everything felt much less interesting, but when the cubes were scaled up to around a meter cubed, everything had this really cool sense of scale. You could make these _huge_ stacks of cubes, up to 20 or 30 meters high. This felt really cool!
 
 It's impossible to communicate visually what this feels like outside of VR, but it looks something like this...
 
@@ -54,7 +36,7 @@ I suggested the following criteria we would use to define success:
 
 3. When cubes thrown by any player interact with the simulation, wherever possible, these interactions should be without latency.
 
-At the same time I created a set of tasks to work in order of greatest risk to least, since this was R&D, there was no guarantee we would actually succeed at what we were trying to do. I simply didn't know if it was possible or not!
+At the same time I created a set of tasks to work in order of greatest risk to least, since this was R&D, there was no guarantee we would actually succeed at what we were trying to do.
 
 # Network Models
 
@@ -74,9 +56,9 @@ The reason for this is that to hide latency with deterministic lockstep I needed
 
 This leaves two options: a client/server network model with client-side prediction (perhaps with dedicated server) and a less secure distributed simulation network model.
 
-Since this was a non-competitive sample, there was little justification to incur the cost of running dedicated servers. Therefore, whether I implemented a client/server model with client-side prediction or distributed simulation model, the security would be effectively the same. The only difference would be if only one of the players in the game could theoretically cheat, or _all_ of them would.
+Since this was a non-competitive sample, there was little justification to incur the cost of running dedicated servers. Therefore, whether I implemented a client/server model with client-side prediction or distributed simulation model, the security would be effectively the same. The only difference would be if only one of the players in the game could theoretically cheat, or _all_ of them could.
 
-For this reason, a distributed simulation model made the most sense. It had effectively the same amount of security, and would not require any expensive rollback and resimulation, since players simply take authority over cubes they interact with and send the state for those cubes to other players rather than using client-side prediction to hide latency.
+For this reason, a distributed simulation model made the most sense. It had effectively the same amount of security, and would not require any expensive rollback and resimulation, since players simply take authority over cubes they interact with and send the state for those cubes to other players.
 
 # Authority Scheme
 
@@ -91,7 +73,7 @@ I thought about this for a while and came up with two key concepts:
 1. Authority
 2. Ownership
 
-Each cube would have authority, either set to default (white), or to whatever color of the player that last interacted with it. If another player interacted with an object, authority would switch and update to that player. I planned to use authority for interactions of thrown objects with the scene. I imagined that a cube throw by player 2 could take authority over any objects it interacted with, and in turn any objects those objects interacted with, recursively.
+Each cube would have authority, either set to default (white), or to whatever color of the player that last interacted with it. If another player interacted with an object, authority would switch and update to that player. I planned to use authority for interactions of thrown objects with the scene. I imagined that a cube thrown by player 2 could take authority over any objects it interacted with, and in turn any objects those objects interacted with, recursively.
 
 Ownership was a bit different. Once a cube is owned by a player, no other player could take ownership until that player reliquished ownership. I planned to use ownership for players grabbing cubes, because I didn't want to make it possible for players to grab cubes out of other player's hands after they picked them up.
 
@@ -146,7 +128,7 @@ The easiest gain I found was to simply encode the state for at rest cubes more e
         [angular_velocity] (vector3)
     }
 
-This is _lossless_ technique because it doesn't change the state sent over the network in any way. It's also extremely effective, since statistically speaking, most of the time the majority of cubes in the scene are at rest.
+This is _lossless_ technique because it doesn't change the state sent over the network in any way. It's also extremely effective, since statistically speaking, most of the time the majority of cubes are at rest.
 
 To optimize bandwidth further we need to use _lossy techniques_. For example, we can reduce the precision of the physics state sent over the network by bounding position in some min/max range and quantizing it to a resolution of 1/1000th of a centimeter and sending that quantized position as an integer value in some known range. The same basic approach can be used for linear and angular velocity. For rotation I used the _smallest three representation_ of a quaternion.
 
@@ -200,7 +182,7 @@ Somewhat counter-intuitively, reducing priority for at rest cubes gave bad resul
 
 Even with all the techniques so far, it still wasn't optimized enough. With four players I really wanted to get the cost per-player down under 256kbps, so the entire simulation could fit into 1mbps for the host.
 
-I had once last trick remaining: __delta compression__.
+I had one last trick remaining: __delta compression__.
 
 First person shooters often implement delta compression by compressing the entire state of the world relative to a previous state. In this technique, a previous complete world state or 'snapshot' acts as the _baseline_, and a set of differences, or _delta_, between the _baseline_ and the _current_ snapshot is generated and sent down to the client.
 
@@ -226,7 +208,7 @@ The simplest way is to encode cubes that haven't changed from the baseline value
 
 A more advanced strategy is to encode the _difference_ between the current and baseline values, aiming to encode small differences with fewer bits. For example, delta position could be (-1,+2,+5) from baseline. I found this works well for linear values, but breaks down for deltas of the smallest three quaternion representation, as the largest component of a quaternion is often different between the baseline and current rotation.
 
-Furthermore, while encoding the difference gives some gains, it's didn't provide another order of magnitude improvement that I was hoping for. In a desperate, last hope, I came up with a delta encoding strategy that included _prediction_. In this approach, I predict the current state from the baseline assuming the cube is moving ballistically under acceleration due to gravity. 
+Furthermore, while encoding the difference gives some gains, it didn't provide the order of magnitude improvement I was hoping for. In a desperate, last hope, I came up with a delta encoding strategy that included _prediction_. In this approach, I predict the current state from the baseline assuming the cube is moving ballistically under acceleration due to gravity. 
 
 Prediction was complicated by the fact that the predictor must be written in fixed point, because floating point calculations are not necessarily guaranteed to be deterministic. But after a few days of tweaking and experimentation, I was able to write a ballistic predictor for position, linear and angular velocity that matched the PhysX integrator within quantize resolution about 90% of the time. 
 
@@ -234,7 +216,7 @@ These lucky cubes get encoded with another bit: _perfect prediction_, leading to
 
 In the time I had to spend, I not able to get a good predictor for rotation. I blame this on the smallest three representation, which is highly numerically unstable, especially in fixed point. In the future, I would not use the smallest three representation for quantized rotations.
 
-It was also painfully obvious while encoding differences and error offsets that using a bitpacker was not the best way to read and write these quantities. I'm certain that something like a range coder or arithmetic compressor that can represent fractional bits, and dynamically adjust a its model to the differences would give much better results, but I was already within my bandwidth budget at this point and couldn't justify any further noodling :)
+It was also painfully obvious while encoding differences and error offsets that using a bitpacker was not the best way to read and write these quantities. I'm certain that something like a range coder or arithmetic compressor that can represent fractional bits, and dynamically adjust its model to the differences would give much better results, but I was already within my bandwidth budget at this point and couldn't justify any further noodling :)
 
 # Synchronizing Avatars
 
@@ -244,7 +226,7 @@ After several months of work, I had made the following progress:
 * Stable stacks in the remote view while quantizing state on both sides
 * Bandwidth reduced to the point where all four players can fit in 1mbps
 
-The next thing I needed to implement was interaction with the simulation via the touch controllers. This part was a lot of fun, was my favorite part of the project :)
+The next thing I needed to implement was interaction with the simulation via the touch controllers. This part was a lot of fun, and was my favorite part of the project :)
 
 I hope you enjoy these interactions. There was a lot of experimentation and tuning to make simple things like picking up, throwing, passing from hand to hand feel good, even crazy adjustments to ensure throwing worked great, while placing objects on top of high stacks could still be done with high accuracy.
 
@@ -266,15 +248,15 @@ Now that I had player interaction with the scene working with the touch controll
 
 To do this without going insane switching between two headsets all the time (!!!), I extended my Unity test scene to be able to switch between the context of player one (left) and player two (right). 
 
-I called the first player the "host" and the second player the "guest". In this model, the host is the "real" simulation, and by default synchronizes all cubes to the guest player, but as the guest interacts with the world, it takes authority over these objects and can send state for them back to the host player. 
+I called the first player the "host" and the second player the "guest". In this model, the host is the "real" simulation, and by default synchronizes all cubes to the guest player, but as the guest interacts with the world, it takes authority over these objects and sends state for them back to the host player. 
 
-To make this work without inducing obvious conflicts the host and guest both check the local state of cubes before taking authority and ownership. For example, the host won't take ownership over a cube already under ownership of the guest, and vice versa, while authority is allowed to be taken, players to throw cubes at somebody else's stack and knock it over while it's being built.
+To make this work without inducing obvious conflicts the host and guest both check the local state of cubes before taking authority and ownership. For example, the host won't take ownership over a cube already under ownership of the guest, and vice versa, while authority is allowed to be taken, to let players throw cubes at somebody else's stack and knock it over while it's being built.
 
-Generalizing further to four players, in the networked physics sample, all packets flow through the host player, making the host the _arbiter_. In effect, rather than being truly peer-to-peer, a topology is chosen that all guests in the game communicate only with the host player, instead of directly with each other. This lets the host decides which updates to accept, and which updates to ignore and subsequently correct.
+Generalizing further to four players, in the networked physics sample, all packets flow through the host player, making the host the _arbiter_. In effect, rather than being truly peer-to-peer, a topology is chosen that all guests in the game communicate only with the host player. This lets the host decide which updates to accept, and which updates to ignore and subsequently correct.
 
-To apply these corrections I needed some way for the host to override guests and say, no, you don't have authority /ownership over this cube, and you should accept this update. I also needed some way for the host to determine _ordering_ for guest interactions with the world, so if one client experiences a burst of lag and delivers a bunch of packets late, these packets won't take precedence over more recent actions from other guests.
+To apply these corrections I needed some way for the host to override guests and say, no, you don't have authority/ownership over this cube, and you should accept this update. I also needed some way for the host to determine _ordering_ for guest interactions with the world, so if one client experiences a burst of lag and delivers a bunch of packets late, these packets won't take precedence over more recent actions from other guests.
 
-As per my hunch early, this was achieved with two sequence numbers per-cube:
+As per my hunch earlier, this was achieved with two sequence numbers per-cube:
 
 1. Authority sequence
 2. Ownership sequence

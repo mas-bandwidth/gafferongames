@@ -730,9 +730,14 @@
 	],
 	"file_history":
 	[
-		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Network Next/ELEVATOR PITCH.txt",
+		"/etc/hosts",
 		"/Users/gaffer/git/gafferongames/config_local.toml",
+		"/Users/gaffer/git/gafferongames/Makefile",
+		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
+		"/Users/gaffer/git/gafferongames/config.toml",
 		"/Users/gaffer/git/gafferongames/config_upload.toml",
+		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
+		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Network Next/ELEVATOR PITCH.txt",
 		"/Users/gaffer/git/gafferongames/content/about.md",
 		"/Users/gaffer/git/gafferongames/content/post/what_every_programmer_needs_to_know_about_game_networking.md",
 		"/Users/gaffer/Desktop/RON MILLER ADVICE",
@@ -749,18 +754,14 @@
 		"/Users/gaffer/git/gafferongames/WHITEPAPER",
 		"/Users/gaffer/git/gafferongames/RESEARCH",
 		"/Users/gaffer/git/gafferongames/PLANNING",
-		"/Users/gaffer/git/gafferongames/Makefile",
-		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
 		"/Users/gaffer/git/gafferongames/content/post/reliable_ordered_messages.md",
 		"/Users/gaffer/git/gafferongames/content/post/snapshot_compression.md",
 		"/Users/gaffer/git/gafferongames/content/post/snapshot_interpolation.md",
 		"/Users/gaffer/git/gafferongames/content/post/state_synchronization.md",
-		"/Users/gaffer/git/gafferongames/config.toml",
 		"/Users/gaffer/Desktop/SUPERBIT PROPOSAL",
 		"/Users/gaffer/git/gafferongames/TODO",
 		"/Users/gaffer/Desktop/GOOGLE EDGE",
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Network Next/NETWORK NEXT.txt",
-		"/etc/hosts",
 		"/Users/gaffer/Desktop/SNAPROUTE",
 		"/Users/gaffer/git/gafferongames/content/post/go_stone_vs_go_board.md",
 		"/Users/gaffer/git/gafferongames/content/post/how_the_go_stone_moves.md",
@@ -781,7 +782,6 @@
 		"/Users/gaffer/git/gafferongames/content/post/tessellating_the_go_stone.md",
 		"/Users/gaffer/git/gafferongames/content/post/udp_vs_tcp.md",
 		"/Users/gaffer/git/gafferongames/content/post/virtual_connection_over_udp.md",
-		"/Users/gaffer/git/gafferongames/content/post/why_cant_i_send_udp_packets_from_a_browser.md",
 		"/Users/gaffer/git/gafferongames/IDEAS",
 		"/Users/gaffer/Desktop/SONY",
 		"/Users/gaffer/Desktop/NETWORK NEXT",
@@ -861,7 +861,7 @@
 	],
 	"find":
 	{
-		"height": 35.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -908,6 +908,15 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"few day",
+			"and and",
+			"from the ",
+			"upload",
+			"PhysX",
+			"an cube",
+			"object",
+			"and ang",
+			"github",
 			"Unreal",
 			"http://gaffer",
 			"http://www.gaff",
@@ -1026,16 +1035,7 @@
 			"player ga",
 			"that the",
 			"it it",
-			"netcode_server_process_connection_request_packet",
-			"security",
-			"reliable ordered",
-			"WebSockets",
-			"hacker news",
-			" we know",
-			"large range",
-			"at all.",
-			"I chose ",
-			"in fact"
+			"netcode_server_process_connection_request_packet"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1140,12 +1140,40 @@
 		"selected_items":
 		[
 			[
+				"make",
+				"Makefile"
+			],
+			[
+				"local",
+				"config_local.toml"
+			],
+			[
+				"mak",
+				"Makefile"
+			],
+			[
+				"makefile",
+				"Makefile"
+			],
+			[
 				"config",
+				"config_local.toml"
+			],
+			[
+				"toml",
 				"config_upload.toml"
 			],
 			[
 				"",
 				"config_upload.toml"
+			],
+			[
+				"udp",
+				"content/post/why_cant_i_send_udp_packets_from_a_browser.md"
+			],
+			[
+				"network",
+				"content/post/networked_physics_in_virtual_reality.md"
 			],
 			[
 				"about",
@@ -1166,14 +1194,6 @@
 			[
 				"todo",
 				"TODO"
-			],
-			[
-				"network",
-				"content/post/networked_physics_in_virtual_reality.md"
-			],
-			[
-				"make",
-				"Makefile"
 			],
 			[
 				"about.md",
@@ -1310,10 +1330,6 @@
 			[
 				"vitual",
 				"content/post/virtual_connection_over_udp.md"
-			],
-			[
-				"udp",
-				"content/post/udp_vs_tcp.md"
 			],
 			[
 				"sending",
@@ -1592,10 +1608,6 @@
 				"nginx/nginx.conf"
 			],
 			[
-				"makefile",
-				"Makefile"
-			],
-			[
 				"webserve",
 				"webserver/webserver.go"
 			],
@@ -1624,10 +1636,6 @@
 				"content/post/networked_physics_in_virtual_reality.md"
 			],
 			[
-				"toml",
-				"config_local.toml"
-			],
-			[
 				"whyca",
 				"content/post/why_cant_i_send_udp_packets_from_a_browser.md"
 			],
@@ -1642,14 +1650,6 @@
 			[
 				"shap",
 				"content/post/shape_of_the_go_stone.md"
-			],
-			[
-				"vir",
-				"content/post/introduction_to_virtual_go.md"
-			],
-			[
-				"cha",
-				"CHANGES"
 			]
 		],
 		"width": 0.0
