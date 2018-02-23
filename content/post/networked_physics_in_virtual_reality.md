@@ -1,7 +1,7 @@
 +++
 categories = ["Networked Physics"]
 tags = ["physics", "networking", "vr"]
-date = "2018-02-19"
+date = "2018-02-22"
 title = "Networked Physics in Virtual Reality"
 description = "Networking a stack of cubes with Unity and PhysX"
 +++
