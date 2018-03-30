@@ -275,7 +275,7 @@ My strategy when testing low-level netcode is as follows:
 
 * Test simultaneously on multiple platforms. I've never written a low-level library that worked first time on MacOS, Windows and Linux. There are always interesting compiler specific issues and crashes. Test on multiple platforms as you develop, otherwise it's pretty painful fixing all these at the end.
 
-* This about how people can attack the protocol. Implement code to defend against these attacks. Add functional tests that mimic these attacks and make sure that your code handles them correctly.
+* Think about how people can attack the protocol. Implement code to defend against these attacks. Add functional tests that mimic these attacks and make sure that your code handles them correctly.
 
 This is my process and it seems to work pretty well. If you are writing a low-level network protocol, the rest of your game depends on this code working correctly. You need to be absolutely sure it works before you build on it, otherwise it's basically a stack of cards.
 
