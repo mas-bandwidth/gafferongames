@@ -730,6 +730,7 @@
 	],
 	"file_history":
 	[
+		"/Users/gaffer/git/gafferongames/content/post/packet_fragmentation_and_reassembly.md",
 		"/Users/gaffer/git/gafferongames/Makefile",
 		"/Users/gaffer/git/gafferongames/content/post/networked_physics_2004.md",
 		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
@@ -770,7 +771,6 @@
 		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
 		"/Users/gaffer/git/gafferongames/content/post/introduction_to_networked_physics.md",
 		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
-		"/Users/gaffer/git/gafferongames/content/post/packet_fragmentation_and_reassembly.md",
 		"/Users/gaffer/git/gafferongames/content/post/physics_in_3d.md",
 		"/Users/gaffer/git/gafferongames/content/post/reading_and_writing_packets.md",
 		"/Users/gaffer/git/gafferongames/content/post/reliability_ordering_and_congestion_avoidance_over_udp.md",
@@ -861,7 +861,7 @@
 	],
 	"find":
 	{
-		"height": 39.0
+		"height": 44.0
 	},
 	"find_in_files":
 	{
@@ -908,6 +908,7 @@
 		"case_sensitive": true,
 		"find_history":
 		[
+			"This about",
 			"players to ",
 			"few day",
 			"and and",
@@ -1034,8 +1035,7 @@
 			"DDoS",
 			"no room",
 			"player ga",
-			"that the",
-			"it it"
+			"that the"
 		],
 		"highlight": true,
 		"in_selection": false,
@@ -1089,7 +1089,7 @@
 	],
 	"incremental_find":
 	{
-		"height": 26.0
+		"height": 31.0
 	},
 	"input":
 	{
@@ -1130,7 +1130,7 @@
 	"project": "gafferongames.sublime-project",
 	"replace":
 	{
-		"height": 48.0
+		"height": 58.0
 	},
 	"save_all_on_build": true,
 	"select_file":
@@ -1139,6 +1139,10 @@
 		"last_filter": "",
 		"selected_items":
 		[
+			[
+				"frag",
+				"content/post/packet_fragmentation_and_reassembly.md"
+			],
 			[
 				"make",
 				"Makefile"
@@ -1646,10 +1650,6 @@
 			[
 				"why",
 				"content/post/why_cant_i_send_udp_packets_from_a_browser.md"
-			],
-			[
-				"abot.md",
-				"content/about.md"
 			]
 		],
 		"width": 0.0
