@@ -3,7 +3,7 @@ categories = ["Networked Physics"]
 tags = ["physics", "networking", "vr"]
 date = "2018-02-22"
 title = "Networked Physics in Virtual Reality"
-description = "Networking a stack of cubes with Unity and PhysX"
+description = "Networking a stack of cubes in VR with Unity and PhysX"
 +++
 
 # Introduction
@@ -282,5 +282,5 @@ __The source code for the networked physics sample can be downloaded [here](http
 ----- 
 
 <i>
-**Glenn Fiedler** is the founder of [Network Next](https://angel.co/network-next) where he's hard at work as CEO/CTO. Network Next is creating a new internet for games and e-sports.
+**Glenn Fiedler** is the founder and CEO of [Network Next](https://networknext.com). Network Next is creating a new internet for games and esports. Come [work with us](mailto:glenn@networknext.com) in sunny Santa Monica!
 </i>

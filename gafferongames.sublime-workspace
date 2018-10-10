@@ -730,8 +730,10 @@
 	],
 	"file_history":
 	[
-		"/Users/gaffer/git/gafferongames/content/post/packet_fragmentation_and_reassembly.md",
+		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
 		"/Users/gaffer/git/gafferongames/Makefile",
+		"/Users/gaffer/git/gafferongames/.git/MERGE_MSG",
+		"/Users/gaffer/git/gafferongames/content/post/packet_fragmentation_and_reassembly.md",
 		"/Users/gaffer/git/gafferongames/content/post/networked_physics_2004.md",
 		"/Users/gaffer/git/gafferongames/content/post/networked_physics_in_virtual_reality.md",
 		"/Users/gaffer/git/gafferongames/IDEAS",
@@ -768,7 +770,6 @@
 		"/Users/gaffer/Desktop/SNAPROUTE",
 		"/Users/gaffer/git/gafferongames/content/post/go_stone_vs_go_board.md",
 		"/Users/gaffer/git/gafferongames/content/post/how_the_go_stone_moves.md",
-		"/Users/gaffer/git/gafferongames/content/post/integration_basics.md",
 		"/Users/gaffer/git/gafferongames/content/post/introduction_to_networked_physics.md",
 		"/Users/gaffer/git/gafferongames/content/post/introduction_to_virtual_go.md",
 		"/Users/gaffer/git/gafferongames/content/post/physics_in_3d.md",
@@ -843,7 +844,6 @@
 		"/Volumes/Secomba/gaffer/Boxcryptor/Dropbox/Encrypted/Personal/HEALTH",
 		"/Users/gaffer/Desktop/Networked Physics/Assets/Scripts/Context.cs",
 		"/Users/gaffer/libyojimbo/premake5.lua",
-		"/Users/gaffer/git/gafferongames/.git/MERGE_MSG",
 		"/Users/gaffer/Desktop/CANCEL SURGERY",
 		"/Users/gaffer/Desktop/cloudflare.txt",
 		"/Users/gaffer/git/gafferongames/static/css/bootstrap.min.css",
@@ -861,7 +861,7 @@
 	],
 	"find":
 	{
-		"height": 44.0
+		"height": 39.0
 	},
 	"find_in_files":
 	{
@@ -1140,6 +1140,14 @@
 		"selected_items":
 		[
 			[
+				"Make",
+				"Makefile"
+			],
+			[
+				"inte",
+				"content/post/integration_basics.md"
+			],
+			[
 				"frag",
 				"content/post/packet_fragmentation_and_reassembly.md"
 			],
@@ -1257,10 +1265,6 @@
 			],
 			[
 				"int",
-				"content/post/integration_basics.md"
-			],
-			[
-				"inte",
 				"content/post/integration_basics.md"
 			],
 			[
@@ -1645,10 +1649,6 @@
 			],
 			[
 				"whyca",
-				"content/post/why_cant_i_send_udp_packets_from_a_browser.md"
-			],
-			[
-				"why",
 				"content/post/why_cant_i_send_udp_packets_from_a_browser.md"
 			]
 		],

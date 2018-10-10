@@ -197,3 +197,9 @@ One solution would be for Google to make it _significantly_ easier for game deve
 Alternatively, [netcode.io](http://netcode.io) provides a much simpler 'WebSockets for UDP'-like approach, which would also solve the problem, if it were standardized and incorporated into browsers.
 
 **UPDATE:** netcode.io is now [available in browsers](https://github.com/RedpointGames/netcode.io-browser)!
+
+----- 
+
+<i>
+**Glenn Fiedler** is the founder and CEO of [Network Next](https://networknext.com). Network Next is creating a new internet for games and esports. Come [work with us](mailto:glenn@networknext.com) in sunny Santa Monica!
+</i>
