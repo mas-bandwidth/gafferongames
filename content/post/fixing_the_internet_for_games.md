@@ -2,7 +2,7 @@
 categories = ["Game Networking"]
 tags = ["networking"]
 date = "2019-03-24"
-title = "Fixing the Internet for Games"
+title = "Fixing the Internet for Games (GDC 2019)"
 description = "The internet is broken for games. Let's fix it!"
 +++
 
