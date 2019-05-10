@@ -1,4 +1,4 @@
-FROM phusion/baseimage:0.9.18
+FROM phusion/baseimage:0.11
 
 run apt-get update && apt-get install -y redis-server
 
