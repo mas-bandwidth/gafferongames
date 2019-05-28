@@ -163,7 +163,7 @@ And that's really all there is to it. Now you have a callback when a packet is 
 
 ## Message Objects
 
-Messages are small objects (smaller than packet size, so that many will fit in a typical packet) that know how to serialize themselves. In my system they perform serialization using a [unified serialize function](https://gafferongames.com/building-a-game-network-protocol/serialization-strategies)unified serialize function.
+Messages are small objects (smaller than packet size, so that many will fit in a typical packet) that know how to serialize themselves. In my system they perform serialization using a [unified serialize function](http://gafferongames.com/building-a-game-network-protocol/serialization-strategies)unified serialize function.
 
 The serialize function is templated so you write it once and it handles read, write and _measure_.
 

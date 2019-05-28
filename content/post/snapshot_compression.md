@@ -99,7 +99,7 @@ We can do even better than this because most cubes are stationary. To take advan
 Your browser does not support the video tag.
 </video>
 
-But why are we sending linear velocity at all? In the <a href="https://gafferongames.com/networked-physics/snapshots-and-interpolation/">previous article</a> we decided to send it because it improved the quality of interpolation at 10 snapshots per-second, but now that we're sending 60 snapshots per-second is this still necessary? As you can see below the answer is _no_.
+But why are we sending linear velocity at all? In the <a href="http://gafferongames.com/networked-physics/snapshots-and-interpolation/">previous article</a> we decided to send it because it improved the quality of interpolation at 10 snapshots per-second, but now that we're sending 60 snapshots per-second is this still necessary? As you can see below the answer is _no_.
 
 <video controls="controls" width="100%">
 <source src="http://gafferongames.com/videos/snapshot_compression_no_velocity.mp4" type="video/mp4" />
