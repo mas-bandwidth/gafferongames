@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I’m [Glenn Fiedler](/about) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
+Hi, I’m [Glenn Fiedler](https://gafferongames.com) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
 
 Many people will tell you that implementing your own reliable message system on top of UDP is foolish. After all, why reimplement TCP? 
 
@@ -343,3 +343,7 @@ while ( true )
 Which is flexible enough to implement whatever you like on top of it.
 
 __NEXT ARTICLE__: [Client Server Connection](/post/client_server_connection/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

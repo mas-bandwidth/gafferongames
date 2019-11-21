@@ -277,10 +277,8 @@ This approach is best used for _cooperative experiences only_, as it does not pr
 
 Thanks to Oculus for sponsoring my work and making this research possible!
 
-__The source code for the networked physics sample can be downloaded [here](https://github.com/OculusVR/oculus-networked-physics-sample).__
+The source code for the networked physics sample can be downloaded [here](https://github.com/OculusVR/oculus-networked-physics-sample).
 
 ----- 
 
-<i>
-**Glenn Fiedler** is the founder and CEO of [Network Next](https://networknext.com). Network Next is creating a new internet for games and esports. Come [work with us](mailto:glenn@networknext.com) in sunny Santa Monica!
-</i>
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

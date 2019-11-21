@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories/networked-physics/)**.
+Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to **[Networked Physics](/categories/networked-physics/)**.
 
 In the [previous article](/post/introduction_to_networked_physics/) we explored the physics simulation we're going to network in this article series. In this article specifically, we're going to network this physics simulation using __deterministic lockstep__.
 
@@ -155,3 +155,7 @@ The video above shows deterministic lockstep synchronized over UDP using this te
 So in conclusion, even where TCP should have the most advantage, in the only networking model that relies on reliable-ordered data, we can still easily whip its ass with a simple protocol built on top of UDP.
 
 __NEXT ARTICLE:__ [Snapshot Interpolation](/post/snapshot_interpolation/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

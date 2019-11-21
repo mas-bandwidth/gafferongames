@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I’m [Glenn Fiedler](/about) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
+Hi, I’m [Glenn Fiedler](https://gafferongames.com) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
 
 In the [previous article](/post/packet_fragmentation_and_reassembly/) we implemented packet fragmentation and reassembly so we can send packets larger than MTU.
 
@@ -220,3 +220,7 @@ This process continues until all slices of the chunk are received, at which poin
 The chunk system is simple in concept, but the implementation is certainly not. I encourage you to take a close look at the [source code](http://www.patreon.com/gafferongames) for this article for further details.
 
 __NEXT ARTICLE:__ [Reliable Ordered Messages](/post/reliable_ordered_messages/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

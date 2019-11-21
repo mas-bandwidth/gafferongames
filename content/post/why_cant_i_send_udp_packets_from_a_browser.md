@@ -200,6 +200,4 @@ Alternatively, [netcode.io](http://netcode.io) provides a much simpler 'WebSocke
 
 ----- 
 
-<i>
-**Glenn Fiedler** is the founder and CEO of [Network Next](https://networknext.com). Network Next is creating a new internet for games and esports. Come [work with us](mailto:glenn@networknext.com) in sunny Santa Monica!
-</i>
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

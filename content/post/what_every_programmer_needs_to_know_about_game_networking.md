@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
+Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
 
 Have you ever wondered how multiplayer games work? 
 
@@ -96,3 +96,7 @@ This way the player appears to control their own character without any latency, 
 <blockquote>... the best of both worlds: In all cases, the server remains completely authoritative. Nearly all the time, the client movement simulation exactly mirrors the client movement carried out by the server, so the client's position is seldom corrected. Only in the rare case, such as a player getting hit by a rocket, or bumping into an enemy, will the client's location need to be corrected.</blockquote>
 
 In other words, only when the player's character is affected by something external to the local player's input, which cannot possibly be predicted on the client, will the player's position need to be corrected. That and of course, if the player is attempting to cheat :)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

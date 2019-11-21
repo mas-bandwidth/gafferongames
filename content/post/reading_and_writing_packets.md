@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I’m [Glenn Fiedler](/about) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
+Hi, I’m [Glenn Fiedler](https://gafferongames.com) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
 
 In this article we're going to explore how AAA multiplayer games like first person shooters read and write packets. We'll start with text based formats then move into binary hand-coded binary formats and bitpacking.
 
@@ -627,3 +627,7 @@ struct PacketB
 If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. _You want it to be automatic_.
 
 __NEXT ARTICLE:__ [Serialization Strategies](/post/serialization_strategies/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

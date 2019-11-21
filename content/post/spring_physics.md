@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to **[Game Physics](/categories/game-physics/)**.
+Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to **[Game Physics](/categories/game-physics/)**.
 
 In the [previous article](/post/physics_in_3d/) we discussed how to simulate the motion of rigid bodies in 3D. Now we're going to discuss how to implement spring physics.
 
@@ -103,3 +103,7 @@ The next problem is that tighter the spring k you use, the more difficult it bec
 The final, and major weakness is that springs are reactive not predictive. This is a subtle point but a very important one. A joint or constraint implemented using springs only works by correcting errors after they occur, and collision response using springs requires allowing some amount of penetration before it acts to correct it and so forth. More advanced techniques exist which can solve for the forces required to constrain the physics simulation without inducing error, such as LCP solvers or iterative methods, but they are out of scope of this simple article.
 
 __NEXT ARTICLE:__ [Networked Physics (2004)](/post/networked_physics_2004/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

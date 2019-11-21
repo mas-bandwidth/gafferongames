@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to the first article in **[Networked Physics](/categories/networked-physics/)**.
+Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to the first article in **[Networked Physics](/categories/networked-physics/)**.
 
 In this article series we're going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.
 
@@ -66,3 +66,7 @@ Cubes within a certain distance of the player have a force applied towards the c
 This is a very difficult situation for networked physics!
 
 __NEXT ARTICLE:__ [Deterministic Lockstep](/post/deterministic_lockstep/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
+Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
 
 Lately I've been doing some research into networking game physics simulations via deterministic lockstep methods.
 
@@ -277,3 +277,7 @@ Many programmers may not realize that even a program that uses only the numeric 
 
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

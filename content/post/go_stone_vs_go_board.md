@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler. Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
+Hi, I'm [Glenn Fiedler](https://gafferongames.com). Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
 
 In this series so far we've defined the shape of a go stone, rendered it using 3D graphics hardware and simulated how it moves in three dimensions.
 
@@ -185,3 +185,7 @@ This seems counter-intuitive at first, but it has some nice parallels with other
 We should probably do the same :)
 
 __NEXT ARTICLE:__ [Rotation and Inertia Tensors](/post/rotation_and_inertia_tensors/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler. Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
+Hi, I'm [Glenn Fiedler](https://gafferongames.com). Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
 
 I'm a professional game programmer with 15 years experience in the game industry. Over the years I've worked for Irrational Games, Team Bondi, Pandemic Studios, Sony Santa Monica and most recently Respawn Entertainment. During my career I'm extremely proud to have worked on such games as 'Freedom Force', 'L.A. Noire', 'Journey', 'God of War: Ascension' and 'Titanfall'.
 
@@ -68,3 +68,7 @@ So many beautiful properties from such simple rules. Truly an amazing game!
 Please visit [The Interactive Way To Go](http://playgo.to/iwtg/en/) if you would like to learn more.
 
 __NEXT ARTICLE:__ [Shape of The Go Stone](/post/shape_of_the_go_stone/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I’m [Glenn Fiedler](/about) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
+Hi, I’m [Glenn Fiedler](https://gafferongames.com) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
 
 So far in this article series we've discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP.
 
@@ -250,3 +250,7 @@ But it's still vulnerable to a sophisticated actors who can sniff packets:
 To solve this, we need to get serious with cryptography to encrypt and sign packets so they can't be read or modified by a third party.
 
 __NEXT ARTICLE__: [Securing Dedicated Servers](http://patreon.com/gafferongames).
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

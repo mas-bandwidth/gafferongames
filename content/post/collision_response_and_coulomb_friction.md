@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler. Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
+Hi, I'm [Glenn Fiedler](https://gafferongames.com). Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
 
 So far in this series, we have mathematically defined the go stone, rendered it, determined how it moves and rotates, and discussed how its shape affects how it responds to collisions.
 
@@ -190,3 +190,7 @@ With a bit of tuning, it seems to work reasonably well:
 <iframe src="//www.youtube.com/embed/1eG2xTubRJY" 
 frameborder="0" allowfullscreen class="video"></iframe>
 </div>
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

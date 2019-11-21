@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
+Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
 
 In the [previous article](/post/udp_vs_tcp/) we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.
 
@@ -393,3 +393,7 @@ As an added bonus the code is the same on all platforms because everything platf
 You now have a platform independent way to send and receive packets. _Enjoy_ :)
 
 __NEXT ARTICLE:__ [Virtual Connection over UDP](/post/virtual_connection_over_udp/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
+Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
 
 In the [previous article](/post/sending_and_receiving_packets) we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.
 
@@ -148,3 +148,7 @@ Our connection is as real as any TCP connection, and the steady stream of UDP pa
 Now that you have your virtual connection over UDP, you can easily setup a client/server relationship for a two player multiplayer game without TCP.
 
 __NEXT ARTICLE:__ [Reliability and Congestion Avoidance over UDP](/post/reliability_ordering_and_congestion_avoidance_over_udp/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

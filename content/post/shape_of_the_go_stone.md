@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler. Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
+Hi, I'm [Glenn Fiedler](https://gafferongames.com). Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
 
 If you play Go, you know that a biconvex go stone has an interesting wobble when it's placed on the board. This wobble is a direct consequence of its unique shape. 
 
@@ -139,3 +139,7 @@ Now we have everything we need to write the function:
 Now we can calculate the bevel torus to round off any go stone we create as the intersection of two spheres.
 
 __NEXT ARTICLE:__ [Tessellating The Go Stone](/post/tessellating_the_go_stone)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

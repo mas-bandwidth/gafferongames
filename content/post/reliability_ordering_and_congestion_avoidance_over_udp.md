@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
+Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
 
 In the [previous article](/post/virtual_connection_over_udp/), we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.
 
@@ -229,3 +229,7 @@ You can also get much more <em>greedy</em> with congestion avoidance, and attemp
 Our new reliability system let's us send a steady stream of packets and notifies us which packets are received. From this we can infer lost packets, and resend data that didn't get through if necessary. We also have a simple congestion avoidance system that drops from 30 packets per-second to 10 times a second so we don't flood the connection.
 
 __NEXT:__ [What Every Programmer Needs to Know About Game Networking](/post/what_every_programmer_needs_to_know_about_game_networking/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

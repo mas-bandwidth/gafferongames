@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories/networked-physics/)**.
+Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to **[Networked Physics](/categories/networked-physics/)**.
 
 In the [previous article](/post/snapshot_interpolation/) we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.
 
@@ -217,6 +217,8 @@ It's possible to get even better compression using a different approach. Bit-pac
 
 It's also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly. 
 
-Chris Doran from Geomerics wrote also wrote an excellent <a href="http://www.geomerics.com/wp-content/uploads/2015/04/rotation_blog_toprint.pdf">article</a> exploring the mathematics of relative quaternion compression that is worth reading.
-
 __NEXT ARTICLE:__ [State Synchronization](/post/state_synchronization/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

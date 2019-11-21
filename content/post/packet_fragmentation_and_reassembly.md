@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I’m [Glenn Fiedler](/about) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
+Hi, I’m [Glenn Fiedler](https://gafferongames.com) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
 
 In the [previous article](/post/serialization_strategies/) we discussed how to unify packet read and write into a single serialize function and added a bunch of safety features to packet read.
 
@@ -282,3 +282,7 @@ This is my process and it seems to work pretty well. If you are writing a low-le
 In my experience, game neworking is hard enough without having suspicions that that your low-level network protocol has bugs that only show up under extreme network conditions. That's exactly where you need to be able to trust your code works correctly. __So test it!__
 
 __NEXT ARTICLE__: [Sending Large Blocks of Data](/post/sending_large_blocks_of_data/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

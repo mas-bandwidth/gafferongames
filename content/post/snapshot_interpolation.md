@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories/networked-physics/)**.
+Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to **[Networked Physics](/categories/networked-physics/)**.
 
 In the [previous article](/post/deterministic_lockstep/) we networked a physics simulation using deterministic lockstep. Now, in this article we're going to network the same simulation with a completely different technique: **snapshot interpolation**.
 
@@ -124,3 +124,7 @@ How can we reduce the amount of delay added for interpolation? 350ms still seems
 In order to increase the send rate we're going to need some pretty good bandwidth optimizations. But don't worry, there's a _lot_ we can do to optimize bandwidth. So much so that there was too much stuff to fit in this article and I had to insert an extra unplanned article just to cover all of it!
 
 __NEXT ARTICLE__: [Snapshot Compression](/post/snapshot_compression/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

@@ -1,26 +1,29 @@
-+++
-categories = ["Game Networking"]
-tags = ["networking"]
-date = "2019-03-24"
-title = "Fixing the Internet for Games (GDC 2019)"
-description = "The internet is broken for games. Let's fix it!"
-+++
+---
+title: "Fixing the Internet for Games"
+summary: "What we're doing at my new startup [Network Next](https://networknext.com) :rocket:"
+categories: ["Game Networking"]
+tags: ["networking"]
+date: "2019-03-24"
+featured: true
+draft: false
+image:
+  focal_point: "Center"
+  preview_only: true
+---
+
+Hi, I'm [Glenn Fiedler](https://gafferongames.com) and this is my GDC 2019 talk called “Fixing the Internet for Games”.
 
 <img src="/img/fixing-the-internet/001.png" width="100%" class="image_border"/>
 
-Hi, I’m Glenn Fiedler.
-
-I’m the CEO of a startup called Network Next. 
-
-This is my GDC 2019 talk called “Fixing the Internet for Games”.
+It's about what we are doing at my new startup [Network Next](https://networknext.com).
 
 <img src="/img/fixing-the-internet/002.png" width="100%" class="image_border"/>
 
-If you launch a multiplayer game, some % of your player base will complain that they are getting a bad experience.
+When you launch a multiplayer game, some percentage of your player base will complain they are getting a bad experience.
 
 You only need to check your forums to see this is true.
 
-And as a player you’ve experienced it too...
+And as a player you’ve probably experienced it too.
 
 What’s going on?
 
@@ -34,13 +37,13 @@ Or maybe you’ve done all this already and now you have too many data centers, 
 
 <img src="/img/fixing-the-internet/004.png" width="100%" class="image_border"/>
 
-It turns out that you can do all these things perfectly, and some % of your player base will still complain.
+It turns out that you can do all these things perfectly yet some % of your player base will still complain.
 
 The real problem is that you don’t control the route from your player to your game server, and sometimes this route is bad.
 
 <img src="/img/fixing-the-internet/005.png" width="100%" class="image_border"/>
 
-This happens because the internet is not optimized for what we want (lowest latency, lowest jitter…)
+This happens because the internet is not optimized for what we want (lowest latency, jitter and packet loss)
 
 No amount of good netcode that you write can compensate for this.
 
@@ -50,17 +53,17 @@ The internet doesn’t care about your game.
 
 <img src="/img/fixing-the-internet/006.png" width="100%" class="image_border"/>
 
-The internet thinks that game traffic is the same as checking emails, visiting a website or watching netflix.
+The internet thinks game traffic is the same as checking emails, visiting a website or watching netflix.
 
-But game traffic is real-time and extremely latency sensitive. It’s not the same.
+But game traffic is real-time and latency sensitive. It’s not the same.
 
-It’s interactive so it can’t be cached at the edge and buffered up like streamed video.
+It’s interactive so it can’t be cached at the edge and buffered like streamed video.
 
-Networks that participate in the internet do hot potato routing, they just try to get your packets off their network as fast as possible so they don’t have to deal with it anymore. Nobody is coordinating centrally to ensure that packets are delivered with the lowest overall latency and jitter.
+Networks that participate in the internet do hot potato routing, they just try to get your packets off their network as fast as possible so they don’t have to deal with it anymore. Nobody is coordinating centrally to ensure that packets are delivered with the lowest overall latency, jitter and packet loss.
 
 Sometimes ISPs or transit providers make mistakes and packets are sent on ridiculous routes that can go to the other side of the country and back on their way to a game server just 5 miles away from the player… you can call up the ISP and ask them to fix this, but it can take days to resolve.
 
-Even from day to day, performance is not consistent. You can get a good route one day, and a terrible route the next.
+Even from day to day, performance is not consistent. You can get a good route one day, and a terrible one the next.
 
 For all of these problems, players tend to blame you, the developer. But it’s not actually your fault.
 
@@ -131,9 +134,9 @@ Network Next was created to solve this problem.
 
 Network Next steers your game’s traffic across private networks that have already been built, so you don’t have to build your own private internet for your game.
 
-These private networks have better performance and are more consistent than the public internet.
-
 <img src="/img/fixing-the-internet/015.png" width="100%" class="image_border"/>
+
+But hold on. Aren't all the problems at the edge?
 
 People seem to think that all the bad stuff on the internet occurs at the edge of the network, eg. shitty DSL connections, oversubscribed cable networks…
 
@@ -281,20 +284,10 @@ On the left is the distribution of cost unit improvements for players that are g
 
 We are able to fix this fluctuation due to internet weather and get the best result at all times.
 
-<img src="/img/fixing-the-internet/038.png" width="100%" class="image_border"/>
-
-OK. Sounds good. So how do I use Network Next with my game?
-
-<img src="/img/fixing-the-internet/039.png" width="100%" class="image_border"/>
-
-Email us at [contact@networknext.com](mailto:contact@networknext.com) to get started.
-
 <img src="/img/fixing-the-internet/040.png" width="100%" class="image_border"/>
 
-Thanks for reading.
+If you'd like to learn more, please visit us at [networknext.com](https://networknext.com)
 
-ps. We're hiring!
+----- 
 
-* [Network Software Engineers](https://hire.withgoogle.com/public/jobs/networknextcom/view/P_AAAAAAHAAAsP8nJibhm6OV)
-* [Full Stack Software Engineers](https://hire.withgoogle.com/public/jobs/networknextcom/view/P_AAAAAAHAAAsN0XVT_T4DJR)
-
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

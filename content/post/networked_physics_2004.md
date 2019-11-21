@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to **[Game Physics](/categories/game-physics/)**.
+Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to **[Game Physics](/categories/game-physics/)**.
 
 In the [previous article](/post/spring_physics) we discussed how to use spring-like forces to model basic collision response, joints and motors.
 
@@ -166,3 +166,7 @@ Sometimes packet loss or out of order delivery occurs and the server input diffe
 ## Conclusion
 
 We can easily apply the client side prediction techniques used in first person shooters to network a physics simulation, but only if there is a clear ownership of objects by clients and these object interact mostly with a static world.
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

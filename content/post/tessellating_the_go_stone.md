@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler. Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
+Hi, I'm [Glenn Fiedler](https://gafferongames.com). Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
 
 In this article we want to draw the go stone using <a href="http://www.opengl.org">OpenGL</a>. 
 
@@ -60,3 +60,7 @@ With vertex welding the reduction in vertices is dramatic: 53000 to just 6500.
 For more information on vertex welding please refer to the discussion in <a href="http://www.amazon.com/Real-Time-Collision-Detection-Interactive-Technology/dp/1558607323/ref=sr_1_1?ie=UTF8&qid=1363029675&sr=8-1&keywords=real+time+collision+detection">Real-Time Collision Detection</a> by <a href="http://realtimecollisiondetection.net/blog/">Christer Ericson</a>.
 
 __NEXT ARTICLE:__ [How The Go Stone Moves](/post/how_the_go_stone_moves/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

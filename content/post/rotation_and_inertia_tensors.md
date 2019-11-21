@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm Glenn Fiedler. Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
+Hi, I'm [Glenn Fiedler](https://gafferongames.com). Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
 
 In the [previous article](/post/go_stone_vs_go_board/) we detected collision between the go stone and the go board. Now we're working up to calculating collision response so the stone bounces and wobbles before coming to rest on the board.
 
@@ -158,3 +158,7 @@ Verifying exact solutions against numeric ones is a fantastic way to check your 
 Can <u>you</u> derive the equation for I<sub>x</sub>?
 
 __NEXT ARTICLE:__ [Collision Response and Coulomb Friction](/post/collision_response_and_coulomb_friction/)
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>

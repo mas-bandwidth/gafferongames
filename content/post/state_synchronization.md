@@ -9,7 +9,7 @@ draft = false
 
 ## Introduction
 
-Hi, I'm [Glenn Fiedler](/about) and welcome to **[Networked Physics](/categories/networked-physics/)**.
+Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to **[Networked Physics](/categories/networked-physics/)**.
 
 In the [previous article](/post/snapshot_compression/) we discussed techniques for compressing snapshots.
 
@@ -208,3 +208,7 @@ We can fix this by tracking objects which have recently come to rest and bumping
 ## Conclusion
 
 And that's really about it for this technique. Without anything fancy it's already pretty good, and on top of that another order of magnitude improvement is available with delta compression, at the cost of significant complexity!
+
+----- 
+
+**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>
