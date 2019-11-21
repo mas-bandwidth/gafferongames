@@ -1,0 +1,2624 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Building a Game Network Protocol on Gaffer On Games</title>
+    <link>http://127.0.0.1:1313/categories/building-a-game-network-protocol/</link>
+    <description>Recent content in Building a Game Network Protocol on Gaffer On Games</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2019</copyright>
+    <lastBuildDate>Wed, 28 Sep 2016 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="http://127.0.0.1:1313/categories/building-a-game-network-protocol/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Client Server Connection</title>
+      <link>http://127.0.0.1:1313/post/client_server_connection/</link>
+      <pubDate>Wed, 28 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/client_server_connection/</guid>
+      <description>
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34; target=&#34;_blank&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;So far in this article series we&amp;rsquo;ve discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP.&lt;/p&gt;
+
+&lt;p&gt;Now in this article we&amp;rsquo;re going to bring everything together and build a client/server connection on top of UDP.&lt;/p&gt;
+
+&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+
+&lt;p&gt;Developers from a web background often wonder why games go to such effort to build a client/server connection on top of UDP, when for many applications, TCP is good enough. &lt;a href=&#34;#quic_footnote&#34;&gt;*&lt;/a&gt;&lt;/p&gt;
+
+&lt;p&gt;The reason is that games send &lt;strong&gt;time critical data&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Why don&amp;rsquo;t games use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP (which is unreliable, unordered) it holds more recent packets hostage in a queue while older packets are resent over the network.&lt;/p&gt;
+
+&lt;p&gt;This is known as &lt;strong&gt;head of line blocking&lt;/strong&gt; and it&amp;rsquo;s a &lt;em&gt;huuuuuge&lt;/em&gt; problem for games. To understand why, consider a game server broadcasting the state of the world to clients 10 times per-second. Each client advances time forward and wants to display the most recent state it receives from the server.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-protocol/client-time.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;But if the packet containing state for time t = 10.0 is lost, under TCP we must wait for it to be resent before we can access t = 10.1 and 10.2, even though those packets have already arrived and contain the state the client wants to display.&lt;/p&gt;
+
+&lt;p&gt;Worse still, by the time the resent packet arrives, it&amp;rsquo;s far too late for the client to actually do anything useful with it. The client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!&lt;/p&gt;
+
+&lt;p&gt;So why resend dropped packets at all? &lt;strong&gt;BINGO!&lt;/strong&gt; What we&amp;rsquo;d really like is an option to tell TCP: &amp;ldquo;Hey, I don&amp;rsquo;t care about old packets being resent, by they time they arrive I can&amp;rsquo;t use them anyway, so just let me skip over them and access the most recent data&amp;rdquo;.&lt;/p&gt;
+
+&lt;p&gt;Unfortunately, TCP simply does not give us this option :(&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;All data must be delivered reliably and in-order&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;This creates terrible problems for time critical data where packet loss &lt;em&gt;and&lt;/em&gt; latency exist. Situations like, you know, The Internet, where people play FPS games.&lt;/p&gt;
+
+&lt;p&gt;Large hitches corresponding to multiples of round trip time are added to the stream of data as TCP waits for dropped packets to be resent, which means additional buffering to smooth out these hitches, or long pauses where the game freezes and is non-responsive.&lt;/p&gt;
+
+&lt;p&gt;Neither option is acceptable for first person shooters, which is why virtually all first person shooters are networked using UDP. UDP doesn&amp;rsquo;t provide any reliability or ordering, so protocols built on top it can access the most recent data without waiting for lost packets to be resent, implementing whatever reliability they need in &lt;em&gt;radically&lt;/em&gt; different ways to TCP.&lt;/p&gt;
+
+&lt;p&gt;But, using UDP comes at a cost:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;UDP doesn&amp;rsquo;t provide any concept of connection.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;We have to build that ourselves. This is a lot of work! So strap in, get ready, because we&amp;rsquo;re going to build it all up from scratch using the same basic techniques first person shooters use when creating their protocols over UDP. You can use this client/server protocol for games or non-gaming applications and, provided the data you send is time critical, I promise you, it&amp;rsquo;s well worth the effort.&lt;/p&gt;
+
+&lt;p&gt;&lt;a name=&#34;quic_footnote&#34;&gt;&lt;/a&gt; &lt;em&gt;* These days even web servers are transitioning to UDP via &lt;a href=&#34;https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/&#34; target=&#34;_blank&#34;&gt;Google&amp;rsquo;s QUIC&lt;/a&gt;. If you still think TCP is good enough for time critical data in 2016, I encourage you to put that in your pipe and smoke it :)&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;client-server-abstraction&#34;&gt;Client/Server Abstraction&lt;/h2&gt;
+
+&lt;p&gt;The goal is to create an abstraction on top of a UDP socket where our server presents a number of &lt;em&gt;virtual slots&lt;/em&gt; for clients to connect to:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-protocol/connection-request.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;When a client requests a connection, it gets assigned to one of these slots:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-protocol/connection-accepted.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;If a client requests connection, but no slots are available, the server is full and the connection request is denied:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-protocol/server-is-full.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;Once a client is connected, packets are exchanged in both directions. These packets form the basis for the custom protocol between the client and server which is game specific.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-protocol/client-server-packets.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;In a first person shooter, packets are sent continuously in both directions. Clients send input to the server as quickly as possible, often 30 or 60 times per-second, and the server broadcasts the state of the world to clients 10, 20 or even 60 times per-second.&lt;/p&gt;
+
+&lt;p&gt;Because of this steady flow of packets in both directions there is no need for keep-alive packets. If at any point packets stop being received from the other side, the connection simply times out. No packets for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want.&lt;/p&gt;
+
+&lt;p&gt;When a client slot times out on the server, it becomes available for other clients to connect. When the client times out, it transitions to an error state.&lt;/p&gt;
+
+&lt;h2 id=&#34;simple-connection-protocol&#34;&gt;Simple Connection Protocol&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s get started with the implementation of a simple protocol. It&amp;rsquo;s a bit basic and more than a bit naive, but it&amp;rsquo;s a good starting point and we&amp;rsquo;ll build on it during the rest of this article, and the next few articles in this series.&lt;/p&gt;
+
+&lt;p&gt;First up we have the client state machine.&lt;/p&gt;
+
+&lt;p&gt;The client is in one of three states:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Disconnected&lt;/li&gt;
+&lt;li&gt;Connecting&lt;/li&gt;
+&lt;li&gt;Connected&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Initially the client starts in &lt;em&gt;disconnected&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;When a client connects to a server, it transitions to the &lt;em&gt;connecting&lt;/em&gt; state and sends &lt;strong&gt;connection request&lt;/strong&gt; packets to the server:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-protocol/connection-request-packet.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;The CRC32 and implicit protocol id in the packet header allow the server to trivially reject UDP packets not belonging to this protocol or from a different version of it.&lt;/p&gt;
+
+&lt;p&gt;Since connection request packets are sent over UDP, they may be lost, received out of order or in duplicate.&lt;/p&gt;
+
+&lt;p&gt;Because of this we do two things: 1) we keep sending packets for the client state until we get a response from the server or the client times out, and 2) on both client and server we ignore any packets that don&amp;rsquo;t correspond to what we are expecting, since a lot of redundant packets are flying over the network.&lt;/p&gt;
+
+&lt;p&gt;On the server, we have the following data structure:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;const int MaxClients = 64;
+
+class Server
+{
+    int m_maxClients;
+    int m_numConnectedClients;
+    bool m_clientConnected[MaxClients];
+    Address m_clientAddress[MaxClients];
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Which lets the server lookup a free slot for a client to join (if any are free):&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int Server::FindFreeClientIndex() const
+{
+    for ( int i = 0; i &amp;lt; m_maxClients; ++i )
+    {
+        if ( !m_clientConnected[i] )
+            return i;
+    }
+    return -1;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Find the client index corresponding to an IP address and port:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;int Server::FindExistingClientIndex( const Address &amp;amp; address ) const
+{
+    for ( int i = 0; i &amp;lt; m_maxClients; ++i )
+    {
+        if ( m_clientConnected[i] &amp;amp;&amp;amp; m_clientAddress[i] == address )
+            return i;
+    }
+    return -1;
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Check if a client is connected to a given slot:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;bool Server::IsClientConnected( int clientIndex ) const
+{
+    return m_clientConnected[clientIndex];
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;&amp;hellip; and retrieve a client’s IP address and port by client index:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;const Address &amp;amp; Server::GetClientAddress( int clientIndex ) const
+{
+    return m_clientAddress[clientIndex];
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Using these queries we implement the following logic when the server processes a &lt;strong&gt;connection request&lt;/strong&gt; packet:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;If the server is full, reply with &lt;strong&gt;connection denied&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;If the connection request is from a new client and we have a slot free, assign the client to a free slot and respond with &lt;strong&gt;connection accepted&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;If the sender corresponds to the address of a client that is already connected, &lt;em&gt;also&lt;/em&gt; reply with &lt;strong&gt;connection accepted&lt;/strong&gt;. This is necessary because the first response packet may not have gotten through due to packet loss. If we don&amp;rsquo;t resend this response, the client gets stuck in the &lt;em&gt;connecting&lt;/em&gt; state until it times out.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The connection accepted packet tells the client which client index it was assigned, which the client needs to know which player it is in the game:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-protocol/connection-accepted-packet.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;Once the server sends a connection accepted packet, from its point of view it considers that client connected. As the server ticks forward, it watches connected client slots, and if no packets have been received from a client for 5 seconds, the slot times out and is reset, ready for another client to connect.&lt;/p&gt;
+
+&lt;p&gt;Back to the client. While the client is in the &lt;em&gt;connecting&lt;/em&gt; state the client listens for &lt;strong&gt;connection denied&lt;/strong&gt; and &lt;strong&gt;connection accepted&lt;/strong&gt; packets from the server. Any other packets are ignored.&lt;/p&gt;
+
+&lt;p&gt;If the client receives &lt;strong&gt;connection accepted&lt;/strong&gt;, it transitions to connected. If it receives &lt;strong&gt;connection denied&lt;/strong&gt;, or after 5 seconds hasn&amp;rsquo;t received any response from the server, it transitions to disconnected.&lt;/p&gt;
+
+&lt;p&gt;Once the client hits &lt;em&gt;connected&lt;/em&gt; it starts sending connection payload packets to the server. If no packets are received from the server in 5 seconds, the client times out and transitions to &lt;em&gt;disconnected&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;naive-protocol-is-naive&#34;&gt;Naive Protocol is Naive&lt;/h2&gt;
+
+&lt;p&gt;While this protocol is easy to implement, we can&amp;rsquo;t use a protocol like this in production. It&amp;rsquo;s way too naive. It simply has too many weaknesses to be taken seriously:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Spoofed packet source addresses can be used to redirect connection accepted responses to a target (victim) address. If the connection accepted packet is larger than the connection request packet, attackers can use this protocol as part of a &lt;a href=&#34;https://www.us-cert.gov/ncas/alerts/TA14-017A&#34; target=&#34;_blank&#34;&gt;DDoS amplification attack&lt;/a&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Spoofed packet source addresses can be used to trivially fill all client slots on a server by sending connection request packets from n different IP addresses, where n is the number of clients allowed per-server. This is a real problem for dedicated servers. Obviously you want to make sure that only real clients are filling slots on servers you are paying for.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;An attacker can trivially fill all slots on a server by varying the client UDP port number on each client connection. This is because clients are considered unique on an address + port basis. This isn&amp;rsquo;t easy to fix because due to NAT (network address translation), different players behind the same router collapse to the same IP address with only the port being different, so we can&amp;rsquo;t just consider clients to be unique at the IP address level sans port.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Traffic between the client and server can be read and modified in transit by a third party. While the CRC32 protects against packet corruption, an attacker would simply recalculate the CRC32 to match the modified packet.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;If an attacker knows the client and server IP addresses and ports, they can impersonate the client or server. This gives an attacker the power to completely a hijack a client’s connection and perform actions on their behalf.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Once a client is connected to a server there is no way for them to disconnect cleanly, they can only time out. This creates a delay before the server realizes a client has disconnected, or before a client realizes the server has shut down. It would be nice if both the client and server could indicate a clean disconnect, so the other side doesn’t need to wait for timeout in the common case.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Clean disconnection is usually implemented with a disconnect packet, however because an attacker can impersonate the client and server with spoofed packets, doing so would give the attacker the ability to disconnect a client from the server whenever they like, provided they know the client and server IP addresses and the structure of the disconnect packet.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;If a client disconnects dirty and attempts to reconnect before their slot times out on the server, the server still thinks that client is connected and replies with &lt;strong&gt;connection accepted&lt;/strong&gt; to handle packet loss. The client processes this response and thinks it&amp;rsquo;s connected to the server, but it&amp;rsquo;s actually in an undefined state.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;While some of these problems require authentication and encryption before they can be fully solved, we can make some small steps forward to improve the protocol before we get to that. These changes are instructive.&lt;/p&gt;
+
+&lt;h2 id=&#34;improving-the-connection-protocol&#34;&gt;Improving The Connection Protocol&lt;/h2&gt;
+
+&lt;p&gt;The first thing we want to do is only allow clients to connect if they can prove they are actually at the IP address and port they say they are.&lt;/p&gt;
+
+&lt;p&gt;To do this, we no longer accept client connections immediately on connection request, instead we send back a challenge packet, and only complete connection when a client replies with information that can only be obtained by receiving the challenge packet.&lt;/p&gt;
+
+&lt;p&gt;The sequence of operations in a typical connect now looks like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-protocol/challenge-response.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;To implement this we need an additional data structure on the server. Somewhere to store the challenge data for pending connections, so when a challenge response comes in from a client we can check against the corresponding entry in the data structure and make sure it&amp;rsquo;s a valid response to the challenge sent to that address.&lt;/p&gt;
+
+&lt;p&gt;While the pending connect data structure can be made larger than the maximum number of connected clients, it&amp;rsquo;s still ultimately finite and is therefore subject to attack. We&amp;rsquo;ll cover some defenses against this in the next article. But for the moment, be happy at least that attackers can&amp;rsquo;t progress to the &lt;strong&gt;connected&lt;/strong&gt; state with spoofed packet source addresses.&lt;/p&gt;
+
+&lt;p&gt;Next, to guard against our protocol being used in a DDoS amplification attack, we&amp;rsquo;ll inflate client to server packets so they&amp;rsquo;re large relative to the response packet sent from the server. This means we add padding to both &lt;strong&gt;connection request&lt;/strong&gt; and &lt;strong&gt;challenge response&lt;/strong&gt; packets and enforce this padding on the server, ignoring any packets without it. Now our protocol effectively has DDoS &lt;em&gt;minification&lt;/em&gt; for requests -&amp;gt; responses, making it highly unattractive for anyone thinking of launching this kind of attack.&lt;/p&gt;
+
+&lt;p&gt;Finally, we&amp;rsquo;ll do one last small thing to improve the robustness and security of the protocol. It&amp;rsquo;s not perfect, we need authentication and encryption for that, but it at least it ups the ante, requiring attackers to actually sniff traffic in order to impersonate the client or server. We&amp;rsquo;ll add some unique random identifiers, or &amp;lsquo;salts&amp;rsquo;, to make each client connection unique from previous ones coming from the same IP address and port.&lt;/p&gt;
+
+&lt;p&gt;The connection request packet now looks like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-protocol/connection-request-packet-2.0.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;The client salt in the packet is a random 64 bit integer rolled each time the client starts a new connect. Connection requests are now uniquely identified by the IP address and port combined with this client salt value. This distinguishes packets from the current connection from any packets belonging to a previous connection, which makes connection and reconnection to the server much more robust.&lt;/p&gt;
+
+&lt;p&gt;Now when a connection request arrives and a pending connection entry can&amp;rsquo;t be found in the data structure (according to IP, port and client salt) the server rolls a server salt and stores it with the rest of the data for the pending connection before sending a challange packet back to the client. If a pending connection is found, the salt value stored in the data structure is used for the challenge. This way there is always a consistent pair of client and server salt values corresponding to each client session.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-protocol/challenge-packet.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;The client state machine has been expanded so &lt;em&gt;connecting&lt;/em&gt; is replaced with two new states: &lt;em&gt;sending connection request&lt;/em&gt; and &lt;em&gt;sending challenge response&lt;/em&gt;, but it&amp;rsquo;s the same idea as before. Client states repeatedly send the packet corresponding to that state to the server while listening for the response that moves it forward to the next state, or back to an error state. If no response is received, the client times out and transitions to &lt;em&gt;disconnected&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;The challenge response sent from the client to the server looks like this:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-protocol/challenge-response-packet.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;The utility of this being that once the client and server have established connection, we prefix all payload packets with the xor of the client and server salt values and discard any packets with the incorrect salt values. This neatly filters out packets from previous sessions and requires an attacker to sniff packets in order to impersonate a client or server.&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-protocol/connection-payload-packet.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;Now that we have at least a &lt;em&gt;basic&lt;/em&gt; level of security, it&amp;rsquo;s not much, but at least it&amp;rsquo;s &lt;em&gt;something&lt;/em&gt;, we can implement a disconnect packet:&lt;/p&gt;
+
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-protocol/disconnect-packet.png&#34; width=&#34;100%&#34;/&gt;&lt;/p&gt;
+
+&lt;p&gt;And when the client or server want to disconnect clean, they simply fire 10 of these over the network to the other side, in the hope that some of them get through, and the other side disconnects cleanly instead of waiting for timeout.&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;We now have a much more robust protocol. It&amp;rsquo;s secure against spoofed IP packet headers. It&amp;rsquo;s no longer able to be used as port of DDoS amplification attacks, and with a trivial xor based authentication, we are protected against &lt;em&gt;casual&lt;/em&gt; attackers while client reconnects are much more robust.&lt;/p&gt;
+
+&lt;p&gt;But it&amp;rsquo;s still vulnerable to a sophisticated actors who can sniff packets:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;This attacker can read and modify packets in flight.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;This breaks the trivial identification based around salt values&amp;hellip;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;&amp;hellip; giving an attacker the power to disconnect any client at will.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;To solve this, we need to get serious with cryptography to encrypt and sign packets so they can&amp;rsquo;t be read or modified by a third party.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://patreon.com/gafferongames&#34; target=&#34;_blank&#34;&gt;Securing Dedicated Servers&lt;/a&gt;.&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34; target=&#34;_blank&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Reliable Ordered Messages</title>
+      <link>http://127.0.0.1:1313/post/reliable_ordered_messages/</link>
+      <pubDate>Thu, 15 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/reliable_ordered_messages/</guid>
+      <description>
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34; target=&#34;_blank&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Many people will tell you that implementing your own reliable message system on top of UDP is foolish. After all, why reimplement TCP?&lt;/p&gt;
+
+&lt;p&gt;But why limit ourselves to how TCP works? But there are so many different ways to implement reliable-messages and most of them work &lt;em&gt;nothing&lt;/em&gt; like TCP!&lt;/p&gt;
+
+&lt;p&gt;So let&amp;rsquo;s get creative and work out how we can implement a reliable message system that&amp;rsquo;s &lt;em&gt;better&lt;/em&gt; and &lt;em&gt;more flexible&lt;/em&gt; than TCP for real-time games.&lt;/p&gt;
+
+&lt;h2 id=&#34;different-approaches&#34;&gt;Different Approaches&lt;/h2&gt;
+
+&lt;p&gt;A common approach to reliability in games is to have two packet types: reliable-ordered and unreliable. You&amp;rsquo;ll see this approach in many network libraries.&lt;/p&gt;
+
+&lt;p&gt;The basic idea is that the library resends reliable packets until they are received by the other side. This is the option that usually ends up looking a bit like TCP-lite for the reliable-packets. It&amp;rsquo;s not that bad, but you can do much better.&lt;/p&gt;
+
+&lt;p&gt;The way I prefer to think of it is that messages are smaller bitpacked elements that know how to serialize themselves. This makes the most sense when the overhead of length prefixing and padding bitpacked messages up to the next byte is undesirable (eg. lots of small messages included in each packet). Sent messages are placed in a queue and each time a packet is sent some of the messages in the send queue are included in the outgoing packet. This way there are no reliable packets that need to be resent. Reliable messages are simply included in outgoing packets until they are received.&lt;/p&gt;
+
+&lt;p&gt;The easiest way to do this is to include all unacked messages in each packet sent. It goes something like this: each message sent has an id that increments each time a message is sent. Each outgoing packet includes the start &lt;em&gt;message id&lt;/em&gt; followed by the data for &lt;em&gt;n&lt;/em&gt; messages. The receiver continually sends back the most recent received message id to the sender as an ack and only messages newer than the most recent acked message id are included in packets.&lt;/p&gt;
+
+&lt;p&gt;This is simple and easy to implement but if a large burst of packet loss occurs while you are sending messages you get a spike in packet size due to unacked messages.&lt;/p&gt;
+
+&lt;p&gt;You can avoid this by extending the system to have an upper bound on the number of messages included per-packet &lt;em&gt;n&lt;/em&gt;. But now if you have a high packet send rate (like 60 packets per-second) you are sending the same message multiple times until you get an ack for that message.&lt;/p&gt;
+
+&lt;p&gt;If your round trip time is 100ms each message will be sent 6 times redundantly before being acked on average. Maybe you really need this amount of redundancy because your messages are extremely time critical, but in most cases, your bandwidth would be better spent on other things.&lt;/p&gt;
+
+&lt;p&gt;The approach I prefer combines packet level acks with a prioritization system that picks the n most important messages to include in each packet. This combines time critical delivery and the ability to send only n messages per-packet, while distributing sends across all messages in the send queue.&lt;/p&gt;
+
+&lt;h2 id=&#34;packet-level-acks&#34;&gt;Packet Level Acks&lt;/h2&gt;
+
+&lt;p&gt;To implement packet level acks, we add the following packet header:&lt;/p&gt;
+
+&lt;pre&gt;
+struct Header
+{
+    uint16_t sequence;
+    uint16_t ack;
+    uint32_t ack_bits;
+};
+&lt;/pre&gt;
+
+&lt;p&gt;These header elements combine to create the ack system: &lt;strong&gt;sequence&lt;/strong&gt; is a number that increases with each packet sent, &lt;strong&gt;ack&lt;/strong&gt; is the most recent packet sequence number received, and &lt;strong&gt;ack_bits&lt;/strong&gt; is a bitfield encoding the set of acked packets.&lt;/p&gt;
+
+&lt;p&gt;If bit &lt;strong&gt;n&lt;/strong&gt; is set in &lt;strong&gt;ack_bits&lt;/strong&gt;, then &lt;strong&gt;ack - n&lt;/strong&gt; is acked. Not only is &lt;strong&gt;ack_bits&lt;/strong&gt; a smart encoding that saves bandwidth, it also adds &lt;em&gt;redundancy&lt;/em&gt; to combat packet loss. Each ack is sent 32 times. If one packet is lost, there&amp;rsquo;s 31 other packets with the same ack. Statistically speaking, acks are very likely to get through.&lt;/p&gt;
+
+&lt;p&gt;But bursts of packet loss do happen, so it&amp;rsquo;s important to note that:&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;If you receive an ack for packet n then that packet was &lt;strong&gt;definitely received&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;If you don&amp;rsquo;t receive an ack, the packet was &lt;em&gt;most likely&lt;/em&gt; not received. But, it might have been, and the ack just didn&amp;rsquo;t get through. &lt;strong&gt;This is extremely rare&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;In my experience it&amp;rsquo;s not necessary to send perfect acks. Building a reliability system on top of a system that very rarely drops acks adds no significant problems. But it does create a challenge for testing this system works under all situations because of the edge cases when acks are dropped.&lt;/p&gt;
+
+&lt;p&gt;So please if you do implement this system yourself, setup a soak test with terrible network conditions to make sure your ack system is working correctly. You&amp;rsquo;ll find such a soak test in the &lt;a href=&#34;http://www.patreon.com/gafferongames&#34; target=&#34;_blank&#34;&gt;example source code&lt;/a&gt; for this article, and the open source network libraries &lt;a href=&#34;https://github.com/networkprotocol/reliable.io&#34; target=&#34;_blank&#34;&gt;reliable.io&lt;/a&gt; and &lt;a href=&#34;http://www.libyojimbo.com&#34; target=&#34;_blank&#34;&gt;yojimbo&lt;/a&gt; which also implement this technique.&lt;/p&gt;
+
+&lt;h2 id=&#34;sequence-buffers&#34;&gt;Sequence Buffers&lt;/h2&gt;
+
+&lt;p&gt;To implement this ack system we need a data structure on the sender side to track whether a packet has been acked so we can ignore redundant acks (each packet is acked multiple times via &lt;strong&gt;ack_bits&lt;/strong&gt;. We also need a data structure on the receiver side to keep track of which packets have been received so we can fill in the &lt;strong&gt;ack_bits&lt;/strong&gt; value in the packet header.&lt;/p&gt;
+
+&lt;p&gt;The data structure should have the following properties:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Constant time insertion (inserts may be &lt;em&gt;random&lt;/em&gt;, for example out of order packets&amp;hellip;)&lt;/li&gt;
+&lt;li&gt;Constant time query if an entry exists given a packet sequence number&lt;/li&gt;
+&lt;li&gt;Constant time access for the data stored for a given packet sequence number&lt;/li&gt;
+&lt;li&gt;Constant time removal of entries&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;You might be thinking. Oh of course, &lt;em&gt;hash table&lt;/em&gt;. But there&amp;rsquo;s a much simpler way:&lt;/p&gt;
+
+&lt;pre&gt;
+const int BufferSize = 1024;
+
+uint32_t sequence_buffer[BufferSize];
+
+struct PacketData
+{
+    bool acked;
+};
+
+PacketData packet_data[BufferSize];
+
+PacketData * GetPacketData( uint16_t sequence )
+{
+    const int index = sequence % BufferSize;
+    if ( sequence_buffer[index] == sequence )
+        return &amp;amp;packet_data[index];
+    else
+        return NULL;
+}
+&lt;/pre&gt;
+
+&lt;p&gt;As you can see the trick here is a rolling buffer indexed by sequence number:&lt;/p&gt;
+
+&lt;pre&gt;
+const int index = sequence % BufferSize;
+&lt;/pre&gt;
+
+&lt;p&gt;This works because we don&amp;rsquo;t care about being destructive to old entries. As the sequence number increases older entries are naturally overwritten as we insert new ones. The sequence_buffer[index] value is used to test if the entry at that index actually corresponds to the sequence number you&amp;rsquo;re looking for. A sequence buffer value of 0xFFFFFFFF indicates an empty entry and naturally returns NULL for any sequence number query without an extra branch.&lt;/p&gt;
+
+&lt;p&gt;When entries are added in order like a send queue, all that needs to be done on insert is to update the sequence buffer value to the new sequence number and overwrite the data at that index:&lt;/p&gt;
+
+&lt;pre&gt;
+PacketData &amp;amp; InsertPacketData( uint16_t sequence )
+{
+    const int index = sequence % BufferSize;
+    sequence_buffer[index] = sequence;
+    return packet_data[index];
+}
+&lt;/pre&gt;
+
+&lt;p&gt;Unfortunately, on the receive side packets arrive out of order and some are lost. Under ridiculously high packet loss (99%) I&amp;rsquo;ve seen old sequence buffer entries stick around from before the previous sequence number wrap at 65535 and break my ack logic (leading to false acks and broken reliability where the sender thinks the other side has received something they haven&amp;rsquo;t&amp;hellip;).&lt;/p&gt;
+
+&lt;p&gt;The solution to this problem is to walk between the previous highest insert sequence and the new insert sequence (if it is more recent) and clear those entries in the sequence buffer to 0xFFFFFFFF. Now in the common case, insert is &lt;em&gt;very close&lt;/em&gt; to constant time, but worst case is linear where n is the number of sequence entries between the previous highest insert sequence and the current insert sequence.&lt;/p&gt;
+
+&lt;p&gt;Before we move on I would like to note that you can do much more with this data structure than just acks. For example, you could extend the per-packet data to include time sent:&lt;/p&gt;
+
+&lt;pre&gt;struct PacketData
+{
+    bool acked;
+    double send_time;
+};
+&lt;/pre&gt;
+
+&lt;p&gt;With this information you can create your own estimate of round trip time by comparing send time to current time when packets are acked and taking an &lt;a href=&#34;https://en.wikipedia.org/wiki/Exponential_smoothing&#34; target=&#34;_blank&#34;&gt;exponentially smoothed moving average&lt;/a&gt;. You can even look at packets in the sent packet sequence buffer older than your RTT estimate (you should have received an ack for them by now&amp;hellip;) to create your own packet loss estimate.&lt;/p&gt;
+
+&lt;h2 id=&#34;ack-algorithm&#34;&gt;Ack Algorithm&lt;/h2&gt;
+
+&lt;p&gt;Now that we have the data structures and packet header, here is the algorithm for implementing packet level acks:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;On packet send:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Insert an entry for for the current send packet sequence number in the sent packet sequence buffer with data indicating that it hasn&amp;rsquo;t been acked yet&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Generate &lt;strong&gt;ack&lt;/strong&gt; and &lt;strong&gt;ack_bits&lt;/strong&gt; from the contents of the local received packet sequence buffer and the most recent received packet sequence number&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Fill the packet header with &lt;strong&gt;sequence&lt;/strong&gt;, &lt;strong&gt;ack&lt;/strong&gt; and &lt;strong&gt;ack_bits&lt;/strong&gt;&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Send the packet and increment the send packet sequence number&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;On packet receive:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Read in &lt;strong&gt;sequence&lt;/strong&gt; from the packet header&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;If &lt;strong&gt;sequence&lt;/strong&gt; is more recent than the previous most recent received packet sequence number, update the most recent received packet sequence number&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Insert an entry for this packet in the received packet sequence buffer&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Decode the set of acked packet sequence numbers from &lt;strong&gt;ack&lt;/strong&gt; and &lt;strong&gt;ack_bits&lt;/strong&gt; in the packet header.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Iterate across all acked packet sequence numbers and for any packet that is not already acked call &lt;strong&gt;OnPacketAcked&lt;/strong&gt;( uint16_t sequence ) and mark that packet as &lt;em&gt;acked&lt;/em&gt; in the sent packet sequence buffer.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Importantly this algorithm is done on both sides so if you have a client and a server then each side of the connection runs the same logic, maintaining its own sequence number for sent packets, tracking most recent received packet sequence # from the other side and a sequence buffer of received packets from which it generates &lt;strong&gt;sequence&lt;/strong&gt;, &lt;strong&gt;ack&lt;/strong&gt; and &lt;strong&gt;ack_bits&lt;/strong&gt; to send to the other side.&lt;/p&gt;
+
+&lt;p&gt;And that&amp;rsquo;s really all there is to it. Now you have a callback when a packet is received by the other side: &lt;strong&gt;OnPacketAcked&lt;/strong&gt;. The main benefit of this ack system is now that you know which packets were received, you can build &lt;em&gt;any&lt;/em&gt; reliability system you want on top. It&amp;rsquo;s not limited to just reliable-ordered messages. For example, you could use it to implement delta encoding on a per-object basis.&lt;/p&gt;
+
+&lt;h2 id=&#34;message-objects&#34;&gt;Message Objects&lt;/h2&gt;
+
+&lt;p&gt;Messages are small objects (smaller than packet size, so that many will fit in a typical packet) that know how to serialize themselves. In my system they perform serialization using a &lt;a href=&#34;http://gafferongames.com/building-a-game-network-protocol/serialization-strategies&#34; target=&#34;_blank&#34;&gt;unified serialize function&lt;/a&gt;unified serialize function.&lt;/p&gt;
+
+&lt;p&gt;The serialize function is templated so you write it once and it handles read, write and &lt;em&gt;measure&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Yes. Measure. One of my favorite tricks is to have a dummy stream class called &lt;strong&gt;MeasureStream&lt;/strong&gt; that doesn&amp;rsquo;t do any actual serialization but just measures the number of bits that &lt;em&gt;would&lt;/em&gt; be written if you called the serialize function. This is particularly useful for working out which messages are going to fit into your packet, especially when messages themselves can have arbitrarily complex serialize functions.&lt;/p&gt;
+
+&lt;pre&gt;
+struct TestMessage : public Message
+{
+    uint32_t a,b,c;
+
+    TestMessage()
+    {
+        a = 0;
+        b = 0;
+        c = 0;
+    }
+
+    template &amp;lt;typename Stream&amp;gt; bool Serialize( Stream &amp;amp; stream )
+    { 
+        serialize_bits( stream, a, 32 );
+        serialize_bits( stream, b, 32 );
+        serialize_bits( stream, c, 32 );
+        return true;
+    }
+
+    virtual SerializeInternal( WriteStream &amp;amp; stream )
+    {
+        return Serialize( stream );
+    }
+
+    virtual SerializeInternal( ReadStream &amp;amp; stream )
+    {
+        return Serialize( stream );
+    }
+
+    virtual SerializeInternal( MeasureStream &amp;amp; stream )
+    {
+        return Serialize( stream );        
+    }
+};
+&lt;/pre&gt;
+
+&lt;p&gt;The trick here is to bridge the unified templated serialize function (so you only have to write it once) to virtual serialize methods by calling into it from virtual functions per-stream type. I usually wrap this boilerplate with a macro, but it&amp;rsquo;s expanded in the code above so you can see what&amp;rsquo;s going on.&lt;/p&gt;
+
+&lt;p&gt;Now when you have a base message pointer you can do this and it &lt;em&gt;just works&lt;/em&gt;:&lt;/p&gt;
+
+&lt;pre&gt;
+Message * message = CreateSomeMessage();
+message-&amp;gt;SerializeInternal( stream );
+&lt;/pre&gt;
+
+&lt;p&gt;An alternative if you know the full set of messages at compile time is to implement a big switch statement on message type casting to the correct message type before calling into the serialize function for each type. I&amp;rsquo;ve done this in the past on console platform implementations of this message system (eg. PS3 SPUs) but for applications today (2016) the overhead of virtual functions is neglible.&lt;/p&gt;
+
+&lt;p&gt;Messages derive from a base class that provides a common interface such as serialization, querying the type of a message and reference counting. Reference counting is necessary because messages are passed around by pointer and stored not only in the message send queue until acked, but also in outgoing packets which are themselves C++ structs.&lt;/p&gt;
+
+&lt;p&gt;This is a strategy to avoid copying data by passing both messages and packets around by pointer. Somewhere else (ideally on a separate thread) packets and the messages inside them are serialized to a buffer. Eventually, when no references to a message exist in the message send queue (the message is acked) and no packets including that message remain in the packet send queue, the message is destroyed.&lt;/p&gt;
+
+&lt;p&gt;We also need a way to create messages. I do this with a message factory class with a virtual function overriden to create a message by type. It&amp;rsquo;s good if the packet factory also knows the total number of message types, so we can serialize a message type over the network with tight bounds and discard malicious packets with message type values outside of the valid range:&lt;/p&gt;
+
+&lt;pre&gt;
+enum TestMessageTypes
+{
+    TEST_MESSAGE_A,
+    TEST_MESSAGE_B,
+    TEST_MESSAGE_C,
+    TEST_MESSAGE_NUM_TYPES
+};
+
+// message definitions omitted
+
+class TestMessageFactory : public MessageFactory
+{ 
+public:
+
+    Message * Create( int type )
+    {
+        switch ( type )
+        {
+            case TEST_MESSAGE_A: return new TestMessageA();
+            case TEST_MESSAGE_B: return new TestMessageB();
+            case TEST_MESSAGE_C: return new TestMessageC();
+        }
+    }
+
+    virtual int GetNumTypes() const
+    {
+        return TEST_MESSAGE_NUM_TYPES;
+    }
+};
+&lt;/pre&gt;
+
+&lt;p&gt;Again, this is boilerplate and is usually wrapped by macros, but underneath this is what&amp;rsquo;s going on.&lt;/p&gt;
+
+&lt;h2 id=&#34;reliable-ordered-message-algorithm&#34;&gt;Reliable Ordered Message Algorithm&lt;/h2&gt;
+
+&lt;p&gt;The algorithm for sending reliable-ordered messages is as follows:&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;On message send:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Measure how many bits the message serializes to using the measure stream&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Insert the message pointer and the # of bits it serializes to into a sequence buffer indexed by message id. Set the time that message has last been sent to -1&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Increment the send message id&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;On packet send:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Walk across the set of messages in the send message sequence buffer between the oldest unacked message id and the most recent inserted message id from left -&amp;gt; right (increasing message id order).&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Never send a message id that the receiver can&amp;rsquo;t buffer or you&amp;rsquo;ll break message acks (since that message won&amp;rsquo;t be buffered, but the packet containing it will be acked, the sender thinks the message has been received, and will not resend it). This means you must &lt;em&gt;never&lt;/em&gt; send a message id equal to or more recent than the oldest unacked message id plus the size of the message receive buffer.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;For any message that hasn&amp;rsquo;t been sent in the last 0.1 seconds &lt;em&gt;and&lt;/em&gt; fits in the available space we have left in the packet, add it to the list of messages to send. Messages on the left (older messages) naturally have priority due to the iteration order.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Include the messages in the outgoing packet and add a reference to each message. Make sure the packet destructor decrements the ref count for each message.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Store the number of messages in the packet &lt;strong&gt;n&lt;/strong&gt; and the array of message ids included in the packet in a sequence buffer indexed by the outgoing packet sequence number so they can be used to map packet level acks to the set of messages included in that packet.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Add the packet to the packet send queue.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;On packet receive:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Walk across the set of messages included in the packet and insert them in the receive message sequence buffer indexed by their message id.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The ack system automatically acks the packet sequence number we just received.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;On packet ack:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Look up the set of messages ids included in the packet by sequence number.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Remove those messages from the message send queue if they exist and decrease their ref count.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Update the last unacked message id by walking forward from the previous unacked message id in the send message sequence buffer until a valid message entry is found, or you reach the current send message id. Whichever comes first.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;&lt;strong&gt;On message receive:&lt;/strong&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;Check the receive message sequence buffer to see if a message exists for the current receive message id.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;If the message exists, remove it from the receive message sequence buffer, increment the receive message id and return a pointer to the message.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Otherwise, no message is available to receive. Return &lt;strong&gt;NULL&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;In short, messages keep getting included in packets until a packet containing that message is acked. We use a data structure on the sender side to map packet sequence numbers to the set of message ids to ack. Messages are removed from the send queue when they are acked. On the receive side, messages arriving out of order are stored in a sequence buffer indexed by message id, which lets us receive them in the order they were sent.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-end-result&#34;&gt;The End Result&lt;/h2&gt;
+
+&lt;p&gt;This provides the user with an interface that looks something like this on send:&lt;/p&gt;
+
+&lt;pre&gt;
+TestMessage * message = (TestMessage*) factory.Create( TEST_MESSAGE );
+if ( message )
+{
+    message-&amp;gt;a = 1;
+    message-&amp;gt;b = 2;
+    message-&amp;gt;c = 3;
+    connection.SendMessage( message );
+}&lt;/pre&gt;
+
+&lt;p&gt;And on the receive side:&lt;/p&gt;
+
+&lt;pre&gt;
+while ( true )
+{
+    Message * message = connection.ReceiveMessage();
+    if ( !message )
+        break;
+
+    if ( message-&amp;gt;GetType() == TEST_MESSAGE )
+    {
+        TestMessage * testMessage = (TestMessage*) message;
+        // process test message
+    }
+
+    factory.Release( message );
+}
+&lt;/pre&gt;
+
+&lt;p&gt;Which is flexible enough to implement whatever you like on top of it.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://127.0.0.1:1313/post/client_server_connection/&#34;&gt;Client Server Connection&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34; target=&#34;_blank&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Sending Large Blocks of Data</title>
+      <link>http://127.0.0.1:1313/post/sending_large_blocks_of_data/</link>
+      <pubDate>Mon, 12 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/sending_large_blocks_of_data/</guid>
+      <description>
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34; target=&#34;_blank&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/packet_fragmentation_and_reassembly/&#34;&gt;previous article&lt;/a&gt; we implemented packet fragmentation and reassembly so we can send packets larger than MTU.&lt;/p&gt;
+
+&lt;p&gt;This approach works great when the data block you&amp;rsquo;re sending is time critical and can be dropped, but in other cases you need to send large blocks of quickly and reliably over packet loss, and you need the data to get through.&lt;/p&gt;
+
+&lt;p&gt;In this situation, a different technique gives much better results.&lt;/p&gt;
+
+&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+
+&lt;p&gt;It&amp;rsquo;s common for servers to send large block of data to the client on connect, for example, the initial state of the game world for late join.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s assume this data is 256k in size and the client needs to receive it before they can join the game. The client is stuck behind a load screen waiting for the data, so obviously we want it to be transmitted as quickly as possible.&lt;/p&gt;
+
+&lt;p&gt;If we send the data with the technique from the previous article, we get &lt;em&gt;packet loss amplification&lt;/em&gt; because a single dropped fragment results in the whole packet being lost. The effect of this is actually quite severe. Our example block split into 256 fragments and sent over 1% packet loss now has a whopping 92.4% chance of being dropped!&lt;/p&gt;
+
+&lt;p&gt;Since we just need the data to get across, we have no choice but to keep sending it until it gets through. On average, we have to send the block 10 times before it&amp;rsquo;s received. You may laugh but this actually happened on a AAA game I worked on!&lt;/p&gt;
+
+&lt;p&gt;To fix this, I implemented a new system for sending large blocks, one that handles packet loss by resends fragments until they are acked. Then I took the problematic large blocks and piped them through this system, fixing a bunch of players stalling out on connect, while continuing to send time critical data (snapshots) via packet fragmentation and reassembly.&lt;/p&gt;
+
+&lt;h2 id=&#34;chunks-and-slices&#34;&gt;Chunks and Slices&lt;/h2&gt;
+
+&lt;p&gt;In this new system blocks of data are called &lt;em&gt;chunks&lt;/em&gt;. Chunks are split up into &lt;em&gt;slices&lt;/em&gt;. This name change keeps the chunk system terminology (chunks/slices) distinct from packet fragmentation and reassembly (packets/fragments).&lt;/p&gt;
+
+&lt;p&gt;The basic idea is that slices are sent over the network repeatedly until they all get through. Since we are implementing this over UDP, simple in concept becomes a little more complicated in implementation because have to build in our own basic reliability system so the sender knows which slices have been received.&lt;/p&gt;
+
+&lt;p&gt;This reliability gets quite tricky if we have a bunch of different chunks in flight, so we&amp;rsquo;re going to make a simplifying assumption up front: we&amp;rsquo;re only going to send one chunk over the network at a time. This doesn&amp;rsquo;t mean the sender can&amp;rsquo;t have a local send queue for chunks, just that in terms of network traffic there&amp;rsquo;s only ever one chunk &lt;em&gt;in flight&lt;/em&gt; at any time.&lt;/p&gt;
+
+&lt;p&gt;This makes intuitive sense because the whole point of the chunk system is to send chunks reliably and in-order. If you are for some reason sending chunk 0 and chunk 1 at the same time, what&amp;rsquo;s the point? You can&amp;rsquo;t process chunk 1 until chunk 0 comes through, because otherwise it wouldn&amp;rsquo;t be reliable-ordered.&lt;/p&gt;
+
+&lt;p&gt;That said, if you dig a bit deeper you&amp;rsquo;ll see that sending one chunk at a time does introduce a small trade-off, and that is that it adds a delay of RTT between chunk n being received and the send starting for chunk n+1 from the receiver&amp;rsquo;s point of view.&lt;/p&gt;
+
+&lt;p&gt;This trade-off is totally acceptable for the occasional sending of large chunks like data sent once on client connect, but it&amp;rsquo;s definitely &lt;em&gt;not&lt;/em&gt; acceptable for data sent 10 or 20 times per-second like snapshots. So remember, this system is useful for large, infrequently sent blocks of data, not for time critical data.&lt;/p&gt;
+
+&lt;h2 id=&#34;packet-structure&#34;&gt;Packet Structure&lt;/h2&gt;
+
+&lt;p&gt;There are two sides to the chunk system, the &lt;strong&gt;sender&lt;/strong&gt; and the &lt;strong&gt;receiver&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;The sender is the side that queues up the chunk and sends slices over the network. The receiver is what reads those slice packets and reassembles the chunk on the other side. The receiver is also responsible for communicating back to the sender which slices have been received via acks.&lt;/p&gt;
+
+&lt;p&gt;The netcode I work on is usually client/server, and in this case I usually want to be able to send blocks of data from the server to the client &lt;em&gt;and&lt;/em&gt; from the client to the server. In that case, there are two senders and two receivers, a sender on the client corresponding to a receiver on the server and vice-versa.&lt;/p&gt;
+
+&lt;p&gt;Think of the sender and receiver as end points for this chunk transmission protocol that define the direction of flow. If you want to send chunks in a different direction, or even extend the chunk sender to support peer-to-peer, just add sender and receiver end points for each direction you need to send chunks.&lt;/p&gt;
+
+&lt;p&gt;Traffic over the network for this system is sent via two packet types:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Slice packet&lt;/strong&gt; - contains a slice of a chunk up to 1k in size.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Ack packet&lt;/strong&gt; - a bitfield indicating which slices have been received so far.&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;The slice packet is sent from the sender to the receiver. It is the payload packet that gets the chunk data across the network and is designed so each packet fits neatly under a conservative MTU of 1200 bytes. Each slice is a maximum of 1k and there is a maximum of 256 slices per-chunk, therefore the largest data you can send over the network with this system is 256k.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;const int SliceSize = 1024;
+const int MaxSlicesPerChunk = 256;
+const int MaxChunkSize = SliceSize * MaxSlicesPerChunk;
+
+struct SlicePacket : public protocol2::Packet
+{
+    uint16_t chunkId;
+    int sliceId;
+    int numSlices;
+    int sliceBytes;
+    uint8_t data[SliceSize];
+
+    template &amp;amp;lt;typename Stream&amp;amp;gt; bool Serialize( Stream &amp;amp;amp; stream )
+    {
+        serialize_bits( stream, chunkId, 16 );
+        serialize_int( stream, sliceId, 0, MaxSlicesPerChunk - 1 );
+        serialize_int( stream, numSlices, 1, MaxSlicesPerChunk );
+        if ( sliceId == numSlices - 1 )
+        {
+            serialize_int( stream, sliceBytes, 1, SliceSize );
+        }
+        else if ( Stream::IsReading )
+        {
+            sliceBytes = SliceSize;
+        }
+        serialize_bytes( stream, data, sliceBytes );
+        return true;
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;There are two points I&amp;rsquo;d like to make about the slice packet. The first is that even though there is only ever one chunk in flight over the network, it&amp;rsquo;s still necessary to include the chunk id (0,1,2,3, etc&amp;hellip;) because packets sent over UDP can be received out of order.&lt;/p&gt;
+
+&lt;p&gt;Second point. Due to the way chunks are sliced up we know that all slices except the last one must be SliceSize (1024 bytes). We take advantage of this to save a small bit of bandwidth sending the slice size only in the last slice, but there is a trade-off: the receiver doesn&amp;rsquo;t know the exact size of a chunk until it receives the last slice.&lt;/p&gt;
+
+&lt;p&gt;The other packet sent by this system is the ack packet. This packet is sent in the opposite direction, from the receiver back to the sender. This is the reliability part of the chunk network protocol. Its purpose is to lets the sender know which slices have been received.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;struct AckPacket : public protocol2::Packet 
+{ 
+    uint16_t chunkId; 
+    int numSlices; 
+    bool acked[MaxSlicesPerChunk]; 
+
+    bool Serialize( Stream &amp;amp;amp; stream )
+    { 
+        serialize_bits( stream, chunkId, 16 ); 
+        serialize_int( stream, numSlices, 1, MaxSlicesPerChunk ); 
+        for ( int i = 0; i &amp;amp;lt; numSlices; ++i ) 
+        {
+            serialize_bool( stream, acked[i] ); return true; } };
+        }
+    }
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Acks are short for &amp;lsquo;acknowledgments&amp;rsquo;. So an ack for slice 100 means the receiver is &lt;em&gt;acknowledging&lt;/em&gt; that it has received slice 100. This is critical information for the sender because not only does it let the sender determine when all slices have been received so it knows when to stop, it also allows the sender to use bandwidth more efficiently by only sending slices that haven&amp;rsquo;t been acked.&lt;/p&gt;
+
+&lt;p&gt;Looking a bit deeper into the ack packet, at first glance it seems a bit &lt;em&gt;redundant&lt;/em&gt;. Why are we sending acks for all slices in every packet? Well, ack packets are sent over UDP so there is no guarantee that all ack packets are going to get through. You certainly don&amp;rsquo;t want a desync between the sender and the receiver regarding which slices are acked.&lt;/p&gt;
+
+&lt;p&gt;So we need some reliability for acks, but we don&amp;rsquo;t want to implement an &lt;em&gt;ack system for acks&lt;/em&gt; because that would be a huge pain in the ass. Since the worst case ack bitfield is just 256 bits or 32 bytes, we just send the entire state of all acked slices in each ack packet. When the ack packet is received, we consider a slice to be acked the instant an ack packet comes in with that slice marked as acked and locally that slice is not seen as acked yet.&lt;/p&gt;
+
+&lt;p&gt;This last step, biasing in the direction of non-acked to ack, like a fuse getting blown, means we can handle out of order delivery of ack packets.&lt;/p&gt;
+
+&lt;h2 id=&#34;sender-implementation&#34;&gt;Sender Implementation&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s get started with the implementation of the sender.&lt;/p&gt;
+
+&lt;p&gt;The strategy for the sender is:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;Keep sending slices until all slices are acked&lt;/li&gt;
+&lt;li&gt;Don&amp;rsquo;t resend slices that have already been acked&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;We use the following data structure for the sender:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class ChunkSender
+{
+    bool sending;
+    uint16_t chunkId;
+    int chunkSize;
+    int numSlices;
+    int numAckedSlices;
+    int currentSliceId;
+    bool acked[MaxSlicesPerChunk];
+    uint8_t chunkData[MaxChunkSize];
+    double timeLastSent[MaxSlicesPerChunk];
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;As mentioned before, only one chunk is sent at a time, so there is a &amp;lsquo;sending&amp;rsquo; state which is true if we are currently sending a chunk, false if we are in an idle state ready for the user to send a chunk. In this implementation, you can&amp;rsquo;t send another chunk while the current chunk is still being sent over the network. If you don&amp;rsquo;t like this, stick a queue in front of the sender.&lt;/p&gt;
+
+&lt;p&gt;Next, we have the id of the chunk we are currently sending, or, if we are not sending a chunk, the id of the next chunk to be sent, followed by the size of the chunk and the number of slices it has been split into. We also track, per-slice, whether that slice has been acked, which lets us count the number of slices that have been acked so far while ignoring redundant acks. A chunk is considered fully received from the sender&amp;rsquo;s point of view when numAckedSlices == numSlices.&lt;/p&gt;
+
+&lt;p&gt;We also keep track of the current slice id for the algorithm that determines which slices to send, which works like this. At the start of a chunk send, start at slice id 0 and work from left to right and wrap back around to 0 again when you go past the last slice. Eventually, you stop iterating across because you&amp;rsquo;ve run out of bandwidth to send slices. At this point, remember our current slice index via current slice id so you can pick up from where you left off next time. This last part is important because it distributes sends across all slices, not just the first few.&lt;/p&gt;
+
+&lt;p&gt;Now let&amp;rsquo;s discuss bandwidth limiting. Obviously you don&amp;rsquo;t just blast slices out continuously as you&amp;rsquo;d flood the connection in no time, so how do we limit the sender bandwidth? My implementation works something like this: as you walk across slices and consider each slice you want to send, estimate roughly how many bytes the slice packet will take eg: roughly slice bytes + some overhead for your protocol and UDP/IP header. Then compare the amount of bytes required vs. the available bytes you have to send in your bandwidth budget. If you don&amp;rsquo;t have enough bytes accumulated, stop. Otherwise, subtract the bytes required to send the slice and repeat the process for the next slice.&lt;/p&gt;
+
+&lt;p&gt;Where does the available bytes in the send budget come from? Each frame before you update the chunk sender, take your target bandwidth (eg. 256kbps), convert it to bytes per-second, and add it multiplied by delta time (dt) to an accumulator.&lt;/p&gt;
+
+&lt;p&gt;A conservative send rate of 256kbps means you can send 32000 bytes per-second, so add 32000 * dt to the accumulator. A middle ground of 512kbit/sec is 64000 bytes per-second. A more aggressive 1mbit is 125000 bytes per-second. This way each update you &lt;em&gt;accumulate&lt;/em&gt; a number of bytes you are allowed to send, and when you&amp;rsquo;ve sent all the slices you can given that budget, any bytes left over stick around for the next time you try to send a slice.&lt;/p&gt;
+
+&lt;p&gt;One subtle point with the chunk sender and is that it&amp;rsquo;s a good idea to implement some minimum resend delay per-slice, otherwise you get situations where for small chunks, or the last few slices of a chunk that the same few slices get spammed over the network.&lt;/p&gt;
+
+&lt;p&gt;For this reason we maintain an array of last send time per-slice. One option for this resend delay is to maintain an estimate of RTT and to only resend a slice if it hasn&amp;rsquo;t been acked within RTT * 1.25 of its last send time. Or, you could just resend the slice it if it hasn&amp;rsquo;t been sent in the last 100ms. Works for me!&lt;/p&gt;
+
+&lt;h2 id=&#34;kicking-it-up-a-notch&#34;&gt;Kicking it up a notch&lt;/h2&gt;
+
+&lt;p&gt;Do the math you&amp;rsquo;ll notice it still takes a long time for a 256k chunk to get across:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;1mbps = 2 seconds&lt;/li&gt;
+&lt;li&gt;512kbps = 4 seconds&lt;/li&gt;
+&lt;li&gt;256kbps = &lt;strong&gt;8 seconds&lt;/span&gt; :(&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Which kinda sucks. The whole point here is quickly and reliably. Emphasis on &lt;em&gt;quickly&lt;/em&gt;. Wouldn&amp;rsquo;t it be nice to be able to get the chunk across faster? The typical use case of the chunk system supports this. For example, a large block of data sent down to the client immediately on connect or a block of data that has to get through before the client exits a load screen and starts to play. You want this to be over as quickly as possible and in both cases the user really doesn&amp;rsquo;t have anything better to do with their bandwidth, so why not use as much of it as possible?&lt;/p&gt;
+
+&lt;p&gt;One thing I&amp;rsquo;ve tried in the past with excellent results is an initial burst. Assuming your chunk size isn&amp;rsquo;t so large, and your chunk sends are infrequent, I can see no reason why you can&amp;rsquo;t just fire across the entire chunk, all slices of it, in separate packets in one glorious burst of bandwidth, wait 100ms, and then resume the regular bandwidth limited slice sending strategy.&lt;/p&gt;
+
+&lt;p&gt;Why does this work? In the case where the user has a good internet connection (some multiple of 10mbps or greater&amp;hellip;), the slices get through very quickly indeed. In the situation where the connection is not so great, the burst gets buffered up and &lt;em&gt;most&lt;/em&gt; slices will be delivered as quickly as possible limited only by the amount bandwidth available. After this point switching to the regular strategy at a lower rate picks up any slices that didn&amp;rsquo;t get through the first time.&lt;/p&gt;
+
+&lt;p&gt;This seems a bit risky so let me explain. In the case where the user can&amp;rsquo;t quite support this bandwidth what you&amp;rsquo;re relying on here is that routers on the Internet &lt;em&gt;strongly prefer&lt;/em&gt; to buffer packets rather than discard them at almost any cost. It&amp;rsquo;s a TCP thing. Normally, I hate this because it induces latency in packet delivery and messes up your game packets which you want delivered as quickly as possible, but in this case it&amp;rsquo;s good behavior because the player really has nothing else to do but wait for your chunk to get through.&lt;/p&gt;
+
+&lt;p&gt;Just don&amp;rsquo;t go too overboard with the spam or the congestion will persist after your chunk send completes and it will affect your game for the first few seconds. Also, make sure you increase the size of your OS socket buffers on both ends so they are larger than your maximum chunk size (I recommend at least double), otherwise you&amp;rsquo;ll be dropping slices packets before they even hit the wire.&lt;/p&gt;
+
+&lt;p&gt;Finally, I want to be a responsible network citizen here so although I recommend sending all slices once in an initial burst, it&amp;rsquo;s important for me to mention that I think this really is only appropriate, and only really &lt;em&gt;borderline appropriate&lt;/em&gt; behavior for small chunks in the few 100s of k range in 2016, and only when your game isn&amp;rsquo;t sending anything else that is time-critical.&lt;/p&gt;
+
+&lt;p&gt;Please don&amp;rsquo;t use this burst strategy if your chunk is really large, eg: megabytes of data, because that&amp;rsquo;s way too big to be relying on the kindness of strangers, AKA. the buffers in the routers between you and your packet&amp;rsquo;s destination. For this it&amp;rsquo;s necessary to implement something much smarter. Something adaptive that tries to send data as quickly as it can, but backs off when it detects too much latency and/or packet loss as a result of flooding the connection. Such a system is outside of the scope of this article.&lt;/p&gt;
+
+&lt;h2 id=&#34;receiver-implementation&#34;&gt;Receiver Implementation&lt;/h2&gt;
+
+&lt;p&gt;Now that we have the sender all sorted out let&amp;rsquo;s move on to the reciever. &lt;/p&gt;
+
+&lt;p&gt;As mentioned previously, unlike the packet fragmentation and reassembly system from the previous article, the chunk system only ever has one chunk in flight.&lt;/p&gt;
+
+&lt;p&gt;This makes the reciever side of the chunk system much simpler:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;class ChunkReceiver
+{
+    bool receiving;
+    bool readyToRead;
+    uint16_t chunkId;
+    int chunkSize;
+    int numSlices;
+    int numReceivedSlices;
+    bool received[MaxSlicesPerChunk];
+    uint8_t chunkData[MaxChunkSize];
+};
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;We have a state whether we are currently &amp;lsquo;receiving&amp;rsquo; a chunk over the network, plus a &amp;rsquo;readyToRead&amp;rsquo; state which indicates that a chunk has received all slices and is ready to be popped off by the user. This is effectively a minimal receive queue of length 1. If you don&amp;rsquo;t like this, of course you are free to add a queue.&lt;/p&gt;
+
+&lt;p&gt;In this data structure we also keep track of chunk size (although it is not known with complete accuracy until the last slice arrives), num slices and num received slices, as well as a received flag per-slice. This per-slice received flag lets us discard packets containing slices we have already received, and count the number of slices received so far (since we may receive the slice multiple times, we only increase this count the first time we receive a particular slice). It&amp;rsquo;s also used when generating ack packets. The chunk receive is completed from the receiver&amp;rsquo;s point of view when numReceivedSlices == numSlices.&lt;/p&gt;
+
+&lt;p&gt;So what does it look like end-to-end receiving a chunk?&lt;/p&gt;
+
+&lt;p&gt;First, the receiver sets up set to start at chunk 0. When the a slice packet comes in over the network matching the chunk id 0, &amp;lsquo;receiving&amp;rsquo; flips from false to true, data for that first slice is inserted into &amp;lsquo;chunkData&amp;rsquo; at the correct position, numSlices is set to the value in that packet, numReceivedSlices is incremented from 0 -&amp;gt; 1, and the received flag in the array entry corresponding to that slice is set to true.&lt;/p&gt;
+
+&lt;p&gt;As the remaining slice packets for the chunk come in, each of them are checked that they match the current chunk id and numSlices that are being received and are ignored if they don&amp;rsquo;t match. Packets are also ignored if they contain a slice that has already been received. Otherwise, the slice data is copied into the correct place in the chunkData array, numReceivedSlices is incremented and received flag for that slice is set to true.&lt;/p&gt;
+
+&lt;p&gt;This process continues until all slices of the chunk are received, at which point the receiver sets receiving to &amp;lsquo;false&amp;rsquo; and &amp;lsquo;readyToRead&amp;rsquo; to true. While &amp;lsquo;readyToRead&amp;rsquo; is true, incoming slice packets are discarded. At this point, the chunk receive packet processing is performed, typically on the same frame. The caller checks &amp;lsquo;do I have a chunk to read?&amp;rsquo; and processes the chunk data. All chunk receive data is cleared back to defaults, except chunk id which is incremented from 0 -&amp;gt; 1, and we are ready to receive the next chunk.&lt;/p&gt;
+
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+
+&lt;p&gt;The chunk system is simple in concept, but the implementation is certainly not. I encourage you to take a close look at the &lt;a href=&#34;http://www.patreon.com/gafferongames&#34; target=&#34;_blank&#34;&gt;source code&lt;/a&gt; for this article for further details.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/reliable_ordered_messages/&#34;&gt;Reliable Ordered Messages&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34; target=&#34;_blank&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Packet Fragmentation and Reassembly</title>
+      <link>http://127.0.0.1:1313/post/packet_fragmentation_and_reassembly/</link>
+      <pubDate>Tue, 06 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/packet_fragmentation_and_reassembly/</guid>
+      <description>
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34; target=&#34;_blank&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/serialization_strategies/&#34;&gt;previous article&lt;/a&gt; we discussed how to unify packet read and write into a single serialize function and added a bunch of safety features to packet read.&lt;/p&gt;
+
+&lt;p&gt;Now we are ready to start putting interesting things in our packets and sending them over the network, but immediately we run into an interesting question: &lt;em&gt;how big should our packets be?&lt;/em&gt;&lt;/p&gt;
+
+&lt;p&gt;To answer this question properly we need a bit of background about how packets are actually sent over the Internet.&lt;/p&gt;
+
+&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+
+&lt;p&gt;Perhaps the most important thing to understand about the internet is that there&amp;rsquo;s no direct connection between the source and destination IP address. What actually happens is that packets hop from one computer to another to reach their destination.&lt;/p&gt;
+
+&lt;p&gt;Each computer along this route enforces a maximum packet size called the maximum transmission unit, or MTU. According to the IP standard, if any computer recieves a packet larger than its MTU, it has the option of a) fragmenting that packet, or b) dropping the packet.&lt;/p&gt;
+
+&lt;p&gt;So here&amp;rsquo;s how this usually goes down. People write a multiplayer game where the average packet size is quite small, lets say a few hundred bytes, but every now and then when a lot of stuff is happening in their game and a burst of packet loss occurs, packets get a lot larger than usual, going above MTU for the route, and suddenly all packets start getting dropped!&lt;/p&gt;
+
+&lt;p&gt;Just last year (2015) I was talking with Alex Austin at Indiecade about networking in his game &lt;a href=&#34;http://subrosagame.com&#34; target=&#34;_blank&#34;&gt;Sub Rosa&lt;/a&gt;. He had this strange networking bug he couldn&amp;rsquo;t reproduce. For some reason, players would randomly get disconnected from the game, but only when a bunch of stuff was going on. It was extremely rare and he was unable to reproduce it. Alex told me looking at the logs it seemed like &lt;em&gt;packets just stopped getting through&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;This sounded &lt;em&gt;exactly&lt;/em&gt; like an MTU issue to me, and sure enough, when Alex limited his maximum packet size to a reasonable value the bug went away.&lt;/p&gt;
+
+&lt;h2 id=&#34;mtu-in-the-real-world&#34;&gt;MTU in the real world&lt;/h2&gt;
+
+&lt;p&gt;So what&amp;rsquo;s a reasonable maximum packet size?&lt;/p&gt;
+
+&lt;p&gt;On the Internet today (2016, IPv4) the real-world MTU is 1500 bytes.&lt;/p&gt;
+
+&lt;p&gt;Give or take a few bytes for UDP/IP packet header and you&amp;rsquo;ll find that the typical number before packets start to get dropped or fragmented is somewhere around 1472.&lt;/p&gt;
+
+&lt;p&gt;You can try this out for yourself by running this command on MacOS X:&lt;/p&gt;
+
+&lt;pre&gt;ping -g 56 -G 1500 -h 10 -D 8.8.4.4&lt;/pre&gt;
+
+&lt;p&gt;On my machine it conks out around just below 1500 bytes as expected:&lt;/p&gt;
+
+&lt;pre&gt;1404 bytes from 8.8.4.4: icmp_seq=134 ttl=56 time=11.945 ms
+1414 bytes from 8.8.4.4: icmp_seq=135 ttl=56 time=11.964 ms
+1424 bytes from 8.8.4.4: icmp_seq=136 ttl=56 time=13.492 ms
+1434 bytes from 8.8.4.4: icmp_seq=137 ttl=56 time=13.652 ms
+1444 bytes from 8.8.4.4: icmp_seq=138 ttl=56 time=133.241 ms
+1454 bytes from 8.8.4.4: icmp_seq=139 ttl=56 time=17.463 ms
+1464 bytes from 8.8.4.4: icmp_seq=140 ttl=56 time=12.307 ms
+1474 bytes from 8.8.4.4: icmp_seq=141 ttl=56 time=11.987 ms
+ping: sendto: Message too long
+ping: sendto: Message too long
+Request timeout for icmp_seq 142&lt;/pre&gt;
+
+&lt;p&gt;Why 1500? That&amp;rsquo;s the default MTU for MacOS X. It&amp;rsquo;s also the default MTU on Windows. So now we have an upper bound for your packet size assuming you actually care about packets getting through to Windows and Mac boxes without IP level fragmentation or a chance of being dropped: &lt;strong&gt;1472 bytes&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;So what&amp;rsquo;s the lower bound? Unfortunately for the routers in between your computer and the destination the IPv4 standard says &lt;strong&gt;576&lt;/strong&gt;. Does this mean we have to limit our packets to 400 bytes or less? In practice, not really.&lt;/p&gt;
+
+&lt;p&gt;MacOS X lets me set MTU values in range 1280 to 1500 so considering packet header overhead, my first guess for a conservative lower bound on the IPv4 Internet today would be &lt;strong&gt;1200 bytes&lt;/strong&gt;. Moving forward, in IPv6 this is also a good value, as any packet of 1280 bytes or less is guaranteed to get passed on without IP level fragmentation.&lt;/p&gt;
+
+&lt;p&gt;This lines up with numbers that I&amp;rsquo;ve seen throughout my career. In my experience games rarely try anything complicated like attempting to discover path MTU, they just assume a reasonably conservative MTU and roll with that, something like 1000 to 1200 bytes of payload data. If a packet larger than this needs to be sent, it&amp;rsquo;s split up into fragments by the game protocol and re-assembled on the other side.&lt;/p&gt;
+
+&lt;p&gt;And that&amp;rsquo;s &lt;em&gt;exactly&lt;/em&gt; what I&amp;rsquo;m going to show you how to do in this article.&lt;/p&gt;
+
+&lt;h2 id=&#34;fragment-packet-structure&#34;&gt;Fragment Packet Structure&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s get started with implementation.&lt;/p&gt;
+
+&lt;p&gt;The first thing we need to decide is how we&amp;rsquo;re going to represent fragment packets over the network so they are distinct from non-fragmented packets.&lt;/p&gt;
+
+&lt;p&gt;Ideally, we would like fragmented and non-fragmented packets to be compatible with the existing packet structure we&amp;rsquo;ve already built, with as little overhead as possible in the common case when we are sending packets smaller than MTU.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s the packet structure from the previous article:&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;del&gt;[protocol id] (64 bits)&lt;/del&gt; // not actually sent, but used to calc crc32 
+[crc32] (32 bits) 
+[packet type] (2 bits for 3 distinct packet types)
+(variable length packet data according to packet type) 
+[end of packet serialize check] (32 bits)
+&lt;/pre&gt;
+
+&lt;p&gt;In our protocol we have three packet types: A, B and C.&lt;/p&gt;
+
+&lt;p&gt;Let&amp;rsquo;s make one of these packet types generate really large packets:&lt;/p&gt;
+
+&lt;pre&gt;
+static const int MaxItems = 4096 * 4;
+
+struct TestPacketB : public Packet
+{
+    int numItems;
+    int items[MaxItems];
+
+    TestPacketB() : Packet( TEST_PACKET_B )
+    {
+        numItems = random_int( 0, MaxItems );
+        for ( int i = 0; i &amp;lt; numItems; ++i )
+            items[i] = random_int( -100, +100 );
+    }
+
+    template &amp;lt;typename Stream&amp;gt; bool Serialize( Stream &amp;amp; stream )
+    {
+        serialize_int( stream, numItems, 0, MaxItems );
+        for ( int i = 0; i &amp;lt; numItems; ++i )
+        {
+            serialize_int( stream, items[i], -100, +100 );
+        }
+        return true;
+    }
+};
+&lt;/pre&gt;
+
+&lt;p&gt;This may seem somewhat contrived but these situations really do occur. For example, if you have a strategy where you send all un-acked events from server to client and you hit a burst of packet loss, you can easily end up with packets larger than MTU, even though your average packet size is quite small.&lt;/p&gt;
+
+&lt;p&gt;Another common case is delta encoded snapshots in a first person shooter. Here packet size is proportional to the amount of state changed between the baseline and current snapshots for each client. If there are a lot of differences between the snapshots the delta packet is large and there&amp;rsquo;s nothing you can do about it except break it up into fragments and re-assemble them on the other side.&lt;/p&gt;
+
+&lt;p&gt;Getting back to packet structure. It&amp;rsquo;s fairly common to add a sequence number at the header of each packet. This is just a packet number that increases with each packet sent. I like to use 16 bits for sequence numbers even though they wrap around in about 15 minutes @ 60 packets-per-second, because it&amp;rsquo;s extremely unlikely that a packet will be delivered 15 minutes late.&lt;/p&gt;
+
+&lt;p&gt;Sequence numbers are useful for a bunch of things like acks, reliability and detecting and discarding out of order packets. In our case, we&amp;rsquo;re going to use the sequence number to identify which packet a fragment belongs to:&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;del&gt;[protocol id] (64 bits)&lt;/del&gt;   // not actually sent, but used to calc crc32
+[crc32] (32 bits)
+&lt;strong&gt;[sequence] (16 bits)&lt;/strong&gt;
+[packet type] (2 bits)
+(variable length packet data according to packet type)
+[end of packet serialize check] (32 bits)
+&lt;/pre&gt;
+
+&lt;p&gt;Here&amp;rsquo;s the interesting part. Sure we could just add a bit &lt;strong&gt;is_fragment&lt;/strong&gt; to the header, but then in the common case of non-fragmented packets you&amp;rsquo;re wasting one bit that is always set to zero.&lt;/p&gt;
+
+&lt;p&gt;What I do instead is add a special fragment packet type:&lt;/p&gt;
+
+&lt;pre&gt;
+enum TestPacketTypes
+{
+    PACKET_FRAGMENT = 0,     // RESERVED 
+    TEST_PACKET_A,
+    TEST_PACKET_B,
+    TEST_PACKET_C,
+    TEST_PACKET_NUM_TYPES
+};
+&lt;/pre&gt;
+
+&lt;p&gt;And it just happens to be &lt;em&gt;free&lt;/em&gt; because four packet types fit into 2 bits. Now when a packet is read, if the packet type is zero we know it&amp;rsquo;s a fragment packet, otherwise we run through the ordinary, non-fragmented read packet codepath.&lt;/p&gt;
+
+&lt;p&gt;Lets design what this fragment packet looks like. We&amp;rsquo;ll allow a maximum of 256 fragments per-packet and have a fragment size of 1024 bytes. This gives a maximum packet size of 256k that we can send through this system, which should be enough for anybody, but please don&amp;rsquo;t quote me on this.&lt;/p&gt;
+
+&lt;p&gt;With a small fixed size header, UDP header and IP header a fragment packet be well under the conservative MTU value of 1200. Plus, with 256 max fragments per-packet we can represent a fragment id in the range [0,255] and the total number of fragments per-packet [1,256] with 8 bits.&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;del&gt;[protocol id] (32 bits)&lt;/del&gt;   // not actually sent, but used to calc crc32
+[crc32] (32 bits)
+[sequence] (16 bits)
+[packet type = 0] (2 bits)
+&lt;strong&gt;[fragment id] (8 bits)
+[num fragments] (8 bits)
+[pad zero bits to nearest byte index]
+&amp;lt;fragment data&amp;gt;&lt;/strong&gt;
+&lt;/pre&gt;
+
+&lt;p&gt;Notice that we pad bits up to the next byte before writing out the fragment data. Why do this? Two reasons: 1) it&amp;rsquo;s faster to copy fragment data into the packet via memcpy than bitpacking each byte, and 2) we can now save a small amount of bandwidth by inferring the fragment size by subtracting the start of the fragment data from the total size of the packet.&lt;/p&gt;
+
+&lt;h2 id=&#34;sending-packet-fragments&#34;&gt;Sending Packet Fragments&lt;/h2&gt;
+
+&lt;p&gt;Sending packet fragments is &lt;em&gt;easy&lt;/em&gt;. For any packet larger than conservative MTU, simply calculate how many 1024 byte fragments it needs to be split into, and send those fragment packets over the network. Fire and forget!&lt;/p&gt;
+
+&lt;p&gt;One consequence of this is that if &lt;em&gt;any&lt;/em&gt; fragment of that packet is lost then the entire packet is lost. It follows that if you have packet loss then sending a 256k packet as 256 fragments is not a very good idea, because the probability of dropping a packet increases significantly as the number of fragments increases. Not quite linearly, but in an interesting way that you can read more about &lt;a href=&#34;http://www.fourmilab.ch/rpkp/experiments/statistics.html&#34; target=&#34;_blank&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In short, to calculate the probability of losing a packet, you must calculate the probability of all fragments being delivered successfully and subtract that from one, giving you the probability that at least one fragment was dropped.&lt;/p&gt;
+
+&lt;pre&gt;
+1 - probability_of_fragment_being_delivered ^ num_fragments
+&lt;/pre&gt;
+
+&lt;p&gt;For example, if we send a non-fragmented packet over the network with 1% packet loss, there is naturally a &lt;sup&gt;1&lt;/sup&gt;&amp;frasl;&lt;sub&gt;100&lt;/sub&gt; chance the packet will be dropped.&lt;/p&gt;
+
+&lt;p&gt;As the number of fragments increase, packet loss is amplified:
+&lt;ul&gt;
+    &lt;li&gt;Two fragments: 1 - (&lt;sup&gt;99&lt;/sup&gt;&amp;frasl;&lt;sub&gt;100&lt;/sub&gt;) ^ 2 = &lt;strong&gt;2%&lt;/strong&gt;&lt;/li&gt;
+    &lt;li&gt;Ten fragments: 1 - (&lt;sup&gt;99&lt;/sup&gt;&amp;frasl;&lt;sub&gt;100&lt;/sub&gt;) ^ 10 = &lt;strong&gt;9.5%&lt;/strong&gt;&lt;/li&gt;
+    &lt;li&gt;100 fragments: 1 - (&lt;sup&gt;99&lt;/sup&gt;&amp;frasl;&lt;sub&gt;100&lt;/sub&gt;) ^ 100 = &lt;strong&gt;63.4%&lt;/strong&gt;&lt;/li&gt;
+    &lt;li&gt;256 fragments: 1 - (&lt;sup&gt;99&lt;/sup&gt;&amp;frasl;&lt;sub&gt;100&lt;/sub&gt;) ^ 256 = &lt;strong&gt;92.4%&lt;/strong&gt;&lt;/li&gt;
+&lt;/ul&gt;&lt;/p&gt;
+
+&lt;p&gt;So I recommend you take it easy with the number of fragments. It&amp;rsquo;s best to use this strategy only for packets in the 2-4 fragment range, and only for time critical data that doesn&amp;rsquo;t matter too much if it gets dropped. It&amp;rsquo;s &lt;em&gt;definitely not&lt;/em&gt; a good idea to fire down a bunch of reliable-ordered events in a huge packet and rely on packet fragmentation and reassembly to save your ass.&lt;/p&gt;
+
+&lt;p&gt;Another typical use case for large packets is when a client initially joins a game. Here you usually want to send a large block of data down reliably to that client, for example, representing the initial state of the world for late join. Whatever you do, don&amp;rsquo;t send that block of data down using the fragmentation and re-assembly technique in this article.&lt;/p&gt;
+
+&lt;p&gt;Instead, check out the technique in &lt;a href=&#34;http://127.0.0.1:1313/post/sending-large-blocks-of-data.html&#34;&gt;next article&lt;/a&gt; which handles packet loss by resending fragments until they are all received.&lt;/p&gt;
+
+&lt;h2 id=&#34;receiving-packet-fragments&#34;&gt;Receiving Packet Fragments&lt;/h2&gt;
+
+&lt;p&gt;It&amp;rsquo;s time to implement the code that receives and processed packet fragments. This is a bit tricky because we have to be particularly careful of somebody trying to attack us with malicious packets.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a list of all the ways I can think of to attack the protocol:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Try to send out of bound fragments ids trying to get you to crash memory. eg: send fragments [0,255] in a packet that has just two fragments.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Send packet n with some maximum fragment count of say 2, and then send more fragment packets belonging to the same packet n but with maximum fragments of 256 hoping that you didn&amp;rsquo;t realize I widened the maximum number of fragments in the packet after the first one you received, and you trash memory.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Send really large fragment packets with fragment data larger than 1k hoping to get you to trash memory as you try to copy that fragment data into the data structure, or blow memory budget trying to allocate fragments&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Continually send fragments of maximum size (&lt;sup&gt;256&lt;/sup&gt;&amp;frasl;&lt;sub&gt;256&lt;/sub&gt; fragments) in hope that it I could make you allocate a bunch of memory and crash you out. Lets say you have a sliding window of 256 packets, 256 fragments per-packet max, and each fragment is 1k. That&amp;rsquo;s 64 mb per-client.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Can I fragment the heap with a bunch of funny sized fragment packets sent over and over? Perhaps the server shares a common allocator across clients and I can make allocations fail for other clients in the game because the heap becomes fragmented.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;Aside from these concerns, implementation is reasonably straightforward: store received fragments somewhere and when all fragments arrive for a packet, reassemble them into the original packet and return that to the user.&lt;/p&gt;
+
+&lt;h2 id=&#34;data-structure-on-receiver-side&#34;&gt;Data Structure on Receiver Side&lt;/h2&gt;
+
+&lt;p&gt;The first thing we need is some way to store fragments before they are reassembled. My favorite data structure is something I call a &lt;em&gt;sequence buffer&lt;/em&gt;:&lt;/p&gt;
+
+&lt;pre&gt;
+const int MaxEntries = 256;
+
+struct SequenceBuffer
+{
+    uint32_t sequence[MaxEntries];
+    Entry entries[MaxEntries];
+};
+&lt;/pre&gt;
+
+&lt;p&gt;Indexing into the arrays is performed with modulo arithmetic, giving us a fast O(1) lookup of entries by sequence number:&lt;/p&gt;
+
+&lt;pre&gt;
+const int index = sequence % MaxEntries;
+&lt;/pre&gt;
+
+&lt;p&gt;A sentinel value of 0xFFFFFFFF is used to represent empty entries. This value cannot possibly occur with 16 bit sequence numbers, thus providing us with a fast test to see if an entry exists for a given sequence number, without an additional branch to test if that entry exists.&lt;/p&gt;
+
+&lt;p&gt;This data structure is used as follows. When the first fragment of a new packet comes in, the sequence number is mapped to an entry in the sequence buffer. If an entry doesn&amp;rsquo;t exist, it&amp;rsquo;s added and the fragment data is stored in there, along with information about the fragment, eg. how many fragments there are, how many fragments have been received so far, and so on.&lt;/p&gt;
+
+&lt;p&gt;Each time a new fragment arrives, it looks up the entry by the packet sequence number. When an entry already exists, the fragment data is stored and number of fragments received is incremented. Eventually, once the number of fragments received matches the number of fragments in the packet, the packet is reassembled and delivered to the user.&lt;/p&gt;
+
+&lt;p&gt;Since it&amp;rsquo;s possible for old entries to stick around (potentially with allocated blocks), great care must be taken to clean up any stale entries when inserting new entries in the sequence buffer. These stale entries correspond to packets that didn&amp;rsquo;t receive all fragments.&lt;/p&gt;
+
+&lt;p&gt;And that&amp;rsquo;s basically it at a high level. For further details on this approach please refer to the example source code for this article. &lt;/p&gt;
+
+&lt;p&gt;&lt;a href=&#34;https://www.patreon.com/gafferongames&#34;&gt;Click here to get the example source code for this article series&lt;/a&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;test-driven-development&#34;&gt;Test Driven Development&lt;/h2&gt;
+
+&lt;p&gt;One thing I&amp;rsquo;d like to close this article out on.&lt;/p&gt;
+
+&lt;p&gt;Writing a custom UDP network protocol is &lt;em&gt;hard&lt;/em&gt;. It&amp;rsquo;s so hard that even though I&amp;rsquo;ve done this from scratch at least 10 times, each time I still manage to fuck it up in a new and exciting ways. You&amp;rsquo;d think eventually I&amp;rsquo;d learn, but this stuff is complicated. You can&amp;rsquo;t just write low-level netcode and expect it to just work.&lt;/p&gt;
+
+&lt;p&gt;You have to test it!&lt;/p&gt;
+
+&lt;p&gt;My strategy when testing low-level netcode is as follows:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;Code defensively. Assert everywhere. These asserts will fire and they&amp;rsquo;ll be important clues you need when something goes wrong.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Add functional tests and make sure stuff is working as you are writing it. Put your code through its paces at a basic level as you write it and make sure it&amp;rsquo;s working as you build it up. Think hard about the essential cases that need to be property handled and add tests that cover them.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;But just adding a bunch of functional tests is not enough. There are of course cases you didn&amp;rsquo;t think of! Now you have to get really mean. I call this soak testing and I&amp;rsquo;ve never, not even once, have coded a network protocol that hasn&amp;rsquo;t subsequently had problems found in it by soak testing.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;When soak testing just loop forever and just do a mix of random stuff that puts your system through its paces, eg. random length packets in this case with a huge amount of packet loss, out of order and duplicates through a packet simulator. Your soak test passes when it runs overnight and doesn&amp;rsquo;t hang or assert.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;If you find anything wrong with soak testing. You may need to go back and add detailed logs to the soak test to work out how you got to the failure case. Once you know what&amp;rsquo;s going on, stop. Don&amp;rsquo;t fix it immediately and just run the soak test again.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Instead, add a unit test that reproduces that problem you are trying to fix, verify your test reproduces the problem, and that it problem goes away with your fix. Only after this, go back to the soak test and make sure they run overnight. This way the unit tests document the correct behavior of your system and can quickly be run in future to make sure you don&amp;rsquo;t break this thing moving forward when you make other changes.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Add a bunch of logs. High level errors, info asserts showing an overview of what is going on, but also low-level warnings and debug logs that show what went wrong after the fact. You&amp;rsquo;re going to need these logs to diagnose issues that don&amp;rsquo;t occur on your machine. Make sure the log level can be adjusted dynamically.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Implement network simulators and make sure code handles the worst possible network conditions imaginable. 99% packet loss, 10 seconds of latency and +/- several seconds of jitter. Again, you&amp;rsquo;ll be surprised how much this uncovers. Testing is the time where you want to uncover and fix issues with bad network conditions, not the night before your open beta.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Implement fuzz tests where appropriate to make sure your protocol doesn&amp;rsquo;t crash when processing random packets. Leave fuzz tests running overnight to feel confident that your code is reasonably secure against malicious packets and doesn&amp;rsquo;t crash.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Surprisingly, I&amp;rsquo;ve consistently found issues that only show up when I loop the set of unit tests over and over, perhaps these issues are caused by different random numbers in tests, especially with the network simulator being driven by random numbers. This is a great way to take a rare test that fails once every few days and make it fail every time. So before you congratulate yourself on your tests passing 100%, add a mode where your unit tests can be looped easily, to uncover such errors.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Test simultaneously on multiple platforms. I&amp;rsquo;ve never written a low-level library that worked first time on MacOS, Windows and Linux. There are always interesting compiler specific issues and crashes. Test on multiple platforms as you develop, otherwise it&amp;rsquo;s pretty painful fixing all these at the end.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Think about how people can attack the protocol. Implement code to defend against these attacks. Add functional tests that mimic these attacks and make sure that your code handles them correctly.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;This is my process and it seems to work pretty well. If you are writing a low-level network protocol, the rest of your game depends on this code working correctly. You need to be absolutely sure it works before you build on it, otherwise it&amp;rsquo;s basically a stack of cards.&lt;/p&gt;
+
+&lt;p&gt;In my experience, game neworking is hard enough without having suspicions that that your low-level network protocol has bugs that only show up under extreme network conditions. That&amp;rsquo;s exactly where you need to be able to trust your code works correctly. &lt;strong&gt;So test it!&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://127.0.0.1:1313/post/sending_large_blocks_of_data/&#34;&gt;Sending Large Blocks of Data&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34; target=&#34;_blank&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Serialization Strategies</title>
+      <link>http://127.0.0.1:1313/post/serialization_strategies/</link>
+      <pubDate>Sun, 04 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/serialization_strategies/</guid>
+      <description>
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34; target=&#34;_blank&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/reading_and_writing_packets/&#34;&gt;previous article&lt;/a&gt;, we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.&lt;/p&gt;
+
+&lt;p&gt;In this article, we&amp;rsquo;re going to transform the bitpacker into a system where this checking is &lt;em&gt;automatic&lt;/em&gt;. We&amp;rsquo;re going to do this with minimal runtime overhead, and in such a way that we don&amp;rsquo;t have to code separate read and write functions, performing both read and write with a single function.&lt;/p&gt;
+
+&lt;p&gt;This is called a &lt;em&gt;serialize function&lt;/em&gt;.&lt;/p&gt;
+
+&lt;h2 id=&#34;serializing-bits&#34;&gt;Serializing Bits&lt;/h2&gt;
+
+&lt;p&gt;Let&amp;rsquo;s start with the goal. Here&amp;rsquo;s where we want to end up:&lt;/p&gt;
+
+&lt;pre&gt;
+struct PacketA
+{
+    int x,y,z;
+
+    template &amp;lt;typename Stream&amp;gt; bool Serialize( Stream &amp;amp; stream )
+    {
+        serialize_bits( stream, x, 32 );
+        serialize_bits( stream, y, 32 );
+        serialize_bits( stream, z, 32 );
+        return true;
+    }
+};
+&lt;/pre&gt;
+
+&lt;p&gt;Above you can see a simple serialize function. We serialize three integer variables x,y,z with 32 bits each.&lt;/p&gt;
+
+&lt;pre&gt;
+struct PacketB
+{
+    int numElements;
+    int elements[MaxElements];
+
+    template &amp;lt;typename Stream&amp;gt; bool Serialize( Stream &amp;amp; stream )
+    {
+        serialize_int( stream, numElements, 0, MaxElements );
+        for ( int i = 0; i &amp;lt; numElements; ++i )
+        {
+            serialize_bits( buffer, elements[i], 32 );
+        }
+        return true;
+    }
+};
+&lt;/pre&gt;
+
+&lt;p&gt;And now something more complicated. We serialize a variable length array, making sure that the array length is in the range [0,MaxElements].&lt;/p&gt;
+
+&lt;p&gt;Next, we serialize a rigid body with an simple optimization while it&amp;rsquo;s at rest, serializing only one bit in place of linear and angular velocity:&lt;/p&gt;
+
+&lt;pre&gt;
+struct RigidBody
+{
+    vec3f position;
+    quat4f orientation;
+    vec3f linear_velocity;
+    vec3f angular_velocity;
+
+    template &amp;lt;typename Stream&amp;gt; bool Serialize( Stream &amp;amp; stream )
+    {
+        serialize_vector( stream, position );
+        serialize_quaternion( stream, orientation );
+        bool at_rest = Stream::IsWriting ? ( velocity.length() == 0 ) : 1;
+        serialize_bool( stream, at_rest );
+        if ( !at_rest )
+        {
+            serialize_vector( stream, linear_velocity );
+            serialize_vector( stream, angular_velocity );
+        }
+        else if ( Stream::IsReading )
+        {
+            linear_velocity = vec3f(0,0,0);
+            angular_velocity = vec3f(0,0,0);
+        }
+        return true;
+    }
+};
+&lt;/pre&gt;
+
+&lt;p&gt;Notice how we&amp;rsquo;re able to branch on Stream::IsWriting and Stream::IsReading to write code for each case. These branches are removed by the compiler when the specialized read and write serialize functions are generated.&lt;/p&gt;
+
+&lt;p&gt;As you can see, serialize functions are flexible and expressive. They&amp;rsquo;re also &lt;em&gt;safe&lt;/em&gt;, with each &lt;strong&gt;serialize_*&lt;/strong&gt; call performing checks and aborting read if anything is wrong (eg. a value out of range, going past the end of the buffer). Most importantly, this checking is automatic, &lt;em&gt;so you can&amp;rsquo;t forget to do it!&lt;/em&gt;&lt;/p&gt;
+
+&lt;h2 id=&#34;implementation-in-c&#34;&gt;Implementation in C++&lt;/h2&gt;
+
+&lt;p&gt;The trick to making this all work is to create two stream classes that share the same interface: &lt;strong&gt;ReadStream&lt;/strong&gt; and &lt;strong&gt;WriteStream&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;The write stream implementation &lt;em&gt;writes values&lt;/em&gt; using the bitpacker:&lt;/p&gt;
+
+&lt;pre&gt;
+class WriteStream
+{
+public:
+
+    enum { IsWriting = 1 };
+    enum { IsReading = 0 };
+
+    WriteStream( uint8_t * buffer, int bytes ) : m_writer( buffer, bytes ) {}
+
+    bool SerializeInteger( int32_t value, int32_t min, int32_t max )
+    {
+        assert( min &lt; max );
+        assert( value &gt;= min );
+        assert( value &lt;= max );
+        const int bits = bits_required( min, max );
+        uint32_t unsigned_value = value - min;
+        m_writer.WriteBits( unsigned_value, bits );
+        return true;
+    }
+
+    // ...
+
+private:
+
+    BitWriter m_writer;
+};
+&lt;/pre&gt;
+
+&lt;p&gt;And the read stream implementation &lt;em&gt;reads values in&lt;/em&gt;:&lt;/p&gt;
+
+&lt;pre&gt;
+class ReadStream
+{
+public:
+
+    enum { IsWriting = 0 };
+    enum { IsReading = 1 };
+
+    ReadStream( const uint8_t * buffer, int bytes ) : m_reader( buffer, bytes ) {}
+
+    bool SerializeInteger( int32_t &amp; value, int32_t min, int32_t max )
+    {
+        assert( min &lt; max );
+        const int bits = bits_required( min, max );
+        if ( m_reader.WouldReadPastEnd( bits ) )
+        {
+            return false;
+        }
+        uint32_t unsigned_value = m_reader.ReadBits( bits );
+        value = (int32_t) unsigned_value + min;
+        return true;
+    }
+
+    // ...
+
+private:
+
+    BitReader m_reader;
+};
+&lt;/pre&gt;
+
+&lt;p&gt;With the magic of C++ templates, we leave it up to the compiler to specialize the serialize function to the stream class passed in, producing optimized read and write functions.&lt;/p&gt;
+
+&lt;p&gt;To handle safety &lt;strong&gt;serialize_*&lt;/strong&gt; calls are not actually functions at all. They&amp;rsquo;re actually macros that return false on error, thus unwinding the stack in case of error, without the need for exceptions.&lt;/p&gt;
+
+&lt;p&gt;For example, this macro serializes an integer in a given range:&lt;/p&gt;
+
+&lt;pre&gt;
+#define serialize_int( stream, value, min, max )                    \
+    do                                                              \
+    {                                                               \
+        assert( min &amp;lt; max );                                        \
+        int32_t int32_value;                                        \
+        if ( Stream::IsWriting )                                    \
+        {                                                           \
+            assert( value &amp;gt;= min );                                 \
+            assert( value &amp;lt;= max );                                 \
+            int32_value = (int32_t) value;                          \
+        }                                                           \
+        if ( !stream.SerializeInteger( int32_value, min, max ) )    \
+        {                                                           \
+            return false;                                           \
+        }                                                           \
+        if ( Stream::IsReading )                                    \
+        {                                                           \
+            value = int32_value;                                    \
+            if ( value &amp;lt; min || value &amp;gt; max )                       \
+            {                                                       \
+                return false;                                       \
+            }                                                       \
+        }                                                           \
+     } while (0)
+&lt;/pre&gt;
+
+&lt;p&gt;If a value read in from the network is outside the expected range, or we read past the end of the buffer, the packet read is aborted.&lt;/p&gt;
+
+&lt;h2 id=&#34;serializing-floating-point-values&#34;&gt;Serializing Floating Point Values&lt;/h2&gt;
+
+&lt;p&gt;We&amp;rsquo;re used to thinking about floating point numbers as being different to integers, but in memory they&amp;rsquo;re just a 32 bit value like any other.&lt;/p&gt;
+
+&lt;p&gt;The C++ language lets us work with this fundamental property, allowing us to directly access the bits of a float value as if it were an integer:&lt;/p&gt;
+
+&lt;pre&gt;
+union FloatInt
+{
+    float float_value;
+    uint32_t int_value;
+};
+
+FloatInt tmp;
+tmp.float_value = 10.0f;
+printf( &#34;float value as an integer: %x\n&#34;, tmp.int_value );
+&lt;/pre&gt;
+
+&lt;p&gt;You may prefer to do this with an aliased uint32_t* pointer, but this breaks with GCC -O2. Friends of mine point out that the only &lt;em&gt;truly standard way&lt;/em&gt; to get the float as an integer is to cast a pointer to the float value to char* and reconstruct the integer from the bytes values accessed through the char pointer.&lt;/p&gt;
+
+&lt;p&gt;Meanwhile in the past 5 years I&amp;rsquo;ve had no problems in the field with the union trick. Here&amp;rsquo;s how I use it to serialize an uncompressed float value:&lt;/p&gt;
+
+&lt;pre&gt;
+template &amp;lt;typename Stream&amp;gt; 
+bool serialize_float_internal( Stream &amp;amp; stream, 
+                               float &amp;amp; value )
+{
+    union FloatInt
+    {
+        float float_value;
+        uint32_t int_value;
+    };
+    FloatInt tmp;
+    if ( Stream::IsWriting )
+    {
+        tmp.float_value = value;
+    }
+    bool result = stream.SerializeBits( tmp.int_value, 32 );
+    if ( Stream::IsReading )
+    {
+        value = tmp.float_value;
+    }
+    return result;
+}
+&lt;/pre&gt;
+
+&lt;p&gt;This is of course wrapped with a &lt;strong&gt;serialize_float&lt;/strong&gt; macro for error checking:&lt;/p&gt;
+
+&lt;pre&gt;
+#define serialize_float( stream, value )                             \
+  do                                                                 \
+  {                                                                  \
+      if ( !serialize_float_internal( stream, value ) )              \
+      {                                                              \
+          return false;                                              \
+      }
+  } while (0)
+&lt;/pre&gt;
+
+&lt;p&gt;We can now transmit full precision floating point values over the network.&lt;/p&gt;
+
+&lt;p&gt;But what about situations where you don&amp;rsquo;t need full precision? What about a floating point value in the range [0,10] with an acceptable precision of 0.01? Is there a way to send this over the network using less bits?&lt;/p&gt;
+
+&lt;p&gt;Yes there is. The trick is to simply divide by 0.01 to get an integer in the range [0,1000] and send that value over the network. On the other side, convert back to a float by multiplying by 0.01.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s a general purpose implementation of this basic idea:&lt;/p&gt;
+
+&lt;pre&gt;
+template &amp;lt;typename Stream&amp;gt; 
+bool serialize_compressed_float_internal( Stream &amp;amp; stream, 
+                                          float &amp;amp; value, 
+                                          float min, 
+                                          float max, 
+                                          float res )
+{
+    const float delta = max - min;
+    const float values = delta / res;
+    const uint32_t maxIntegerValue = (uint32_t) ceil( values );
+    const int bits = bits_required( 0, maxIntegerValue );
+    uint32_t integerValue = 0; 
+    if ( Stream::IsWriting )
+    {
+        float normalizedValue = 
+            clamp( ( value - min ) / delta, 0.0f, 1.0f );
+        integerValue = (uint32_t) floor( normalizedValue * 
+                                         maxIntegerValue + 0.5f );
+    }
+    if ( !stream.SerializeBits( integerValue, bits ) )
+    {
+        return false;
+    }
+    if ( Stream::IsReading )
+    {
+        const float normalizedValue = 
+            integerValue / float( maxIntegerValue );
+        value = normalizedValue * delta + min;
+    }
+    return true;
+}
+&lt;/pre&gt;
+
+&lt;p&gt;Of course we need error checking, so we wrap this with a macro:&lt;/p&gt;
+
+&lt;pre&gt;
+#define serialize_compressed_float( stream, value, min, max )        \
+  do                                                                 \
+  {                                                                  \
+    if ( !serialize_float_internal( stream, value, min, max ) )      \
+    {                                                                \
+        return false;                                                \
+    }                                                                \
+  } while (0)
+&lt;/pre&gt;
+
+&lt;p&gt;And now the basic interface is complete. We can serialize both compressed and uncompressed floating point values over the network.&lt;/p&gt;
+
+&lt;h1 id=&#34;serializing-vectors-and-quaternions&#34;&gt;Serializing Vectors and Quaternions&lt;/h1&gt;
+
+&lt;p&gt;Once you can serialize float values it&amp;rsquo;s trivial to serialize vectors over the network. I use a modified version of the &lt;a href=&#34;https://github.com/scoopr/vectorial&#34;&gt;vectorial library&lt;/a&gt; in my projects and implement serialization for its vector type like this:&lt;/p&gt;
+
+&lt;pre&gt;
+template &amp;lt;typename Stream&amp;gt; 
+bool serialize_vector_internal( Stream &amp;amp; stream, 
+                                vec3f &amp;amp; vector )
+{
+    float values[3];
+    if ( Stream::IsWriting )
+    {
+        vector.store( values );
+    }
+    serialize_float( stream, values[0] );
+    serialize_float( stream, values[1] );
+    serialize_float( stream, values[2] );
+    if ( Stream::IsReading )
+    {
+        vector.load( values );
+    }
+    return true;
+}
+
+#define serialize_vector( stream, value )                       \
+ do                                                             \
+ {                                                              \
+     if ( !serialize_vector_internal( stream, value ) )         \
+     {                                                          \
+         return false;                                          \
+     }                                                          \
+ }                                                              \
+ while(0)
+&lt;/pre&gt;
+
+&lt;p&gt;If your vector is bounded in some range, then you can compress it:&lt;/p&gt;
+
+&lt;pre&gt;
+template &amp;lt;typename Stream&amp;gt; 
+bool serialize_compressed_vector_internal( Stream &amp;amp; stream, 
+                                           vec3f &amp;amp; vector,
+                                           float min,
+                                           float max,
+                                           float res )
+{
+    float values[3];
+    if ( Stream::IsWriting )
+    {
+        vector.store( values );
+    }
+    serialize_compressed_float( stream, values[0], min, max, res );
+    serialize_compressed_float( stream, values[1], min, max, res );
+    serialize_compressed_float( stream, values[2], min, max, res );
+    if ( Stream::IsReading )
+    {
+        vector.load( values );
+    }
+    return true;
+}
+&lt;/pre&gt;
+
+&lt;p&gt;Notice how we are able to build more complex serialization using the primitives we&amp;rsquo;re already created. Using this approach you can easily extend the serialization to support anything you need.&lt;/p&gt;
+
+&lt;h2 id=&#34;serializing-strings-and-arrays&#34;&gt;Serializing Strings and Arrays&lt;/h2&gt;
+
+&lt;p&gt;What if you need to serialize a string over the network?&lt;/p&gt;
+
+&lt;p&gt;Is it a good idea to send a string over the network with null termination? Not really. You&amp;rsquo;re just asking for trouble! Instead, serialize the string as an array of bytes with the string length in front. Therefore, in order to send a string over the network, we have to work out how to send an array of bytes.&lt;/p&gt;
+
+&lt;p&gt;First observation. Why waste effort bitpacking an array of bytes into your bit stream just so they are randomly shifted by [0,7] bits? Why not align to byte so you can memcpy the array of bytes directly into the packet?&lt;/p&gt;
+
+&lt;p&gt;To align a bitstream just work out your current bit index in the stream and how many bits of padding are needed until the current bit index divides evenly into 8, then insert that number of padding bits. &lt;/p&gt;
+
+&lt;p&gt;For bonus points, pad up with zero bits to add entropy so that on read you can verify that yes, you are reading a byte align and yes, it is indeed padded up with zero bits to the next whole byte bit index. If a non-zero bit is discovered in the padding, &lt;em&gt;abort serialize read and discard the packet&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s my code to align a bit stream to byte:&lt;/p&gt;
+
+&lt;pre&gt;
+void BitWriter::WriteAlign()
+{
+    const int remainderBits = m_bitsWritten % 8;
+    if ( remainderBits != 0 )
+    {
+        uint32_t zero = 0;
+        WriteBits( zero, 8 - remainderBits );
+        assert( ( m_bitsWritten % 8 ) == 0 );
+    }
+}
+
+bool BitReader::ReadAlign()
+{
+    const int remainderBits = m_bitsRead % 8;
+    if ( remainderBits != 0 )
+    {
+        uint32_t value = ReadBits( 8 - remainderBits );
+        assert( m_bitsRead % 8 == 0 );
+        if ( value != 0 )
+            return false;
+    }
+    return true;
+}
+
+#define serialize_align( stream )           \
+  do                                        \
+  {                                         \
+      if ( !stream.SerializeAlign() )       \
+          return false;                     \
+  } while (0)
+&lt;/pre&gt;
+
+&lt;p&gt;Now we can align to byte prior to writing an array of bytes, letting us use memcpy for the bulk of the array data. The only wrinkle is because the bitpacker works at the word level, it&amp;rsquo;s necessary to have special handling for the head and tail portions. Because of this, the code is quite complex and is omitted for brevity. You can find it in the &lt;a href=&#34;https://www.patreon.com/gafferongames&#34; target=&#34;_blank&#34;&gt;sample code&lt;/a&gt; for this article.&lt;/p&gt;
+
+&lt;p&gt;The end result of all this is a &lt;strong&gt;serialize_bytes&lt;/strong&gt; primitive that we can use to serialize a string as a length followed by the string data, like so:&lt;/p&gt;
+
+&lt;pre&gt;
+template &amp;lt;typename Stream&amp;gt; 
+bool serialize_string_internal( Stream &amp;amp; stream, 
+                                char * string, 
+                                int buffer_size )
+{
+    uint32_t length;
+    if ( Stream::IsWriting )
+    {
+        length = strlen( string );
+        assert( length &amp;lt; buffer_size - 1 );
+    }
+    serialize_int( stream, length, 0, buffer_size - 1 );
+    serialize_bytes( stream, (uint8_t*)string, length );
+    if ( Stream::IsReading )
+    {
+        string[length] = &#39;\0&#39;;
+    }
+}
+
+#define serialize_string( stream, string, buffer_size )              \
+do                                                                   \
+{                                                                    \
+    if ( !serialize_string_internal( stream,                         \
+                                     string,                         \
+                                     buffer_size ) )                 \
+    {                                                                \
+        return false;                                                \
+    }                                                                \
+} while (0)
+&lt;/pre&gt;
+
+&lt;p&gt;This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for &lt;strong&gt;&amp;lsquo;\0&amp;rsquo;&lt;/strong&gt; before giving up. This is important because otherwise protocol level attacks could be crafted to degrade your server&amp;rsquo;s performance by making it do extra work.&lt;/p&gt;
+
+&lt;h2 id=&#34;serializing-array-subsets&#34;&gt;Serializing Array Subsets&lt;/h2&gt;
+
+&lt;p&gt;When implemeting a game network protocol, sooner or later you need to serialize an array of objects over the network. Perhaps the server needs to send object state down to the client, or there is an array of messages to be sent.&lt;/p&gt;
+
+&lt;p&gt;This is straightforward if you are sending &lt;em&gt;all&lt;/em&gt; objects in the array - just iterate across the array and serialize each object in turn. But what if you want to send a subset of the array?&lt;/p&gt;
+
+&lt;p&gt;The simplest approach is to iterate across all objects in the array and serialize a bit per-object if that object is to be sent. If the value of the bit is 1 then the object data follows in the bit stream, otherwise it&amp;rsquo;s ommitted:&lt;/p&gt;
+
+&lt;pre&gt;
+template &amp;lt;typename Stream&amp;gt; 
+bool serialize_scene_a( Stream &amp;amp; stream, Scene &amp;amp; scene )
+{
+    for ( int i = 0; i &amp;lt; MaxObjects; ++i )
+    {
+        serialize_bool( stream, scene.objects[i].send );
+        if ( !scene.objects[i].send )
+        {
+            if ( Stream::IsReading )
+            {
+                memset( &amp;amp;scene.objects[i], 0, sizeof( Object ) );
+            }
+            continue;
+        }
+        serialize_object( stream, scene.objects[i] );
+    }
+    return true;
+}
+&lt;/pre&gt;
+
+&lt;p&gt;This approach breaks down as the size of the array gets larger. For example, for an array size of size 4096, then 4096 / 8 = 512 bytes spent on skip bits. That&amp;rsquo;s not good. Can we switch it around so we take overhead propertional to the number of objects sent instead of the total number of objects in the array?&lt;/p&gt;
+
+&lt;p&gt;We can but now, we&amp;rsquo;ve done something interesting. We&amp;rsquo;re walking one set of objects in the serialize write (all objects in the array) and are walking over a different set of objects in the serialize read (subset of objects sent).&lt;/p&gt;
+
+&lt;p&gt;At this point the unified serialize function concept starts to breaks down, and in my opinion, it&amp;rsquo;s best to separate the read and write back into separate functions, because they have so little in common:&lt;/p&gt;
+
+&lt;pre&gt;
+bool write_scene_b( WriteStream &amp;amp; stream, Scene &amp;amp; scene )
+{
+    int num_objects_sent = 0;
+    for ( int i = 0; i &amp;lt; MaxObjects; ++i )
+    {
+        if ( scene.objects[i].send )
+            num_objects_sent++;
+    }
+    write_int( stream, num_objects_sent, 0, MaxObjects );
+    for ( int i = 0; i &amp;lt; MaxObjects; ++i )
+    {
+        if ( !scene.objects[i].send )
+        {
+            continue;
+        }
+        write_int( stream, i, 0, MaxObjects - 1 );
+        write_object( stream, scene.objects[i] );
+    }
+    return true;
+}
+
+bool read_scene_b( ReadStream &amp;amp; stream, Scene &amp;amp; scene )
+{
+    memset( &amp;amp;scene, 0, sizeof( scene ) );
+    int num_objects_sent; 
+    read_int( stream, num_objects_sent, 0, MaxObjects );
+    for ( int i = 0; i &amp;lt; num_objects_sent; ++i )
+    {
+        int index; 
+        read_int( stream, index, 0, MaxObjects - 1 );
+        read_object( stream, scene.objects[index] );
+    }
+    return true;
+}
+&lt;/pre&gt;
+
+&lt;p&gt;One more point. The code above walks over the set of objects &lt;em&gt;twice&lt;/em&gt; on serialize write. Once to determine the number of changed objects and a second time to actually serialize the set of changed objects. Can we do it in one pass instead? Absolutely! You can use another trick, rather than serializing the # of objects in the array up front, use a &lt;em&gt;sentinel value&lt;/em&gt; to indicate the end of the array:&lt;/p&gt;
+
+&lt;pre&gt;
+bool write_scene_c( WriteStream &amp;amp; stream, Scene &amp;amp; scene )
+{
+    for ( int i = 0; i &amp;lt; MaxObjects; ++i )
+    {
+        if ( !scene.objects[i].send )
+        {
+            continue;
+        }
+        write_int( stream, i, 0, MaxObjects );
+        write_object( stream, scene.objects[i] );
+    }
+    write_int( stream, MaxObjects, 0, MaxObjects );
+    return true;
+}
+
+bool read_scene_c( ReadStream &amp;amp; stream, Scene &amp;amp; scene )
+{
+    memset( &amp;amp;scene, 0, sizeof( scene ) );
+    while ( true )
+    {
+        int index; read_int( stream, index, 0, MaxObjects );
+        if ( index == MaxObjects )
+        {
+            break;
+        }
+        read_object( stream, scene.objects[index] );
+    }
+    return true;
+}
+&lt;/pre&gt;
+
+&lt;p&gt;The above technique works great if the objects sent are a small percentage of total objects. But what if a large number of objects are sent, lets say half of the 4000 objects in the scene. That&amp;rsquo;s 2000 object indices with each index costing 12 bits&amp;hellip; that&amp;rsquo;s 24000 bits or 3000 bytes (almost 3k!) in your packet wasted on indexing.&lt;/p&gt;
+
+&lt;p&gt;You can reduce this overhead by encoding each object index relative to the previous object index. Think about it, you&amp;rsquo;re walking from left to right along an array, so object indices start at 0 and go up to MaxObjects - 1. Statistically speaking, you&amp;rsquo;re quite likely to have objects that are close to each other and if the next index is +1 or even +10 or +30 from the previous one, on average, you&amp;rsquo;ll need quite a few less bits to represent that difference than an absolute index.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s one way to encode the object index as an integer relative to the previous object index, while spending less bits on statistically more likely values:&lt;/p&gt;
+
+&lt;pre&gt;
+template &amp;lt;typename Stream&amp;gt; 
+bool serialize_object_index_internal( Stream &amp;amp; stream, 
+                                      int &amp;amp; previous, 
+                                      int &amp;amp; current )
+{
+    uint32_t difference;
+    if ( Stream::IsWriting )
+    {
+        assert( previous &amp;lt; current );
+        difference = current - previous;
+        assert( difference &amp;gt; 0 );
+    }
+
+    // +1 (1 bit)
+    bool plusOne;
+    if ( Stream::IsWriting )
+    {
+       plusOne = difference == 1;
+    }
+    serialize_bool( stream, plusOne );
+    if ( plusOne )
+    {
+        if ( Stream::IsReading )
+        {
+            current = previous + 1;
+        }
+        previous = current;
+        return true;
+    }
+
+    // [+2,5] -&amp;gt; [0,3] (2 bits)
+    bool twoBits;
+    if ( Stream::IsWriting )
+    {
+        twoBits = difference &amp;lt;= 5;
+    }
+    serialize_bool( stream, twoBits );
+    if ( twoBits )
+    {
+        serialize_int( stream, difference, 2, 5 );
+        if ( Stream::IsReading )
+        {
+            current = previous + difference;
+        }
+        previous = current;
+        return true;
+    }
+
+    // [6,13] -&amp;gt; [0,7] (3 bits)
+    bool threeBits;
+    if ( Stream::IsWriting )
+    {
+        threeBits = difference &amp;lt;= 13;
+    }
+    serialize_bool( stream, threeBits );
+    if ( threeBits )
+    {
+        serialize_int( stream, difference, 6, 13 );
+        if ( Stream::IsReading )
+        {
+            current = previous + difference;
+        }
+        previous = current;
+        return true;
+    }
+
+    // [14,29] -&amp;gt; [0,15] (4 bits)
+    bool fourBits;
+    if ( Stream::IsWriting )
+    {
+        fourBits = difference &amp;lt;= 29;
+    }
+    serialize_bool( stream, fourBits );
+    if ( fourBits )
+    {
+        serialize_int( stream, difference, 14, 29 );
+        if ( Stream::IsReading )
+        {
+            current = previous + difference;
+        }
+        previous = current;
+        return true;
+    }
+
+    // [30,61] -&amp;gt; [0,31] (5 bits)
+    bool fiveBits;
+    if ( Stream::IsWriting )
+    {
+        fiveBits = difference &amp;lt;= 61;
+    }
+    serialize_bool( stream, fiveBits );
+    if ( fiveBits )
+    {
+        serialize_int( stream, difference, 30, 61 );
+        if ( Stream::IsReading )
+        {
+            current = previous + difference;
+        }
+        previous = current;
+        return true;
+    }
+
+    // [62,125] -&amp;gt; [0,63] (6 bits)
+    bool sixBits;
+    if ( Stream::IsWriting )
+    {
+        sixBits = difference &amp;lt;= 125;
+    }
+    serialize_bool( stream, sixBits );
+    if ( sixBits )
+    {
+        serialize_int( stream, difference, 62, 125 );
+        if ( Stream::IsReading )
+        {
+            current = previous + difference;
+        }
+        previous = current;
+        return true;
+    }
+
+    // [126,MaxObjects+1] 
+    serialize_int( stream, difference, 126, MaxObjects + 1 );
+    if ( Stream::IsReading )
+    {
+        current = previous + difference;
+    }
+    previous = current;
+    return true;
+}
+
+template &amp;lt;typename Stream&amp;gt; 
+bool serialize_scene_d( Stream &amp;amp; stream, Scene &amp;amp; scene )
+{
+    int previous_index = -1;
+    
+    if ( Stream::IsWriting )
+    {
+        for ( int i = 0; i &amp;lt; MaxObjects; ++i )
+        {
+            if ( !scene.objects[i].send )
+            {
+                continue;
+            }
+            write_object_index( stream, previous_index, i );
+            write_object( stream, scene.objects[i] );
+        }
+        write_object_index( stream, previous_index, MaxObjects );
+    }
+    else
+    {
+        while ( true )
+        {
+            int index; 
+            read_object_index( stream, previous_index, index );
+            if ( index == MaxObjects )
+            {
+                break;
+            }
+            read_object( stream, scene.objects[index] );
+        }
+    }
+    return true;
+}
+&lt;/pre&gt;
+
+&lt;p&gt;But what about the worst case? Won&amp;rsquo;t we spent more bits when indices are &amp;gt;= +126 apart than on an absolute index? Yes we do, but how many of these worst case indices fit in an array of size 4096? Just 32. It&amp;rsquo;s nothing to worry about.&lt;/p&gt;
+
+&lt;h2 id=&#34;protocol-ids-crc32-and-serialization-checks&#34;&gt;Protocol IDs, CRC32 and Serialization Checks&lt;/h2&gt;
+
+&lt;p&gt;We are nearly at the end of this article, and you can see by now that we are sending a completely unattributed binary stream. It&amp;rsquo;s essential that read and write match perfectly, which is of course why the serialize functions are so great, it&amp;rsquo;s hard to desync something when you unify read and write.&lt;/p&gt;
+
+&lt;p&gt;But accidents happen, and when they do this system can seem like a stack of cards. What if you somehow desync read and write? How can you debug this? What if somebody tries to connect to your latest server code with an old version of your client?&lt;/p&gt;
+
+&lt;p&gt;One technique to protect against this is to include a protocol id in your packet. For example, it could be a combination of a unique number for your game, plus the hash of your protocol version and a hash of your game data. Now if a packet comes in from an incompatible game version, it&amp;rsquo;s automatically discarded because the protocol ids don&amp;rsquo;t match:&lt;/p&gt;
+
+&lt;pre&gt;
+[protocol id] (64bits)
+(packet data)
+&lt;/pre&gt;
+
+&lt;p&gt;The next level of protection is to pass a CRC32 over your packet and include that in the header. This lets you pick up corrupt packets (these do happen, remember that the IP checksum is just 16 bits&amp;hellip;). Now your packet header looks like this:&lt;/p&gt;
+
+&lt;pre&gt;
+[protocol id] (64bits)
+[crc32] (32bits)
+(packet data)
+&lt;/pre&gt;
+
+&lt;p&gt;At this point you may be wincing. Wait. I have to take 8+4 = 12 bytes of overhead per-packet just to implement my own checksum and protocol id? Well actually, &lt;em&gt;you don&amp;rsquo;t&lt;/em&gt;. You can take a leaf out of how IPv4 does their checksum, and make the protocol id a &lt;strong&gt;magical prefix&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;This means you don&amp;rsquo;t actually send it, and rely on the fact that if the CRC32 is calculated as if the packet were prefixed by the protocol id, then the CRC32 will be incorrect if the sender does not have the same protocol id as the receiver, thus saving 8 bytes per-packet:&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;del&gt;[protocol id] (64bits)&lt;/del&gt;   // not actually sent, but used to calc crc32
+[crc32] (32bits)
+(packet data)
+&lt;/pre&gt;
+
+&lt;p&gt;One final technique, perhaps as much a check against programmer error on your part and malicious senders (although redundant once you encrypt and sign your packet) is the &lt;em&gt;serialization check&lt;/em&gt;. Basically, somewhere mid-packet, either before or after a complicated serialization section, just write out a known 32 bit integer value, and check that it reads back in on the other side with the same value. If the serialize check value is incorrect &lt;em&gt;abort read and discard the packet&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;I like to do this between sections of my packet as I write them, so at least I know which part of my packet serialization has desynced read and write as I&amp;rsquo;m developing my protocol. Another cool trick I like to use is to always serialize a protocol check at the very end of the packet, to detect accidental packet truncation (which happens more often than you would think).&lt;/p&gt;
+
+&lt;p&gt;Now the packet looks something like this:&lt;/p&gt;
+
+&lt;pre&gt;
+&lt;del&gt;[protocol id] (64bits)&lt;/del&gt;   // not actually sent, but used to calc crc32
+[crc32] (32bits)
+(packet data)
+[end of packet serialize check] (32 bits)
+&lt;/pre&gt;
+
+&lt;p&gt;This is great packet structure to use during development.&lt;/p&gt;
+
+&lt;hr&gt;
+
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://127.0.0.1:1313/post/packet_fragmentation_and_reassembly&#34;&gt;Packet Fragmentation and Reassembly&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34; target=&#34;_blank&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Reading and Writing Packets</title>
+      <link>http://127.0.0.1:1313/post/reading_and_writing_packets/</link>
+      <pubDate>Thu, 01 Sep 2016 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/reading_and_writing_packets/</guid>
+      <description>
+
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34; target=&#34;_blank&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;In this article we&amp;rsquo;re going to explore how AAA multiplayer games like first person shooters read and write packets. We&amp;rsquo;ll start with text based formats then move into binary hand-coded binary formats and bitpacking.&lt;/p&gt;
+
+&lt;p&gt;At the end of this article and the next, you should understand exactly how to implement your own packet read and write the same way the pros do it.&lt;/p&gt;
+
+&lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
+
+&lt;p&gt;Consider a web server. It listens for requests, does some work asynchronously and sends responses back to clients. It’s stateless and generally not real-time, although a fast response time is great. Web servers are most often IO bound.&lt;/p&gt;
+
+&lt;p&gt;Game server are different. They&amp;rsquo;re a headless version of the game running in the cloud. As such they are stateful and CPU bound. The traffic patterns are different too. Instead of infrequent request/response from tens of thousands of clients, a game server has far fewer clients, but processes a continuous stream of input packets sent from each client 60 times per-second, and broadcasts out the state of the world to clients 10, 20 or even 60 times per-second.&lt;/p&gt;
+
+&lt;p&gt;And this state is &lt;strong&gt;huge&lt;/strong&gt;. Thousands of objects with hundreds of properties each. Game network programmers spend a lot of their time optimizing exactly how this state is sent over the network with crazy bit-packing tricks, hand-coded binary formats and delta encoding.&lt;/p&gt;
+
+&lt;p&gt;What would happen if we just encoded this world state as XML?&lt;/p&gt;
+
+&lt;pre&gt;&amp;lt;world_update world_time=&#34;0.0&#34;&amp;gt;
+  &amp;lt;object id=&#34;1&#34; class=&#34;player&#34;&amp;gt;
+    &amp;lt;property name=&#34;position&#34; value=&#34;(0,0,0)&#34;&amp;lt;/property&amp;gt;
+    &amp;lt;property name=&#34;orientation&#34; value=&#34;(1,0,0,0)&#34;&amp;lt;/property&amp;gt;
+    &amp;lt;property name=&#34;velocity&#34; value=&#34;(10,0,0)&#34;&amp;lt;/property&amp;gt;
+    &amp;lt;property name=&#34;health&#34; value=&#34;100&#34;&amp;gt;&amp;lt;/property&amp;gt;
+    &amp;lt;property name=&#34;weapon&#34; value=&#34;110&#34;&amp;gt;&amp;lt;/property&amp;gt;
+    ... 100s more properties per-object ...
+ &amp;lt;/object&amp;gt;
+ &amp;lt;object id=&#34;100&#34; class=&#34;grunt&#34;&amp;gt;
+   &amp;lt;property name=&#34;position&#34; value=&#34;(100,100,0)&#34;&amp;lt;/property&amp;gt;
+   &amp;lt;property name=&#34;health&#34; value=&#34;10&#34;&amp;lt;/property&amp;gt;
+ &amp;lt;/object&amp;gt;
+ &amp;lt;object id=&#34;110&#34; class=&#34;weapon&#34;&amp;gt;
+   &amp;lt;property type=&#34;semi-automatic&#34;&amp;gt;&amp;lt;/property&amp;gt;
+   &amp;lt;property ammo_in_clip=&#34;8&#34;&amp;gt;&amp;lt;/property&amp;gt;
+   &amp;lt;property round_in_chamber=&#34;true&#34;&amp;gt;&amp;lt;/property&amp;gt;
+ &amp;lt;/object&amp;gt;
+ ... 1000s more objects ...
+&amp;lt;/world_update&amp;gt;
+&lt;/pre&gt;
+
+&lt;p&gt;Pretty verbose&amp;hellip; it&amp;rsquo;s hard to see how this would be practical for a large world.&lt;/p&gt;
+
+&lt;p&gt;JSON is a bit more compact:&lt;/p&gt;
+
+&lt;pre&gt;
+{
+  &#34;world_time&#34;: 0.0,
+  &#34;objects&#34;: {
+    1: {
+      &#34;class&#34;: &#34;player&#34;,
+      &#34;position&#34;: &#34;(0,0,0)&#34;,
+      &#34;orientation&#34;: &#34;(1,0,0,0)&#34;,
+      &#34;velocity&#34;: &#34;(10,0,0)&#34;,
+      &#34;health&#34;: 100,
+      &#34;weapon&#34;: 110
+    }
+    100: {
+      &#34;class&#34;: &#34;grunt&#34;,
+      &#34;position&#34;: &#34;(100,100,0)&#34;,
+      &#34;health&#34;: 10
+    }
+    110: {
+      &#34;class&#34;: &#34;weapon&#34;,
+      &#34;type: &#34;semi-automatic&#34;
+      &#34;ammo_in_clip&#34;: 8,
+      &#34;round_in_chamber&#34;: 1 
+    }
+    // etc...
+  }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;But it still suffers from the same problem: the description of the data is larger than the data itself. What if instead of fully describing the world state in each packet, we split it up into two parts?&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;p&gt;A schema that describes the set of object classes and properties per-class, &lt;strong&gt;sent only once&lt;/strong&gt; when a client connects to the server.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Data sent rapidly from server to client, &lt;strong&gt;which is encoded relative to the schema&lt;/strong&gt;.&lt;/p&gt;&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;The schema could look something like this:&lt;/p&gt;
+
+&lt;pre&gt;{
+  &#34;classes&#34;: {
+    0: &#34;player&#34; {
+      &#34;properties&#34;: {
+        0: {
+          &#34;name&#34;: &#34;position&#34;,
+          &#34;type&#34;: &#34;vec3f&#34;
+        }
+        1: {
+          &#34;name&#34;: &#34;orientation&#34;,
+          &#34;type&#34;: &#34;quat4f&#34;
+        }
+        2: {
+          &#34;name&#34;: &#34;velocity&#34;,
+          &#34;type&#34;: &#34;vec3f&#34;
+        }
+        3: {
+          &#34;name&#34;: &#34;health&#34;,
+          &#34;type&#34;: &#34;float&#34;
+        }
+        4: {
+          &#34;name&#34;: &#34;weapon&#34;,
+          &#34;type&#34;: &#34;object&#34;, 
+        }
+      }
+    }
+    1: &#34;grunt&#34;: {
+      &#34;properties&#34;: {
+        0: {
+          &#34;name&#34;: &#34;position&#34;,
+          &#34;type&#34;: &#34;vec3f&#34;
+        }
+        1: {
+          &#34;name&#34;: &#34;health&#34;,
+          &#34;type&#34;: &#34;float&#34;
+        }
+      }
+    }
+    2: &#34;weapon&#34;: {
+      &#34;properties&#34;: {
+        0: {
+          &#34;name&#34;: &#34;type&#34;,
+          &#34;type&#34;: &#34;enum&#34;,
+          &#34;enum_values&#34;: [ &#34;revolver&#34;, &#34;semi-automatic&#34; ]
+        }
+        1: {
+          &#34;name&#34;: &#34;ammo_in_clip&#34;,
+          &#34;type&#34;: &#34;integer&#34;,
+          &#34;range&#34;: &#34;0..9&#34;,
+        }
+        2: {
+          &#34;name&#34;: &#34;round_in_chamber&#34;,
+          &#34;type&#34;: &#34;integer&#34;,
+          &#34;range&#34;: &#34;0..1&#34;
+        }
+      }
+    }  
+  }
+}&lt;/pre&gt;
+
+&lt;p&gt;The schema is quite big, but that&amp;rsquo;s beside the point. It&amp;rsquo;s sent only once, and now the client knows the set of classes in the game world and the number, name, type and range of properties per-class.&lt;/p&gt;
+
+&lt;p&gt;With this knowledge we can make the rapidly sent portion of the world state much more compact:&lt;/p&gt;
+
+&lt;pre&gt;
+{
+  &#34;world_time&#34;: 0.0,
+  &#34;objects&#34;: {
+    1: [0,&#34;(0,0,0)&#34;,&#34;(1,0,0,0)&#34;,&#34;(10,0,0)&#34;,100,110],
+    100: [1,&#34;(100,100,0)&#34;,10],
+    110: [2,1,8,1]
+  }
+}
+&lt;/pre&gt;
+
+&lt;p&gt;And we can compress it even further by switching to a custom text format:&lt;/p&gt;
+
+&lt;pre&gt;
+0.0
+1:0,0,0,0,1,0,0,0,10,0,0,100,110
+100:1,100,100,0,10
+110:2,1,8,1
+&lt;/pre&gt;
+
+&lt;p&gt;As you can see, it’s much more about what you &lt;strong&gt;don’t send&lt;/strong&gt; than what you do.&lt;/p&gt;
+
+&lt;h2 id=&#34;the-inefficiencies-of-text&#34;&gt;The Inefficiencies of Text&lt;/h2&gt;
+
+&lt;p&gt;We’ve made good progress on our text format so far, moving from a highly attributed stream that fully describes the data (more description than actual data) to an unattributed text format that&amp;rsquo;s an order of magnitude more efficient.&lt;/p&gt;
+
+&lt;p&gt;But there are inherent inefficiencies when using text format for packets:&lt;/p&gt;
+
+&lt;ul&gt;
+&lt;li&gt;&lt;p&gt;We are most often sending data in the range &lt;strong&gt;A-Z&lt;/strong&gt;, &lt;strong&gt;a-z&lt;/strong&gt; and &lt;strong&gt;0-1&lt;/strong&gt;, plus a few other symbols. This wastes the remainder of the &lt;strong&gt;0-255&lt;/strong&gt; range for each character sent. From an information theory standpoint, this is an inefficient encoding.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The text representation of integer values are in the general case much less efficient than the binary format. For example, in text format the worst case unsigned 32 bit integer &lt;strong&gt;4294967295&lt;/strong&gt; takes 10 bytes, but in binary format it takes just four.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;In text, even the smallest numbers in &lt;strong&gt;0-9&lt;/strong&gt; range require at least one byte, but in binary, smaller values like &lt;strong&gt;0, 11, 31, 100&lt;/strong&gt; can be sent with fewer than 8 bits if we know their range ahead of time.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;If an integer value is negative, you have to spend a whole byte on &lt;strong&gt;&amp;rsquo;-&amp;rsquo;&lt;/strong&gt; to indicate that.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Floating point numbers waste one byte specifying the decimal point.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;The text representation of numerical values are variable length: &lt;strong&gt;“5”&lt;/strong&gt;, &lt;strong&gt;“12345”&lt;/strong&gt;, &lt;strong&gt;“3.141593”. &lt;/strong&gt;Because of this we need to spend one byte on a separator after each value so we know when it ends.&lt;/p&gt;&lt;/li&gt;
+
+&lt;li&gt;&lt;p&gt;Newlines &lt;strong&gt;&amp;lsquo;\n&amp;rsquo;&lt;/strong&gt; or some other separator are required to distinguish between the set of variables belonging to one object and the next. When you have thousands of objects, this really adds up.&lt;/p&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+&lt;p&gt;In short, if we wish to optimize any further, it&amp;rsquo;s necessary to switch to a binary format.&lt;/p&gt;
+
+&lt;h2 id=&#34;switching-to-a-binary-format&#34;&gt;Switching to a Binary Format&lt;/h2&gt;
+
+&lt;p&gt;In the web world there are some really great libraries that read and write binary formats like &lt;a href=&#34;http://bjson.org&#34;&gt;BJSON&lt;/a&gt;, &lt;a href=&#34;https://developers.google.com/protocol-buffers/&#34;&gt;Protocol Buffers&lt;/a&gt;, &lt;a href=&#34;https://google.github.io/flatbuffers/&#34;&gt;Flatbuffers&lt;/a&gt;, &lt;a href=&#34;https://thrift.apache.org&#34;&gt;Thrift&lt;/a&gt;, &lt;a href=&#34;https://capnproto.org&#34;&gt;Cap’n Proto&lt;/a&gt; and &lt;a href=&#34;http://msgpack.org/index.html&#34;&gt;MsgPack&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;In manay cases, these libraries are great fit for building your game network protocol. But in the fast-paced world of first person shooters where efficiency is paramount, a hand-tuned binary protocol is still the gold standard.&lt;/p&gt;
+
+&lt;p&gt;There are a few reasons for this. Web binary formats are designed for situations where versioning of data is &lt;em&gt;extremely&lt;/em&gt; important. If you upgrade your backend, older clients should be able to keep talking to it with the old format. Data formats are also expected to be language agnostic. A backend written in Golang should be able to talk with a web client written in JavaScript and other server-side components written in Python or Java.&lt;/p&gt;
+
+&lt;p&gt;Game servers are completely different beasts. The client and server are almost always written in the same language (C++), and versioning is much simpler. If a client with an incompatible version tries to connect, that connection is simply rejected. There&amp;rsquo;s simply no need for compatibility across different versions.&lt;/p&gt;
+
+&lt;p&gt;So if you don’t need versioning and you don’t need cross-language support what are the benefits for these libraries? Convenience. Ease of use. Not needing to worry about creating, testing and debugging your own binary format.&lt;/p&gt;
+
+&lt;p&gt;But this convenience is offset by the fact that these libraries are less efficient and less flexible than a binary protocol we can roll ourselves. So while I encourage you to evaluate these libraries and see if they suit your needs, for the rest of this article, we&amp;rsquo;re going to move forward with a custom binary protocol.&lt;/p&gt;
+
+&lt;h2 id=&#34;getting-started-with-a-binary-format&#34;&gt;Getting Started with a Binary Format&lt;/h2&gt;
+
+&lt;p&gt;One option for creating a custom binary protocol is to use the in-memory format of your data structures in C/C++ as the over-the-wire format. People often start here, so although I don’t recommend this approach, lets explore it for a while before we poke holes in it.&lt;/p&gt;
+
+&lt;p&gt;First define the set of packets, typically as a union of structs:&lt;/p&gt;
+
+&lt;pre&gt;
+struct Packet
+{
+    enum PacketTypeEnum { PACKET_A, PACKET_B, PACKET_C };
+
+    uint8_t packetType;
+ 
+    union
+    {
+        struct PacketA
+        {
+            int x,y,z;
+        } a;
+
+        struct PacketB
+        {
+            int numElements;
+            int elements[MaxElements];
+        } b;
+
+        struct PacketC
+        {
+            bool x;
+            short y;
+            int z;
+        } c;
+    }; 
+};
+&lt;/pre&gt;
+
+&lt;p&gt;When writing the packet, set the first byte in the packet to the packet type number (0, 1 or 2). Then depending on the packet type, memcpy the appropriate union struct into the packet. On read do the reverse: read in the first byte, then according to the packet type, copy the packet data to the corresponding struct.&lt;/p&gt;
+
+&lt;p&gt;It couldn’t get simpler. So why do most games avoid this approach?&lt;/p&gt;
+
+&lt;p&gt;The first reason is that different compilers and platforms provide different packing of structs. If you go this route you’ll spend a lot of time with &lt;strong&gt;#pragma pack&lt;/strong&gt; trying to make sure that different compilers and different platforms lay out the structures in memory exactly the same way.&lt;/p&gt;
+
+&lt;p&gt;The next one is endianness. Most computers are mostly &lt;a href=&#34;https://en.wikipedia.org/wiki/Endianness#Little-endian&#34; target=&#34;_blank&#34;&gt;little endian&lt;/a&gt; these days but historically some architectures like PowerPC were &lt;a href=&#34;https://en.wikipedia.org/wiki/Endianness#Big-endian&#34; target=&#34;_blank&#34;&gt;big endian&lt;/a&gt;. If you need to support communication between little endian and big endian machines, the memcpy the struct in and out of the packet approach simply won’t work. At minimum you need to write a function to swap bytes between host and network byte order on read and write for each variable in your struct.&lt;/p&gt;
+
+&lt;p&gt;There are other issues as well. If a struct contains pointers you can’t just serialize that value over the network and expect a valid pointer on the other side. Also, if you have variable sized structures, such as an array of 32 elements, but most of the time it’s empty or only has a few elements, it&amp;rsquo;s wasteful to always send the array at worst case size. A better approach would support a variable length encoding that only sends the actual number of elements in the array.&lt;/p&gt;
+
+&lt;p&gt;But ultimately, what really drives a stake into the heart of this approach is &lt;strong&gt;security&lt;/strong&gt;. It’s a &lt;em&gt;massive&lt;/em&gt; security risk to take data coming in over the network and trust it, and that&amp;rsquo;s exactly what you do if you just copy a block of memory sent over the network into your struct. Wheee! What if somebody constructs a malicious &lt;strong&gt;PacketB&lt;/strong&gt; and sends it to you with &lt;strong&gt;numElements&lt;/strong&gt; = 0xFFFFFFFF?&lt;/p&gt;
+
+&lt;p&gt;You should, no you &lt;em&gt;must&lt;/em&gt;, at minimum do some sort of per-field checking that values are in range vs. blindly accepting what is sent to you. This is why the memcpy struct approach is rarely used in professional games.&lt;/p&gt;
+
+&lt;h2 id=&#34;read-and-write-functions&#34;&gt;Read and Write Functions&lt;/h2&gt;
+
+&lt;p&gt;The next level of sophistication is read and write functions per-packet.&lt;/p&gt;
+
+&lt;p&gt;Start with the following simple operations:&lt;/p&gt;
+
+&lt;pre&gt;
+void WriteInteger( Buffer &amp;amp; buffer, uint32_t value );
+void WriteShort( Buffer &amp;amp; buffer, uint16_t value );
+void WriteChar( Buffer &amp;amp; buffer, uint8_t value );
+
+uint32_t ReadInteger( Buffer &amp;amp; buffer );
+uint16_t ReadShort( Buffer &amp;amp; buffer );
+uint8_t ReadByte( Buffer &amp;amp; buffer );
+&lt;/pre&gt;
+
+&lt;p&gt;These operate on a structure which keeps track of the current position:&lt;/p&gt;
+
+&lt;pre&gt;
+struct Buffer
+{
+    uint8_t * data;     // pointer to buffer data
+    int size;           // size of buffer data (bytes)
+    int index;          // index of next byte to be read/written
+};
+&lt;/pre&gt;
+
+&lt;p&gt;The write integer function looks something like this:&lt;/p&gt;
+
+&lt;pre&gt;
+void WriteInteger( Buffer &amp;amp; buffer, uint32_t value )
+{
+    assert( buffer.index + 4 &amp;lt;= size );
+#ifdef BIG_ENDIAN
+    *((uint32_t*)(buffer.data+buffer.index)) = bswap( value ); 
+#else // #ifdef BIG_ENDIAN
+    *((uint32_t*)(buffer.data+buffer.index)) = value; 
+#endif // #ifdef BIG_ENDIAN
+    buffer.index += 4;
+}
+&lt;/pre&gt;
+
+&lt;p&gt;And the read integer function looks like this:&lt;/p&gt;
+
+&lt;pre&gt;
+uint32_t ReadInteger( Buffer &amp;amp; buffer )
+{
+    assert( buffer.index + 4 &amp;lt;= size );
+    uint32_t value;
+#ifdef BIG_ENDIAN
+    value = bswap( *((uint32_t*)(buffer.data+buffer.index)) );
+#else // #ifdef BIG_ENDIAN
+    value = *((uint32_t*)(buffer.data+buffer.index));
+#endif // #ifdef BIG_ENDIAN
+    buffer.index += 4;
+    return value;
+}
+&lt;/pre&gt;
+
+&lt;p&gt;Now, instead of copying across packet data in and out of structs, we implement read and write functions for each packet type:&lt;/p&gt;
+
+&lt;pre&gt;
+struct PacketA
+{
+    int x,y,z;
+
+    void Write( Buffer &amp;amp; buffer )
+    {
+        WriteInteger( buffer, x );
+        WriteInteger( buffer, y );
+        WriteInteger( buffer, z );
+    }
+
+    void Read( Buffer &amp;amp; buffer )
+    {
+        ReadInteger( buffer, x );
+        ReadInteger( buffer, y );
+        ReadInteger( buffer, z ); 
+    }
+};
+
+struct PacketB
+{
+    int numElements;
+    int elements[MaxElements];
+
+    void Write( Buffer &amp;amp; buffer )
+    {
+        WriteInteger( buffer, numElements );
+        for ( int i = 0; i &amp;lt; numElements; ++i )
+            WriteInteger( buffer, elements[i] );
+    }
+
+    void Read( Buffer &amp;amp; buffer )
+    {
+        ReadInteger( buffer, numElements );
+        for ( int i = 0; i &amp;lt; numElements; ++i )
+            ReadInteger( buffer, elements[i] );
+    }
+};
+
+struct PacketC
+{
+    bool x;
+    short y;
+    int z;
+
+    void Write( Buffer &amp;amp; buffer )
+    {
+        WriteByte( buffer, x );
+        WriteShort( buffer, y );
+        WriteInt( buffer, z );
+    }
+
+    void Read( Buffer &amp;amp; buffer )
+    {
+        ReadByte( buffer, x );
+        ReadShort( buffer, y );
+        ReadInt( buffer, z );
+    }
+};
+&lt;/pre&gt;
+
+&lt;p&gt;When reading and writing packets, start the packet with a byte specifying the packet type via ReadByte/WriteByte, then according to the packet type, call the read/write on the corresponding packet struct in the union.&lt;/p&gt;
+
+&lt;p&gt;Now we have a system that allows machines with different endianness to communicate and supports variable length encoding of elements.&lt;/p&gt;
+
+&lt;h2 id=&#34;bitpacking&#34;&gt;Bitpacking&lt;/h2&gt;
+
+&lt;p&gt;What if we have a value in the range [0,1000] we really only need 10 bits to represent all possible values. Wouldn&amp;rsquo;t it be nice if we could write just 10 bits, instead of rounding up to 16? What about boolean values? It would be nice to send these as one bit instead of 8!&lt;/p&gt;
+
+&lt;p&gt;One way to implement this is to manually organize your C++ structures into packed integers with bitfields and union tricks, such as grouping all bools together into one integer type via bitfield and serializing them as a group. But this is tedious and error prone and there’s no guarantee that different C++ compilers pack bitfields in memory exactly the same way.&lt;/p&gt;
+
+&lt;p&gt;A much more flexible way that trades a small amount of CPU on packet read and write for convenience is a &lt;strong&gt;bitpacker&lt;/strong&gt;. This is code that reads and writes non-multiples of 8 bits to a buffer.&lt;/p&gt;
+
+&lt;h2 id=&#34;writing-bits&#34;&gt;Writing Bits&lt;/h2&gt;
+
+&lt;p&gt;Many people write bitpackers that work at the byte level. This means they flush bytes to memory as they are filled. This is simpler to code, but the ideal is to read and write words at a time, because modern machines are optimized to work this way instead of farting across a buffer at byte level like it’s 1985.&lt;/p&gt;
+
+&lt;p&gt;If you want to write 32 bits at a time, you&amp;rsquo;ll need a scratch word twice that size, eg. uint64_t. The reason is that you need the top half for overflow. For example, if you have just written a value 30 bits long into the scratch buffer, then write another value that is 10 bits long you need somewhere to store 30 + 10 = 40 bits.&lt;/p&gt;
+
+&lt;pre&gt;
+uint64_t scratch;
+int scratch_bits;
+int word_index;
+uint32_t * buffer;
+&lt;/pre&gt;
+
+&lt;p&gt;When we start writing with the bitpacker, all these variables are cleared to zero except &lt;strong&gt;buffer&lt;/strong&gt; which points to the start of the packet we are writing to. Because we&amp;rsquo;re accessing this packet data at a word level, not byte level, make sure packet buffers lengths are a multiple of 4 bytes.&lt;/p&gt;
+
+&lt;p&gt;Let’s say we want to write 3 bits followed by 10 bits, then 24. Our goal is to pack this tightly in the scratch buffer and flush that out to memory, 32 bits at a time. Note that 3 + 10 + 24 = 37. We have to handle this case where the total number of bits don’t evenly divide into 32. This is actually the &lt;em&gt;common case&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;At the first step, write the 3 bits to &lt;strong&gt;scratch&lt;/strong&gt; like this:&lt;/p&gt;
+
+&lt;pre&gt;xxx&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;scratch_bits&lt;/strong&gt; is now 3.&lt;/p&gt;
+
+&lt;p&gt;Next, write 10 bits:&lt;/p&gt;
+
+&lt;pre&gt;yyyyyyyyyyxxx&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;scratch_bits&lt;/strong&gt; is now 13 (3+10).&lt;/p&gt;
+
+&lt;p&gt;Next write 24 bits:&lt;/p&gt;
+
+&lt;pre&gt;zzzzzzzzzzzzzzzzzzzzzzzzyyyyyyyyyyxxx&lt;/pre&gt;
+
+&lt;p&gt;&lt;strong&gt;scratch_bits&lt;/strong&gt; is now 37 (3+10+24). We’re straddling the 32 bit word boundary in our 64 bit &lt;strong&gt;scratch&lt;/strong&gt; variable and have 5 bits in the upper 32 bits (overflow). Flush the lower 32 bits of &lt;strong&gt;scratch&lt;/strong&gt; to memory, advance &lt;strong&gt;word_index&lt;/strong&gt; by one, shift &lt;strong&gt;scratch&lt;/strong&gt; right by 32 and subtract 32 from &lt;strong&gt;scratch_bits&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;scratch&lt;/strong&gt; now looks like this:&lt;/p&gt;
+
+&lt;pre&gt;zzzzz&lt;/pre&gt;
+
+&lt;p&gt;We&amp;rsquo;ve finished writing bits but we still have data in scratch that&amp;rsquo;s not flushed to memory. For this data to be included in the packet we need to make sure to flush any remaining bits in &lt;strong&gt;scratch&lt;/strong&gt; to memory at the end of writing.&lt;/p&gt;
+
+&lt;p&gt;When we flush a word to memory it is converted to little endian byte order. To see why this is important consider what happens if we flush bytes to memory in big endian order:&lt;/p&gt;
+
+&lt;pre&gt;DCBA000E&lt;/pre&gt;
+
+&lt;p&gt;Since we fill bits in the word from right to left, the last byte in the packet E is actually on the right. If we try to send this buffer in a packet of 5 bytes (the actual amount of data we have to send) the packet catches 0 for the last byte instead of E. Ouch!&lt;/p&gt;
+
+&lt;p&gt;But when we write to memory in little endian order, bytes are reversed back out in memory like this:&lt;/p&gt;
+
+&lt;pre&gt;ABCDE000&lt;/pre&gt;
+
+&lt;p&gt;And we can write 5 bytes to the network and catch E at the end. Et voilà!&lt;/p&gt;
+
+&lt;h2 id=&#34;reading-bits&#34;&gt;Reading Bits&lt;/h2&gt;
+
+&lt;p&gt;To read the bitpacked data, start with the buffer sent over the network:&lt;/p&gt;
+
+&lt;pre&gt;ABCDE&lt;/pre&gt;
+
+&lt;p&gt;The bit reader has the following state:&lt;/p&gt;
+
+&lt;pre&gt;
+uint64_t scratch;
+int scratch_bits;
+int total_bits;
+int num_bits_read;
+int word_index;
+uint32_t * buffer;
+&lt;/pre&gt;
+
+&lt;p&gt;To start all variables are cleared to zero except &lt;strong&gt;total_bits&lt;/strong&gt; which is set to the size of the packet as bytes * 8, and &lt;strong&gt;buffer&lt;/strong&gt; which points to the start of the packet.&lt;/p&gt;
+
+&lt;p&gt;The user requests a read of 3 bits. Since &lt;strong&gt;scratch_bits&lt;/strong&gt; is zero, it’s time to read in the first word. Read in the word to &lt;strong&gt;scratch&lt;/strong&gt;, shifted left by &lt;strong&gt;scratch_bits&lt;/strong&gt; (0). Add 32 to &lt;strong&gt;scratch_bits&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;The value of &lt;strong&gt;scratch&lt;/strong&gt; is now:&lt;/p&gt;
+
+&lt;pre&gt;zzzzzzzzzzzzzzzzzzzyyyyyyyyyyxxx&lt;/pre&gt;
+
+&lt;p&gt;Read off the low 3 bits, giving the expected value of:&lt;/p&gt;
+
+&lt;pre&gt;xxx&lt;/pre&gt;
+
+&lt;p&gt;Shift &lt;strong&gt;scratch&lt;/strong&gt; to the right 3 bits and subtract 3 from &lt;strong&gt;scratch_bits&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;pre&gt;zzzzzzzzzzzzzzzzzzzyyyyyyyyyy&lt;/pre&gt;
+
+&lt;p&gt;Read off another 10 bits in the same way, giving the expected value of:&lt;/p&gt;
+
+&lt;pre&gt;yyyyyyyyyy&lt;/pre&gt;
+
+&lt;p&gt;Scratch now looks like:&lt;/p&gt;
+
+&lt;pre&gt;zzzzzzzzzzzzzzzzzzz&lt;/pre&gt;
+
+&lt;p&gt;The next read asks for 24 bits but &lt;strong&gt;scratch_bits&lt;/strong&gt; is only 19 (=32-10-3).&lt;/p&gt;
+
+&lt;p&gt;It’s time to read in the next word. Shifting the word in memory left by &lt;strong&gt;scratch_bits&lt;/strong&gt; (19) and or it on top of &lt;strong&gt;scratch&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Now we have all the bits necessary for z in &lt;strong&gt;scratch&lt;/strong&gt;:&lt;/p&gt;
+
+&lt;pre&gt;zzzzzzzzzzzzzzzzzzzzzzzz&lt;/pre&gt;
+
+&lt;p&gt;Read off 24 bits and shift &lt;strong&gt;scratch&lt;/strong&gt; right by 24. &lt;strong&gt;scratch&lt;/strong&gt; is now all zeros.&lt;/p&gt;
+
+&lt;p&gt;We&amp;rsquo;re done!&lt;/p&gt;
+
+&lt;h2 id=&#34;beyond-bitpacking&#34;&gt;Beyond Bitpacking&lt;/h2&gt;
+
+&lt;p&gt;Reading and writing integer values into a packet by specifying the number of bits to read/write is not the most user friendly option.&lt;/p&gt;
+
+&lt;p&gt;Consider this example:&lt;/p&gt;
+
+&lt;pre&gt;
+const int MaxElements = 32;
+
+struct PacketB
+{
+    int numElements;
+    int elements[MaxElements];
+
+    void Write( BitWriter &amp;amp; writer )
+    {
+        WriteBits( writer, numElements, 6 );
+        for ( int i = 0; i &amp;lt; numElements; ++i )
+            WriteBits( writer, elements[i] );
+    }
+
+    void Read( BitReader &amp;amp; reader )
+    {
+        ReadBits( reader, numElements, 6 );
+        for ( int i = 0; i &amp;lt; numElements; ++i )
+            ReadBits( reader, elements[i] );
+    }
+};
+&lt;/pre&gt;
+
+&lt;p&gt;This code looks fine at first glance, but let’s assume that some time later you, or somebody else on your team, increases &lt;strong&gt;MaxElements&lt;/strong&gt; from 32 to 200 but forget to update the number of bits required to &lt;strong&gt;7&lt;/strong&gt;. Now the high bit of &lt;strong&gt;numElements&lt;/strong&gt; are being silently truncated on send. It&amp;rsquo;s pretty hard to track something like this down after the fact.&lt;/p&gt;
+
+&lt;p&gt;The simplest option is to just turn it around and define the maximum number of elements in terms of the number of bits sent:&lt;/p&gt;
+
+&lt;pre&gt;
+const int MaxElementBits = 7;
+const int MaxElements = ( 1 &amp;lt;&amp;lt; MaxElementBits ) - 1;
+&lt;/pre&gt;
+
+&lt;p&gt;Another option is to get fancy and work out the number of bits required at compile time:&lt;/p&gt;
+
+&lt;pre&gt;
+template &amp;lt;uint32_t x&amp;gt; struct PopCount
+{
+    enum { a = x - ( ( x &amp;gt;&amp;gt; 1 ) &amp;amp; 0x55555555 ),
+           b = ( ( ( a &amp;gt;&amp;gt; 2 ) &amp;amp; 0x33333333 ) + ( a &amp;amp; 0x33333333 ) ),
+           c = ( ( ( b &amp;gt;&amp;gt; 4 ) + b ) &amp;amp; 0x0f0f0f0f ),
+           d = c + ( c &amp;gt;&amp;gt; 8 ),
+           e = d + ( d &amp;gt;&amp;gt; 16 ),
+    result = e &amp;amp; 0x0000003f }; 
+};
+
+template &amp;lt;uint32_t x&amp;gt; struct Log2
+{
+    enum { a = x | ( x &amp;gt;&amp;gt; 1 ),
+           b = a | ( a &amp;gt;&amp;gt; 2 ),
+           c = b | ( b &amp;gt;&amp;gt; 4 ),
+           d = c | ( c &amp;gt;&amp;gt; 8 ),
+           e = d | ( d &amp;gt;&amp;gt; 16 ),
+           f = e &amp;gt;&amp;gt; 1,
+    result = PopCount&amp;lt;f&amp;gt;::result };
+};
+
+template &amp;lt;int64_t min, int64_t max&amp;gt; struct BitsRequired
+{
+    static const uint32_t result = 
+        ( min == max ) ? 0 : ( Log2&amp;lt;uint32_t(max-min)&amp;gt;::result + 1 );
+};
+
+#define BITS_REQUIRED( min, max ) BitsRequired&amp;lt;min,max&amp;gt;::result
+&lt;/pre&gt;
+
+&lt;p&gt;Now you can’t mess up the number of bits, and you can specify non-power of two maximum values and it everything works out.&lt;/p&gt;
+
+&lt;pre&gt;
+const int MaxElements = 32;
+const int MaxElementBits = BITS_REQUIRED( 0, MaxElements );
+&lt;/pre&gt;
+
+&lt;p&gt;But be careful when array sizes aren&amp;rsquo;t a power of two! In the example above &lt;strong&gt;MaxElements&lt;/strong&gt; is 32, so &lt;strong&gt;MaxElementBits&lt;/strong&gt; is 6. This seems fine because all values in [0,32] fit in 6 bits. The problem is that there are additional values within 6 bits that are &lt;em&gt;outside&lt;/em&gt; our array bounds: [33,63]. An attacker can use this to construct a malicious packet that corrupts memory!&lt;/p&gt;
+
+&lt;p&gt;This leads to the &lt;em&gt;inescapable&lt;/em&gt; conclusion that it’s not enough to just specify the number of bits required when reading and writing a value, we must also check that it is within the valid range: [min,max]. This way if a value is outside of the expected range we can detect that and abort read.&lt;/p&gt;
+
+&lt;p&gt;I used to implement this using C++ exceptions, but when I profiled, I found it to be incredibly slow. In my experience, it’s much faster to take one of two approaches: set a flag on the bit reader that it should abort, or return false from read functions on failure. But now, in order to be completely safe on read you must to check for error on every read operation.&lt;/p&gt;
+
+&lt;pre&gt;
+const int MaxElements = 32;
+const int MaxElementBits = BITS_REQUIRED( 0, MaxElements );
+
+struct PacketB
+{
+    int numElements;
+    int elements[MaxElements];
+
+    void Write( BitWriter &amp;amp; writer )
+    {
+        WriteBits( writer, numElements, MaxElementBits );
+        for ( int i = 0; i &amp;lt; numElements; ++i )
+        {
+            WriteBits( writer, elements[i], 32 );
+        }
+    }
+
+    void Read( BitReader &amp;amp; reader )
+    {
+        ReadBits( reader, numElements, MaxElementBits );
+        
+        if ( numElements &amp;gt; MaxElements )
+        {
+            reader.Abort();
+            return;
+        }
+        
+        for ( int i = 0; i &amp;lt; numElements; ++i )
+        {
+            if ( reader.IsOverflow() )
+                break;
+
+            ReadBits( buffer, elements[i], 32 );
+        }
+    }
+};
+&lt;/pre&gt;
+
+&lt;p&gt;If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. &lt;em&gt;You want it to be automatic&lt;/em&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/serialization_strategies/&#34;&gt;Serialization Strategies&lt;/a&gt;&lt;/p&gt;
+
+&lt;hr /&gt;
+
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34; target=&#34;_blank&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

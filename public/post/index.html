@@ -1,0 +1,3561 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academia 4.3.1">
+  <meta name="generator" content="Hugo 0.59.1" />
+
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Glenn Fiedler&#39;s game development and networking articles">
+
+  
+  <link rel="alternate" hreflang="en-us" href="http://127.0.0.1:1313/post/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#3f51b5">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academiaons/1.8.6/css/academiaons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Open+Sans|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academia.min.8a3593d460141b5e02e37f93da471ca7.css">
+
+  
+
+  
+  
+  
+
+  
+  <link rel="alternate" href="/post/index.xml" type="application/rss+xml" title="Gaffer On Games">
+  <link rel="feed" href="/post/index.xml" type="application/rss+xml" title="Gaffer On Games">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="http://127.0.0.1:1313/post/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@gafferongames">
+  <meta property="twitter:creator" content="@gafferongames">
+  
+  <meta property="og:site_name" content="Gaffer On Games">
+  <meta property="og:url" content="http://127.0.0.1:1313/post/">
+  <meta property="og:title" content="Posts | Gaffer On Games">
+  <meta property="og:description" content="Glenn Fiedler&#39;s game development and networking articles"><meta property="og:image" content="http://127.0.0.1:1313/img/icon-192.png">
+  <meta property="twitter:image" content="http://127.0.0.1:1313/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+  <meta property="og:updated_time" content="2019-03-24T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Posts | Gaffer On Games</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Gaffer On Games</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"><span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Articles</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+    
+    
+    
+    
+    <div class="universal-wrapper py-3">
+      <h1 itemprop="name">Posts</h1>
+
+      
+
+      
+      
+    </div>
+  </div>
+</div>
+
+<div class="universal-wrapper">
+
+  
+
+  
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/fixing_the_internet_for_games/" itemprop="url">Fixing the Internet for Games</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          What we&rsquo;re doing at my new startup <a href="https://networknext.com" target="_blank">Network Next</a> 🚀
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2019-03-24 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2019-03-24 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Mar 24, 2019</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    8 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-networking/">Game Networking</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/networked_physics_in_virtual_reality/" itemprop="url">Networked Physics in Virtual Reality</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &ldquo;Hey Glenn, …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2018-02-22 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2018-02-22 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Feb 22, 2018</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    21 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/networked-physics/">Networked Physics</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/why_cant_i_send_udp_packets_from_a_browser/" itemprop="url">Why can&#39;t I send UDP packets from a browser?</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Premise In 2017 the most popular web games like agar.io are networked via WebSockets over TCP. If a UDP equivalent of WebSockets could …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2017-02-26 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2017-02-26 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Feb 26, 2017</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    14 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/white-papers/">White papers</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/client_server_connection/" itemprop="url">Client Server Connection</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+So far in this article series we&rsquo;ve discussed …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2016-09-28 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2016-09-28 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Sep 28, 2016</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    14 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/building-a-game-network-protocol/">Building a Game Network Protocol</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/reliable_ordered_messages/" itemprop="url">Reliable Ordered Messages</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+Many people will tell you that implementing your …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2016-09-15 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2016-09-15 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Sep 15, 2016</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    14 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/building-a-game-network-protocol/">Building a Game Network Protocol</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/sending_large_blocks_of_data/" itemprop="url">Sending Large Blocks of Data</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+In the previous article we implemented packet …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2016-09-12 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2016-09-12 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Sep 12, 2016</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    16 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/building-a-game-network-protocol/">Building a Game Network Protocol</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/packet_fragmentation_and_reassembly/" itemprop="url">Packet Fragmentation and Reassembly</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+In the previous article we discussed how to unify …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2016-09-06 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2016-09-06 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Sep 6, 2016</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    16 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/building-a-game-network-protocol/">Building a Game Network Protocol</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/serialization_strategies/" itemprop="url">Serialization Strategies</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+In the previous article, we created a bitpacker but …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2016-09-04 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2016-09-04 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Sep 4, 2016</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    19 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/building-a-game-network-protocol/">Building a Game Network Protocol</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/reading_and_writing_packets/" itemprop="url">Reading and Writing Packets</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+In this article we&rsquo;re going to explore how …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2016-09-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2016-09-01 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Sep 1, 2016</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    18 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/building-a-game-network-protocol/">Building a Game Network Protocol</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/state_synchronization/" itemprop="url">State Synchronization</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In the previous article we discussed techniques for …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2015-01-05 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2015-01-05 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Jan 5, 2015</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    16 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/networked-physics/">Networked Physics</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/snapshot_compression/" itemprop="url">Snapshot Compression</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In the previous article we sent snapshots of the entire …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2015-01-04 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2015-01-04 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Jan 4, 2015</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    16 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/networked-physics/">Networked Physics</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/snapshot_interpolation/" itemprop="url">Snapshot Interpolation</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In the previous article we networked a physics simulation …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2014-11-30 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2014-11-30 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Nov 30, 2014</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    11 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/networked-physics/">Networked Physics</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/deterministic_lockstep/" itemprop="url">Deterministic Lockstep</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In the previous article we explored the physics simulation …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2014-11-29 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2014-11-29 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Nov 29, 2014</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    11 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/networked-physics/">Networked Physics</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/introduction_to_networked_physics/" itemprop="url">Introduction to Networked Physics</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to the first article in Networked Physics.
+In this article series we&rsquo;re …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2014-11-28 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2014-11-28 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Nov 28, 2014</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    3 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/networked-physics/">Networked Physics</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/collision_response_and_coulomb_friction/" itemprop="url">Collision Response and Coulomb Friction</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2013-02-24 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2013-02-24 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Feb 24, 2013</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    7 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/virtual-go/">Virtual Go</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/rotation_and_inertia_tensors/" itemprop="url">Rotation &amp; Inertia Tensors</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2013-02-23 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2013-02-23 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Feb 23, 2013</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    7 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/virtual-go/">Virtual Go</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/go_stone_vs_go_board/" itemprop="url">Go Stone vs. Go Board</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2013-02-22 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2013-02-22 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Feb 22, 2013</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    8 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/virtual-go/">Virtual Go</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/how_the_go_stone_moves/" itemprop="url">How The Go Stone Moves</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2013-02-21 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2013-02-21 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Feb 21, 2013</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    8 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/virtual-go/">Virtual Go</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/tessellating_the_go_stone/" itemprop="url">Tessellating The Go Stone</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2013-02-20 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2013-02-20 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Feb 20, 2013</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    3 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/virtual-go/">Virtual Go</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/shape_of_the_go_stone/" itemprop="url">Shape of The Go Stone</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2013-02-19 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2013-02-19 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Feb 19, 2013</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    5 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/virtual-go/">Virtual Go</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/introduction_to_virtual_go/" itemprop="url">Introduction to Virtual Go</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2013-02-18 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2013-02-18 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Feb 18, 2013</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    4 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/virtual-go/">Virtual Go</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/floating_point_determinism/" itemprop="url">Floating Point Determinism</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+Lately I&rsquo;ve been doing some research …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2010-02-24 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2010-02-24 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Feb 24, 2010</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    16 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-networking/">Game Networking</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/what_every_programmer_needs_to_know_about_game_networking/" itemprop="url">What Every Programmer Needs To Know About Game Networking</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+Have you ever wondered how multiplayer games …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2010-02-24 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2010-02-24 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Feb 24, 2010</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    11 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-networking/">Game Networking</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/reliability_ordering_and_congestion_avoidance_over_udp/" itemprop="url">Reliability and Congestion Avoidance over UDP</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+In the previous article, we added our own …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2008-10-20 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2008-10-20 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Oct 20, 2008</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    16 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-networking/">Game Networking</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/virtual_connection_over_udp/" itemprop="url">Virtual Connection over UDP</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+In the previous article we sent and received …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2008-10-08 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2008-10-08 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Oct 8, 2008</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    10 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-networking/">Game Networking</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/sending_and_receiving_packets/" itemprop="url">Sending and Receiving Packets</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+In the previous article we discussed options …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2008-10-03 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2008-10-03 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Oct 3, 2008</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    10 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-networking/">Game Networking</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/udp_vs_tcp/" itemprop="url">UDP vs. TCP</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+In this article we start with the most basic …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2008-10-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2008-10-01 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Oct 1, 2008</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    13 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-networking/">Game Networking</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/networked_physics_2004/" itemprop="url">Networked Physics (2004)</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to use spring-like …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2004-09-04 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2004-09-04 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Sep 4, 2004</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    10 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-physics/">Game Physics</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/spring_physics/" itemprop="url">Spring Physics</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to simulate the motion …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2004-09-03 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2004-09-03 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Sep 3, 2004</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    9 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-physics/">Game Physics</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/physics_in_3d/" itemprop="url">Physics in 3D</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to integrate our physics …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2004-09-02 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2004-09-02 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Sep 2, 2004</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    17 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-physics/">Game Physics</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/fix_your_timestep/" itemprop="url">Fix Your Timestep!</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to integrate the …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2004-06-10 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2004-06-10 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Jun 10, 2004</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    9 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-physics/">Game Physics</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+    
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <div class="col-md-10 col-lg-8">
+    <div class="media stream-item shadow p-4" itemscope itemtype="http://schema.org/BlogPosting">
+      <div class="media-body">
+
+        <h3 class="article-title mb-0 mt-0" itemprop="name">
+          <a href="/post/integration_basics/" itemprop="url">Integration Basics</a>
+        </h3>
+
+        
+        <div class="article-style" itemprop="articleBody">
+          Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+If you have ever wondered how the physics simulation in a …
+        </div>
+        
+
+        <div class="stream-meta article-metadata">
+
+          
+
+          
+          
+
+
+
+<meta content="2004-06-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2004-06-01 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Jun 1, 2004</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    13 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-physics/">Game Physics</a></span>
+  
+
+  
+
+</div>
+
+          
+        </div>
+
+        
+
+      </div>
+      <div class="ml-3">
+        
+        
+      </div>
+    </div>
+  </div>
+    
+  
+
+  
+
+
+</div>
+
+      
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="/js/academia.min.281fa180ccfa1769ea3c7dd430814861.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        
+        <p>
+          Copyright © Glenn Fiedler, 2004 - 2019 
+        </p>
+      </div>
+      <div class="col-md-6">
+        <ul class="list-inline network-icon text-right">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://twitter.com/Twitter" target="_blank" rel="noopener" title="DM Me"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

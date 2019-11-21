@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academia 4.3.1">
+  <meta name="generator" content="Hugo 0.59.1" />
+
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Glenn Fiedler&#39;s game development and networking articles">
+
+  
+  <link rel="alternate" hreflang="en-us" href="http://127.0.0.1:1313/tags/physics/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#3f51b5">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academiaons/1.8.6/css/academiaons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Open+Sans|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academia.min.8a3593d460141b5e02e37f93da471ca7.css">
+
+  
+
+  
+  
+  
+
+  
+  <link rel="alternate" href="/tags/physics/index.xml" type="application/rss+xml" title="Gaffer On Games">
+  <link rel="feed" href="/tags/physics/index.xml" type="application/rss+xml" title="Gaffer On Games">
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="http://127.0.0.1:1313/tags/physics/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@gafferongames">
+  <meta property="twitter:creator" content="@gafferongames">
+  
+  <meta property="og:site_name" content="Gaffer On Games">
+  <meta property="og:url" content="http://127.0.0.1:1313/tags/physics/">
+  <meta property="og:title" content="physics | Gaffer On Games">
+  <meta property="og:description" content="Glenn Fiedler&#39;s game development and networking articles"><meta property="og:image" content="http://127.0.0.1:1313/img/icon-192.png">
+  <meta property="twitter:image" content="http://127.0.0.1:1313/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+  <meta property="og:updated_time" content="2018-02-22T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>physics | Gaffer On Games</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Gaffer On Games</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"><span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Articles</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+    
+    
+    
+    
+    <div class="universal-wrapper py-3">
+      <h1 itemprop="name">physics</h1>
+
+      
+
+      
+      
+    </div>
+  </div>
+</div>
+
+<div class="universal-wrapper">
+  
+
+  
+  
+  <div>
+    <h2><a href="/post/networked_physics_in_virtual_reality/">Networked Physics in Virtual Reality</a></h2>
+    <div class="article-style">
+      
+      Introduction About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &ldquo;Hey Glenn, there&rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?&rdquo;
+I replied &ldquo;F*** yes!&rdquo; cough &ldquo;Sure. This could be a lot of fun!
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/state_synchronization/">State Synchronization</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In the previous article we discussed techniques for compressing snapshots.
+In this article we round out our discussion of networked physics strategies with state synchronization, the third and final strategy in this article series.
+State Synchronization What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, unlike deterministic lockstep, we don&rsquo;t just send input, we send both input and state.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/snapshot_compression/">Snapshot Compression</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In the previous article we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.
+The problem with a low snapshot rate like 10HZ is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/snapshot_interpolation/">Snapshot Interpolation</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In the previous article we networked a physics simulation using deterministic lockstep. Now, in this article we&rsquo;re going to network the same simulation with a completely different technique: snapshot interpolation.
+Background While deterministic lockstep is very efficient in terms of bandwidth, it&rsquo;s not always possible to make your simulation deterministic. Floating point determinism across platforms is hard.
+Also, as the player counts increase, deterministic lockstep becomes problematic: you can&rsquo;t simulate frame n until you receive input from all players for that frame, so players end up waiting for the most lagged player.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/deterministic_lockstep/">Deterministic Lockstep</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+In the previous article we explored the physics simulation we&rsquo;re going to network in this article series. In this article specifically, we&rsquo;re going to network this physics simulation using deterministic lockstep.
+Deterministic lockstep is a method of networking a system from one computer to another by sending only the inputs that control that system, rather than the state of that system.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/introduction_to_networked_physics/">Introduction to Networked Physics</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to the first article in Networked Physics.
+In this article series we&rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.
+But before we get to this, let&rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:
+Your browser does not support the video tag.  Here I’ve setup a simple simulation of a cube in the open source physics engine ODE.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/collision_response_and_coulomb_friction/">Collision Response and Coulomb Friction</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+So far in this series, we have mathematically defined the go stone, rendered it, determined how it moves and rotates, and discussed how its shape affects how it responds to collisions.
+Now in this article we reach our first milestone:
+A go stone bouncing and coming to rest on the go board.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/rotation_and_inertia_tensors/">Rotation &amp; Inertia Tensors</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+In the previous article we detected collision between the go stone and the go board. Now we&rsquo;re working up to calculating collision response so the stone bounces and wobbles before coming to rest on the board.
+But in order to reach this goal we first need to lay some groundwork.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/go_stone_vs_go_board/">Go Stone vs. Go Board</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+In this series so far we&rsquo;ve defined the shape of a go stone, rendered it using 3D graphics hardware and simulated how it moves in three dimensions.
+Our next goal is for the go stone to bounce and come to rest on the go board.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/how_the_go_stone_moves/">How The Go Stone Moves</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+In previous articles we mathematically defined the shape of a go stone and tessellated its shape so it can be drawn with 3D graphics hardware.
+Now we want to make the go stone move, obeying Newton&rsquo;s laws of motion so the simulation is physically accurate. The stone should be accelerated by gravity and fall downwards.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/tessellating_the_go_stone/">Tessellating The Go Stone</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+In this article we want to draw the go stone using OpenGL.
+Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r1 and r2!&ldquo;, because modern 3D graphics cards work by drawing triangles.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/shape_of_the_go_stone/">Shape of The Go Stone</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+If you play Go, you know that a biconvex go stone has an interesting wobble when it&rsquo;s placed on the board. This wobble is a direct consequence of its unique shape.
+I&rsquo;d like to reproduce this wobble in Virtual Go, so let&rsquo;s to spend some time studying go stone&rsquo;s shape, so we can capture this wobble and simulate it on a computer :)
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/introduction_to_virtual_go/">Introduction to Virtual Go</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+I&rsquo;m a professional game programmer with 15 years experience in the game industry. Over the years I&rsquo;ve worked for Irrational Games, Team Bondi, Pandemic Studios, Sony Santa Monica and most recently Respawn Entertainment. During my career I&rsquo;m extremely proud to have worked on such games as &lsquo;Freedom Force&rsquo;, &lsquo;L.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/networked_physics_2004/">Networked Physics (2004)</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to use spring-like forces to model basic collision response, joints and motors.
+In this article we&rsquo;re going to discuss how to network a physics simulation.
+First Person Shooters First person shooter physics are usually very simple. The world is static and players are limited to running around and jumping and shooting.
+Because of cheating, first person shooters typically operate on a client-server model where the server is authoritative over physics.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/spring_physics/">Spring Physics</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to simulate the motion of rigid bodies in 3D. Now we&rsquo;re going to discuss how to implement spring physics.
+The physics behind springs is simple but extremely versatile and useful. You can use springs to link points together to model rope and string, cloth, and even blobs of jelly. Springs can also be used to implement basic collision response, and to create joints that constrain the motion of rigid bodies.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/physics_in_3d/">Physics in 3D</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.
+In this article we are going to simulate motion in three dimensions.
+Rigid Bodies We will concentrate on a type of object called a rigid body. Rigid bodies cannot bend, compress or deform in any way. This makes their motion much easier to calculate.
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/fix_your_timestep/">Fix Your Timestep!</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &ldquo;delta time&rdquo; (or dt for short).
+But how to choose this delta time value? This may seem like a trivial subject but in fact there are many different ways to do it, each with their own strengths and weaknesses - so read on!
+      
+    </div>
+  </div>
+  
+  <div>
+    <h2><a href="/post/integration_basics/">Integration Basics</a></h2>
+    <div class="article-style">
+      
+      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.
+A physics simulation works by making many small predictions based on the laws of physics.
+      
+    </div>
+  </div>
+  
+
+  
+
+</div>
+
+      
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="/js/academia.min.281fa180ccfa1769ea3c7dd430814861.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        
+        <p>
+          Copyright © Glenn Fiedler, 2004 - 2019 
+        </p>
+      </div>
+      <div class="col-md-6">
+        <ul class="list-inline network-icon text-right">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://twitter.com/Twitter" target="_blank" rel="noopener" title="DM Me"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

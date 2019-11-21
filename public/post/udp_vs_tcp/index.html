@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academia 4.3.1">
+  <meta name="generator" content="Hugo 0.59.1" />
+
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+In this article we start with the most basic aspect of network programming: sending and receiving data over the network. This is perhaps the simplest and most basic part of what network programmers do, but still it is quite intricate and non-obvious as to what the best course of action is.
+You have most likely heard of sockets, and are probably aware that there are two main types: TCP and UDP.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="http://127.0.0.1:1313/post/udp_vs_tcp/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#3f51b5">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academiaons/1.8.6/css/academiaons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Open+Sans|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academia.min.8a3593d460141b5e02e37f93da471ca7.css">
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="http://127.0.0.1:1313/post/udp_vs_tcp/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@gafferongames">
+  <meta property="twitter:creator" content="@gafferongames">
+  
+  <meta property="og:site_name" content="Gaffer On Games">
+  <meta property="og:url" content="http://127.0.0.1:1313/post/udp_vs_tcp/">
+  <meta property="og:title" content="UDP vs. TCP | Gaffer On Games">
+  <meta property="og:description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+In this article we start with the most basic aspect of network programming: sending and receiving data over the network. This is perhaps the simplest and most basic part of what network programmers do, but still it is quite intricate and non-obvious as to what the best course of action is.
+You have most likely heard of sockets, and are probably aware that there are two main types: TCP and UDP."><meta property="og:image" content="http://127.0.0.1:1313/img/icon-192.png">
+  <meta property="twitter:image" content="http://127.0.0.1:1313/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2008-10-01T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2008-10-01T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>UDP vs. TCP | Gaffer On Games</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Gaffer On Games</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"><span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Articles</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article py-5" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+    
+    
+    <div class="article-container py-3">
+      <h1 itemprop="name">UDP vs. TCP</h1>
+
+      
+
+      
+      
+
+
+
+<meta content="2008-10-01 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2008-10-01 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Oct 1, 2008</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    13 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-networking/">Game Networking</a></span>
+  
+
+  
+    
+
+  
+
+</div>
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+      
+    </div>
+  </div>
+</div>
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<h2 id="introduction">Introduction</h2>
+
+<p>Hi, I&rsquo;m <a href="https://gafferongames.com" target="_blank">Glenn Fiedler</a> and welcome to <a href="/categories/game-networking/"><strong>Networking for Game Programmers</strong></a>.</p>
+
+<p>In this article we start with the most basic aspect of network programming: sending and receiving data over the network. This is perhaps the simplest and most basic part of what network programmers do, but still it is quite intricate and non-obvious as to what the best course of action is.</p>
+
+<p>You have most likely heard of sockets, and are probably aware that there are two main types: TCP and UDP. When writing a network game, we first need to choose what type of socket to use. Do we use TCP sockets, UDP sockets or a mixture of both? Take care because if you get this wrong it will have terrible effects on your multiplayer game!</p>
+
+<p>The choice you make depends entirely on what sort of game you want to network. So from this point on and for the rest of this article series, I assume you want to network an action game. You know, games like Halo, Battlefield 1942, Quake, Unreal, CounterStrike and Team Fortress.</p>
+
+<p>In light of the fact that we want to network an action game, we&rsquo;ll take a very close look at the properties of each protocol, and dig a bit into how the internet actually works. Once we have all this information, the correct choice is clear.</p>
+
+<h2 id="tcp-ip">TCP/IP</h2>
+
+<p>TCP stands for &ldquo;transmission control protocol&rdquo;. IP stands for &ldquo;internet protocol&rdquo;. Together they form the backbone for almost everything you do online, from web browsing to IRC to email, it&rsquo;s all built on top of TCP/IP.</p>
+
+<p>If you have ever used a TCP socket, then you know it&rsquo;s a reliable connection based protocol. This means you create a connection between two machines, then you exchange data much like you&rsquo;re writing to a file on one side, and reading from a file on the other.</p>
+
+<p>TCP connections are reliable and ordered. All data you send is guaranteed to arrive at the other side and in the order you wrote it. It&rsquo;s also a stream protocol, so TCP automatically splits your data into packets and sends them over the network for you.</p>
+
+<h2 id="ip">IP</h2>
+
+<p>The simplicity of TCP is in stark contrast to what actually goes on underneath TCP at the IP or &ldquo;internet protocol&rdquo; level.</p>
+
+<p>Here there is no concept of connection, packets are simply passed from one computer to the next. You can visualize this process being somewhat like a hand-written note passed from one person to the next across a crowded room, eventually, reaching the person it&rsquo;s addressed to, but only after passing through many hands.</p>
+
+<p>There is also no guarantee that this note will actually reach the person it is intended for. The sender just passes the note along and hopes for the best, never knowing whether or not the note was received, unless the other person decides to write back!</p>
+
+<p>Of course IP is in reality a little more complicated than this, since no one computer knows the exact sequence of computers to pass the packet along to so that it reaches its destination quickly. Sometimes IP passes along multiple copies of the same packet and these packets make their way to the destination via different paths, causing packets to arrive out of order and in duplicate.</p>
+
+<p>This is because the internet is designed to be self-organizing and self-repairing, able to route around connectivity problems rather than relying on direct connections between computers. It&rsquo;s actually quite cool if you think about what&rsquo;s <em>really</em> going on at the low level. You can read all about this in the classic book <a href="http://www.cs.newpaltz.edu/~pletcha/NET_PY/the-protocols-tcp-ip-illustrated-volume-1.9780201633467.24290.pdf" target="_blank">TCP/IP Illustrated</a>.</p>
+
+<h2 id="udp">UDP</h2>
+
+<p>Instead of treating communications between computers like writing to files, what if we want to send and receive packets directly?</p>
+
+<p>We can do this using UDP.</p>
+
+<p>UDP stands for &ldquo;user datagram protocol&rdquo; and it&rsquo;s another protocol built on top of IP, but unlike TCP, instead of adding lots of features and complexity, UDP is a very thin layer over IP.</p>
+
+<p>With UDP we can send a packet to a destination IP address (eg. 112.140.20.10) and port (say 52423), and it gets passed from computer to computer until it arrives at the destination or is lost along the way.</p>
+
+<p>On the receiver side, we just sit there listening on a specific port (eg. 52423) and when a packet arrives from <em>any</em> computer (remember there are no connections!), we get notified of the address and port of the computer that sent the packet, the size of the packet, and can read the packet data.</p>
+
+<p>Like IP, UDP is an unreliable protocol. In practice however, most packets that are sent <em>will</em> get through, but you&rsquo;ll usually have around 1-5% packet loss, and occasionally you&rsquo;ll get periods where no packets get through at all (remember there are lots of computers between you and your destination where things can go wrong&hellip;)</p>
+
+<p>There is also no guarantee of ordering of packets with UDP. You could send 5 packets in order 1,2,3,4,5 and they could arrive completely out of order like 3,1,2,5,4. In practice, packets tend to arrive in order <em>most</em> of the time, but you cannot rely on this!</p>
+
+<p>UDP also provides a 16 bit checksum, which in theory is meant to protect you from receiving invalid or truncated data, but you can&rsquo;t even trust this, since 16 bits is just not enough protection when you are sending UDP packets rapidly over a long period of time. Statistically, you can&rsquo;t even rely on this checksum and must add your own.</p>
+
+<p>So in short, when you use UDP you&rsquo;re pretty much on your own!</p>
+
+<h2 id="tcp-vs-udp">TCP vs. UDP</h2>
+
+<p>We have a decision to make here, do we use TCP sockets or UDP sockets?</p>
+
+<p>Lets look at the properties of each:</p>
+
+<p>TCP:</p>
+
+<ul>
+    <li>Connection based</li>
+    <li>Guaranteed reliable and ordered</li>
+    <li>Automatically breaks up your data into packets for you</li>
+    <li>Makes sure it doesn't send data too fast for the internet connection to handle (flow control)</li>
+    <li>Easy to use, you just read and write data like its a file</li>
+</ul>
+
+<p>UDP:</p>
+
+<ul>
+    <li>No concept of connection, you have to code this yourself</li>
+    <li>No guarantee of reliability or ordering of packets, they may arrive out of order, be duplicated, or not arrive at all!</li>
+    <li>You have to manually break your data up into packets and send them</li>
+    <li>You have to make sure you don't send data too fast for your internet connection to handle</li>
+    <li>If a packet is lost, you need to devise some way to detect this, and resend that data if necessary</li>
+    <li>You can't even rely on the UDP checksum so you must add your own</li>
+</ul>
+
+<p>The decision seems pretty clear then, TCP does everything we want and its super easy to use, while UDP is a huge pain in the ass and we have to code everything ourselves from scratch.</p>
+
+<p>So obviously we just use TCP right?</p>
+
+<p>Wrong!</p>
+
+<p>Using TCP is the worst possible mistake you can make when developing a multiplayer game! To understand why, you need to see what TCP is actually doing above IP to make everything look so simple.</p>
+
+<h2 id="how-tcp-really-works">How TCP really works</h2>
+
+<p>TCP and UDP are both built on top of IP, but they are radically different. UDP behaves very much like the IP protocol underneath it, while TCP abstracts everything so it looks like you are reading and writing to a file, hiding all complexities of packets and unreliability from you.</p>
+
+<p>So how does it do this?</p>
+
+<p>Firstly, TCP is a stream protocol, so you just write bytes to a stream, and TCP makes sure that they get across to the other side. Since IP is built on packets, and TCP is built on top of IP, TCP must therefore break your stream of data up into packets. So, some internal TCP code queues up the data you send, then when enough data is pending the queue, it sends a packet to the other machine.</p>
+
+<p>This can be a problem for multiplayer games if you are sending very small packets. What can happen here is that TCP may decide it&rsquo;s not going to send data until you have buffered up enough data to make a reasonably sized packet to send over the network.</p>
+
+<p>This is a problem because you want your client player input to get to the server <em>as quickly as possible</em>, if it is delayed or &ldquo;clumped up&rdquo; like TCP can do with small packets, the client&rsquo;s user experience of the multiplayer game will be very poor. Game network updates will arrive late and infrequently, instead of on-time and frequently like we want.</p>
+
+<p>TCP has an option to fix this behavior called <a href="https://en.wikipedia.org/wiki/Nagle%27s_algorithm" target="_blank">TCP_NODELAY</a>. This option instructs TCP not to wait around until enough data is queued up, but to flush any data you write to it immediately. This is referred to as disabling Nagle&rsquo;s algorithm.</p>
+
+<p>Unfortunately, even if you set this option TCP still has serious problems for multiplayer games and it all stems from how TCP handles lost and out of order packets to present you with the &ldquo;illusion&rdquo; of a reliable, ordered stream of data.</p>
+
+<h2 id="how-tcp-implements-reliability">How TCP implements reliability</h2>
+
+<p>Fundamentally TCP breaks down a stream of data into packets, sends these packets over unreliable IP, then takes the packets received on the other side and reconstructs the stream.</p>
+
+<p>But what happens when a packet is lost?</p>
+
+<p>What happens when packets arrive out of order or are duplicated?</p>
+
+<p>Without going too much into the details of how TCP works because its super-complicated (please refer to <a href="http://www.cs.newpaltz.edu/~pletcha/NET_PY/the-protocols-tcp-ip-illustrated-volume-1.9780201633467.24290.pdf" target="_blank">TCP/IP Illustrated</a>) in essence TCP sends out a packet, waits a while until it detects that packet was lost because it didn&rsquo;t receive an ack (or acknowledgement), then resends the lost packet to the other machine. Duplicate packets are discarded on the receiver side, and out of order packets are resequenced so everything is reliable and in order.</p>
+
+<p>The problem is that if we were to send our time critical game data over TCP, whenever a packet is dropped it has to stop and wait for that data to be resent. Yes, even if more recent data arrives, that new data gets put in a queue, and you cannot access it until that lost packet has been retransmitted. How long does it take to resend the packet?</p>
+
+<p>Well, it&rsquo;s going to take <em>at least</em> round trip latency for TCP to work out that data needs to be resent, but commonly it takes 2*RTT, and another one way trip from the sender to the receiver for the resent packet to get there. So if you have a 125ms ping, you&rsquo;ll be waiting roughly 1/5th of a second for the packet data to be resent <em>at best</em>, and in worst case conditions you could be waiting up to half a second or more (consider what happens if the attempt to resend the packet fails to get through?). What happens if TCP decides the packet loss indicates network congestion and it backs off? Yes it actually does this. Fun times!</p>
+
+<h2 id="never-use-tcp-for-time-critical-data">Never use TCP for time critical data</h2>
+
+<p>The problem with using TCP for realtime games like FPS is that unlike web browsers, or email or most other applications, these multiplayer games have a <em>real time requirement</em> on packet delivery.</p>
+
+<p>What this means is that for many parts of a game, for example player input and character positions, it really doesn&rsquo;t matter what happened a second ago, the game only cares about the most recent data.</p>
+
+<p>TCP was simply not designed with this in mind.</p>
+
+<p>Consider a very simple example of a multiplayer game, some sort of action game like a shooter. You  want to network this in a very simple way. Every frame you send the input from the client to the server (eg. keypresses, mouse input controller input), and each frame the server processes the input from each player, updates the simulation, then sends the current position of game objects back to the client for rendering.</p>
+
+<p>So in our simple multiplayer game, whenever a packet is lost, everything has to <em>stop and wait</em> for that packet to be resent. On the client game objects stop receiving updates so they appear to be standing still, and on the server input stops getting through from the client, so the players cannot move or shoot. When the resent packet finally arrives, you receive this stale, out of date information that you don&rsquo;t even care about! Plus, there are packets backed up in queue waiting for the resend which arrive at same time, so you have to process all of these packets in one frame. Everything is clumped up!</p>
+
+<p>Unfortunately, there is nothing you can do to fix this behavior, it&rsquo;s just the fundamental nature of TCP. This is just what it takes to make the unreliable, packet-based internet look like a reliable-ordered stream.</p>
+
+<p>Thing is we don&rsquo;t want a reliable ordered stream.</p>
+
+<p>We want our data to get as quickly as possible from client to server without having to wait for lost data to be resent.</p>
+
+<p>This is why you should <strong>never</strong> use TCP when networking time-critical data!</p>
+
+<h2 id="wait-why-can-t-i-use-both-udp-and-tcp">Wait? Why can&rsquo;t I use <em>both</em> UDP and TCP?</h2>
+
+<p>For realtime game data like player input and state, only the most recent data is relevant, but for other types of data, say perhaps a sequence of commands sent from one machine to another, reliability and ordering can be very important.</p>
+
+<p>The temptation then is to use UDP for player input and state, and TCP for the reliable ordered data. If you&rsquo;re sharp you&rsquo;ve probably even worked out that you may have multiple &ldquo;streams&rdquo; of reliable ordered commands, maybe one about level loading, and another about AI. Perhaps you think to yourself, &ldquo;Well, I&rsquo;d really not want AI commands to stall out if a packet is lost containing a level loading command - they are completely unrelated!&rdquo;. You are right, so you may be tempted to create one TCP socket for each stream of commands.</p>
+
+<p>On the surface, this seems like a great idea. The problem is that since TCP and UDP are both built on top of IP, the underlying packets sent by each protocol will affect each other. Exactly how they affect each other is quite complicated and relates to how TCP performs reliability and flow control, but fundamentally you should remember that TCP tends to <em>induce</em> packet loss in UDP packets. For more information, read <a href="http://www.isoc.org/INET97/proceedings/F3/F3_1.HTM">this paper</a> on the subject.</p>
+
+<p>Also, it&rsquo;s pretty complicated to mix UDP and TCP. If you mix UDP and TCP you lose a certain amount of control. Maybe you can implement reliability in a more efficient way that TCP does, better suited to your needs? Even if you need reliable-ordered data, it&rsquo;s possible, provided that data is small relative to the available bandwidth to get that data across faster and more reliably that it would if you sent it over TCP. Plus, if you have to do NAT to enable home internet connections to talk to each other, having to do this NAT once for UDP and once for TCP (not even sure if this is possible&hellip;) is kind of painful.</p>
+
+<h2 id="conclusion">Conclusion</h2>
+
+<p>My recommendation is not only that you use UDP, but that you <em>only</em> use UDP for your game protocol. Don&rsquo;t mix TCP and UDP! Instead, learn how to implement the specific features of TCP that you need <em>inside</em> your own custom UDP based protocol.</p>
+
+<p>Of course, it is no problem to use HTTP to talk to some RESTful services while your game is running. I&rsquo;m not saying you can&rsquo;t do that. A few TCP connections running while your game is running isn&rsquo;t going to bring everything down. The point is, don&rsquo;t split your <em>game protocol</em> across UDP and TCP. Keep your game protocol running over UDP so you are fully in control of the data you send and receive and how reliability, ordering and congestion avoidance are implemented.</p>
+
+<p>The rest of this article series show you how to do this, from creating your own virtual connection on top of UDP, to creating your own reliability, flow control and congestion avoidance.</p>
+
+<p><strong>NEXT ARTICLE:</strong> <a href="/post/sending_and_receiving_packets/">Sending and Receiving Packets</a></p>
+
+<hr />
+
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com" target="_blank">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
+
+    </div>
+
+    
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/networking/">networking</a>
+  
+</div>
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+  
+  
+
+
+
+
+
+
+
+      
+      
+      <div class="article-widget">
+        <div class="hr-light"></div>
+        <h3>Related</h3>
+        <ul>
+          
+          <li><a href="/post/networked_physics_2004/">Networked Physics (2004)</a></li>
+          
+        </ul>
+      </div>
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="/js/academia.min.281fa180ccfa1769ea3c7dd430814861.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        
+        <p>
+          Copyright © Glenn Fiedler, 2004 - 2019 
+        </p>
+      </div>
+      <div class="col-md-6">
+        <ul class="list-inline network-icon text-right">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://twitter.com/Twitter" target="_blank" rel="noopener" title="DM Me"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
