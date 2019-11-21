@@ -1,0 +1,1105 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academia 4.3.1">
+  <meta name="generator" content="Hugo 0.59.1" />
+
+  
+
+  
+  
+  
+  
+  
+    
+    
+    
+  
+  
+
+  <meta name="author" content="Michael Vahn">
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Create a beautifully simple website in under 10 minutes.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="https://academia-hugo.netlify.com/post/getting-started/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#fc6f5c">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academiaons/1.8.6/css/academiaons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Open+Sans|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academia.min.bc0bb88bdd81325546c60a72b4a6b9e5.css">
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="https://academia-hugo.netlify.com/post/getting-started/">
+
+  
+  
+  
+  
+    
+  
+  <meta property="twitter:card" content="summary_large_image">
+  
+  <meta property="og:site_name" content="Academia">
+  <meta property="og:url" content="https://academia-hugo.netlify.com/post/getting-started/">
+  <meta property="og:title" content="academia: the website builder for Hugo | Academia">
+  <meta property="og:description" content="Create a beautifully simple website in under 10 minutes."><meta property="og:image" content="https://academia-hugo.netlify.com/post/getting-started/featured.jpg">
+  <meta property="twitter:image" content="https://academia-hugo.netlify.com/post/getting-started/featured.jpg"><meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2016-04-20T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2019-04-17T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>academia: the website builder for Hugo | Academia</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Academia</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"><span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#about"><span>Home</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Posts</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#projects"><span>Projects</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#publications"><span>Publications</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/courses/"><span>Courses</span></a>
+        </li>
+
+        
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#contact"><span>Contact</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article py-5" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="container split-header">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+        <img class="img-fluid w-100" src="/post/getting-started/featured_hue69fb4adfc11ca9c4444dcd3a513aa00_325031_680x500_fill_q90_lanczos_smart1.jpg" itemprop="image" alt="">
+        <span
+          class="article-header-caption">Image credit: <a href="https://unsplash.com/photos/CpkOjOcXdUY" target="_blank"><strong>Unsplash</strong></a></span>
+    </div>
+    <div class="col-lg-8">
+      <h1 itemprop="name">academia: the website builder for Hugo</h1>
+
+      
+      <p class="page-subtitle">Create a beautifully simple website in under 10 minutes 🚀</p>
+      
+
+      
+
+
+
+<meta content="2016-04-20 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2019-04-17 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+  
+  
+  <div>
+    
+
+
+
+  <span itemprop="author name" itemtype="http://schema.org/Person"><a href="/authors/admin/">Michael Vahn</a></span>
+
+  </div>
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+          Last updated on
+      
+    
+    <time>Apr 17, 2019</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    2 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+
+  
+    
+<div class="share-box" aria-hidden="true">
+  <ul class="share">
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://twitter.com/intent/tweet?url=https://academia-hugo.netlify.com/post/getting-started/&amp;text=academia:%20the%20website%20builder%20for%20Hugo" target="_blank" rel="noopener" class="share-btn-twitter">
+          <i class="fab fa-twitter"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.facebook.com/sharer.php?u=https://academia-hugo.netlify.com/post/getting-started/&amp;t=academia:%20the%20website%20builder%20for%20Hugo" target="_blank" rel="noopener" class="share-btn-facebook">
+          <i class="fab fa-facebook-f"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="mailto:?subject=academia:%20the%20website%20builder%20for%20Hugo&amp;body=https://academia-hugo.netlify.com/post/getting-started/" target="_blank" rel="noopener" class="share-btn-email">
+          <i class="fas fa-envelope"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://www.linkedin.com/shareArticle?url=https://academia-hugo.netlify.com/post/getting-started/&amp;title=academia:%20the%20website%20builder%20for%20Hugo" target="_blank" rel="noopener" class="share-btn-linkedin">
+          <i class="fab fa-linkedin-in"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://web.whatsapp.com/send?text=academia:%20the%20website%20builder%20for%20Hugo%20https://academia-hugo.netlify.com/post/getting-started/" target="_blank" rel="noopener" class="share-btn-whatsapp">
+          <i class="fab fa-whatsapp"></i>
+        </a>
+      </li>
+    
+      
+      
+      
+        
+      
+      
+      
+      <li>
+        <a href="https://service.weibo.com/share/share.php?url=https://academia-hugo.netlify.com/post/getting-started/&amp;title=academia:%20the%20website%20builder%20for%20Hugo" target="_blank" rel="noopener" class="share-btn-weibo">
+          <i class="fab fa-weibo"></i>
+        </a>
+      </li>
+    
+  </ul>
+</div>
+
+
+  
+
+</div>
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    </div>
+    
+    </div>
+  </div>
+</div>
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      
+
+<p><strong>Create a free website with academia using Markdown, Jupyter, or RStudio. Choose a beautiful color theme and build anything with the Page Builder - over 40 <em>widgets</em>, <em>themes</em>, and <em>language packs</em> included!</strong></p>
+
+<p><a href="https://academia-demo.netlify.com/" target="_blank">Check out the latest <strong>demo</strong></a> of what you&rsquo;ll get in less than 10 minutes, or <a href="https://sourcethemes.com/academic/#expo" target="_blank">view the <strong>showcase</strong></a> of personal, project, and business sites.</p>
+
+<ul>
+<li><a href="#install"><strong>Setup academia</strong></a></li>
+<li><a href="https://sourcethemes.com/academic/docs/get-started/" target="_blank"><strong>Get Started</strong></a></li>
+<li><a href="https://sourcethemes.com/academic/docs/" target="_blank">View the documentation</a></li>
+<li><a href="http://discuss.gohugo.io/" target="_blank">Ask a question</a></li>
+<li><a href="https://github.com/gcushen/hugo-academia/issues" target="_blank">Request a feature or report a bug</a></li>
+<li>Updating? View the <a href="https://sourcethemes.com/academic/docs/update/" target="_blank">Update Guide</a> and <a href="https://sourcethemes.com/academic/updates/" target="_blank">Release Notes</a></li>
+<li>Support development of academia:
+
+<ul>
+<li><a href="https://paypal.me/cushen" target="_blank">Donate a coffee</a></li>
+<li><a href="https://www.patreon.com/cushen" target="_blank">Become a backer on Patreon</a></li>
+<li><a href="https://www.redbubble.com/people/neutreno/works/34387919-academia" target="_blank">Decorate your laptop or journal with an academia sticker</a></li>
+<li><a href="https://academia.threadless.com/" target="_blank">Wear the T-shirt</a></li>
+</ul></li>
+</ul>
+
+<p><a href="https://github.com/gcushen/hugo-academia/" target="_blank"><img src="https://raw.githubusercontent.com/gcushen/hugo-academia/master/academia.png" alt="Screenshot" /></a></p>
+
+<p><strong>Key features:</strong></p>
+
+<ul>
+<li><strong>Page builder</strong> - Create <em>anything</em> with <a href="https://sourcethemes.com/academic/docs/page-builder/" target="_blank"><strong>widgets</strong></a> and <a href="https://sourcethemes.com/academic/docs/writing-markdown-latex/" target="_blank"><strong>elements</strong></a></li>
+<li><strong>Edit any type of content</strong> - Blog posts, publications, talks, slides, projects, and more!</li>
+<li><strong>Create content</strong> in <a href="https://sourcethemes.com/academic/docs/writing-markdown-latex/" target="_blank"><strong>Markdown</strong></a>, <a href="https://sourcethemes.com/academic/docs/jupyter/" target="_blank"><strong>Jupyter</strong></a>, or <a href="https://sourcethemes.com/academic/docs/install/#install-with-rstudio" target="_blank"><strong>RStudio</strong></a></li>
+<li><strong>Plugin System</strong> - Fully customizable <a href="https://sourcethemes.com/academic/themes/" target="_blank"><strong>color</strong> and <strong>font themes</strong></a></li>
+<li><strong>Display Code and Math</strong> - Code highlighting and <a href="https://en.wikibooks.org/wiki/LaTeX/Mathematics" target="_blank">LaTeX math</a> supported</li>
+<li><strong>Integrations</strong> - <a href="https://analytics.google.com" target="_blank">Google Analytics</a>, <a href="https://disqus.com" target="_blank">Disqus commenting</a>, Maps, Contact Forms, and more!</li>
+<li><strong>Beautiful Site</strong> - Simple and refreshing one page design</li>
+<li><strong>Industry-Leading SEO</strong> - Help get your website found on search engines and social media</li>
+<li><strong>Media Galleries</strong> - Display your images and videos with captions in a customizable gallery</li>
+<li><strong>Mobile Friendly</strong> - Look amazing on every screen with a mobile friendly version of your site</li>
+<li><strong>Multi-language</strong> - 15+ language packs including English, 中文, and Português</li>
+<li><strong>Multi-user</strong> - Each author gets their own profile page</li>
+<li><strong>Privacy Pack</strong> - Assists with GDPR</li>
+<li><strong>Stand Out</strong> - Bring your site to life with animation, parallax backgrounds, and scroll effects</li>
+<li><strong>One-Click Deployment</strong> - No servers. No databases. Only files.</li>
+</ul>
+
+<h2 id="color-themes">Color Themes</h2>
+
+<p>academia comes with <strong>day (light) and night (dark) mode</strong> built-in. Click the sun/moon icon in the top right of the <a href="https://academia-demo.netlify.com/" target="_blank">Demo</a> to see it in action!</p>
+
+<p>Choose a stunning color and font theme for your site. Themes are fully customizable and include:</p>
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+<div class="gallery">
+
+  
+  
+  
+  
+    
+    
+    
+    
+    
+      
+        
+      
+    
+  <a data-fancybox="gallery-gallery" href="/post/getting-started/gallery/theme-1950s.png" data-caption="1950s">
+  <img src="/post/getting-started/gallery/theme-1950s_huaf5482f8cea0c5a703a328640e3b7509_21614_0x190_resize_lanczos_2.png" alt="">
+  </a>
+  
+    
+    
+    
+    
+    
+      
+        
+      
+    
+  <a data-fancybox="gallery-gallery" href="/post/getting-started/gallery/theme-apogee.png" data-caption="Apogee">
+  <img src="/post/getting-started/gallery/theme-apogee_hu4b45d99db97150df01464c393bfd17d4_24119_0x190_resize_lanczos_2.png" alt="">
+  </a>
+  
+    
+    
+    
+    
+    
+      
+        
+      
+    
+  <a data-fancybox="gallery-gallery" href="/post/getting-started/gallery/theme-coffee-playfair.png" data-caption="Coffee theme with Playfair font">
+  <img src="/post/getting-started/gallery/theme-coffee-playfair_hu446a8f670cc5622adcc77b97ba95f6c5_22462_0x190_resize_lanczos_2.png" alt="">
+  </a>
+  
+    
+    
+    
+    
+    
+      
+        
+      
+    
+  <a data-fancybox="gallery-gallery" href="/post/getting-started/gallery/theme-dark.png" data-caption="Dark">
+  <img src="/post/getting-started/gallery/theme-dark_hu1e8601ecc47f58eada7743fdcd709d3d_21456_0x190_resize_lanczos_2.png" alt="">
+  </a>
+  
+    
+    
+    
+    
+    
+      
+        
+      
+    
+  <a data-fancybox="gallery-gallery" href="/post/getting-started/gallery/theme-default.png" data-caption="Default">
+  <img src="/post/getting-started/gallery/theme-default_huba6228b7bdf30e2f03f12ea91b2cba0d_21751_0x190_resize_lanczos_2.png" alt="">
+  </a>
+  
+    
+    
+    
+    
+    
+      
+        
+      
+    
+  <a data-fancybox="gallery-gallery" href="/post/getting-started/gallery/theme-forest.png" data-caption="Forest">
+  <img src="/post/getting-started/gallery/theme-forest_hu4f093a1c683134431456584193ea41ee_21797_0x190_resize_lanczos_2.png" alt="">
+  </a>
+  
+    
+    
+    
+    
+    
+      
+        
+      
+    
+  <a data-fancybox="gallery-gallery" href="/post/getting-started/gallery/theme-ocean.png" data-caption="Ocean">
+  <img src="/post/getting-started/gallery/theme-ocean_hu14831ccafc2219f30a7a096fa7617e01_21760_0x190_resize_lanczos_2.png" alt="">
+  </a>
+  
+    
+    
+    
+    
+    
+      
+        
+      
+    
+  <a data-fancybox="gallery-gallery" href="/post/getting-started/gallery/theme-strawberry.png" data-caption="Strawberry">
+  <img src="/post/getting-started/gallery/theme-strawberry_hu36b0b347fcca08bd39e2df22dcedbdfb_39532_0x190_resize_lanczos_2.png" alt="">
+  </a>
+  
+
+  
+</div>
+
+<h2 id="ecosystem">Ecosystem</h2>
+
+<ul>
+<li><strong><a href="https://github.com/sourcethemes/academia-admin" target="_blank">academia Admin</a>:</strong> An admin tool to import publications from BibTeX or import assets for an offline site</li>
+<li><strong><a href="https://github.com/sourcethemes/academia-scripts" target="_blank">academia Scripts</a>:</strong> Scripts to help migrate content to new versions of academia</li>
+</ul>
+
+<h2 id="install">Install</h2>
+
+<p>You can choose from one of the following four methods to install:</p>
+
+<ul>
+<li><a href="https://sourcethemes.com/academic/docs/install/#install-with-web-browser" target="_blank"><strong>one-click install using your web browser (recommended)</strong></a></li>
+<li><a href="https://sourcethemes.com/academic/docs/install/#install-with-git" target="_blank">install on your computer using <strong>Git</strong> with the Command Prompt/Terminal app</a></li>
+<li><a href="https://sourcethemes.com/academic/docs/install/#install-with-zip" target="_blank">install on your computer by downloading the <strong>ZIP files</strong></a></li>
+<li><a href="https://sourcethemes.com/academic/docs/install/#install-with-rstudio" target="_blank">install on your computer with <strong>RStudio</strong></a></li>
+</ul>
+
+<p>Then <a href="https://sourcethemes.com/academic/docs/get-started/" target="_blank">personalize and deploy your new site</a>.</p>
+
+<h2 id="updating">Updating</h2>
+
+<p><a href="https://sourcethemes.com/academic/docs/update/" target="_blank">View the Update Guide</a>.</p>
+
+<p>Feel free to <em>star</em> the project on <a href="https://github.com/gcushen/hugo-academia/" target="_blank">Github</a> to help keep track of <a href="https://sourcethemes.com/academic/updates" target="_blank">updates</a>.</p>
+
+<h2 id="license">License</h2>
+
+<p>Copyright 2016-present <a href="https://georgecushen.com" target="_blank">George Cushen</a>.</p>
+
+<p>Released under the <a href="https://github.com/gcushen/hugo-academia/blob/master/LICENSE.md" target="_blank">MIT</a> license.</p>
+
+    </div>
+
+    
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/academia/">academia</a>
+  
+</div>
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+  
+
+
+
+
+
+  
+  
+  
+    
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="https://academia-hugo.netlify.com/">Michael Vahn</a></h5>
+      <h6 class="card-subtitle">Professor of Artificial Intelligence</h6>
+      <p class="card-text" itemprop="description">My research interests include distributed robotics, mobile computing and programmable matter.</p>
+      <ul class="network-icon" aria-hidden="true">
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="/#contact" >
+              <i class="fas fa-envelope"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://twitter.com/GeorgeCushen" target="_blank" rel="noopener">
+              <i class="fab fa-twitter"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://scholar.google.co.uk/citations?user=sIwtMXoAAAAJ" target="_blank" rel="noopener">
+              <i class="ai ai-google-scholar"></i>
+            </a>
+          </li>
+        
+          
+          
+          
+            
+          
+          
+          
+          
+          
+            
+          
+          <li>
+            <a itemprop="sameAs" href="https://github.com/gcushen" target="_blank" rel="noopener">
+              <i class="fab fa-github"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+      <div class="article-widget">
+        <div class="hr-light"></div>
+        <h3>Related</h3>
+        <ul>
+          
+          <li><a href="/post/snail/">A Study of Snail Behavior</a></li>
+          
+        </ul>
+      </div>
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+    
+
+    
+    
+      <script async defer src="//maps.googleapis.com/maps/api/js?key=AIzaSyBu5nZKbeK-WHQ70oqOWo-_4VmwOwKP9YQ"></script>
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/gmaps.js/0.4.25/gmaps.min.js" integrity="sha256-7vjlAeb8OaTrCXZkCNun9djzuB2owUsaO72kXaFDBJs=" crossorigin="anonymous"></script>
+      
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="/js/academia.min.281fa180ccfa1769ea3c7dd430814861.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        
+        <p>
+          
+          Powered by
+          <a href="https://themefisher.com" target="_blank" rel="noopener">themefisher</a> for
+          <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a>.
+        </p>
+      </div>
+      <div class="col-md-6">
+        <ul class="list-inline network-icon text-right">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://twitter.com/Twitter" target="_blank" rel="noopener" title="DM Me"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+          </li>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="skype:echo123?call"  title="Skype Me"><i class="fab fa-skype" aria-hidden="true"></i></a>
+          </li>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://keybase.io/" target="_blank" rel="noopener" title="Chat on Keybase"><i class="fab fa-keybase" aria-hidden="true"></i></a>
+          </li>
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://discourse.gohugo.io" target="_blank" rel="noopener" title="Discuss on Forum"><i class="fas fa-comments" aria-hidden="true"></i></a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

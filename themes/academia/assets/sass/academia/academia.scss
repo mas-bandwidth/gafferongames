@@ -1,0 +1,33 @@
+/*************************************************
+ *  academia: The Website Builder for Hugo
+ *  Designed by @GeorgeCushen
+ *  https://sourcethemes.com/academic/
+ *  License: https://github.com/gcushen/hugo-academia/blob/master/LICENSE.md
+ **************************************************/
+
+@import "root";
+@import "nav";
+@import "card";
+@import "search";
+@import "content";
+@import "listings";
+@import "widgets";
+@import "docs";
+@import "dark";
+@import "integrations";
+
+.video_container {
+    position: relative;
+    width: 100%;
+    height: 0;
+    padding-bottom: 56.25%;
+}
+.video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+.image_border { border-width: 1px; border-color: black; border-style: solid; } 
