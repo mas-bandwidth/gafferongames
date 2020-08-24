@@ -3,236 +3,241 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://academia-hugo.netlify.com/courses/example/example1/</loc>
-    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
+    <loc>http://127.0.0.1:1313/categories/</loc>
+    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/courses/example.1/example3/</loc>
-    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/fixing_the_internet_for_games/</loc>
+    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/courses/example.2/example3/</loc>
-    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
+    <loc>http://127.0.0.1:1313/</loc>
+    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/courses/example.1/</loc>
-    <lastmod>2018-09-09T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/categories/game-networking/</loc>
+    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/courses/example.2/</loc>
-    <lastmod>2018-09-09T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/tags/networking/</loc>
+    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/courses/example/</loc>
-    <lastmod>2018-09-09T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/</loc>
+    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/courses/example.2/example4/</loc>
-    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
+    <loc>http://127.0.0.1:1313/tags/</loc>
+    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/courses/example/example2/</loc>
-    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
+    <loc>http://127.0.0.1:1313/categories/networked-physics/</loc>
+    <lastmod>2018-02-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/courses/example.1/example4/</loc>
-    <lastmod>2019-05-05T00:00:00+01:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/networked_physics_in_virtual_reality/</loc>
+    <lastmod>2018-02-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/</loc>
-    <lastmod>2030-06-01T13:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/tags/physics/</loc>
+    <lastmod>2018-02-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/talk/coding/</loc>
-    <lastmod>2030-06-01T13:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/tags/vr/</loc>
+    <lastmod>2018-02-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/talk/qualitative/</loc>
-    <lastmod>2030-06-01T13:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/categories/white-papers/</loc>
+    <lastmod>2017-02-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/talk/</loc>
-    <lastmod>2030-06-01T13:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/why_cant_i_send_udp_packets_from_a_browser/</loc>
+    <lastmod>2017-02-26T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/talk/synthesizing/</loc>
-    <lastmod>2030-06-01T13:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/categories/building-a-game-network-protocol/</loc>
+    <lastmod>2016-09-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/authors/admin/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/client_server_connection/</loc>
+    <lastmod>2016-09-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/publication_types/3/</loc>
-    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/reliable_ordered_messages/</loc>
+    <lastmod>2016-09-15T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/publication/preprint/</loc>
-    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/sending_large_blocks_of_data/</loc>
+    <lastmod>2016-09-12T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/authors/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/packet_fragmentation_and_reassembly/</loc>
+    <lastmod>2016-09-06T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/publication_types/</loc>
-    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/serialization_strategies/</loc>
+    <lastmod>2016-09-04T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/publication/</loc>
-    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/reading_and_writing_packets/</loc>
+    <lastmod>2016-09-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/tags/source-themes/</loc>
-    <lastmod>2019-04-07T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/state_synchronization/</loc>
+    <lastmod>2015-01-05T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/tags/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/snapshot_compression/</loc>
+    <lastmod>2015-01-04T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/post/jupyter/</loc>
-    <lastmod>2019-02-05T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/snapshot_interpolation/</loc>
+    <lastmod>2014-11-30T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/post/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/deterministic_lockstep/</loc>
+    <lastmod>2014-11-29T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/slides/</loc>
-    <lastmod>2019-02-05T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/introduction_to_networked_physics/</loc>
+    <lastmod>2014-11-28T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/slides/example/</loc>
-    <lastmod>2019-02-05T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/collision_response_and_coulomb_friction/</loc>
+    <lastmod>2013-02-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/project/artificial-intelligence/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/tags/go/baduk/weiqi/</loc>
+    <lastmod>2013-02-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/tags/deep-learning/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/categories/virtual-go/</loc>
+    <lastmod>2013-02-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/project/deep-learning/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/rotation_and_inertia_tensors/</loc>
+    <lastmod>2013-02-23T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/tags/demo/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/go_stone_vs_go_board/</loc>
+    <lastmod>2013-02-22T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/project/external-project/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/how_the_go_stone_moves/</loc>
+    <lastmod>2013-02-21T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/tags/human/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/tessellating_the_go_stone/</loc>
+    <lastmod>2013-02-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/project/internal-project/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/shape_of_the_go_stone/</loc>
+    <lastmod>2013-02-19T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/project/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/introduction_to_virtual_go/</loc>
+    <lastmod>2013-02-18T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/project/robotics/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/floating_point_determinism/</loc>
+    <lastmod>2010-02-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/tags/robotics/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/what_every_programmer_needs_to_know_about_game_networking/</loc>
+    <lastmod>2010-02-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/project/skin-cancer-ai/</loc>
-    <lastmod>2016-04-27T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/</loc>
+    <lastmod>2008-10-20T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/post/snail/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/virtual_connection_over_udp/</loc>
+    <lastmod>2008-10-08T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/tags/academia/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/sending_and_receiving_packets/</loc>
+    <lastmod>2008-10-03T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/post/getting-started/</loc>
-    <lastmod>2019-04-17T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/udp_vs_tcp/</loc>
+    <lastmod>2008-10-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/publication_types/2/</loc>
-    <lastmod>2015-09-01T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/categories/game-physics/</loc>
+    <lastmod>2004-09-04T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/publication/journal-article/</loc>
-    <lastmod>2015-09-01T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/networked_physics_2004/</loc>
+    <lastmod>2004-09-04T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/authors/robert-ford/</loc>
-    <lastmod>2015-09-01T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/spring_physics/</loc>
+    <lastmod>2004-09-03T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/publication_types/1/</loc>
-    <lastmod>2013-07-01T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/physics_in_3d/</loc>
+    <lastmod>2004-09-02T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/publication/conference-paper/</loc>
-    <lastmod>2013-07-01T00:00:00+00:00</lastmod>
+    <loc>http://127.0.0.1:1313/post/fix_your_timestep/</loc>
+    <lastmod>2004-06-10T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/categories/</loc>
+    <loc>http://127.0.0.1:1313/post/integration_basics/</loc>
+    <lastmod>2004-06-01T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://academia-hugo.netlify.com/courses/</loc>
+    <loc>http://127.0.0.1:1313/authors/</loc>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1:1313/publication_types/</loc>
   </url>
   
 </urlset>

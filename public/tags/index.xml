@@ -1,67 +1,50 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Tags on Academia</title>
-    <link>https://academia-hugo.netlify.com/tags/</link>
-    <description>Recent content in Tags on Academia</description>
+    <title>Tags on Gaffer On Games</title>
+    <link>http://127.0.0.1:1313/tags/</link>
+    <description>Recent content in Tags on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 07 Apr 2019 00:00:00 +0000</lastBuildDate>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2019</copyright>
+    <lastBuildDate>Sun, 24 Mar 2019 00:00:00 +0000</lastBuildDate>
     
-	    <atom:link href="https://academia-hugo.netlify.com/tags/index.xml" rel="self" type="application/rss+xml" />
+	    <atom:link href="http://127.0.0.1:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Source Themes</title>
-      <link>https://academia-hugo.netlify.com/tags/source-themes/</link>
-      <pubDate>Sun, 07 Apr 2019 00:00:00 +0000</pubDate>
+      <title>networking</title>
+      <link>http://127.0.0.1:1313/tags/networking/</link>
+      <pubDate>Sun, 24 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://academia-hugo.netlify.com/tags/source-themes/</guid>
+      <guid>http://127.0.0.1:1313/tags/networking/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Deep Learning</title>
-      <link>https://academia-hugo.netlify.com/tags/deep-learning/</link>
-      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      <title>physics</title>
+      <link>http://127.0.0.1:1313/tags/physics/</link>
+      <pubDate>Thu, 22 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://academia-hugo.netlify.com/tags/deep-learning/</guid>
+      <guid>http://127.0.0.1:1313/tags/physics/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>Demo</title>
-      <link>https://academia-hugo.netlify.com/tags/demo/</link>
-      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      <title>vr</title>
+      <link>http://127.0.0.1:1313/tags/vr/</link>
+      <pubDate>Thu, 22 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>https://academia-hugo.netlify.com/tags/demo/</guid>
+      <guid>http://127.0.0.1:1313/tags/vr/</guid>
       <description></description>
     </item>
     
     <item>
-      <title>human</title>
-      <link>https://academia-hugo.netlify.com/tags/human/</link>
-      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
+      <title>go/baduk/weiqi</title>
+      <link>http://127.0.0.1:1313/tags/go/baduk/weiqi/</link>
+      <pubDate>Sun, 24 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>https://academia-hugo.netlify.com/tags/human/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>robotics</title>
-      <link>https://academia-hugo.netlify.com/tags/robotics/</link>
-      <pubDate>Wed, 27 Apr 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://academia-hugo.netlify.com/tags/robotics/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title>academia</title>
-      <link>https://academia-hugo.netlify.com/tags/academia/</link>
-      <pubDate>Wed, 20 Apr 2016 00:00:00 +0000</pubDate>
-      
-      <guid>https://academia-hugo.netlify.com/tags/academia/</guid>
+      <guid>http://127.0.0.1:1313/tags/go/baduk/weiqi/</guid>
       <description></description>
     </item>
     
