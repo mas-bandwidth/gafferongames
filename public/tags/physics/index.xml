@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>physics on Gaffer On Games</title>
-    <link>http://127.0.0.1:1313/tags/physics/</link>
+    <link>https://gafferongames.com/tags/physics/</link>
     <description>Recent content in physics on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
-    <copyright>Copyright © Glenn Fiedler, 2004 - 2019</copyright>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2020</copyright>
     <lastBuildDate>Thu, 22 Feb 2018 00:00:00 +0000</lastBuildDate>
     
-	    <atom:link href="http://127.0.0.1:1313/tags/physics/index.xml" rel="self" type="application/rss+xml" />
+	    <atom:link href="https://gafferongames.com/tags/physics/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Networked Physics in Virtual Reality</title>
-      <link>http://127.0.0.1:1313/post/networked_physics_in_virtual_reality/</link>
+      <link>https://gafferongames.com/post/networked_physics_in_virtual_reality/</link>
       <pubDate>Thu, 22 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/networked_physics_in_virtual_reality/</guid>
+      <guid>https://gafferongames.com/post/networked_physics_in_virtual_reality/</guid>
       <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &amp;ldquo;Hey Glenn, there&amp;rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?&amp;rdquo;&lt;/p&gt;
 &lt;p&gt;I replied ~~&amp;quot;F*** yes!&amp;ldquo;~~ **cough** &amp;ldquo;Sure. This could be a lot of fun!&amp;rdquo;. But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good. Two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.&lt;/p&gt;
@@ -221,13 +221,13 @@
     
     <item>
       <title>State Synchronization</title>
-      <link>http://127.0.0.1:1313/post/state_synchronization/</link>
+      <link>https://gafferongames.com/post/state_synchronization/</link>
       <pubDate>Mon, 05 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/state_synchronization/</guid>
+      <guid>https://gafferongames.com/post/state_synchronization/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_compression/&#34;&gt;previous article&lt;/a&gt; we discussed techniques for compressing snapshots.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;previous article&lt;/a&gt; we discussed techniques for compressing snapshots.&lt;/p&gt;
 &lt;p&gt;In this article we round out our discussion of networked physics strategies with &lt;strong&gt;state synchronization&lt;/strong&gt;, the third and final strategy in this article series.&lt;/p&gt;
 &lt;h2 id=&#34;state-synchronization&#34;&gt;State Synchronization&lt;/h2&gt;
 &lt;p&gt;What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, &lt;em&gt;unlike&lt;/em&gt; deterministic lockstep, we don&amp;rsquo;t just send input, we send both input &lt;!-- raw HTML omitted --&gt;and&lt;!-- raw HTML omitted --&gt; state.&lt;/p&gt;
@@ -243,7 +243,7 @@
 &lt;p&gt;While we must send the velocities, there&amp;rsquo;s no point wasting bandwidth sending (0,0,0) over and over while an object is at rest. We can fix this with a trivial optimization, like so:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;!-- raw HTML omitted --&gt;
-&lt;p&gt;What you see above is a &lt;em&gt;serialize function&lt;/em&gt;. It&amp;rsquo;s a trick I like to use to unify packet read and write. I like it because it&amp;rsquo;s expressive while at the same time it&amp;rsquo;s difficult to desync read and write. You can read more about them &lt;a href=&#34;http://127.0.0.1:1313/post/serialization_strategies/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;What you see above is a &lt;em&gt;serialize function&lt;/em&gt;. It&amp;rsquo;s a trick I like to use to unify packet read and write. I like it because it&amp;rsquo;s expressive while at the same time it&amp;rsquo;s difficult to desync read and write. You can read more about them &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;packet-structure&#34;&gt;Packet Structure&lt;/h2&gt;
 &lt;p&gt;Now let&amp;rsquo;s look at the overall structure of packets being sent:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
@@ -268,7 +268,7 @@
 &lt;p&gt;Surprisingly, without any smoothing the result is already pretty good:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;As you can see it&amp;rsquo;s already looking quite good and barely any bandwidth optimization has been performed. Contrast this with the first video for snapshot interpolation which was at 18mbit/sec and you can see that using the simulation to extrapolate between state updates is a great way to use less bandwidth.&lt;/p&gt;
-&lt;p&gt;Of course we can do a lot better than this and each optimization we do lets us squeeze more state updates in the same amount of bandwidth. The next obvious thing we can do is to apply all the standard quantization compression techniques such as bounding and quantizing position, linear and angular velocity value and using the smallest three compression as described in &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_compression/&#34;&gt;snapshot compression&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Of course we can do a lot better than this and each optimization we do lets us squeeze more state updates in the same amount of bandwidth. The next obvious thing we can do is to apply all the standard quantization compression techniques such as bounding and quantizing position, linear and angular velocity value and using the smallest three compression as described in &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;snapshot compression&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;But here it gets a bit more complex. We are extrapolating from those state updates so if we quantize these values over the network then the state that arrives on the right side is slightly different from the left side, leading to a slightly different extrapolation and a pop when the next state update arrives for that object.&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;h2 id=&#34;quantize-both-sides&#34;&gt;Quantize Both Sides&lt;/h2&gt;
@@ -292,7 +292,7 @@
 &lt;p&gt;Even though I would argue the result above is probably good enough already it is possible to improve the synchronization considerably from this point. For example to support a world with larger objects or more objects being interacted with. So lets work through some of those techniques and push this technique as far as it can go.&lt;/p&gt;
 &lt;p&gt;There is an easy compression that can be performed. Instead of encoding absolute position, if it is within a range of the player cube center, encode position as a relative offset to the player center position. In the common cases where bandwidth is high and state updates need to be more frequent (katamari ball) this provides a large win.&lt;/p&gt;
 &lt;p&gt;Next, what if we do want to perform some sort of delta encoding for state synchronization? We can but it&amp;rsquo;s quite different in this case than it is with snapshots because we&amp;rsquo;re not including every cube in every packet, so we can&amp;rsquo;t just track the most recent packet received and say, OK all these state updates in this packet are relative to packet X.&lt;/p&gt;
-&lt;p&gt;What you actually have to do is per-object update keep track of the packet that includes the base for that update. You also need to keep track of exactly the set of packets received so that the sender knows which packets are valid bases to encode relative to. This is reasonably complicated and requires a bidirectional ack system over UDP. Such a system is designed for exactly this sort of situation where you need to know exactly which packets definitely got through. You can find a tutorial on how to implement this in &lt;a href=&#34;http://127.0.0.1:1313/post/reliability_and_flow_control/&#34;&gt;this article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;What you actually have to do is per-object update keep track of the packet that includes the base for that update. You also need to keep track of exactly the set of packets received so that the sender knows which packets are valid bases to encode relative to. This is reasonably complicated and requires a bidirectional ack system over UDP. Such a system is designed for exactly this sort of situation where you need to know exactly which packets definitely got through. You can find a tutorial on how to implement this in &lt;a href=&#34;https://gafferongames.com/post/reliability_and_flow_control/&#34;&gt;this article&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;So assuming that you have an ack system you know with packet sequence numbers get through. What you do then is per-state update write one bit if the update is relative or absolute, if absolute then encode with no base as before, otherwise if relative send the 16 bit sequence number per-state update of the base and then encode relative to the state update data sent in that packet. This adds 1 bit overhead per-update as well as 16 bits to identify the sequence number of the base per-object update. Can we do better?&lt;/p&gt;
 &lt;p&gt;Yes. In turns out that of course you&amp;rsquo;re going to have to buffer on the send and receive side to implement this relative encoding and you can&amp;rsquo;t buffer forever. In fact, if you think about it you can only buffer up a couple of seconds before it becomes impractical and in the common case of moving objects you&amp;rsquo;re going to be sending the updates for same object frequently (katamari ball) so practically speaking the base sequence will only be from a short time ago.&lt;/p&gt;
 &lt;p&gt;So instead of sending the 16 bit sequence base per-object, send in the header of the packet the most recent acked packet (from the reliability ack system) and per-object encode the offset of the base sequence relative to that value using 5 bits. This way at 60 packets per-second you can identify an state update with a base half a second ago. Any base older than this is unlikely to provide a good delta encoding anyway because it&amp;rsquo;s old, so in that case just drop back to absolute encoding for that update.&lt;/p&gt;
@@ -307,13 +307,13 @@
     
     <item>
       <title>Snapshot Compression</title>
-      <link>http://127.0.0.1:1313/post/snapshot_compression/</link>
+      <link>https://gafferongames.com/post/snapshot_compression/</link>
       <pubDate>Sun, 04 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/snapshot_compression/</guid>
+      <guid>https://gafferongames.com/post/snapshot_compression/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_interpolation/&#34;&gt;previous article&lt;/a&gt; we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;previous article&lt;/a&gt; we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.&lt;/p&gt;
 &lt;p&gt;The problem with a low snapshot rate like 10HZ is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms. If protection against one or two lost packets in a row is desired, this blows out to 250ms or 350ms delay.&lt;/p&gt;
 &lt;p&gt;This is not an acceptable amount of delay for most games, but when the physics simulation is as unpredictable as ours, the only way to reduce it is to increase the packet send rate. Unfortunately, increasing the send rate also increases bandwidth. So what we&amp;rsquo;re going to do in this article is work through every possible bandwidth optimization &lt;em&gt;(that I can think of at least)&lt;/em&gt; until we get bandwidth under control.&lt;/p&gt;
 &lt;p&gt;Our target bandwidth is &lt;strong&gt;256 kilobits per-second&lt;/strong&gt;.&lt;/p&gt;
@@ -400,7 +400,7 @@
 &lt;p&gt;And that&amp;rsquo;s about as far as I can take it using traditional hand-rolled bit-packing techniques. You can find source code for my implementation of all compression techniques mentioned in this article &lt;!-- raw HTML omitted --&gt;here&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s possible to get even better compression using a different approach. Bit-packing is inefficient because not all bit values have equal probability of 0 vs 1. No matter how hard you tune your bit-packer a context aware arithmetic encoding can beat your result by more accurately modeling the probability of values that occur in your data set. This &lt;!-- raw HTML omitted --&gt;implementation&lt;!-- raw HTML omitted --&gt; by Fabian Giesen beat my best bit-packed result by 25%.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/state_synchronization/&#34;&gt;State Synchronization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/state_synchronization/&#34;&gt;State Synchronization&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -408,15 +408,15 @@
     
     <item>
       <title>Snapshot Interpolation</title>
-      <link>http://127.0.0.1:1313/post/snapshot_interpolation/</link>
+      <link>https://gafferongames.com/post/snapshot_interpolation/</link>
       <pubDate>Sun, 30 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/snapshot_interpolation/</guid>
+      <guid>https://gafferongames.com/post/snapshot_interpolation/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/deterministic_lockstep/&#34;&gt;previous article&lt;/a&gt; we networked a physics simulation using deterministic lockstep. Now, in this article we&amp;rsquo;re going to network the same simulation with a completely different technique: &lt;strong&gt;snapshot interpolation&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;previous article&lt;/a&gt; we networked a physics simulation using deterministic lockstep. Now, in this article we&amp;rsquo;re going to network the same simulation with a completely different technique: &lt;strong&gt;snapshot interpolation&lt;/strong&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
-&lt;p&gt;While deterministic lockstep is very efficient in terms of bandwidth, it&amp;rsquo;s not always possible to make your simulation deterministic. Floating point determinism across platforms is &lt;a href=&#34;http://127.0.0.1:1313/post/floating_point_determinism/&#34;&gt;hard&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;While deterministic lockstep is very efficient in terms of bandwidth, it&amp;rsquo;s not always possible to make your simulation deterministic. Floating point determinism across platforms is &lt;a href=&#34;https://gafferongames.com/post/floating_point_determinism/&#34;&gt;hard&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Also, as the player counts increase, deterministic lockstep becomes problematic: you can&amp;rsquo;t simulate frame n until you receive input from &lt;em&gt;all&lt;/em&gt; players for that frame, so players end up waiting for the most lagged player. Because of this, I recommend deterministic lockstep for 2-4 players at most.&lt;/p&gt;
 &lt;p&gt;So if your simulation is not deterministic or you want higher player counts then you need a different technique. Snapshot interpolation fits the bill nicely. It is in many ways the polar opposite of deterministic lockstep: instead of running two simulations, one on the left and one on the right, and using perfect determinism and synchronized inputs keep them in sync, snapshot interpolation doesn&amp;rsquo;t run any simulation on the right side at all!&lt;/p&gt;
 &lt;h2 id=&#34;snapshots&#34;&gt;Snapshots&lt;/h2&gt;
@@ -466,7 +466,7 @@
 &lt;p&gt;But even if you do all this there will still be misprediction because you simply can&amp;rsquo;t accurately match a physics simulation with an approximation. If your simulation is mostly linear motion, eg. fast moving planes, boats, space ships &amp;ndash; you may find that a simple extrapolation works well for short time periods (50-250ms or so), but in my experience as soon as objects start colliding with other non-stationary objects, extrapolation starts to break down.&lt;/p&gt;
 &lt;p&gt;How can we reduce the amount of delay added for interpolation? 350ms still seems unacceptable and we can&amp;rsquo;t use extrapolation to reduce this delay without adding a lot of inaccuracy. The solution is simple: &lt;em&gt;increase the send rate!&lt;/em&gt; If we send 30 snapshots per-second we can get the same amount of packet loss protection with a delay of 150ms. 60 packets per-second needs only 85ms.&lt;/p&gt;
 &lt;p&gt;In order to increase the send rate we&amp;rsquo;re going to need some pretty good bandwidth optimizations. But don&amp;rsquo;t worry, there&amp;rsquo;s a &lt;em&gt;lot&lt;/em&gt; we can do to optimize bandwidth. So much so that there was too much stuff to fit in this article and I had to insert an extra unplanned article just to cover all of it!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_compression/&#34;&gt;Snapshot Compression&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;Snapshot Compression&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -474,13 +474,13 @@
     
     <item>
       <title>Deterministic Lockstep</title>
-      <link>http://127.0.0.1:1313/post/deterministic_lockstep/</link>
+      <link>https://gafferongames.com/post/deterministic_lockstep/</link>
       <pubDate>Sat, 29 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/deterministic_lockstep/</guid>
+      <guid>https://gafferongames.com/post/deterministic_lockstep/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/introduction_to_networked_physics/&#34;&gt;previous article&lt;/a&gt; we explored the physics simulation we&amp;rsquo;re going to network in this article series. In this article specifically, we&amp;rsquo;re going to network this physics simulation using &lt;strong&gt;deterministic lockstep&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/introduction_to_networked_physics/&#34;&gt;previous article&lt;/a&gt; we explored the physics simulation we&amp;rsquo;re going to network in this article series. In this article specifically, we&amp;rsquo;re going to network this physics simulation using &lt;strong&gt;deterministic lockstep&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Deterministic lockstep is a method of networking a system from one computer to another by sending only the &lt;em&gt;inputs&lt;/em&gt; that control that system, rather than the &lt;em&gt;state&lt;/em&gt; of that system. In the context of networking a physics simulation, this means we send across a small amount of input, while avoiding sending state like position, orientation, linear velocity and angular velocity per-object.&lt;/p&gt;
 &lt;p&gt;The benefit is that bandwidth is proportional to the size of the input, not the number of objects in the simulation. Yes, with deterministic lockstep you can network a physics simulation of one million objects with the same bandwidth as just one.&lt;/p&gt;
 &lt;p&gt;While this sounds great in theory, in practice it&amp;rsquo;s difficult to implement deterministic lockstep because most physics simulations are not deterministic. Differences in floating point behavior between compilers, OS&amp;rsquo;s and even instruction sets make it almost impossible to guarantee determinism for floating point calculations.&lt;/p&gt;
@@ -494,7 +494,7 @@
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;And now a word of warning. Even though the simulation above is deterministic on the same machine, that does &lt;em&gt;not&lt;/em&gt; necessarily mean it would also be deterministic across different compilers, a different OS or different machine architectures (eg. PowerPC vs. Intel). In fact, it&amp;rsquo;s probably not even deterministic between debug and release builds due to floating point optimizations.&lt;/p&gt;
 &lt;p&gt;Floating point determinism is a complicated subject and there&amp;rsquo;s no silver bullet.&lt;/p&gt;
-&lt;p&gt;For more information please refer to this &lt;a href=&#34;http://127.0.0.1:1313/post/floating_point_determinism/&#34;&gt;article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For more information please refer to this &lt;a href=&#34;https://gafferongames.com/post/floating_point_determinism/&#34;&gt;article&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;networking-inputs&#34;&gt;Networking Inputs&lt;/h2&gt;
 &lt;p&gt;Now let&amp;rsquo;s get down to implementation.&lt;/p&gt;
 &lt;p&gt;Our example physics simulation is driven by keyboard input: arrow keys apply forces to make the player cube move, holding space lifts the cube up and blows other cubes around, and holding &amp;lsquo;z&amp;rsquo; enables katamari mode.&lt;/p&gt;
@@ -555,7 +555,7 @@
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;The video above shows deterministic lockstep synchronized over UDP using this technique with &lt;strong&gt;2 seconds&lt;/strong&gt; of latency and &lt;strong&gt;25% packet loss&lt;/strong&gt;. Imagine how awful TCP would look under these conditions.&lt;/p&gt;
 &lt;p&gt;So in conclusion, even where TCP should have the most advantage, in the only networking model that relies on reliable-ordered data, we can still easily whip its ass with a simple protocol built on top of UDP.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_interpolation/&#34;&gt;Snapshot Interpolation&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;Snapshot Interpolation&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -563,12 +563,12 @@
     
     <item>
       <title>Introduction to Networked Physics</title>
-      <link>http://127.0.0.1:1313/post/introduction_to_networked_physics/</link>
+      <link>https://gafferongames.com/post/introduction_to_networked_physics/</link>
       <pubDate>Fri, 28 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/introduction_to_networked_physics/</guid>
+      <guid>https://gafferongames.com/post/introduction_to_networked_physics/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to the first article in &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to the first article in &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In this article series we&amp;rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.&lt;/p&gt;
 &lt;p&gt;But before we get to this, let&amp;rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
@@ -588,7 +588,7 @@
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;Cubes within a certain distance of the player have a force applied towards the center of the cube. These cubes remain physically simulated while in the katamari ball, they are not just “stuck” to the player like in the original game.&lt;/p&gt;
 &lt;p&gt;This is a very difficult situation for networked physics!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/deterministic_lockstep/&#34;&gt;Deterministic Lockstep&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;Deterministic Lockstep&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -596,12 +596,12 @@
     
     <item>
       <title>Collision Response and Coulomb Friction</title>
-      <link>http://127.0.0.1:1313/post/collision_response_and_coulomb_friction/</link>
+      <link>https://gafferongames.com/post/collision_response_and_coulomb_friction/</link>
       <pubDate>Sun, 24 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/collision_response_and_coulomb_friction/</guid>
+      <guid>https://gafferongames.com/post/collision_response_and_coulomb_friction/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;So far in this series, we have mathematically defined the go stone, rendered it, determined how it moves and rotates, and discussed how its shape affects how it responds to collisions.&lt;/p&gt;
 &lt;p&gt;Now in this article we reach our first milestone:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;A go stone bouncing and coming to rest on the go board&lt;/strong&gt;.&lt;/p&gt;
@@ -609,7 +609,7 @@
 &lt;p&gt;We&amp;rsquo;re going do this using a technique called &lt;!-- raw HTML omitted --&gt;impulse-based collision response&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
 &lt;p&gt;The concept is simple. To handle a collision we apply an impulse, an instantaneous change in momentum, at the point of impact to make the go stone bounce.&lt;/p&gt;
 &lt;h2 id=&#34;linear-collision-response&#34;&gt;Linear Collision Response&lt;/h2&gt;
-&lt;p&gt;We now pick up where we left off at the end of the &lt;a href=&#34;http://127.0.0.1:1313/post/go_stone_vs_go_board/&#34;&gt;collision detection article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;We now pick up where we left off at the end of the &lt;a href=&#34;https://gafferongames.com/post/go_stone_vs_go_board/&#34;&gt;collision detection article&lt;/a&gt;.&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;We have a contact point and a contact normal for the collision.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s start by calculating a collision response impulse without rotation.&lt;/p&gt;
@@ -709,13 +709,13 @@
     
     <item>
       <title>Rotation &amp; Inertia Tensors</title>
-      <link>http://127.0.0.1:1313/post/rotation_and_inertia_tensors/</link>
+      <link>https://gafferongames.com/post/rotation_and_inertia_tensors/</link>
       <pubDate>Sat, 23 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/rotation_and_inertia_tensors/</guid>
+      <guid>https://gafferongames.com/post/rotation_and_inertia_tensors/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/go_stone_vs_go_board/&#34;&gt;previous article&lt;/a&gt; we detected collision between the go stone and the go board. Now we&amp;rsquo;re working up to calculating collision response so the stone bounces and wobbles before coming to rest on the board.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/go_stone_vs_go_board/&#34;&gt;previous article&lt;/a&gt; we detected collision between the go stone and the go board. Now we&amp;rsquo;re working up to calculating collision response so the stone bounces and wobbles before coming to rest on the board.&lt;/p&gt;
 &lt;p&gt;But in order to reach this goal we first need to lay some groundwork. It turns out that irregularly shaped objects, like go stones, are easier to rotate about some axes than others and this has a large effect on how they react to collisions.&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;This is the reason go stones wobble in such an interesting way when placed on the go board, and why thick go stones wobble differently to thin ones.&lt;/p&gt;
@@ -796,7 +796,7 @@
 &lt;p&gt;Plugging in the values for a size 33 stone, we get 0.303588 which is close to the approximate solution 0.304776.&lt;/p&gt;
 &lt;p&gt;Verifying exact solutions against numeric ones is a fantastic way to check your calculations.&lt;/p&gt;
 &lt;p&gt;Can &lt;!-- raw HTML omitted --&gt;you&lt;!-- raw HTML omitted --&gt; derive the equation for I&lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt;?&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/collision_response_and_coulomb_friction/&#34;&gt;Collision Response and Coulomb Friction&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/collision_response_and_coulomb_friction/&#34;&gt;Collision Response and Coulomb Friction&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -804,12 +804,12 @@
     
     <item>
       <title>Go Stone vs. Go Board</title>
-      <link>http://127.0.0.1:1313/post/go_stone_vs_go_board/</link>
+      <link>https://gafferongames.com/post/go_stone_vs_go_board/</link>
       <pubDate>Fri, 22 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/go_stone_vs_go_board/</guid>
+      <guid>https://gafferongames.com/post/go_stone_vs_go_board/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;In this series so far we&amp;rsquo;ve defined the shape of a go stone, rendered it using 3D graphics hardware and simulated how it moves in three dimensions.&lt;/p&gt;
 &lt;p&gt;Our next goal is for the go stone to bounce and come to rest on the go board.&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
@@ -898,7 +898,7 @@
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;This seems counter-intuitive at first, but it has some nice parallels with other physical laws. Nature is lazy and always takes the shortest path. Nature does the &lt;em&gt;least amount of work&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;We should probably do the same :)&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/rotation_and_inertia_tensors/&#34;&gt;Rotation and Inertia Tensors&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/rotation_and_inertia_tensors/&#34;&gt;Rotation and Inertia Tensors&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -906,12 +906,12 @@
     
     <item>
       <title>How The Go Stone Moves</title>
-      <link>http://127.0.0.1:1313/post/how_the_go_stone_moves/</link>
+      <link>https://gafferongames.com/post/how_the_go_stone_moves/</link>
       <pubDate>Thu, 21 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/how_the_go_stone_moves/</guid>
+      <guid>https://gafferongames.com/post/how_the_go_stone_moves/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;In previous articles we mathematically defined the shape of a go stone and tessellated its shape so it can be drawn with 3D graphics hardware.&lt;/p&gt;
 &lt;p&gt;Now we want to make the go stone move, obeying Newton&amp;rsquo;s laws of motion so the simulation is physically accurate. The stone should be accelerated by gravity and fall downwards. I also want the stone to rotate so it tumbles as it falls through the air.&lt;/p&gt;
 &lt;h2 id=&#34;the-rigid-body-assumption&#34;&gt;The Rigid Body Assumption&lt;/h2&gt;
@@ -1080,7 +1080,7 @@ while ( !quit )
 &lt;p&gt;And here is the end result:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;I think this is fairly convincing. The go stone is moving quite realistically!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/go_stone_vs_go_board/&#34;&gt;Go Stone vs. Go Board&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/go_stone_vs_go_board/&#34;&gt;Go Stone vs. Go Board&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1088,12 +1088,12 @@ while ( !quit )
     
     <item>
       <title>Tessellating The Go Stone</title>
-      <link>http://127.0.0.1:1313/post/tessellating_the_go_stone/</link>
+      <link>https://gafferongames.com/post/tessellating_the_go_stone/</link>
       <pubDate>Wed, 20 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/tessellating_the_go_stone/</guid>
+      <guid>https://gafferongames.com/post/tessellating_the_go_stone/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;In this article we want to draw the go stone using &lt;!-- raw HTML omitted --&gt;OpenGL&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
 &lt;p&gt;Unfortunately we can&amp;rsquo;t just tell the graphics card, &amp;ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r&lt;!-- raw HTML omitted --&gt;1&lt;!-- raw HTML omitted --&gt; and r&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;!&amp;rdquo;, because modern 3D graphics cards work by drawing triangles. We have to take our mathematical definition of the go stone and turn it into a set of triangles that the graphics card can render.&lt;/p&gt;
 &lt;p&gt;This is called tessellation and there are several different ways to do it.&lt;/p&gt;
@@ -1118,7 +1118,7 @@ while ( !quit )
 &lt;p&gt;I&amp;rsquo;d rather not have the graphics card waste time transforming the same vertex over and over, so as I add vertices to the mesh I hash vertex positions into a 3D grid (~1mm cells) and reuse an existing vertex if the position and normals match within some small epsilon value.&lt;/p&gt;
 &lt;p&gt;With vertex welding the reduction in vertices is dramatic: 53000 to just 6500.&lt;/p&gt;
 &lt;p&gt;For more information on vertex welding please refer to the discussion in &lt;!-- raw HTML omitted --&gt;Real-Time Collision Detection&lt;!-- raw HTML omitted --&gt; by &lt;!-- raw HTML omitted --&gt;Christer Ericson&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/how_the_go_stone_moves/&#34;&gt;How The Go Stone Moves&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/how_the_go_stone_moves/&#34;&gt;How The Go Stone Moves&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1126,12 +1126,12 @@ while ( !quit )
     
     <item>
       <title>Shape of The Go Stone</title>
-      <link>http://127.0.0.1:1313/post/shape_of_the_go_stone/</link>
+      <link>https://gafferongames.com/post/shape_of_the_go_stone/</link>
       <pubDate>Tue, 19 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/shape_of_the_go_stone/</guid>
+      <guid>https://gafferongames.com/post/shape_of_the_go_stone/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;If you play Go, you know that a biconvex go stone has an interesting wobble when it&amp;rsquo;s placed on the board. This wobble is a direct consequence of its unique shape.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;d like to reproduce this wobble in Virtual Go, so let&amp;rsquo;s to spend some time studying go stone&amp;rsquo;s shape, so we can capture this wobble and simulate it on a computer :)&lt;/p&gt;
 &lt;h2 id=&#34;slate-and-shell&#34;&gt;Slate And Shell&lt;/h2&gt;
@@ -1178,7 +1178,7 @@ while ( !quit )
 &lt;p&gt;In three dimensions the bevel is actually a torus (donut) around the edge of the go stone. We need to calculate the major and minor radii r&lt;!-- raw HTML omitted --&gt;1&lt;!-- raw HTML omitted --&gt; and r&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt; of the torus as a function of b and the dimensions of the go stone:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;The key to solving this is to realize that if the go stone and the bevel are to match perfectly then the tangent of the two circles must be equal at the point P.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;&lt;em&gt;Update&lt;/em&gt;: A few years later and it occurs to me that it would be even more beautiful if the second derivative matched at this intersection as well. Is this possible in general, or must the generating spheres become to ellipses in order to make this happen? I suspect this is the case. Mathematicians who play Go, &lt;a href=&#34;http://127.0.0.1:1313/contact&#34;&gt;let me know your thoughts&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;em&gt;Update&lt;/em&gt;: A few years later and it occurs to me that it would be even more beautiful if the second derivative matched at this intersection as well. Is this possible in general, or must the generating spheres become to ellipses in order to make this happen? I suspect this is the case. Mathematicians who play Go, &lt;a href=&#34;https://gafferongames.com/contact&#34;&gt;let me know your thoughts&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;If the tangent is equal then the normal must be equal as well. This means that the center of the bevel circle lies at the intersection of the line CP and the x axis.&lt;/p&gt;
 &lt;p&gt;We already know C so if we can find the point P then we can find this intersection point. Once we know the intersection point we can find r&lt;!-- raw HTML omitted --&gt;1&lt;!-- raw HTML omitted --&gt; and r&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
@@ -1211,7 +1211,7 @@ while ( !quit )
     }
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Now we can calculate the bevel torus to round off any go stone we create as the intersection of two spheres.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/tessellating_the_go_stone&#34;&gt;Tessellating The Go Stone&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/tessellating_the_go_stone&#34;&gt;Tessellating The Go Stone&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1219,19 +1219,19 @@ while ( !quit )
     
     <item>
       <title>Introduction to Virtual Go</title>
-      <link>http://127.0.0.1:1313/post/introduction_to_virtual_go/</link>
+      <link>https://gafferongames.com/post/introduction_to_virtual_go/</link>
       <pubDate>Mon, 18 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/introduction_to_virtual_go/</guid>
+      <guid>https://gafferongames.com/post/introduction_to_virtual_go/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;m a professional game programmer with 15 years experience in the game industry. Over the years I&amp;rsquo;ve worked for Irrational Games, Team Bondi, Pandemic Studios, Sony Santa Monica and most recently Respawn Entertainment. During my career I&amp;rsquo;m extremely proud to have worked on such games as &amp;lsquo;Freedom Force&amp;rsquo;, &amp;lsquo;L.A. Noire&amp;rsquo;, &amp;lsquo;Journey&amp;rsquo;, &amp;lsquo;God of War: Ascension&amp;rsquo; and &amp;lsquo;Titanfall&amp;rsquo;.&lt;/p&gt;
 &lt;p&gt;In my spare time I&amp;rsquo;m also an avid player of the board game &lt;a href=&#34;https://en.wikipedia.org/wiki/Go_(game)&#34;&gt;Go&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 &lt;p&gt;A personal project I&amp;rsquo;ve always dreamed of combines the things I love: the game of Go, graphics programming, physics simulation and network programming.&lt;/p&gt;
 &lt;p&gt;The end result I hope to achieve is a beautiful real-time computer rendering of a go board and stones with photorealistic visuals and the laws of physics defining all interactions between the go stones and the board. To Go players reading this, yes, I do aim to reproduce that unique &amp;lsquo;wobble&amp;rsquo; and feel you are familiar with when placing a stone on the board.&lt;/p&gt;
 &lt;p&gt;During the course of this article series I&amp;rsquo;m going to build this project entirely from scratch and include &lt;!-- raw HTML omitted --&gt;you&lt;!-- raw HTML omitted --&gt; in on all the details of building it as a tutorial. I believe in sharing knowledge and my hope is you can follow this project and understand the passion I bring to it and perhaps learn a few things along the way.&lt;/p&gt;
-&lt;p&gt;If you already play Go and want to get right in to the details of building the simulation, I would recommend skipping ahead to the next article in the series: &lt;a href=&#34;http://127.0.0.1:1313/post/shape_of_the_go_stone/&#34;&gt;Shape Of The Go Stone&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you already play Go and want to get right in to the details of building the simulation, I would recommend skipping ahead to the next article in the series: &lt;a href=&#34;https://gafferongames.com/post/shape_of_the_go_stone/&#34;&gt;Shape Of The Go Stone&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Otherwise, if you would like a quick introduction to Go, please read on!&lt;/p&gt;
 &lt;h2 id=&#34;the-game-of-go&#34;&gt;The Game of Go&lt;/h2&gt;
 &lt;p&gt;Go is a board game that originated in ancient China.&lt;/p&gt;
@@ -1253,7 +1253,7 @@ while ( !quit )
 &lt;p&gt;It sounds simple but as you play Go you&amp;rsquo;ll notice beautiful complexity emerging like a fractal: life and death - stones living even though surrounded, liberty races, seki or &amp;ldquo;dual life&amp;rdquo;, the ladder, ko, the snapback, playing under the stones, the monkey jump, the bamboo joint, the tiger mouth.&lt;/p&gt;
 &lt;p&gt;So many beautiful properties from such simple rules. Truly an amazing game!&lt;/p&gt;
 &lt;p&gt;Please visit &lt;a href=&#34;http://playgo.to/iwtg/en/&#34;&gt;The Interactive Way To Go&lt;/a&gt; if you would like to learn more.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/shape_of_the_go_stone/&#34;&gt;Shape of The Go Stone&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/shape_of_the_go_stone/&#34;&gt;Shape of The Go Stone&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1261,13 +1261,13 @@ while ( !quit )
     
     <item>
       <title>Networked Physics (2004)</title>
-      <link>http://127.0.0.1:1313/post/networked_physics_2004/</link>
+      <link>https://gafferongames.com/post/networked_physics_2004/</link>
       <pubDate>Sat, 04 Sep 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/networked_physics_2004/</guid>
+      <guid>https://gafferongames.com/post/networked_physics_2004/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/spring_physics&#34;&gt;previous article&lt;/a&gt; we discussed how to use spring-like forces to model basic collision response, joints and motors.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/spring_physics&#34;&gt;previous article&lt;/a&gt; we discussed how to use spring-like forces to model basic collision response, joints and motors.&lt;/p&gt;
 &lt;p&gt;In this article we&amp;rsquo;re going to discuss how to network a physics simulation.&lt;/p&gt;
 &lt;h2 id=&#34;first-person-shooters&#34;&gt;First Person Shooters&lt;/h2&gt;
 &lt;p&gt;First person shooter physics are usually very simple. The world is static and players are limited to running around and jumping and shooting.&lt;/p&gt;
@@ -1333,13 +1333,13 @@ while ( !quit )
     
     <item>
       <title>Spring Physics</title>
-      <link>http://127.0.0.1:1313/post/spring_physics/</link>
+      <link>https://gafferongames.com/post/spring_physics/</link>
       <pubDate>Fri, 03 Sep 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/spring_physics/</guid>
+      <guid>https://gafferongames.com/post/spring_physics/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/physics_in_3d/&#34;&gt;previous article&lt;/a&gt; we discussed how to simulate the motion of rigid bodies in 3D. Now we&amp;rsquo;re going to discuss how to implement spring physics.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/physics_in_3d/&#34;&gt;previous article&lt;/a&gt; we discussed how to simulate the motion of rigid bodies in 3D. Now we&amp;rsquo;re going to discuss how to implement spring physics.&lt;/p&gt;
 &lt;p&gt;The physics behind springs is simple but extremely versatile and useful. You can use springs to link points together to model rope and string, cloth, and even blobs of jelly. Springs can also be used to implement basic collision response, and to create joints that constrain the motion of rigid bodies.&lt;/p&gt;
 &lt;p&gt;The more physics programming you do, the more springs pop up. Many physical phenomenon boil down to spring-like forces being applied such as buoyancy in water. Springs are everywhere so lets discover how to simulate them!&lt;/p&gt;
 &lt;h2 id=&#34;spring-and-dampers&#34;&gt;Spring and Dampers&lt;/h2&gt;
@@ -1388,7 +1388,7 @@ while ( !quit )
 &lt;p&gt;The first weakness is that its difficult to tune the spring constants to get exactly the effect you want. For example, if you are attempting to model the real world physics of an object, you will need to experiment to find the spring k and b values that match the simulation. These values are usually dependent on other values of your simulation, such as the gravity constant, meaning that if you adjust gravity you&amp;rsquo;ll need to retune your springs to get the same effect.&lt;/p&gt;
 &lt;p&gt;The next problem is that tighter the spring k you use, the more difficult it becomes to solve the differential equation. Using an RK4 integrator sure help with this, but even with RK4 there is a fundamental limit to how large you can make your spring k before your simulation will explode. At this point you need to either decrease your timestep or reduce your spring k.&lt;/p&gt;
 &lt;p&gt;The final, and major weakness is that springs are reactive not predictive. This is a subtle point but a very important one. A joint or constraint implemented using springs only works by correcting errors after they occur, and collision response using springs requires allowing some amount of penetration before it acts to correct it and so forth. More advanced techniques exist which can solve for the forces required to constrain the physics simulation without inducing error, such as LCP solvers or iterative methods, but they are out of scope of this simple article.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/networked_physics_2004/&#34;&gt;Networked Physics (2004)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/networked_physics_2004/&#34;&gt;Networked Physics (2004)&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1396,13 +1396,13 @@ while ( !quit )
     
     <item>
       <title>Physics in 3D</title>
-      <link>http://127.0.0.1:1313/post/physics_in_3d/</link>
+      <link>https://gafferongames.com/post/physics_in_3d/</link>
       <pubDate>Thu, 02 Sep 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/physics_in_3d/</guid>
+      <guid>https://gafferongames.com/post/physics_in_3d/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/fix_your_timestep/&#34;&gt;previous article&lt;/a&gt; we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/fix_your_timestep/&#34;&gt;previous article&lt;/a&gt; we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.&lt;/p&gt;
 &lt;p&gt;In this article we are going to simulate motion in three dimensions.&lt;/p&gt;
 &lt;h2 id=&#34;rigid-bodies&#34;&gt;Rigid Bodies&lt;/h2&gt;
 &lt;p&gt;We will concentrate on a type of object called a &lt;strong&gt;rigid body&lt;/strong&gt;. Rigid bodies cannot bend, compress or deform in any way. This makes their motion much easier to calculate.&lt;/p&gt;
@@ -1419,7 +1419,7 @@ while ( !quit )
 &lt;p&gt;Addition of two vectors is defined as adding each component together. Multiplying a vector by a floating point number is the same as just multiplying each component. Lets add overloaded operators to the vector struct so that we can perform these operations in code as if vectors are a native type:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;!-- raw HTML omitted --&gt;
-&lt;p&gt;Now instead of maintaining completely seperate equations of motion and integrating seperately for x, y and z, we convert our position, velocity, acceleration and force to vector quantities, then integrate the vectors directly using the equations of motion from the &lt;a href=&#34;http://127.0.0.1:1313/post/integration_basics/&#34;&gt;first article&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;Now instead of maintaining completely seperate equations of motion and integrating seperately for x, y and z, we convert our position, velocity, acceleration and force to vector quantities, then integrate the vectors directly using the equations of motion from the &lt;a href=&#34;https://gafferongames.com/post/integration_basics/&#34;&gt;first article&lt;/a&gt;:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;Notice how &lt;!-- raw HTML omitted --&gt;F&lt;!-- raw HTML omitted --&gt;, &lt;!-- raw HTML omitted --&gt;a&lt;!-- raw HTML omitted --&gt;, &lt;!-- raw HTML omitted --&gt;v&lt;!-- raw HTML omitted --&gt; and &lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt; are written in bold. This is the convention used to distinguish vector quantities from single value (scalar) quantities such as mass m and time t.&lt;/p&gt;
@@ -1484,7 +1484,7 @@ while ( !quit )
 &lt;h2 id=&#34;orientation-in-3d&#34;&gt;Orientation in 3D&lt;/h2&gt;
 &lt;p&gt;This complexity is due to the difficulty of representing orientations in three dimensions.&lt;/p&gt;
 &lt;p&gt;In two dimensions orientations are easy, you just keep track of an angle in radians and you are done. In three dimensions it becomes much more complex. It turns out that you must either use 3x3 rotation matrices or quaternions to correctly represent the orientation of an object.&lt;/p&gt;
-&lt;p&gt;For reasons of simplicity and efficiency I&amp;rsquo;m going to use quaternions to represent the orientation instead of matrices. This also gives us an easy way to interpolate between the previous and current physics orientation to get smooth framerate independent animation as per the time stepping scheme outlined in the &lt;a href=&#34;http://127.0.0.1:1313/post/fix_your_timestep/&#34;&gt;previous article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For reasons of simplicity and efficiency I&amp;rsquo;m going to use quaternions to represent the orientation instead of matrices. This also gives us an easy way to interpolate between the previous and current physics orientation to get smooth framerate independent animation as per the time stepping scheme outlined in the &lt;a href=&#34;https://gafferongames.com/post/fix_your_timestep/&#34;&gt;previous article&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Now there are plenty of resources on the internet which explain what quaternions are and how unit length quaternions are used to represent rotations in three dimensions. Here is a particularly &lt;a href=&#34;http://www.sjbrown.co.uk/quaternions.html&#34;&gt;nice one&lt;/a&gt;. What you need to know however is that, effectively, unit quaternions represent an axis of rotation and an amount of rotation about that axis. This may seem similar to our angular velocity, but quaternions are four dimensional vectors instead of three, so mathematically they are actually quite different!&lt;/p&gt;
 &lt;p&gt;We will represent quaternions in code as another struct:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;    struct Quaternion
@@ -1572,7 +1572,7 @@ while ( !quit )
 &lt;p&gt;Where &lt;!-- raw HTML omitted --&gt;p&lt;!-- raw HTML omitted --&gt; is the point on the rigid body and &lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt; is the center of mass of the object.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;We have covered the techniques required to simulate linear and rotational movement of a rigid body in three dimensions. By combining the linear and rotational physics into a single physics state and integrating, we can simulate the motion of a rigid body in three dimensions.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/spring_physics/&#34;&gt;Spring Physics&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/spring_physics/&#34;&gt;Spring Physics&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1580,13 +1580,13 @@ while ( !quit )
     
     <item>
       <title>Fix Your Timestep!</title>
-      <link>http://127.0.0.1:1313/post/fix_your_timestep/</link>
+      <link>https://gafferongames.com/post/fix_your_timestep/</link>
       <pubDate>Thu, 10 Jun 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/fix_your_timestep/</guid>
+      <guid>https://gafferongames.com/post/fix_your_timestep/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/integration_basics/&#34;&gt;previous article&lt;/a&gt; we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&amp;rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &amp;ldquo;delta time&amp;rdquo; (or dt for short).&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/integration_basics/&#34;&gt;previous article&lt;/a&gt; we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&amp;rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &amp;ldquo;delta time&amp;rdquo; (or dt for short).&lt;/p&gt;
 &lt;p&gt;But how to choose this delta time value? This may seem like a trivial subject but in fact there are many different ways to do it, each with their own strengths and weaknesses - so read on!&lt;/p&gt;
 &lt;h2 id=&#34;fixed-delta-time&#34;&gt;Fixed delta time&lt;/h2&gt;
 &lt;p&gt;The simplest way to step forward is with fixed delta time, like 1/60th of a second:&lt;/p&gt;
@@ -1727,7 +1727,7 @@ while ( !quit )
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;This &lt;em&gt;looks&lt;/em&gt; complicated but here is a simple way to think about it. Any remainder in the accumulator is effectively a measure of just how much more time is required before another whole physics step can be taken. For example, a remainder of dt/2 means that we are currently halfway between the current physics step and the next. A remainder of dt*0.1 means that the update is 1/10th of the way between the current and the next state.&lt;/p&gt;
 &lt;p&gt;We can use this remainder value to get a blending factor between the previous and current physics state simply by dividing by dt. This gives an alpha value in the range [0,1] which is used to perform a linear interpolation between the two physics states to get the current state to render. This interpolation is easy to do for single values and for vector state values. You can even use it with full 3D rigid body dynamics if you store your orientation as a quaternion and use a spherical linear interpolation (slerp) to blend between the previous and current orientations.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/physics_in_3d/&#34;&gt;Physics in 3D&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/physics_in_3d/&#34;&gt;Physics in 3D&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1735,12 +1735,12 @@ while ( !quit )
     
     <item>
       <title>Integration Basics</title>
-      <link>http://127.0.0.1:1313/post/integration_basics/</link>
+      <link>https://gafferongames.com/post/integration_basics/</link>
       <pubDate>Tue, 01 Jun 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/integration_basics/</guid>
+      <guid>https://gafferongames.com/post/integration_basics/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.&lt;/p&gt;
 &lt;p&gt;A physics simulation works by making many small predictions based on the laws of physics. These predictions are actually quite simple, and basically boil down to something like &amp;ldquo;the object is here, and is traveling this fast in that direction, so in a short amount of time it should be over there&amp;rdquo;. We perform these predictions using a mathematical technique called integration.&lt;/p&gt;
 &lt;p&gt;Exactly how to implement this integration is the subject of this article.&lt;/p&gt;
@@ -1971,7 +1971,7 @@ while ( !quit )
     position += velocity * dt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;You&amp;rsquo;ll be glad you did :)&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/fix_your_timestep/&#34;&gt;Fix Your Timestep!&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/fix_your_timestep/&#34;&gt;Fix Your Timestep!&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>

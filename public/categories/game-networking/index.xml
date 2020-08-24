@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Game Networking on Gaffer On Games</title>
-    <link>http://127.0.0.1:1313/categories/game-networking/</link>
+    <link>https://gafferongames.com/categories/game-networking/</link>
     <description>Recent content in Game Networking on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
-    <copyright>Copyright © Glenn Fiedler, 2004 - 2019</copyright>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2020</copyright>
     <lastBuildDate>Mon, 24 Aug 2020 00:00:00 +0000</lastBuildDate>
     
-	    <atom:link href="http://127.0.0.1:1313/categories/game-networking/index.xml" rel="self" type="application/rss+xml" />
+	    <atom:link href="https://gafferongames.com/categories/game-networking/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Network Neutrality Considered Harmful</title>
-      <link>http://127.0.0.1:1313/post/network_neutrality_considered_harmful/</link>
+      <link>https://gafferongames.com/post/network_neutrality_considered_harmful/</link>
       <pubDate>Mon, 24 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/network_neutrality_considered_harmful/</guid>
+      <guid>https://gafferongames.com/post/network_neutrality_considered_harmful/</guid>
       <description>&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://www.linkedin.com/in/glennfiedler/&#34;&gt;Glenn Fiedler&lt;/a&gt; and I&amp;rsquo;m the founder and CEO of &lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Before starting Network Next, I worked in the game industry for 20 years as a software engineer. I was fortunate enough to have a good career and got to work on some games you&amp;rsquo;ve might have played: &lt;strong&gt;Freedom Force&lt;/strong&gt;, &lt;strong&gt;Mercenaries 2&lt;/strong&gt;, &lt;strong&gt;God of War&lt;/strong&gt;, &lt;strong&gt;Journey&lt;/strong&gt; and &lt;strong&gt;Titanfall 1 and 2&lt;/strong&gt;. Some of my netcode is still active in &lt;strong&gt;Apex Legends&lt;/strong&gt; even though I left Respawn Entertainment before it started development.&lt;/p&gt;
 &lt;p&gt;Ever since &lt;a href=&#34;https://quake.fandom.com/wiki/Qtest&#34;&gt;QTest&lt;/a&gt; I&amp;rsquo;ve found the idea that people in different physical locations could inhabit the same virtual space utterly fascinating. I wanted to understand how that worked and be part of it. So, after a few false starts in graphics programming and physics, I specialized in UDP protocol design for latency sensitive games.&lt;/p&gt;
@@ -34,16 +34,16 @@
 &lt;p&gt;And despite all this effort, a significant portion of players would play my game and get bad network performance and there was &lt;em&gt;literally nothing I could do about it&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Just how bad does it get? Let&amp;rsquo;s take a look at the data&amp;hellip;&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s a screenshot from Thursday August 20th, 2020:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-neutrality-considered-harmful/portal-001.png&#34; alt=&#34;Screenshot of https://portal.networknext.com&#34;&gt;&lt;/p&gt;
-&lt;p&gt;1000+ players with extra 100ms of latency courtesy of best effort delivery, one player with an additional 730ms. &lt;em&gt;Clearly, this is not a speed of light problem&amp;hellip;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-001.png&#34; alt=&#34;Screenshot of https://portal.networknext.com&#34;&gt;&lt;/p&gt;
+&lt;p&gt;1000+ players with an additional 100ms+ of latency courtesy of best effort delivery, one player with a whooping 730ms extra. &lt;em&gt;Clearly, this is not a speed of light problem&amp;hellip;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Later the same day we saw a packet loss event:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-neutrality-considered-harmful/portal-002.png&#34; alt=&#34;Graph showing AB test result for packet loss&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-002.png&#34; alt=&#34;Graph showing AB test result for packet loss&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Now you may look at this and think, oh, it&amp;rsquo;s just 0.8% packet loss at peak, it&amp;rsquo;s not that bad&amp;hellip; but this is an average across all players, and only some portion of players were affected. For these players, the effect was much more severe:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-neutrality-considered-harmful/portal-003.png&#34; alt=&#34;Graph showing absolute point reduction in packet loss percent for players on network next&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-003.png&#34; alt=&#34;Graph showing absolute point reduction in packet loss percent for players on network next&#34;&gt;&lt;/p&gt;
 &lt;p&gt;During the mitigation the average packet loss reduction was an absolute reduction of 12 points of packet loss. No, not a reduction of 12%, &lt;strong&gt;a reduction of 12 points&lt;/strong&gt;. In other words, a conversion from totally unplayable to playable.&lt;/p&gt;
 &lt;p&gt;This is not an isolated incident. These things literally happen all the time. Take a look for yourself, the portal is live and updated in real-time: &lt;a href=&#34;https://portal.networknext.com&#34;&gt;https://portal.networknext.com&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;From this it should be clear: &lt;strong&gt;the internet doesn&amp;rsquo;t care about your game.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;So what&amp;rsquo;s going on?&lt;/p&gt;
+&lt;p&gt;From this point on it should be clear: &lt;strong&gt;the internet really doesn&amp;rsquo;t care about your game.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;So&amp;hellip; what&amp;rsquo;s going on, and why is the case?&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s this. The internet makes no guarantee of performance, but instead offers best effort delivery. By the orthodoxy of Network Neutrality it is hand-wavingly assumed that overall, the quality level is maintained via over provisioning. But while this may be true for browsing the web and reading email, looking at the results above we can clearly see it isn&amp;rsquo;t working for latency sensitive applications like games!&lt;/p&gt;
 &lt;p&gt;As a game developer what I want for my traffic is the lowest latency (within speed of light limits), with as little packet loss and jitter as possible. In other words, if I send 60 packets per-second, I want all of them to arrive as quickly as possible exactly 1/60th of a second apart. The internet as it exists today, is just not capable of this.&lt;/p&gt;
 &lt;p&gt;So now let&amp;rsquo;s take direct aim at one of the core tenets of Network Neutrality. That all traffic is the same. Clearly this is false. Latency sensitive traffic like game traffic is not the same as checking your email or browsing the web. It&amp;rsquo;s not even the same as watching YouTube or Netflix, which can be solved by simply buffering the stream. It&amp;rsquo;s something completely different.&lt;/p&gt;
@@ -61,10 +61,10 @@
     
     <item>
       <title>Fixing the Internet for Games</title>
-      <link>http://127.0.0.1:1313/post/fixing_the_internet_for_games/</link>
+      <link>https://gafferongames.com/post/fixing_the_internet_for_games/</link>
       <pubDate>Sun, 24 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/fixing_the_internet_for_games/</guid>
+      <guid>https://gafferongames.com/post/fixing_the_internet_for_games/</guid>
       <description>&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and this is my GDC 2019 talk called “Fixing the Internet for Games”.&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;It&amp;rsquo;s about what we are doing at my new startup &lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;.&lt;/p&gt;
@@ -224,12 +224,12 @@
     
     <item>
       <title>Floating Point Determinism</title>
-      <link>http://127.0.0.1:1313/post/floating_point_determinism/</link>
+      <link>https://gafferongames.com/post/floating_point_determinism/</link>
       <pubDate>Wed, 24 Feb 2010 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/floating_point_determinism/</guid>
+      <guid>https://gafferongames.com/post/floating_point_determinism/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Lately I&amp;rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.&lt;/p&gt;
 &lt;p&gt;The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation &lt;em&gt;implicitly&lt;/em&gt; by sending just the player inputs.&lt;/p&gt;
 &lt;p&gt;This is a very attractive synchronization strategy because the amount of network traffic depends on the size of the player inputs instead of the amount of physics state in the world. In fact, this strategy has been used for many years in RTS games for precisely this reason; with thousands and thousands of units on the map, they simply have too much state to send over the network.&lt;/p&gt;
@@ -251,7 +251,7 @@
 &lt;p&gt;However with a good deal of work you &lt;!-- raw HTML omitted --&gt;may&lt;!-- raw HTML omitted --&gt; be able to &lt;!-- raw HTML omitted --&gt;coax&lt;!-- raw HTML omitted --&gt; exactly the same floating point results out of different compilers or different machine architectures by using your compilers &amp;ldquo;strict&amp;rdquo; IEEE 754 compliant mode and restricting the set of floating point operations you use. This typically results in significantly lower floating point performance.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;If you would like to debate these points or add your own nuance, please &lt;a href=&#34;http://127.0.0.1:1313/contact&#34;&gt;contact&lt;/a&gt; me! I consider this question by no means settled and am very interested in other peoples experiences with deterministic floating point simulations and exactly reproducible floating point calculations. Please contact me especially if you have managed to get binary exact results across different architectures and compilers in real world situations.&lt;/p&gt;
+&lt;p&gt;If you would like to debate these points or add your own nuance, please &lt;a href=&#34;https://gafferongames.com/contact&#34;&gt;contact&lt;/a&gt; me! I consider this question by no means settled and am very interested in other peoples experiences with deterministic floating point simulations and exactly reproducible floating point calculations. Please contact me especially if you have managed to get binary exact results across different architectures and compilers in real world situations.&lt;/p&gt;
 &lt;p&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 &lt;p&gt;&lt;!-- raw HTML omitted --&gt;Here are the resources I have discovered in my search so far&amp;hellip;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 &lt;p&gt;&lt;!-- raw HTML omitted --&gt;
@@ -407,12 +407,12 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>What Every Programmer Needs To Know About Game Networking</title>
-      <link>http://127.0.0.1:1313/post/what_every_programmer_needs_to_know_about_game_networking/</link>
+      <link>https://gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/</link>
       <pubDate>Wed, 24 Feb 2010 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/what_every_programmer_needs_to_know_about_game_networking/</guid>
+      <guid>https://gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Have you ever wondered how multiplayer games work?&lt;/p&gt;
 &lt;p&gt;From the outside it seems magical: two or more players sharing a consistent experience across the network like they actually exist together in the same virtual world.&lt;/p&gt;
 &lt;p&gt;But as programmers we know the truth of what is actually going on underneath is quite different from what you see. It turns out it&amp;rsquo;s all an illusion. A massive sleight-of-hand. What you perceive as a shared reality is only an approximation unique to your own point of view and place in time.&lt;/p&gt;
@@ -463,13 +463,13 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>Reliability and Congestion Avoidance over UDP</title>
-      <link>http://127.0.0.1:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/</link>
+      <link>https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/</link>
       <pubDate>Mon, 20 Oct 2008 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/</guid>
+      <guid>https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/virtual_connection_over_udp/&#34;&gt;previous article&lt;/a&gt;, we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/virtual_connection_over_udp/&#34;&gt;previous article&lt;/a&gt;, we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.&lt;/p&gt;
 &lt;h2 id=&#34;the-problem-with-tcp&#34;&gt;The Problem with TCP&lt;/h2&gt;
 &lt;p&gt;Those of you familiar with TCP know that it already has its own concept of connection, reliability-ordering and congestion avoidance, so why are we rewriting our own mini version of TCP on top of UDP?&lt;/p&gt;
 &lt;p&gt;The issue is that multiplayer action games rely on a steady stream of packets sent at rates of 10 to 30 packets per second, and for the most part, the data contained is these packets is so time sensitive that only the most recent data is useful. This includes data such as player inputs, the position, orientation and velocity of each player character, and the state of physics objects in the world.&lt;/p&gt;
@@ -621,7 +621,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;You can also get much more &lt;!-- raw HTML omitted --&gt;greedy&lt;!-- raw HTML omitted --&gt; with congestion avoidance, and attempt to discover when you can send data at a much higher bandwidth (eg. LAN), but you have to be very careful! With increased greediness comes more risk that you&amp;rsquo;ll flood the connection.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;Our new reliability system let&amp;rsquo;s us send a steady stream of packets and notifies us which packets are received. From this we can infer lost packets, and resend data that didn&amp;rsquo;t get through if necessary. We also have a simple congestion avoidance system that drops from 30 packets per-second to 10 times a second so we don&amp;rsquo;t flood the connection.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/what_every_programmer_needs_to_know_about_game_networking/&#34;&gt;What Every Programmer Needs to Know About Game Networking&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/&#34;&gt;What Every Programmer Needs to Know About Game Networking&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -629,13 +629,13 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>Virtual Connection over UDP</title>
-      <link>http://127.0.0.1:1313/post/virtual_connection_over_udp/</link>
+      <link>https://gafferongames.com/post/virtual_connection_over_udp/</link>
       <pubDate>Wed, 08 Oct 2008 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/virtual_connection_over_udp/</guid>
+      <guid>https://gafferongames.com/post/virtual_connection_over_udp/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/sending_and_receiving_packets&#34;&gt;previous article&lt;/a&gt; we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/sending_and_receiving_packets&#34;&gt;previous article&lt;/a&gt; we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.&lt;/p&gt;
 &lt;p&gt;As the first step towards a general connection system, we&amp;rsquo;ll start with the simplest case possible: creating a virtual connection between two computers on top of UDP.&lt;/p&gt;
 &lt;p&gt;But first, we&amp;rsquo;re going to dig in a bit deeper about how the Internet really works!&lt;/p&gt;
 &lt;h2 id=&#34;the-internet-unotu-a-series-of-tubes&#34;&gt;The Internet &lt;!-- raw HTML omitted --&gt;NOT&lt;!-- raw HTML omitted --&gt; a series of tubes&lt;/h2&gt;
@@ -655,7 +655,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;Take a look and you should be able to convince yourself pretty quickly that there is no direct connection.&lt;/p&gt;
 &lt;h2 id=&#34;how-packets-get-delivered&#34;&gt;How Packets Get Delivered&lt;/h2&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/udp_vs_tcp/&#34;&gt;first article&lt;/a&gt;, I presented a simple analogy for packet delivery, describing it as somewhat like a note being passed from person to person across a crowded room.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/udp_vs_tcp/&#34;&gt;first article&lt;/a&gt;, I presented a simple analogy for packet delivery, describing it as somewhat like a note being passed from person to person across a crowded room.&lt;/p&gt;
 &lt;p&gt;While this analogy gets the basic idea across, it is much too simple. The Internet is &lt;!-- raw HTML omitted --&gt;not&lt;!-- raw HTML omitted --&gt; a flat network of computers, it is a network of networks. And of course, we don&amp;rsquo;t just need to pass letters around a small room, we need to be able to send them anywhere in the world.&lt;/p&gt;
 &lt;p&gt;It should be pretty clear then that the best analogy is the postal service!&lt;/p&gt;
 &lt;p&gt;When you want to send a letter to somebody you put your letter in the mailbox and you trust that it will be delivered correctly. It&amp;rsquo;s not really relevant to you &lt;!-- raw HTML omitted --&gt;how&lt;!-- raw HTML omitted --&gt; it gets there, as long as it does. Somebody has to physically deliver your letter to its destination of course, so how is this done?&lt;/p&gt;
@@ -699,7 +699,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;And that&amp;rsquo;s all it takes to setup a virtual connection: some way to establish connection, filtering for packets not involved in the connection, and timeouts to detect disconnection.&lt;/p&gt;
 &lt;p&gt;Our connection is as real as any TCP connection, and the steady stream of UDP packets it provides is a suitable starting point for a multiplayer action game.&lt;/p&gt;
 &lt;p&gt;Now that you have your virtual connection over UDP, you can easily setup a client/server relationship for a two player multiplayer game without TCP.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/&#34;&gt;Reliability and Congestion Avoidance over UDP&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/&#34;&gt;Reliability and Congestion Avoidance over UDP&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -707,13 +707,13 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>Sending and Receiving Packets</title>
-      <link>http://127.0.0.1:1313/post/sending_and_receiving_packets/</link>
+      <link>https://gafferongames.com/post/sending_and_receiving_packets/</link>
       <pubDate>Fri, 03 Oct 2008 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/sending_and_receiving_packets/</guid>
+      <guid>https://gafferongames.com/post/sending_and_receiving_packets/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/udp_vs_tcp/&#34;&gt;previous article&lt;/a&gt; we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/udp_vs_tcp/&#34;&gt;previous article&lt;/a&gt; we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.&lt;/p&gt;
 &lt;p&gt;In this article I am going to show you how to send and receive UDP packets.&lt;/p&gt;
 &lt;h2 id=&#34;bsd-sockets&#34;&gt;BSD sockets&lt;/h2&gt;
 &lt;p&gt;For most modern platforms you have some sort of basic socket layer available based on BSD sockets.&lt;/p&gt;
@@ -1029,7 +1029,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;As an added bonus the code is the same on all platforms because everything platform specific is handled inside the socket and address classes.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;You now have a platform independent way to send and receive packets. &lt;em&gt;Enjoy&lt;/em&gt; :)&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/virtual_connection_over_udp/&#34;&gt;Virtual Connection over UDP&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/virtual_connection_over_udp/&#34;&gt;Virtual Connection over UDP&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1037,12 +1037,12 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>UDP vs. TCP</title>
-      <link>http://127.0.0.1:1313/post/udp_vs_tcp/</link>
+      <link>https://gafferongames.com/post/udp_vs_tcp/</link>
       <pubDate>Wed, 01 Oct 2008 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/udp_vs_tcp/</guid>
+      <guid>https://gafferongames.com/post/udp_vs_tcp/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In this article we start with the most basic aspect of network programming: sending and receiving data over the network. This is perhaps the simplest and most basic part of what network programmers do, but still it is quite intricate and non-obvious as to what the best course of action is.&lt;/p&gt;
 &lt;p&gt;You have most likely heard of sockets, and are probably aware that there are two main types: TCP and UDP. When writing a network game, we first need to choose what type of socket to use. Do we use TCP sockets, UDP sockets or a mixture of both? Take care because if you get this wrong it will have terrible effects on your multiplayer game!&lt;/p&gt;
 &lt;p&gt;The choice you make depends entirely on what sort of game you want to network. So from this point on and for the rest of this article series, I assume you want to network an action game. You know, games like Halo, Battlefield 1942, Quake, Unreal, CounterStrike and Team Fortress.&lt;/p&gt;
@@ -1112,7 +1112,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;My recommendation is not only that you use UDP, but that you &lt;em&gt;only&lt;/em&gt; use UDP for your game protocol. Don&amp;rsquo;t mix TCP and UDP! Instead, learn how to implement the specific features of TCP that you need &lt;em&gt;inside&lt;/em&gt; your own custom UDP based protocol.&lt;/p&gt;
 &lt;p&gt;Of course, it is no problem to use HTTP to talk to some RESTful services while your game is running. I&amp;rsquo;m not saying you can&amp;rsquo;t do that. A few TCP connections running while your game is running isn&amp;rsquo;t going to bring everything down. The point is, don&amp;rsquo;t split your &lt;em&gt;game protocol&lt;/em&gt; across UDP and TCP. Keep your game protocol running over UDP so you are fully in control of the data you send and receive and how reliability, ordering and congestion avoidance are implemented.&lt;/p&gt;
 &lt;p&gt;The rest of this article series show you how to do this, from creating your own virtual connection on top of UDP, to creating your own reliability, flow control and congestion avoidance.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/sending_and_receiving_packets/&#34;&gt;Sending and Receiving Packets&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/sending_and_receiving_packets/&#34;&gt;Sending and Receiving Packets&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>

@@ -37,7 +37,7 @@ Here's a screenshot from Thursday August 20th, 2020:
 
 ![Screenshot of https://portal.networknext.com](/img/network-neutrality-considered-harmful/portal-001.png)
 
-1000+ players with extra 100ms of latency courtesy of best effort delivery, one player with an additional 730ms. _Clearly, this is not a speed of light problem..._
+1000+ players with an additional 100ms+ of latency courtesy of best effort delivery, one player with a whooping 730ms extra. _Clearly, this is not a speed of light problem..._
 
 Later the same day we saw a packet loss event:
 
@@ -51,9 +51,9 @@ During the mitigation the average packet loss reduction was an absolute reductio
 
 This is not an isolated incident. These things literally happen all the time. Take a look for yourself, the portal is live and updated in real-time: https://portal.networknext.com
 
-From this it should be clear: **the internet doesn't care about your game.**
+From this point on it should be clear: **the internet really doesn't care about your game.**
 
-So what's going on?  
+So... what's going on, and why is the case?
 
 It's this. The internet makes no guarantee of performance, but instead offers best effort delivery. By the orthodoxy of Network Neutrality it is hand-wavingly assumed that overall, the quality level is maintained via over provisioning. But while this may be true for browsing the web and reading email, looking at the results above we can clearly see it isn't working for latency sensitive applications like games!
 

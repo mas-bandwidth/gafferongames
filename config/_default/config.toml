@@ -9,12 +9,11 @@ title = "Gaffer On Games"
 
 # The URL of your site.
 # End your URL with a `/` trailing slash, e.g. `https://example.com/`.
-baseurl = "http://127.0.0.1:1313"
-#baseURL = "https://gafferongames.com/"
+baseURL = "https://gafferongames.com/"
 
 # Enter a copyright notice to display in the site footer.
 # To display a copyright symbol, type `&copy;`. For current year, type `{year}`.
-copyright = "Copyright © Glenn Fiedler, 2004 - 2019"
+copyright = "Copyright © Glenn Fiedler, 2004 - 2020"
 
 # Enable analytics by entering your Google Analytics tracking ID
 googleAnalytics = ""

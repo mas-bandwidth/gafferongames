@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Networked Physics on Gaffer On Games</title>
-    <link>http://127.0.0.1:1313/categories/networked-physics/</link>
+    <link>https://gafferongames.com/categories/networked-physics/</link>
     <description>Recent content in Networked Physics on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
-    <copyright>Copyright © Glenn Fiedler, 2004 - 2019</copyright>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2020</copyright>
     <lastBuildDate>Thu, 22 Feb 2018 00:00:00 +0000</lastBuildDate>
     
-	    <atom:link href="http://127.0.0.1:1313/categories/networked-physics/index.xml" rel="self" type="application/rss+xml" />
+	    <atom:link href="https://gafferongames.com/categories/networked-physics/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Networked Physics in Virtual Reality</title>
-      <link>http://127.0.0.1:1313/post/networked_physics_in_virtual_reality/</link>
+      <link>https://gafferongames.com/post/networked_physics_in_virtual_reality/</link>
       <pubDate>Thu, 22 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/networked_physics_in_virtual_reality/</guid>
+      <guid>https://gafferongames.com/post/networked_physics_in_virtual_reality/</guid>
       <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &amp;ldquo;Hey Glenn, there&amp;rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?&amp;rdquo;&lt;/p&gt;
 &lt;p&gt;I replied ~~&amp;quot;F*** yes!&amp;ldquo;~~ **cough** &amp;ldquo;Sure. This could be a lot of fun!&amp;rdquo;. But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good. Two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.&lt;/p&gt;
@@ -221,13 +221,13 @@
     
     <item>
       <title>State Synchronization</title>
-      <link>http://127.0.0.1:1313/post/state_synchronization/</link>
+      <link>https://gafferongames.com/post/state_synchronization/</link>
       <pubDate>Mon, 05 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/state_synchronization/</guid>
+      <guid>https://gafferongames.com/post/state_synchronization/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_compression/&#34;&gt;previous article&lt;/a&gt; we discussed techniques for compressing snapshots.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;previous article&lt;/a&gt; we discussed techniques for compressing snapshots.&lt;/p&gt;
 &lt;p&gt;In this article we round out our discussion of networked physics strategies with &lt;strong&gt;state synchronization&lt;/strong&gt;, the third and final strategy in this article series.&lt;/p&gt;
 &lt;h2 id=&#34;state-synchronization&#34;&gt;State Synchronization&lt;/h2&gt;
 &lt;p&gt;What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, &lt;em&gt;unlike&lt;/em&gt; deterministic lockstep, we don&amp;rsquo;t just send input, we send both input &lt;!-- raw HTML omitted --&gt;and&lt;!-- raw HTML omitted --&gt; state.&lt;/p&gt;
@@ -243,7 +243,7 @@
 &lt;p&gt;While we must send the velocities, there&amp;rsquo;s no point wasting bandwidth sending (0,0,0) over and over while an object is at rest. We can fix this with a trivial optimization, like so:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;!-- raw HTML omitted --&gt;
-&lt;p&gt;What you see above is a &lt;em&gt;serialize function&lt;/em&gt;. It&amp;rsquo;s a trick I like to use to unify packet read and write. I like it because it&amp;rsquo;s expressive while at the same time it&amp;rsquo;s difficult to desync read and write. You can read more about them &lt;a href=&#34;http://127.0.0.1:1313/post/serialization_strategies/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;What you see above is a &lt;em&gt;serialize function&lt;/em&gt;. It&amp;rsquo;s a trick I like to use to unify packet read and write. I like it because it&amp;rsquo;s expressive while at the same time it&amp;rsquo;s difficult to desync read and write. You can read more about them &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;packet-structure&#34;&gt;Packet Structure&lt;/h2&gt;
 &lt;p&gt;Now let&amp;rsquo;s look at the overall structure of packets being sent:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
@@ -268,7 +268,7 @@
 &lt;p&gt;Surprisingly, without any smoothing the result is already pretty good:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;As you can see it&amp;rsquo;s already looking quite good and barely any bandwidth optimization has been performed. Contrast this with the first video for snapshot interpolation which was at 18mbit/sec and you can see that using the simulation to extrapolate between state updates is a great way to use less bandwidth.&lt;/p&gt;
-&lt;p&gt;Of course we can do a lot better than this and each optimization we do lets us squeeze more state updates in the same amount of bandwidth. The next obvious thing we can do is to apply all the standard quantization compression techniques such as bounding and quantizing position, linear and angular velocity value and using the smallest three compression as described in &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_compression/&#34;&gt;snapshot compression&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Of course we can do a lot better than this and each optimization we do lets us squeeze more state updates in the same amount of bandwidth. The next obvious thing we can do is to apply all the standard quantization compression techniques such as bounding and quantizing position, linear and angular velocity value and using the smallest three compression as described in &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;snapshot compression&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;But here it gets a bit more complex. We are extrapolating from those state updates so if we quantize these values over the network then the state that arrives on the right side is slightly different from the left side, leading to a slightly different extrapolation and a pop when the next state update arrives for that object.&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;h2 id=&#34;quantize-both-sides&#34;&gt;Quantize Both Sides&lt;/h2&gt;
@@ -292,7 +292,7 @@
 &lt;p&gt;Even though I would argue the result above is probably good enough already it is possible to improve the synchronization considerably from this point. For example to support a world with larger objects or more objects being interacted with. So lets work through some of those techniques and push this technique as far as it can go.&lt;/p&gt;
 &lt;p&gt;There is an easy compression that can be performed. Instead of encoding absolute position, if it is within a range of the player cube center, encode position as a relative offset to the player center position. In the common cases where bandwidth is high and state updates need to be more frequent (katamari ball) this provides a large win.&lt;/p&gt;
 &lt;p&gt;Next, what if we do want to perform some sort of delta encoding for state synchronization? We can but it&amp;rsquo;s quite different in this case than it is with snapshots because we&amp;rsquo;re not including every cube in every packet, so we can&amp;rsquo;t just track the most recent packet received and say, OK all these state updates in this packet are relative to packet X.&lt;/p&gt;
-&lt;p&gt;What you actually have to do is per-object update keep track of the packet that includes the base for that update. You also need to keep track of exactly the set of packets received so that the sender knows which packets are valid bases to encode relative to. This is reasonably complicated and requires a bidirectional ack system over UDP. Such a system is designed for exactly this sort of situation where you need to know exactly which packets definitely got through. You can find a tutorial on how to implement this in &lt;a href=&#34;http://127.0.0.1:1313/post/reliability_and_flow_control/&#34;&gt;this article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;What you actually have to do is per-object update keep track of the packet that includes the base for that update. You also need to keep track of exactly the set of packets received so that the sender knows which packets are valid bases to encode relative to. This is reasonably complicated and requires a bidirectional ack system over UDP. Such a system is designed for exactly this sort of situation where you need to know exactly which packets definitely got through. You can find a tutorial on how to implement this in &lt;a href=&#34;https://gafferongames.com/post/reliability_and_flow_control/&#34;&gt;this article&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;So assuming that you have an ack system you know with packet sequence numbers get through. What you do then is per-state update write one bit if the update is relative or absolute, if absolute then encode with no base as before, otherwise if relative send the 16 bit sequence number per-state update of the base and then encode relative to the state update data sent in that packet. This adds 1 bit overhead per-update as well as 16 bits to identify the sequence number of the base per-object update. Can we do better?&lt;/p&gt;
 &lt;p&gt;Yes. In turns out that of course you&amp;rsquo;re going to have to buffer on the send and receive side to implement this relative encoding and you can&amp;rsquo;t buffer forever. In fact, if you think about it you can only buffer up a couple of seconds before it becomes impractical and in the common case of moving objects you&amp;rsquo;re going to be sending the updates for same object frequently (katamari ball) so practically speaking the base sequence will only be from a short time ago.&lt;/p&gt;
 &lt;p&gt;So instead of sending the 16 bit sequence base per-object, send in the header of the packet the most recent acked packet (from the reliability ack system) and per-object encode the offset of the base sequence relative to that value using 5 bits. This way at 60 packets per-second you can identify an state update with a base half a second ago. Any base older than this is unlikely to provide a good delta encoding anyway because it&amp;rsquo;s old, so in that case just drop back to absolute encoding for that update.&lt;/p&gt;
@@ -307,13 +307,13 @@
     
     <item>
       <title>Snapshot Compression</title>
-      <link>http://127.0.0.1:1313/post/snapshot_compression/</link>
+      <link>https://gafferongames.com/post/snapshot_compression/</link>
       <pubDate>Sun, 04 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/snapshot_compression/</guid>
+      <guid>https://gafferongames.com/post/snapshot_compression/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_interpolation/&#34;&gt;previous article&lt;/a&gt; we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;previous article&lt;/a&gt; we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.&lt;/p&gt;
 &lt;p&gt;The problem with a low snapshot rate like 10HZ is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms. If protection against one or two lost packets in a row is desired, this blows out to 250ms or 350ms delay.&lt;/p&gt;
 &lt;p&gt;This is not an acceptable amount of delay for most games, but when the physics simulation is as unpredictable as ours, the only way to reduce it is to increase the packet send rate. Unfortunately, increasing the send rate also increases bandwidth. So what we&amp;rsquo;re going to do in this article is work through every possible bandwidth optimization &lt;em&gt;(that I can think of at least)&lt;/em&gt; until we get bandwidth under control.&lt;/p&gt;
 &lt;p&gt;Our target bandwidth is &lt;strong&gt;256 kilobits per-second&lt;/strong&gt;.&lt;/p&gt;
@@ -400,7 +400,7 @@
 &lt;p&gt;And that&amp;rsquo;s about as far as I can take it using traditional hand-rolled bit-packing techniques. You can find source code for my implementation of all compression techniques mentioned in this article &lt;!-- raw HTML omitted --&gt;here&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s possible to get even better compression using a different approach. Bit-packing is inefficient because not all bit values have equal probability of 0 vs 1. No matter how hard you tune your bit-packer a context aware arithmetic encoding can beat your result by more accurately modeling the probability of values that occur in your data set. This &lt;!-- raw HTML omitted --&gt;implementation&lt;!-- raw HTML omitted --&gt; by Fabian Giesen beat my best bit-packed result by 25%.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/state_synchronization/&#34;&gt;State Synchronization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/state_synchronization/&#34;&gt;State Synchronization&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -408,15 +408,15 @@
     
     <item>
       <title>Snapshot Interpolation</title>
-      <link>http://127.0.0.1:1313/post/snapshot_interpolation/</link>
+      <link>https://gafferongames.com/post/snapshot_interpolation/</link>
       <pubDate>Sun, 30 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/snapshot_interpolation/</guid>
+      <guid>https://gafferongames.com/post/snapshot_interpolation/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/deterministic_lockstep/&#34;&gt;previous article&lt;/a&gt; we networked a physics simulation using deterministic lockstep. Now, in this article we&amp;rsquo;re going to network the same simulation with a completely different technique: &lt;strong&gt;snapshot interpolation&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;previous article&lt;/a&gt; we networked a physics simulation using deterministic lockstep. Now, in this article we&amp;rsquo;re going to network the same simulation with a completely different technique: &lt;strong&gt;snapshot interpolation&lt;/strong&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
-&lt;p&gt;While deterministic lockstep is very efficient in terms of bandwidth, it&amp;rsquo;s not always possible to make your simulation deterministic. Floating point determinism across platforms is &lt;a href=&#34;http://127.0.0.1:1313/post/floating_point_determinism/&#34;&gt;hard&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;While deterministic lockstep is very efficient in terms of bandwidth, it&amp;rsquo;s not always possible to make your simulation deterministic. Floating point determinism across platforms is &lt;a href=&#34;https://gafferongames.com/post/floating_point_determinism/&#34;&gt;hard&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Also, as the player counts increase, deterministic lockstep becomes problematic: you can&amp;rsquo;t simulate frame n until you receive input from &lt;em&gt;all&lt;/em&gt; players for that frame, so players end up waiting for the most lagged player. Because of this, I recommend deterministic lockstep for 2-4 players at most.&lt;/p&gt;
 &lt;p&gt;So if your simulation is not deterministic or you want higher player counts then you need a different technique. Snapshot interpolation fits the bill nicely. It is in many ways the polar opposite of deterministic lockstep: instead of running two simulations, one on the left and one on the right, and using perfect determinism and synchronized inputs keep them in sync, snapshot interpolation doesn&amp;rsquo;t run any simulation on the right side at all!&lt;/p&gt;
 &lt;h2 id=&#34;snapshots&#34;&gt;Snapshots&lt;/h2&gt;
@@ -466,7 +466,7 @@
 &lt;p&gt;But even if you do all this there will still be misprediction because you simply can&amp;rsquo;t accurately match a physics simulation with an approximation. If your simulation is mostly linear motion, eg. fast moving planes, boats, space ships &amp;ndash; you may find that a simple extrapolation works well for short time periods (50-250ms or so), but in my experience as soon as objects start colliding with other non-stationary objects, extrapolation starts to break down.&lt;/p&gt;
 &lt;p&gt;How can we reduce the amount of delay added for interpolation? 350ms still seems unacceptable and we can&amp;rsquo;t use extrapolation to reduce this delay without adding a lot of inaccuracy. The solution is simple: &lt;em&gt;increase the send rate!&lt;/em&gt; If we send 30 snapshots per-second we can get the same amount of packet loss protection with a delay of 150ms. 60 packets per-second needs only 85ms.&lt;/p&gt;
 &lt;p&gt;In order to increase the send rate we&amp;rsquo;re going to need some pretty good bandwidth optimizations. But don&amp;rsquo;t worry, there&amp;rsquo;s a &lt;em&gt;lot&lt;/em&gt; we can do to optimize bandwidth. So much so that there was too much stuff to fit in this article and I had to insert an extra unplanned article just to cover all of it!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_compression/&#34;&gt;Snapshot Compression&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;Snapshot Compression&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -474,13 +474,13 @@
     
     <item>
       <title>Deterministic Lockstep</title>
-      <link>http://127.0.0.1:1313/post/deterministic_lockstep/</link>
+      <link>https://gafferongames.com/post/deterministic_lockstep/</link>
       <pubDate>Sat, 29 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/deterministic_lockstep/</guid>
+      <guid>https://gafferongames.com/post/deterministic_lockstep/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/introduction_to_networked_physics/&#34;&gt;previous article&lt;/a&gt; we explored the physics simulation we&amp;rsquo;re going to network in this article series. In this article specifically, we&amp;rsquo;re going to network this physics simulation using &lt;strong&gt;deterministic lockstep&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/introduction_to_networked_physics/&#34;&gt;previous article&lt;/a&gt; we explored the physics simulation we&amp;rsquo;re going to network in this article series. In this article specifically, we&amp;rsquo;re going to network this physics simulation using &lt;strong&gt;deterministic lockstep&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Deterministic lockstep is a method of networking a system from one computer to another by sending only the &lt;em&gt;inputs&lt;/em&gt; that control that system, rather than the &lt;em&gt;state&lt;/em&gt; of that system. In the context of networking a physics simulation, this means we send across a small amount of input, while avoiding sending state like position, orientation, linear velocity and angular velocity per-object.&lt;/p&gt;
 &lt;p&gt;The benefit is that bandwidth is proportional to the size of the input, not the number of objects in the simulation. Yes, with deterministic lockstep you can network a physics simulation of one million objects with the same bandwidth as just one.&lt;/p&gt;
 &lt;p&gt;While this sounds great in theory, in practice it&amp;rsquo;s difficult to implement deterministic lockstep because most physics simulations are not deterministic. Differences in floating point behavior between compilers, OS&amp;rsquo;s and even instruction sets make it almost impossible to guarantee determinism for floating point calculations.&lt;/p&gt;
@@ -494,7 +494,7 @@
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;And now a word of warning. Even though the simulation above is deterministic on the same machine, that does &lt;em&gt;not&lt;/em&gt; necessarily mean it would also be deterministic across different compilers, a different OS or different machine architectures (eg. PowerPC vs. Intel). In fact, it&amp;rsquo;s probably not even deterministic between debug and release builds due to floating point optimizations.&lt;/p&gt;
 &lt;p&gt;Floating point determinism is a complicated subject and there&amp;rsquo;s no silver bullet.&lt;/p&gt;
-&lt;p&gt;For more information please refer to this &lt;a href=&#34;http://127.0.0.1:1313/post/floating_point_determinism/&#34;&gt;article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For more information please refer to this &lt;a href=&#34;https://gafferongames.com/post/floating_point_determinism/&#34;&gt;article&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;networking-inputs&#34;&gt;Networking Inputs&lt;/h2&gt;
 &lt;p&gt;Now let&amp;rsquo;s get down to implementation.&lt;/p&gt;
 &lt;p&gt;Our example physics simulation is driven by keyboard input: arrow keys apply forces to make the player cube move, holding space lifts the cube up and blows other cubes around, and holding &amp;lsquo;z&amp;rsquo; enables katamari mode.&lt;/p&gt;
@@ -555,7 +555,7 @@
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;The video above shows deterministic lockstep synchronized over UDP using this technique with &lt;strong&gt;2 seconds&lt;/strong&gt; of latency and &lt;strong&gt;25% packet loss&lt;/strong&gt;. Imagine how awful TCP would look under these conditions.&lt;/p&gt;
 &lt;p&gt;So in conclusion, even where TCP should have the most advantage, in the only networking model that relies on reliable-ordered data, we can still easily whip its ass with a simple protocol built on top of UDP.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_interpolation/&#34;&gt;Snapshot Interpolation&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;Snapshot Interpolation&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -563,12 +563,12 @@
     
     <item>
       <title>Introduction to Networked Physics</title>
-      <link>http://127.0.0.1:1313/post/introduction_to_networked_physics/</link>
+      <link>https://gafferongames.com/post/introduction_to_networked_physics/</link>
       <pubDate>Fri, 28 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/introduction_to_networked_physics/</guid>
+      <guid>https://gafferongames.com/post/introduction_to_networked_physics/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to the first article in &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to the first article in &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In this article series we&amp;rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.&lt;/p&gt;
 &lt;p&gt;But before we get to this, let&amp;rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
@@ -588,7 +588,7 @@
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;Cubes within a certain distance of the player have a force applied towards the center of the cube. These cubes remain physically simulated while in the katamari ball, they are not just “stuck” to the player like in the original game.&lt;/p&gt;
 &lt;p&gt;This is a very difficult situation for networked physics!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/deterministic_lockstep/&#34;&gt;Deterministic Lockstep&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;Deterministic Lockstep&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>

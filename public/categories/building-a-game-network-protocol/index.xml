@@ -2,24 +2,24 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Building a Game Network Protocol on Gaffer On Games</title>
-    <link>http://127.0.0.1:1313/categories/building-a-game-network-protocol/</link>
+    <link>https://gafferongames.com/categories/building-a-game-network-protocol/</link>
     <description>Recent content in Building a Game Network Protocol on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
-    <copyright>Copyright © Glenn Fiedler, 2004 - 2019</copyright>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2020</copyright>
     <lastBuildDate>Wed, 28 Sep 2016 00:00:00 +0000</lastBuildDate>
     
-	    <atom:link href="http://127.0.0.1:1313/categories/building-a-game-network-protocol/index.xml" rel="self" type="application/rss+xml" />
+	    <atom:link href="https://gafferongames.com/categories/building-a-game-network-protocol/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Client Server Connection</title>
-      <link>http://127.0.0.1:1313/post/client_server_connection/</link>
+      <link>https://gafferongames.com/post/client_server_connection/</link>
       <pubDate>Wed, 28 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/client_server_connection/</guid>
+      <guid>https://gafferongames.com/post/client_server_connection/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;So far in this article series we&amp;rsquo;ve discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP.&lt;/p&gt;
 &lt;p&gt;Now in this article we&amp;rsquo;re going to bring everything together and build a client/server connection on top of UDP.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
@@ -204,12 +204,12 @@ class Server
     
     <item>
       <title>Reliable Ordered Messages</title>
-      <link>http://127.0.0.1:1313/post/reliable_ordered_messages/</link>
+      <link>https://gafferongames.com/post/reliable_ordered_messages/</link>
       <pubDate>Thu, 15 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/reliable_ordered_messages/</guid>
+      <guid>https://gafferongames.com/post/reliable_ordered_messages/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Many people will tell you that implementing your own reliable message system on top of UDP is foolish. After all, why reimplement TCP?&lt;/p&gt;
 &lt;p&gt;But why limit ourselves to how TCP works? But there are so many different ways to implement reliable-messages and most of them work &lt;em&gt;nothing&lt;/em&gt; like TCP!&lt;/p&gt;
 &lt;p&gt;So let&amp;rsquo;s get creative and work out how we can implement a reliable message system that&amp;rsquo;s &lt;em&gt;better&lt;/em&gt; and &lt;em&gt;more flexible&lt;/em&gt; than TCP for real-time games.&lt;/p&gt;
@@ -395,7 +395,7 @@ class Server
 &lt;!-- raw HTML omitted --&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;Which is flexible enough to implement whatever you like on top of it.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://127.0.0.1:1313/post/client_server_connection/&#34;&gt;Client Server Connection&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/client_server_connection/&#34;&gt;Client Server Connection&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -403,13 +403,13 @@ class Server
     
     <item>
       <title>Sending Large Blocks of Data</title>
-      <link>http://127.0.0.1:1313/post/sending_large_blocks_of_data/</link>
+      <link>https://gafferongames.com/post/sending_large_blocks_of_data/</link>
       <pubDate>Mon, 12 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/sending_large_blocks_of_data/</guid>
+      <guid>https://gafferongames.com/post/sending_large_blocks_of_data/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/packet_fragmentation_and_reassembly/&#34;&gt;previous article&lt;/a&gt; we implemented packet fragmentation and reassembly so we can send packets larger than MTU.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/packet_fragmentation_and_reassembly/&#34;&gt;previous article&lt;/a&gt; we implemented packet fragmentation and reassembly so we can send packets larger than MTU.&lt;/p&gt;
 &lt;p&gt;This approach works great when the data block you&amp;rsquo;re sending is time critical and can be dropped, but in other cases you need to send large blocks of quickly and reliably over packet loss, and you need the data to get through.&lt;/p&gt;
 &lt;p&gt;In this situation, a different technique gives much better results.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
@@ -557,7 +557,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;p&gt;This process continues until all slices of the chunk are received, at which point the receiver sets receiving to &amp;lsquo;false&amp;rsquo; and &amp;lsquo;readyToRead&amp;rsquo; to true. While &amp;lsquo;readyToRead&amp;rsquo; is true, incoming slice packets are discarded. At this point, the chunk receive packet processing is performed, typically on the same frame. The caller checks &amp;lsquo;do I have a chunk to read?&amp;rsquo; and processes the chunk data. All chunk receive data is cleared back to defaults, except chunk id which is incremented from 0 -&amp;gt; 1, and we are ready to receive the next chunk.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;The chunk system is simple in concept, but the implementation is certainly not. I encourage you to take a close look at the &lt;a href=&#34;http://www.patreon.com/gafferongames&#34;&gt;source code&lt;/a&gt; for this article for further details.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/reliable_ordered_messages/&#34;&gt;Reliable Ordered Messages&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/reliable_ordered_messages/&#34;&gt;Reliable Ordered Messages&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -565,13 +565,13 @@ struct SlicePacket : public protocol2::Packet
     
     <item>
       <title>Packet Fragmentation and Reassembly</title>
-      <link>http://127.0.0.1:1313/post/packet_fragmentation_and_reassembly/</link>
+      <link>https://gafferongames.com/post/packet_fragmentation_and_reassembly/</link>
       <pubDate>Tue, 06 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/packet_fragmentation_and_reassembly/</guid>
+      <guid>https://gafferongames.com/post/packet_fragmentation_and_reassembly/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/serialization_strategies/&#34;&gt;previous article&lt;/a&gt; we discussed how to unify packet read and write into a single serialize function and added a bunch of safety features to packet read.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;previous article&lt;/a&gt; we discussed how to unify packet read and write into a single serialize function and added a bunch of safety features to packet read.&lt;/p&gt;
 &lt;p&gt;Now we are ready to start putting interesting things in our packets and sending them over the network, but immediately we run into an interesting question: &lt;em&gt;how big should our packets be?&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;To answer this question properly we need a bit of background about how packets are actually sent over the Internet.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
@@ -632,7 +632,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;So I recommend you take it easy with the number of fragments. It&amp;rsquo;s best to use this strategy only for packets in the 2-4 fragment range, and only for time critical data that doesn&amp;rsquo;t matter too much if it gets dropped. It&amp;rsquo;s &lt;em&gt;definitely not&lt;/em&gt; a good idea to fire down a bunch of reliable-ordered events in a huge packet and rely on packet fragmentation and reassembly to save your ass.&lt;/p&gt;
 &lt;p&gt;Another typical use case for large packets is when a client initially joins a game. Here you usually want to send a large block of data down reliably to that client, for example, representing the initial state of the world for late join. Whatever you do, don&amp;rsquo;t send that block of data down using the fragmentation and re-assembly technique in this article.&lt;/p&gt;
-&lt;p&gt;Instead, check out the technique in &lt;a href=&#34;http://127.0.0.1:1313/post/sending-large-blocks-of-data.html&#34;&gt;next article&lt;/a&gt; which handles packet loss by resending fragments until they are all received.&lt;/p&gt;
+&lt;p&gt;Instead, check out the technique in &lt;a href=&#34;https://gafferongames.com/post/sending-large-blocks-of-data.html&#34;&gt;next article&lt;/a&gt; which handles packet loss by resending fragments until they are all received.&lt;/p&gt;
 &lt;h2 id=&#34;receiving-packet-fragments&#34;&gt;Receiving Packet Fragments&lt;/h2&gt;
 &lt;p&gt;It&amp;rsquo;s time to implement the code that receives and processed packet fragments. This is a bit tricky because we have to be particularly careful of somebody trying to attack us with malicious packets.&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s a list of all the ways I can think of to attack the protocol:&lt;/p&gt;
@@ -712,7 +712,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;/ul&gt;
 &lt;p&gt;This is my process and it seems to work pretty well. If you are writing a low-level network protocol, the rest of your game depends on this code working correctly. You need to be absolutely sure it works before you build on it, otherwise it&amp;rsquo;s basically a stack of cards.&lt;/p&gt;
 &lt;p&gt;In my experience, game neworking is hard enough without having suspicions that that your low-level network protocol has bugs that only show up under extreme network conditions. That&amp;rsquo;s exactly where you need to be able to trust your code works correctly. &lt;strong&gt;So test it!&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://127.0.0.1:1313/post/sending_large_blocks_of_data/&#34;&gt;Sending Large Blocks of Data&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/sending_large_blocks_of_data/&#34;&gt;Sending Large Blocks of Data&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -720,13 +720,13 @@ struct SlicePacket : public protocol2::Packet
     
     <item>
       <title>Serialization Strategies</title>
-      <link>http://127.0.0.1:1313/post/serialization_strategies/</link>
+      <link>https://gafferongames.com/post/serialization_strategies/</link>
       <pubDate>Sun, 04 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/serialization_strategies/</guid>
+      <guid>https://gafferongames.com/post/serialization_strategies/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/reading_and_writing_packets/&#34;&gt;previous article&lt;/a&gt;, we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/reading_and_writing_packets/&#34;&gt;previous article&lt;/a&gt;, we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.&lt;/p&gt;
 &lt;p&gt;In this article, we&amp;rsquo;re going to transform the bitpacker into a system where this checking is &lt;em&gt;automatic&lt;/em&gt;. We&amp;rsquo;re going to do this with minimal runtime overhead, and in such a way that we don&amp;rsquo;t have to code separate read and write functions, performing both read and write with a single function.&lt;/p&gt;
 &lt;p&gt;This is called a &lt;em&gt;serialize function&lt;/em&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;serializing-bits&#34;&gt;Serializing Bits&lt;/h2&gt;
@@ -840,7 +840,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;This is great packet structure to use during development.&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://127.0.0.1:1313/post/packet_fragmentation_and_reassembly&#34;&gt;Packet Fragmentation and Reassembly&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/packet_fragmentation_and_reassembly&#34;&gt;Packet Fragmentation and Reassembly&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -848,12 +848,12 @@ struct SlicePacket : public protocol2::Packet
     
     <item>
       <title>Reading and Writing Packets</title>
-      <link>http://127.0.0.1:1313/post/reading_and_writing_packets/</link>
+      <link>https://gafferongames.com/post/reading_and_writing_packets/</link>
       <pubDate>Thu, 01 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/reading_and_writing_packets/</guid>
+      <guid>https://gafferongames.com/post/reading_and_writing_packets/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In this article we&amp;rsquo;re going to explore how AAA multiplayer games like first person shooters read and write packets. We&amp;rsquo;ll start with text based formats then move into binary hand-coded binary formats and bitpacking.&lt;/p&gt;
 &lt;p&gt;At the end of this article and the next, you should understand exactly how to implement your own packet read and write the same way the pros do it.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
@@ -1026,7 +1026,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;!-- raw HTML omitted --&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. &lt;em&gt;You want it to be automatic&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/serialization_strategies/&#34;&gt;Serialization Strategies&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;Serialization Strategies&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>

@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>vr on Gaffer On Games</title>
-    <link>http://127.0.0.1:1313/tags/vr/</link>
+    <link>https://gafferongames.com/tags/vr/</link>
     <description>Recent content in vr on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
-    <copyright>Copyright © Glenn Fiedler, 2004 - 2019</copyright>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2020</copyright>
     <lastBuildDate>Thu, 22 Feb 2018 00:00:00 +0000</lastBuildDate>
     
-	    <atom:link href="http://127.0.0.1:1313/tags/vr/index.xml" rel="self" type="application/rss+xml" />
+	    <atom:link href="https://gafferongames.com/tags/vr/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Networked Physics in Virtual Reality</title>
-      <link>http://127.0.0.1:1313/post/networked_physics_in_virtual_reality/</link>
+      <link>https://gafferongames.com/post/networked_physics_in_virtual_reality/</link>
       <pubDate>Thu, 22 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/networked_physics_in_virtual_reality/</guid>
+      <guid>https://gafferongames.com/post/networked_physics_in_virtual_reality/</guid>
       <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &amp;ldquo;Hey Glenn, there&amp;rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?&amp;rdquo;&lt;/p&gt;
 &lt;p&gt;I replied ~~&amp;quot;F*** yes!&amp;ldquo;~~ **cough** &amp;ldquo;Sure. This could be a lot of fun!&amp;rdquo;. But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good. Two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.&lt;/p&gt;

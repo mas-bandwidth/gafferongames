@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>networking on Gaffer On Games</title>
-    <link>http://127.0.0.1:1313/tags/networking/</link>
+    <link>https://gafferongames.com/tags/networking/</link>
     <description>Recent content in networking on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
-    <copyright>Copyright © Glenn Fiedler, 2004 - 2019</copyright>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2020</copyright>
     <lastBuildDate>Mon, 24 Aug 2020 00:00:00 +0000</lastBuildDate>
     
-	    <atom:link href="http://127.0.0.1:1313/tags/networking/index.xml" rel="self" type="application/rss+xml" />
+	    <atom:link href="https://gafferongames.com/tags/networking/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Network Neutrality Considered Harmful</title>
-      <link>http://127.0.0.1:1313/post/network_neutrality_considered_harmful/</link>
+      <link>https://gafferongames.com/post/network_neutrality_considered_harmful/</link>
       <pubDate>Mon, 24 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/network_neutrality_considered_harmful/</guid>
+      <guid>https://gafferongames.com/post/network_neutrality_considered_harmful/</guid>
       <description>&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://www.linkedin.com/in/glennfiedler/&#34;&gt;Glenn Fiedler&lt;/a&gt; and I&amp;rsquo;m the founder and CEO of &lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Before starting Network Next, I worked in the game industry for 20 years as a software engineer. I was fortunate enough to have a good career and got to work on some games you&amp;rsquo;ve might have played: &lt;strong&gt;Freedom Force&lt;/strong&gt;, &lt;strong&gt;Mercenaries 2&lt;/strong&gt;, &lt;strong&gt;God of War&lt;/strong&gt;, &lt;strong&gt;Journey&lt;/strong&gt; and &lt;strong&gt;Titanfall 1 and 2&lt;/strong&gt;. Some of my netcode is still active in &lt;strong&gt;Apex Legends&lt;/strong&gt; even though I left Respawn Entertainment before it started development.&lt;/p&gt;
 &lt;p&gt;Ever since &lt;a href=&#34;https://quake.fandom.com/wiki/Qtest&#34;&gt;QTest&lt;/a&gt; I&amp;rsquo;ve found the idea that people in different physical locations could inhabit the same virtual space utterly fascinating. I wanted to understand how that worked and be part of it. So, after a few false starts in graphics programming and physics, I specialized in UDP protocol design for latency sensitive games.&lt;/p&gt;
@@ -34,16 +34,16 @@
 &lt;p&gt;And despite all this effort, a significant portion of players would play my game and get bad network performance and there was &lt;em&gt;literally nothing I could do about it&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Just how bad does it get? Let&amp;rsquo;s take a look at the data&amp;hellip;&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s a screenshot from Thursday August 20th, 2020:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-neutrality-considered-harmful/portal-001.png&#34; alt=&#34;Screenshot of https://portal.networknext.com&#34;&gt;&lt;/p&gt;
-&lt;p&gt;1000+ players with extra 100ms of latency courtesy of best effort delivery, one player with an additional 730ms. &lt;em&gt;Clearly, this is not a speed of light problem&amp;hellip;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-001.png&#34; alt=&#34;Screenshot of https://portal.networknext.com&#34;&gt;&lt;/p&gt;
+&lt;p&gt;1000+ players with an additional 100ms+ of latency courtesy of best effort delivery, one player with a whooping 730ms extra. &lt;em&gt;Clearly, this is not a speed of light problem&amp;hellip;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Later the same day we saw a packet loss event:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-neutrality-considered-harmful/portal-002.png&#34; alt=&#34;Graph showing AB test result for packet loss&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-002.png&#34; alt=&#34;Graph showing AB test result for packet loss&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Now you may look at this and think, oh, it&amp;rsquo;s just 0.8% packet loss at peak, it&amp;rsquo;s not that bad&amp;hellip; but this is an average across all players, and only some portion of players were affected. For these players, the effect was much more severe:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-neutrality-considered-harmful/portal-003.png&#34; alt=&#34;Graph showing absolute point reduction in packet loss percent for players on network next&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-003.png&#34; alt=&#34;Graph showing absolute point reduction in packet loss percent for players on network next&#34;&gt;&lt;/p&gt;
 &lt;p&gt;During the mitigation the average packet loss reduction was an absolute reduction of 12 points of packet loss. No, not a reduction of 12%, &lt;strong&gt;a reduction of 12 points&lt;/strong&gt;. In other words, a conversion from totally unplayable to playable.&lt;/p&gt;
 &lt;p&gt;This is not an isolated incident. These things literally happen all the time. Take a look for yourself, the portal is live and updated in real-time: &lt;a href=&#34;https://portal.networknext.com&#34;&gt;https://portal.networknext.com&lt;/a&gt;&lt;/p&gt;
-&lt;p&gt;From this it should be clear: &lt;strong&gt;the internet doesn&amp;rsquo;t care about your game.&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;So what&amp;rsquo;s going on?&lt;/p&gt;
+&lt;p&gt;From this point on it should be clear: &lt;strong&gt;the internet really doesn&amp;rsquo;t care about your game.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;So&amp;hellip; what&amp;rsquo;s going on, and why is the case?&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s this. The internet makes no guarantee of performance, but instead offers best effort delivery. By the orthodoxy of Network Neutrality it is hand-wavingly assumed that overall, the quality level is maintained via over provisioning. But while this may be true for browsing the web and reading email, looking at the results above we can clearly see it isn&amp;rsquo;t working for latency sensitive applications like games!&lt;/p&gt;
 &lt;p&gt;As a game developer what I want for my traffic is the lowest latency (within speed of light limits), with as little packet loss and jitter as possible. In other words, if I send 60 packets per-second, I want all of them to arrive as quickly as possible exactly 1/60th of a second apart. The internet as it exists today, is just not capable of this.&lt;/p&gt;
 &lt;p&gt;So now let&amp;rsquo;s take direct aim at one of the core tenets of Network Neutrality. That all traffic is the same. Clearly this is false. Latency sensitive traffic like game traffic is not the same as checking your email or browsing the web. It&amp;rsquo;s not even the same as watching YouTube or Netflix, which can be solved by simply buffering the stream. It&amp;rsquo;s something completely different.&lt;/p&gt;
@@ -61,10 +61,10 @@
     
     <item>
       <title>Fixing the Internet for Games</title>
-      <link>http://127.0.0.1:1313/post/fixing_the_internet_for_games/</link>
+      <link>https://gafferongames.com/post/fixing_the_internet_for_games/</link>
       <pubDate>Sun, 24 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/fixing_the_internet_for_games/</guid>
+      <guid>https://gafferongames.com/post/fixing_the_internet_for_games/</guid>
       <description>&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and this is my GDC 2019 talk called “Fixing the Internet for Games”.&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;It&amp;rsquo;s about what we are doing at my new startup &lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;.&lt;/p&gt;
@@ -224,10 +224,10 @@
     
     <item>
       <title>Networked Physics in Virtual Reality</title>
-      <link>http://127.0.0.1:1313/post/networked_physics_in_virtual_reality/</link>
+      <link>https://gafferongames.com/post/networked_physics_in_virtual_reality/</link>
       <pubDate>Thu, 22 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/networked_physics_in_virtual_reality/</guid>
+      <guid>https://gafferongames.com/post/networked_physics_in_virtual_reality/</guid>
       <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &amp;ldquo;Hey Glenn, there&amp;rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?&amp;rdquo;&lt;/p&gt;
 &lt;p&gt;I replied ~~&amp;quot;F*** yes!&amp;ldquo;~~ **cough** &amp;ldquo;Sure. This could be a lot of fun!&amp;rdquo;. But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good. Two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.&lt;/p&gt;
@@ -431,10 +431,10 @@
     
     <item>
       <title>Why can&#39;t I send UDP packets from a browser?</title>
-      <link>http://127.0.0.1:1313/post/why_cant_i_send_udp_packets_from_a_browser/</link>
+      <link>https://gafferongames.com/post/why_cant_i_send_udp_packets_from_a_browser/</link>
       <pubDate>Sun, 26 Feb 2017 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/why_cant_i_send_udp_packets_from_a_browser/</guid>
+      <guid>https://gafferongames.com/post/why_cant_i_send_udp_packets_from_a_browser/</guid>
       <description>&lt;h1 id=&#34;premise&#34;&gt;Premise&lt;/h1&gt;
 &lt;p&gt;In 2017 the most popular web games like &lt;a href=&#34;http://agar.io&#34;&gt;agar.io&lt;/a&gt; are networked via WebSockets over TCP. If a UDP equivalent of WebSockets could be incorporated into browsers, it would greatly improve the networking of these games.&lt;/p&gt;
 &lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;
@@ -570,12 +570,12 @@ Matheus Valadares, creator of agar.io&lt;/p&gt;
     
     <item>
       <title>Client Server Connection</title>
-      <link>http://127.0.0.1:1313/post/client_server_connection/</link>
+      <link>https://gafferongames.com/post/client_server_connection/</link>
       <pubDate>Wed, 28 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/client_server_connection/</guid>
+      <guid>https://gafferongames.com/post/client_server_connection/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;So far in this article series we&amp;rsquo;ve discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP.&lt;/p&gt;
 &lt;p&gt;Now in this article we&amp;rsquo;re going to bring everything together and build a client/server connection on top of UDP.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
@@ -760,12 +760,12 @@ class Server
     
     <item>
       <title>Reliable Ordered Messages</title>
-      <link>http://127.0.0.1:1313/post/reliable_ordered_messages/</link>
+      <link>https://gafferongames.com/post/reliable_ordered_messages/</link>
       <pubDate>Thu, 15 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/reliable_ordered_messages/</guid>
+      <guid>https://gafferongames.com/post/reliable_ordered_messages/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Many people will tell you that implementing your own reliable message system on top of UDP is foolish. After all, why reimplement TCP?&lt;/p&gt;
 &lt;p&gt;But why limit ourselves to how TCP works? But there are so many different ways to implement reliable-messages and most of them work &lt;em&gt;nothing&lt;/em&gt; like TCP!&lt;/p&gt;
 &lt;p&gt;So let&amp;rsquo;s get creative and work out how we can implement a reliable message system that&amp;rsquo;s &lt;em&gt;better&lt;/em&gt; and &lt;em&gt;more flexible&lt;/em&gt; than TCP for real-time games.&lt;/p&gt;
@@ -951,7 +951,7 @@ class Server
 &lt;!-- raw HTML omitted --&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;Which is flexible enough to implement whatever you like on top of it.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://127.0.0.1:1313/post/client_server_connection/&#34;&gt;Client Server Connection&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/client_server_connection/&#34;&gt;Client Server Connection&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -959,13 +959,13 @@ class Server
     
     <item>
       <title>Sending Large Blocks of Data</title>
-      <link>http://127.0.0.1:1313/post/sending_large_blocks_of_data/</link>
+      <link>https://gafferongames.com/post/sending_large_blocks_of_data/</link>
       <pubDate>Mon, 12 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/sending_large_blocks_of_data/</guid>
+      <guid>https://gafferongames.com/post/sending_large_blocks_of_data/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/packet_fragmentation_and_reassembly/&#34;&gt;previous article&lt;/a&gt; we implemented packet fragmentation and reassembly so we can send packets larger than MTU.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/packet_fragmentation_and_reassembly/&#34;&gt;previous article&lt;/a&gt; we implemented packet fragmentation and reassembly so we can send packets larger than MTU.&lt;/p&gt;
 &lt;p&gt;This approach works great when the data block you&amp;rsquo;re sending is time critical and can be dropped, but in other cases you need to send large blocks of quickly and reliably over packet loss, and you need the data to get through.&lt;/p&gt;
 &lt;p&gt;In this situation, a different technique gives much better results.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
@@ -1113,7 +1113,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;p&gt;This process continues until all slices of the chunk are received, at which point the receiver sets receiving to &amp;lsquo;false&amp;rsquo; and &amp;lsquo;readyToRead&amp;rsquo; to true. While &amp;lsquo;readyToRead&amp;rsquo; is true, incoming slice packets are discarded. At this point, the chunk receive packet processing is performed, typically on the same frame. The caller checks &amp;lsquo;do I have a chunk to read?&amp;rsquo; and processes the chunk data. All chunk receive data is cleared back to defaults, except chunk id which is incremented from 0 -&amp;gt; 1, and we are ready to receive the next chunk.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;The chunk system is simple in concept, but the implementation is certainly not. I encourage you to take a close look at the &lt;a href=&#34;http://www.patreon.com/gafferongames&#34;&gt;source code&lt;/a&gt; for this article for further details.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/reliable_ordered_messages/&#34;&gt;Reliable Ordered Messages&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/reliable_ordered_messages/&#34;&gt;Reliable Ordered Messages&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1121,13 +1121,13 @@ struct SlicePacket : public protocol2::Packet
     
     <item>
       <title>Packet Fragmentation and Reassembly</title>
-      <link>http://127.0.0.1:1313/post/packet_fragmentation_and_reassembly/</link>
+      <link>https://gafferongames.com/post/packet_fragmentation_and_reassembly/</link>
       <pubDate>Tue, 06 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/packet_fragmentation_and_reassembly/</guid>
+      <guid>https://gafferongames.com/post/packet_fragmentation_and_reassembly/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/serialization_strategies/&#34;&gt;previous article&lt;/a&gt; we discussed how to unify packet read and write into a single serialize function and added a bunch of safety features to packet read.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;previous article&lt;/a&gt; we discussed how to unify packet read and write into a single serialize function and added a bunch of safety features to packet read.&lt;/p&gt;
 &lt;p&gt;Now we are ready to start putting interesting things in our packets and sending them over the network, but immediately we run into an interesting question: &lt;em&gt;how big should our packets be?&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;To answer this question properly we need a bit of background about how packets are actually sent over the Internet.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
@@ -1188,7 +1188,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;So I recommend you take it easy with the number of fragments. It&amp;rsquo;s best to use this strategy only for packets in the 2-4 fragment range, and only for time critical data that doesn&amp;rsquo;t matter too much if it gets dropped. It&amp;rsquo;s &lt;em&gt;definitely not&lt;/em&gt; a good idea to fire down a bunch of reliable-ordered events in a huge packet and rely on packet fragmentation and reassembly to save your ass.&lt;/p&gt;
 &lt;p&gt;Another typical use case for large packets is when a client initially joins a game. Here you usually want to send a large block of data down reliably to that client, for example, representing the initial state of the world for late join. Whatever you do, don&amp;rsquo;t send that block of data down using the fragmentation and re-assembly technique in this article.&lt;/p&gt;
-&lt;p&gt;Instead, check out the technique in &lt;a href=&#34;http://127.0.0.1:1313/post/sending-large-blocks-of-data.html&#34;&gt;next article&lt;/a&gt; which handles packet loss by resending fragments until they are all received.&lt;/p&gt;
+&lt;p&gt;Instead, check out the technique in &lt;a href=&#34;https://gafferongames.com/post/sending-large-blocks-of-data.html&#34;&gt;next article&lt;/a&gt; which handles packet loss by resending fragments until they are all received.&lt;/p&gt;
 &lt;h2 id=&#34;receiving-packet-fragments&#34;&gt;Receiving Packet Fragments&lt;/h2&gt;
 &lt;p&gt;It&amp;rsquo;s time to implement the code that receives and processed packet fragments. This is a bit tricky because we have to be particularly careful of somebody trying to attack us with malicious packets.&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s a list of all the ways I can think of to attack the protocol:&lt;/p&gt;
@@ -1268,7 +1268,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;/ul&gt;
 &lt;p&gt;This is my process and it seems to work pretty well. If you are writing a low-level network protocol, the rest of your game depends on this code working correctly. You need to be absolutely sure it works before you build on it, otherwise it&amp;rsquo;s basically a stack of cards.&lt;/p&gt;
 &lt;p&gt;In my experience, game neworking is hard enough without having suspicions that that your low-level network protocol has bugs that only show up under extreme network conditions. That&amp;rsquo;s exactly where you need to be able to trust your code works correctly. &lt;strong&gt;So test it!&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://127.0.0.1:1313/post/sending_large_blocks_of_data/&#34;&gt;Sending Large Blocks of Data&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/sending_large_blocks_of_data/&#34;&gt;Sending Large Blocks of Data&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1276,13 +1276,13 @@ struct SlicePacket : public protocol2::Packet
     
     <item>
       <title>Serialization Strategies</title>
-      <link>http://127.0.0.1:1313/post/serialization_strategies/</link>
+      <link>https://gafferongames.com/post/serialization_strategies/</link>
       <pubDate>Sun, 04 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/serialization_strategies/</guid>
+      <guid>https://gafferongames.com/post/serialization_strategies/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/reading_and_writing_packets/&#34;&gt;previous article&lt;/a&gt;, we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/reading_and_writing_packets/&#34;&gt;previous article&lt;/a&gt;, we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.&lt;/p&gt;
 &lt;p&gt;In this article, we&amp;rsquo;re going to transform the bitpacker into a system where this checking is &lt;em&gt;automatic&lt;/em&gt;. We&amp;rsquo;re going to do this with minimal runtime overhead, and in such a way that we don&amp;rsquo;t have to code separate read and write functions, performing both read and write with a single function.&lt;/p&gt;
 &lt;p&gt;This is called a &lt;em&gt;serialize function&lt;/em&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;serializing-bits&#34;&gt;Serializing Bits&lt;/h2&gt;
@@ -1396,7 +1396,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;This is great packet structure to use during development.&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://127.0.0.1:1313/post/packet_fragmentation_and_reassembly&#34;&gt;Packet Fragmentation and Reassembly&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/packet_fragmentation_and_reassembly&#34;&gt;Packet Fragmentation and Reassembly&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1404,12 +1404,12 @@ struct SlicePacket : public protocol2::Packet
     
     <item>
       <title>Reading and Writing Packets</title>
-      <link>http://127.0.0.1:1313/post/reading_and_writing_packets/</link>
+      <link>https://gafferongames.com/post/reading_and_writing_packets/</link>
       <pubDate>Thu, 01 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/reading_and_writing_packets/</guid>
+      <guid>https://gafferongames.com/post/reading_and_writing_packets/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In this article we&amp;rsquo;re going to explore how AAA multiplayer games like first person shooters read and write packets. We&amp;rsquo;ll start with text based formats then move into binary hand-coded binary formats and bitpacking.&lt;/p&gt;
 &lt;p&gt;At the end of this article and the next, you should understand exactly how to implement your own packet read and write the same way the pros do it.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
@@ -1582,7 +1582,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;!-- raw HTML omitted --&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. &lt;em&gt;You want it to be automatic&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/serialization_strategies/&#34;&gt;Serialization Strategies&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;Serialization Strategies&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1590,13 +1590,13 @@ struct SlicePacket : public protocol2::Packet
     
     <item>
       <title>State Synchronization</title>
-      <link>http://127.0.0.1:1313/post/state_synchronization/</link>
+      <link>https://gafferongames.com/post/state_synchronization/</link>
       <pubDate>Mon, 05 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/state_synchronization/</guid>
+      <guid>https://gafferongames.com/post/state_synchronization/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_compression/&#34;&gt;previous article&lt;/a&gt; we discussed techniques for compressing snapshots.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;previous article&lt;/a&gt; we discussed techniques for compressing snapshots.&lt;/p&gt;
 &lt;p&gt;In this article we round out our discussion of networked physics strategies with &lt;strong&gt;state synchronization&lt;/strong&gt;, the third and final strategy in this article series.&lt;/p&gt;
 &lt;h2 id=&#34;state-synchronization&#34;&gt;State Synchronization&lt;/h2&gt;
 &lt;p&gt;What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, &lt;em&gt;unlike&lt;/em&gt; deterministic lockstep, we don&amp;rsquo;t just send input, we send both input &lt;!-- raw HTML omitted --&gt;and&lt;!-- raw HTML omitted --&gt; state.&lt;/p&gt;
@@ -1612,7 +1612,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;p&gt;While we must send the velocities, there&amp;rsquo;s no point wasting bandwidth sending (0,0,0) over and over while an object is at rest. We can fix this with a trivial optimization, like so:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;!-- raw HTML omitted --&gt;
-&lt;p&gt;What you see above is a &lt;em&gt;serialize function&lt;/em&gt;. It&amp;rsquo;s a trick I like to use to unify packet read and write. I like it because it&amp;rsquo;s expressive while at the same time it&amp;rsquo;s difficult to desync read and write. You can read more about them &lt;a href=&#34;http://127.0.0.1:1313/post/serialization_strategies/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;What you see above is a &lt;em&gt;serialize function&lt;/em&gt;. It&amp;rsquo;s a trick I like to use to unify packet read and write. I like it because it&amp;rsquo;s expressive while at the same time it&amp;rsquo;s difficult to desync read and write. You can read more about them &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;packet-structure&#34;&gt;Packet Structure&lt;/h2&gt;
 &lt;p&gt;Now let&amp;rsquo;s look at the overall structure of packets being sent:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
@@ -1637,7 +1637,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;p&gt;Surprisingly, without any smoothing the result is already pretty good:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;As you can see it&amp;rsquo;s already looking quite good and barely any bandwidth optimization has been performed. Contrast this with the first video for snapshot interpolation which was at 18mbit/sec and you can see that using the simulation to extrapolate between state updates is a great way to use less bandwidth.&lt;/p&gt;
-&lt;p&gt;Of course we can do a lot better than this and each optimization we do lets us squeeze more state updates in the same amount of bandwidth. The next obvious thing we can do is to apply all the standard quantization compression techniques such as bounding and quantizing position, linear and angular velocity value and using the smallest three compression as described in &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_compression/&#34;&gt;snapshot compression&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Of course we can do a lot better than this and each optimization we do lets us squeeze more state updates in the same amount of bandwidth. The next obvious thing we can do is to apply all the standard quantization compression techniques such as bounding and quantizing position, linear and angular velocity value and using the smallest three compression as described in &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;snapshot compression&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;But here it gets a bit more complex. We are extrapolating from those state updates so if we quantize these values over the network then the state that arrives on the right side is slightly different from the left side, leading to a slightly different extrapolation and a pop when the next state update arrives for that object.&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
 &lt;h2 id=&#34;quantize-both-sides&#34;&gt;Quantize Both Sides&lt;/h2&gt;
@@ -1661,7 +1661,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;p&gt;Even though I would argue the result above is probably good enough already it is possible to improve the synchronization considerably from this point. For example to support a world with larger objects or more objects being interacted with. So lets work through some of those techniques and push this technique as far as it can go.&lt;/p&gt;
 &lt;p&gt;There is an easy compression that can be performed. Instead of encoding absolute position, if it is within a range of the player cube center, encode position as a relative offset to the player center position. In the common cases where bandwidth is high and state updates need to be more frequent (katamari ball) this provides a large win.&lt;/p&gt;
 &lt;p&gt;Next, what if we do want to perform some sort of delta encoding for state synchronization? We can but it&amp;rsquo;s quite different in this case than it is with snapshots because we&amp;rsquo;re not including every cube in every packet, so we can&amp;rsquo;t just track the most recent packet received and say, OK all these state updates in this packet are relative to packet X.&lt;/p&gt;
-&lt;p&gt;What you actually have to do is per-object update keep track of the packet that includes the base for that update. You also need to keep track of exactly the set of packets received so that the sender knows which packets are valid bases to encode relative to. This is reasonably complicated and requires a bidirectional ack system over UDP. Such a system is designed for exactly this sort of situation where you need to know exactly which packets definitely got through. You can find a tutorial on how to implement this in &lt;a href=&#34;http://127.0.0.1:1313/post/reliability_and_flow_control/&#34;&gt;this article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;What you actually have to do is per-object update keep track of the packet that includes the base for that update. You also need to keep track of exactly the set of packets received so that the sender knows which packets are valid bases to encode relative to. This is reasonably complicated and requires a bidirectional ack system over UDP. Such a system is designed for exactly this sort of situation where you need to know exactly which packets definitely got through. You can find a tutorial on how to implement this in &lt;a href=&#34;https://gafferongames.com/post/reliability_and_flow_control/&#34;&gt;this article&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;So assuming that you have an ack system you know with packet sequence numbers get through. What you do then is per-state update write one bit if the update is relative or absolute, if absolute then encode with no base as before, otherwise if relative send the 16 bit sequence number per-state update of the base and then encode relative to the state update data sent in that packet. This adds 1 bit overhead per-update as well as 16 bits to identify the sequence number of the base per-object update. Can we do better?&lt;/p&gt;
 &lt;p&gt;Yes. In turns out that of course you&amp;rsquo;re going to have to buffer on the send and receive side to implement this relative encoding and you can&amp;rsquo;t buffer forever. In fact, if you think about it you can only buffer up a couple of seconds before it becomes impractical and in the common case of moving objects you&amp;rsquo;re going to be sending the updates for same object frequently (katamari ball) so practically speaking the base sequence will only be from a short time ago.&lt;/p&gt;
 &lt;p&gt;So instead of sending the 16 bit sequence base per-object, send in the header of the packet the most recent acked packet (from the reliability ack system) and per-object encode the offset of the base sequence relative to that value using 5 bits. This way at 60 packets per-second you can identify an state update with a base half a second ago. Any base older than this is unlikely to provide a good delta encoding anyway because it&amp;rsquo;s old, so in that case just drop back to absolute encoding for that update.&lt;/p&gt;
@@ -1676,13 +1676,13 @@ struct SlicePacket : public protocol2::Packet
     
     <item>
       <title>Snapshot Compression</title>
-      <link>http://127.0.0.1:1313/post/snapshot_compression/</link>
+      <link>https://gafferongames.com/post/snapshot_compression/</link>
       <pubDate>Sun, 04 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/snapshot_compression/</guid>
+      <guid>https://gafferongames.com/post/snapshot_compression/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_interpolation/&#34;&gt;previous article&lt;/a&gt; we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;previous article&lt;/a&gt; we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.&lt;/p&gt;
 &lt;p&gt;The problem with a low snapshot rate like 10HZ is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms. If protection against one or two lost packets in a row is desired, this blows out to 250ms or 350ms delay.&lt;/p&gt;
 &lt;p&gt;This is not an acceptable amount of delay for most games, but when the physics simulation is as unpredictable as ours, the only way to reduce it is to increase the packet send rate. Unfortunately, increasing the send rate also increases bandwidth. So what we&amp;rsquo;re going to do in this article is work through every possible bandwidth optimization &lt;em&gt;(that I can think of at least)&lt;/em&gt; until we get bandwidth under control.&lt;/p&gt;
 &lt;p&gt;Our target bandwidth is &lt;strong&gt;256 kilobits per-second&lt;/strong&gt;.&lt;/p&gt;
@@ -1769,7 +1769,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;p&gt;And that&amp;rsquo;s about as far as I can take it using traditional hand-rolled bit-packing techniques. You can find source code for my implementation of all compression techniques mentioned in this article &lt;!-- raw HTML omitted --&gt;here&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s possible to get even better compression using a different approach. Bit-packing is inefficient because not all bit values have equal probability of 0 vs 1. No matter how hard you tune your bit-packer a context aware arithmetic encoding can beat your result by more accurately modeling the probability of values that occur in your data set. This &lt;!-- raw HTML omitted --&gt;implementation&lt;!-- raw HTML omitted --&gt; by Fabian Giesen beat my best bit-packed result by 25%.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/state_synchronization/&#34;&gt;State Synchronization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/state_synchronization/&#34;&gt;State Synchronization&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1777,15 +1777,15 @@ struct SlicePacket : public protocol2::Packet
     
     <item>
       <title>Snapshot Interpolation</title>
-      <link>http://127.0.0.1:1313/post/snapshot_interpolation/</link>
+      <link>https://gafferongames.com/post/snapshot_interpolation/</link>
       <pubDate>Sun, 30 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/snapshot_interpolation/</guid>
+      <guid>https://gafferongames.com/post/snapshot_interpolation/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/deterministic_lockstep/&#34;&gt;previous article&lt;/a&gt; we networked a physics simulation using deterministic lockstep. Now, in this article we&amp;rsquo;re going to network the same simulation with a completely different technique: &lt;strong&gt;snapshot interpolation&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;previous article&lt;/a&gt; we networked a physics simulation using deterministic lockstep. Now, in this article we&amp;rsquo;re going to network the same simulation with a completely different technique: &lt;strong&gt;snapshot interpolation&lt;/strong&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
-&lt;p&gt;While deterministic lockstep is very efficient in terms of bandwidth, it&amp;rsquo;s not always possible to make your simulation deterministic. Floating point determinism across platforms is &lt;a href=&#34;http://127.0.0.1:1313/post/floating_point_determinism/&#34;&gt;hard&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;While deterministic lockstep is very efficient in terms of bandwidth, it&amp;rsquo;s not always possible to make your simulation deterministic. Floating point determinism across platforms is &lt;a href=&#34;https://gafferongames.com/post/floating_point_determinism/&#34;&gt;hard&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Also, as the player counts increase, deterministic lockstep becomes problematic: you can&amp;rsquo;t simulate frame n until you receive input from &lt;em&gt;all&lt;/em&gt; players for that frame, so players end up waiting for the most lagged player. Because of this, I recommend deterministic lockstep for 2-4 players at most.&lt;/p&gt;
 &lt;p&gt;So if your simulation is not deterministic or you want higher player counts then you need a different technique. Snapshot interpolation fits the bill nicely. It is in many ways the polar opposite of deterministic lockstep: instead of running two simulations, one on the left and one on the right, and using perfect determinism and synchronized inputs keep them in sync, snapshot interpolation doesn&amp;rsquo;t run any simulation on the right side at all!&lt;/p&gt;
 &lt;h2 id=&#34;snapshots&#34;&gt;Snapshots&lt;/h2&gt;
@@ -1835,7 +1835,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;p&gt;But even if you do all this there will still be misprediction because you simply can&amp;rsquo;t accurately match a physics simulation with an approximation. If your simulation is mostly linear motion, eg. fast moving planes, boats, space ships &amp;ndash; you may find that a simple extrapolation works well for short time periods (50-250ms or so), but in my experience as soon as objects start colliding with other non-stationary objects, extrapolation starts to break down.&lt;/p&gt;
 &lt;p&gt;How can we reduce the amount of delay added for interpolation? 350ms still seems unacceptable and we can&amp;rsquo;t use extrapolation to reduce this delay without adding a lot of inaccuracy. The solution is simple: &lt;em&gt;increase the send rate!&lt;/em&gt; If we send 30 snapshots per-second we can get the same amount of packet loss protection with a delay of 150ms. 60 packets per-second needs only 85ms.&lt;/p&gt;
 &lt;p&gt;In order to increase the send rate we&amp;rsquo;re going to need some pretty good bandwidth optimizations. But don&amp;rsquo;t worry, there&amp;rsquo;s a &lt;em&gt;lot&lt;/em&gt; we can do to optimize bandwidth. So much so that there was too much stuff to fit in this article and I had to insert an extra unplanned article just to cover all of it!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_compression/&#34;&gt;Snapshot Compression&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;Snapshot Compression&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1843,13 +1843,13 @@ struct SlicePacket : public protocol2::Packet
     
     <item>
       <title>Deterministic Lockstep</title>
-      <link>http://127.0.0.1:1313/post/deterministic_lockstep/</link>
+      <link>https://gafferongames.com/post/deterministic_lockstep/</link>
       <pubDate>Sat, 29 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/deterministic_lockstep/</guid>
+      <guid>https://gafferongames.com/post/deterministic_lockstep/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/introduction_to_networked_physics/&#34;&gt;previous article&lt;/a&gt; we explored the physics simulation we&amp;rsquo;re going to network in this article series. In this article specifically, we&amp;rsquo;re going to network this physics simulation using &lt;strong&gt;deterministic lockstep&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/introduction_to_networked_physics/&#34;&gt;previous article&lt;/a&gt; we explored the physics simulation we&amp;rsquo;re going to network in this article series. In this article specifically, we&amp;rsquo;re going to network this physics simulation using &lt;strong&gt;deterministic lockstep&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Deterministic lockstep is a method of networking a system from one computer to another by sending only the &lt;em&gt;inputs&lt;/em&gt; that control that system, rather than the &lt;em&gt;state&lt;/em&gt; of that system. In the context of networking a physics simulation, this means we send across a small amount of input, while avoiding sending state like position, orientation, linear velocity and angular velocity per-object.&lt;/p&gt;
 &lt;p&gt;The benefit is that bandwidth is proportional to the size of the input, not the number of objects in the simulation. Yes, with deterministic lockstep you can network a physics simulation of one million objects with the same bandwidth as just one.&lt;/p&gt;
 &lt;p&gt;While this sounds great in theory, in practice it&amp;rsquo;s difficult to implement deterministic lockstep because most physics simulations are not deterministic. Differences in floating point behavior between compilers, OS&amp;rsquo;s and even instruction sets make it almost impossible to guarantee determinism for floating point calculations.&lt;/p&gt;
@@ -1863,7 +1863,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;And now a word of warning. Even though the simulation above is deterministic on the same machine, that does &lt;em&gt;not&lt;/em&gt; necessarily mean it would also be deterministic across different compilers, a different OS or different machine architectures (eg. PowerPC vs. Intel). In fact, it&amp;rsquo;s probably not even deterministic between debug and release builds due to floating point optimizations.&lt;/p&gt;
 &lt;p&gt;Floating point determinism is a complicated subject and there&amp;rsquo;s no silver bullet.&lt;/p&gt;
-&lt;p&gt;For more information please refer to this &lt;a href=&#34;http://127.0.0.1:1313/post/floating_point_determinism/&#34;&gt;article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For more information please refer to this &lt;a href=&#34;https://gafferongames.com/post/floating_point_determinism/&#34;&gt;article&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;networking-inputs&#34;&gt;Networking Inputs&lt;/h2&gt;
 &lt;p&gt;Now let&amp;rsquo;s get down to implementation.&lt;/p&gt;
 &lt;p&gt;Our example physics simulation is driven by keyboard input: arrow keys apply forces to make the player cube move, holding space lifts the cube up and blows other cubes around, and holding &amp;lsquo;z&amp;rsquo; enables katamari mode.&lt;/p&gt;
@@ -1924,7 +1924,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;The video above shows deterministic lockstep synchronized over UDP using this technique with &lt;strong&gt;2 seconds&lt;/strong&gt; of latency and &lt;strong&gt;25% packet loss&lt;/strong&gt;. Imagine how awful TCP would look under these conditions.&lt;/p&gt;
 &lt;p&gt;So in conclusion, even where TCP should have the most advantage, in the only networking model that relies on reliable-ordered data, we can still easily whip its ass with a simple protocol built on top of UDP.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/snapshot_interpolation/&#34;&gt;Snapshot Interpolation&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;Snapshot Interpolation&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1932,12 +1932,12 @@ struct SlicePacket : public protocol2::Packet
     
     <item>
       <title>Introduction to Networked Physics</title>
-      <link>http://127.0.0.1:1313/post/introduction_to_networked_physics/</link>
+      <link>https://gafferongames.com/post/introduction_to_networked_physics/</link>
       <pubDate>Fri, 28 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/introduction_to_networked_physics/</guid>
+      <guid>https://gafferongames.com/post/introduction_to_networked_physics/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to the first article in &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to the first article in &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In this article series we&amp;rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.&lt;/p&gt;
 &lt;p&gt;But before we get to this, let&amp;rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:&lt;/p&gt;
 &lt;!-- raw HTML omitted --&gt;
@@ -1957,7 +1957,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;Cubes within a certain distance of the player have a force applied towards the center of the cube. These cubes remain physically simulated while in the katamari ball, they are not just “stuck” to the player like in the original game.&lt;/p&gt;
 &lt;p&gt;This is a very difficult situation for networked physics!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/deterministic_lockstep/&#34;&gt;Deterministic Lockstep&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;Deterministic Lockstep&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -1965,12 +1965,12 @@ struct SlicePacket : public protocol2::Packet
     
     <item>
       <title>Floating Point Determinism</title>
-      <link>http://127.0.0.1:1313/post/floating_point_determinism/</link>
+      <link>https://gafferongames.com/post/floating_point_determinism/</link>
       <pubDate>Wed, 24 Feb 2010 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/floating_point_determinism/</guid>
+      <guid>https://gafferongames.com/post/floating_point_determinism/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Lately I&amp;rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.&lt;/p&gt;
 &lt;p&gt;The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation &lt;em&gt;implicitly&lt;/em&gt; by sending just the player inputs.&lt;/p&gt;
 &lt;p&gt;This is a very attractive synchronization strategy because the amount of network traffic depends on the size of the player inputs instead of the amount of physics state in the world. In fact, this strategy has been used for many years in RTS games for precisely this reason; with thousands and thousands of units on the map, they simply have too much state to send over the network.&lt;/p&gt;
@@ -1992,7 +1992,7 @@ struct SlicePacket : public protocol2::Packet
 &lt;p&gt;However with a good deal of work you &lt;!-- raw HTML omitted --&gt;may&lt;!-- raw HTML omitted --&gt; be able to &lt;!-- raw HTML omitted --&gt;coax&lt;!-- raw HTML omitted --&gt; exactly the same floating point results out of different compilers or different machine architectures by using your compilers &amp;ldquo;strict&amp;rdquo; IEEE 754 compliant mode and restricting the set of floating point operations you use. This typically results in significantly lower floating point performance.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;If you would like to debate these points or add your own nuance, please &lt;a href=&#34;http://127.0.0.1:1313/contact&#34;&gt;contact&lt;/a&gt; me! I consider this question by no means settled and am very interested in other peoples experiences with deterministic floating point simulations and exactly reproducible floating point calculations. Please contact me especially if you have managed to get binary exact results across different architectures and compilers in real world situations.&lt;/p&gt;
+&lt;p&gt;If you would like to debate these points or add your own nuance, please &lt;a href=&#34;https://gafferongames.com/contact&#34;&gt;contact&lt;/a&gt; me! I consider this question by no means settled and am very interested in other peoples experiences with deterministic floating point simulations and exactly reproducible floating point calculations. Please contact me especially if you have managed to get binary exact results across different architectures and compilers in real world situations.&lt;/p&gt;
 &lt;p&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 &lt;p&gt;&lt;!-- raw HTML omitted --&gt;Here are the resources I have discovered in my search so far&amp;hellip;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 &lt;p&gt;&lt;!-- raw HTML omitted --&gt;
@@ -2148,12 +2148,12 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>What Every Programmer Needs To Know About Game Networking</title>
-      <link>http://127.0.0.1:1313/post/what_every_programmer_needs_to_know_about_game_networking/</link>
+      <link>https://gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/</link>
       <pubDate>Wed, 24 Feb 2010 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/what_every_programmer_needs_to_know_about_game_networking/</guid>
+      <guid>https://gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Have you ever wondered how multiplayer games work?&lt;/p&gt;
 &lt;p&gt;From the outside it seems magical: two or more players sharing a consistent experience across the network like they actually exist together in the same virtual world.&lt;/p&gt;
 &lt;p&gt;But as programmers we know the truth of what is actually going on underneath is quite different from what you see. It turns out it&amp;rsquo;s all an illusion. A massive sleight-of-hand. What you perceive as a shared reality is only an approximation unique to your own point of view and place in time.&lt;/p&gt;
@@ -2204,13 +2204,13 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>Reliability and Congestion Avoidance over UDP</title>
-      <link>http://127.0.0.1:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/</link>
+      <link>https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/</link>
       <pubDate>Mon, 20 Oct 2008 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/</guid>
+      <guid>https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/virtual_connection_over_udp/&#34;&gt;previous article&lt;/a&gt;, we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/virtual_connection_over_udp/&#34;&gt;previous article&lt;/a&gt;, we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.&lt;/p&gt;
 &lt;h2 id=&#34;the-problem-with-tcp&#34;&gt;The Problem with TCP&lt;/h2&gt;
 &lt;p&gt;Those of you familiar with TCP know that it already has its own concept of connection, reliability-ordering and congestion avoidance, so why are we rewriting our own mini version of TCP on top of UDP?&lt;/p&gt;
 &lt;p&gt;The issue is that multiplayer action games rely on a steady stream of packets sent at rates of 10 to 30 packets per second, and for the most part, the data contained is these packets is so time sensitive that only the most recent data is useful. This includes data such as player inputs, the position, orientation and velocity of each player character, and the state of physics objects in the world.&lt;/p&gt;
@@ -2362,7 +2362,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;You can also get much more &lt;!-- raw HTML omitted --&gt;greedy&lt;!-- raw HTML omitted --&gt; with congestion avoidance, and attempt to discover when you can send data at a much higher bandwidth (eg. LAN), but you have to be very careful! With increased greediness comes more risk that you&amp;rsquo;ll flood the connection.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;Our new reliability system let&amp;rsquo;s us send a steady stream of packets and notifies us which packets are received. From this we can infer lost packets, and resend data that didn&amp;rsquo;t get through if necessary. We also have a simple congestion avoidance system that drops from 30 packets per-second to 10 times a second so we don&amp;rsquo;t flood the connection.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/what_every_programmer_needs_to_know_about_game_networking/&#34;&gt;What Every Programmer Needs to Know About Game Networking&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/&#34;&gt;What Every Programmer Needs to Know About Game Networking&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -2370,13 +2370,13 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>Virtual Connection over UDP</title>
-      <link>http://127.0.0.1:1313/post/virtual_connection_over_udp/</link>
+      <link>https://gafferongames.com/post/virtual_connection_over_udp/</link>
       <pubDate>Wed, 08 Oct 2008 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/virtual_connection_over_udp/</guid>
+      <guid>https://gafferongames.com/post/virtual_connection_over_udp/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/sending_and_receiving_packets&#34;&gt;previous article&lt;/a&gt; we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/sending_and_receiving_packets&#34;&gt;previous article&lt;/a&gt; we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.&lt;/p&gt;
 &lt;p&gt;As the first step towards a general connection system, we&amp;rsquo;ll start with the simplest case possible: creating a virtual connection between two computers on top of UDP.&lt;/p&gt;
 &lt;p&gt;But first, we&amp;rsquo;re going to dig in a bit deeper about how the Internet really works!&lt;/p&gt;
 &lt;h2 id=&#34;the-internet-unotu-a-series-of-tubes&#34;&gt;The Internet &lt;!-- raw HTML omitted --&gt;NOT&lt;!-- raw HTML omitted --&gt; a series of tubes&lt;/h2&gt;
@@ -2396,7 +2396,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;!-- raw HTML omitted --&gt;
 &lt;p&gt;Take a look and you should be able to convince yourself pretty quickly that there is no direct connection.&lt;/p&gt;
 &lt;h2 id=&#34;how-packets-get-delivered&#34;&gt;How Packets Get Delivered&lt;/h2&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/udp_vs_tcp/&#34;&gt;first article&lt;/a&gt;, I presented a simple analogy for packet delivery, describing it as somewhat like a note being passed from person to person across a crowded room.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/udp_vs_tcp/&#34;&gt;first article&lt;/a&gt;, I presented a simple analogy for packet delivery, describing it as somewhat like a note being passed from person to person across a crowded room.&lt;/p&gt;
 &lt;p&gt;While this analogy gets the basic idea across, it is much too simple. The Internet is &lt;!-- raw HTML omitted --&gt;not&lt;!-- raw HTML omitted --&gt; a flat network of computers, it is a network of networks. And of course, we don&amp;rsquo;t just need to pass letters around a small room, we need to be able to send them anywhere in the world.&lt;/p&gt;
 &lt;p&gt;It should be pretty clear then that the best analogy is the postal service!&lt;/p&gt;
 &lt;p&gt;When you want to send a letter to somebody you put your letter in the mailbox and you trust that it will be delivered correctly. It&amp;rsquo;s not really relevant to you &lt;!-- raw HTML omitted --&gt;how&lt;!-- raw HTML omitted --&gt; it gets there, as long as it does. Somebody has to physically deliver your letter to its destination of course, so how is this done?&lt;/p&gt;
@@ -2440,7 +2440,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;And that&amp;rsquo;s all it takes to setup a virtual connection: some way to establish connection, filtering for packets not involved in the connection, and timeouts to detect disconnection.&lt;/p&gt;
 &lt;p&gt;Our connection is as real as any TCP connection, and the steady stream of UDP packets it provides is a suitable starting point for a multiplayer action game.&lt;/p&gt;
 &lt;p&gt;Now that you have your virtual connection over UDP, you can easily setup a client/server relationship for a two player multiplayer game without TCP.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/&#34;&gt;Reliability and Congestion Avoidance over UDP&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/&#34;&gt;Reliability and Congestion Avoidance over UDP&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -2448,13 +2448,13 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>Sending and Receiving Packets</title>
-      <link>http://127.0.0.1:1313/post/sending_and_receiving_packets/</link>
+      <link>https://gafferongames.com/post/sending_and_receiving_packets/</link>
       <pubDate>Fri, 03 Oct 2008 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/sending_and_receiving_packets/</guid>
+      <guid>https://gafferongames.com/post/sending_and_receiving_packets/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/udp_vs_tcp/&#34;&gt;previous article&lt;/a&gt; we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/udp_vs_tcp/&#34;&gt;previous article&lt;/a&gt; we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.&lt;/p&gt;
 &lt;p&gt;In this article I am going to show you how to send and receive UDP packets.&lt;/p&gt;
 &lt;h2 id=&#34;bsd-sockets&#34;&gt;BSD sockets&lt;/h2&gt;
 &lt;p&gt;For most modern platforms you have some sort of basic socket layer available based on BSD sockets.&lt;/p&gt;
@@ -2770,7 +2770,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;As an added bonus the code is the same on all platforms because everything platform specific is handled inside the socket and address classes.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;You now have a platform independent way to send and receive packets. &lt;em&gt;Enjoy&lt;/em&gt; :)&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/virtual_connection_over_udp/&#34;&gt;Virtual Connection over UDP&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/virtual_connection_over_udp/&#34;&gt;Virtual Connection over UDP&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -2778,12 +2778,12 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>UDP vs. TCP</title>
-      <link>http://127.0.0.1:1313/post/udp_vs_tcp/</link>
+      <link>https://gafferongames.com/post/udp_vs_tcp/</link>
       <pubDate>Wed, 01 Oct 2008 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/udp_vs_tcp/</guid>
+      <guid>https://gafferongames.com/post/udp_vs_tcp/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In this article we start with the most basic aspect of network programming: sending and receiving data over the network. This is perhaps the simplest and most basic part of what network programmers do, but still it is quite intricate and non-obvious as to what the best course of action is.&lt;/p&gt;
 &lt;p&gt;You have most likely heard of sockets, and are probably aware that there are two main types: TCP and UDP. When writing a network game, we first need to choose what type of socket to use. Do we use TCP sockets, UDP sockets or a mixture of both? Take care because if you get this wrong it will have terrible effects on your multiplayer game!&lt;/p&gt;
 &lt;p&gt;The choice you make depends entirely on what sort of game you want to network. So from this point on and for the rest of this article series, I assume you want to network an action game. You know, games like Halo, Battlefield 1942, Quake, Unreal, CounterStrike and Team Fortress.&lt;/p&gt;
@@ -2853,7 +2853,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;My recommendation is not only that you use UDP, but that you &lt;em&gt;only&lt;/em&gt; use UDP for your game protocol. Don&amp;rsquo;t mix TCP and UDP! Instead, learn how to implement the specific features of TCP that you need &lt;em&gt;inside&lt;/em&gt; your own custom UDP based protocol.&lt;/p&gt;
 &lt;p&gt;Of course, it is no problem to use HTTP to talk to some RESTful services while your game is running. I&amp;rsquo;m not saying you can&amp;rsquo;t do that. A few TCP connections running while your game is running isn&amp;rsquo;t going to bring everything down. The point is, don&amp;rsquo;t split your &lt;em&gt;game protocol&lt;/em&gt; across UDP and TCP. Keep your game protocol running over UDP so you are fully in control of the data you send and receive and how reliability, ordering and congestion avoidance are implemented.&lt;/p&gt;
 &lt;p&gt;The rest of this article series show you how to do this, from creating your own virtual connection on top of UDP, to creating your own reliability, flow control and congestion avoidance.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/sending_and_receiving_packets/&#34;&gt;Sending and Receiving Packets&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/sending_and_receiving_packets/&#34;&gt;Sending and Receiving Packets&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
 </description>
@@ -2861,13 +2861,13 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>Networked Physics (2004)</title>
-      <link>http://127.0.0.1:1313/post/networked_physics_2004/</link>
+      <link>https://gafferongames.com/post/networked_physics_2004/</link>
       <pubDate>Sat, 04 Sep 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://127.0.0.1:1313/post/networked_physics_2004/</guid>
+      <guid>https://gafferongames.com/post/networked_physics_2004/</guid>
       <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/spring_physics&#34;&gt;previous article&lt;/a&gt; we discussed how to use spring-like forces to model basic collision response, joints and motors.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/spring_physics&#34;&gt;previous article&lt;/a&gt; we discussed how to use spring-like forces to model basic collision response, joints and motors.&lt;/p&gt;
 &lt;p&gt;In this article we&amp;rsquo;re going to discuss how to network a physics simulation.&lt;/p&gt;
 &lt;h2 id=&#34;first-person-shooters&#34;&gt;First Person Shooters&lt;/h2&gt;
 &lt;p&gt;First person shooter physics are usually very simple. The world is static and players are limited to running around and jumping and shooting.&lt;/p&gt;
