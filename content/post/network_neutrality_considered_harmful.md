@@ -1,6 +1,6 @@
 ---
 title: "Network Neutrality Considered Harmful"
-summary: "Why I create Network Next [Network Next](https://networknext.com)"
+summary: "Why I created Network Next"
 categories: ["Game Networking"]
 tags: ["networking"]
 date: "2020-08-24"
