@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academia 4.3.1">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+In the previous article, we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.
+In this article, we&rsquo;re going to transform the bitpacker into a system where this checking is automatic.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="http://127.0.0.1:1313/post/serialization_strategies/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#3f51b5">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academiaons/1.8.6/css/academiaons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Open+Sans|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academia.min.cbfe411b85bcf6c144a15531ef0c8d7b.css">
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="http://127.0.0.1:1313/post/serialization_strategies/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@gafferongames">
+  <meta property="twitter:creator" content="@gafferongames">
+  
+  <meta property="og:site_name" content="Gaffer On Games">
+  <meta property="og:url" content="http://127.0.0.1:1313/post/serialization_strategies/">
+  <meta property="og:title" content="Serialization Strategies | Gaffer On Games">
+  <meta property="og:description" content="Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+In the previous article, we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.
+In this article, we&rsquo;re going to transform the bitpacker into a system where this checking is automatic."><meta property="og:image" content="http://127.0.0.1:1313/img/icon-192.png">
+  <meta property="twitter:image" content="http://127.0.0.1:1313/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2016-09-04T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2016-09-04T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Serialization Strategies | Gaffer On Games</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Gaffer On Games</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"><span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Articles</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article py-5" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+    
+    
+    <div class="article-container py-3">
+      <h1 itemprop="name">Serialization Strategies</h1>
+
+      
+
+      
+      
+
+
+
+<meta content="2016-09-04 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2016-09-04 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Sep 4, 2016</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    11 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/building-a-game-network-protocol/">Building a Game Network Protocol</a></span>
+  
+
+  
+    
+
+  
+
+</div>
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+      
+    </div>
+  </div>
+</div>
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      <h2 id="introduction">Introduction</h2>
+<p>Hi, I’m <a href="https://gafferongames.com">Glenn Fiedler</a> and welcome to <strong><a href="/categories/building-a-game-network-protocol/">Building a Game Network Protocol</a></strong>.</p>
+<p>In the <a href="/post/reading_and_writing_packets/">previous article</a>, we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.</p>
+<p>In this article, we&rsquo;re going to transform the bitpacker into a system where this checking is <em>automatic</em>. We&rsquo;re going to do this with minimal runtime overhead, and in such a way that we don&rsquo;t have to code separate read and write functions, performing both read and write with a single function.</p>
+<p>This is called a <em>serialize function</em>.</p>
+<h2 id="serializing-bits">Serializing Bits</h2>
+<p>Let&rsquo;s start with the goal. Here&rsquo;s where we want to end up:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>Above you can see a simple serialize function. We serialize three integer variables x,y,z with 32 bits each.</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>And now something more complicated. We serialize a variable length array, making sure that the array length is in the range [0,MaxElements].</p>
+<p>Next, we serialize a rigid body with an simple optimization while it&rsquo;s at rest, serializing only one bit in place of linear and angular velocity:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>Notice how we&rsquo;re able to branch on Stream::IsWriting and Stream::IsReading to write code for each case. These branches are removed by the compiler when the specialized read and write serialize functions are generated.</p>
+<p>As you can see, serialize functions are flexible and expressive. They&rsquo;re also <em>safe</em>, with each <em><em>serialize</em>*</em>_ call performing checks and aborting read if anything is wrong (eg. a value out of range, going past the end of the buffer). Most importantly, this checking is automatic, _so you can&rsquo;t forget to do it!_</p>
+<h2 id="implementation-in-c">Implementation in C++</h2>
+<p>The trick to making this all work is to create two stream classes that share the same interface: <strong>ReadStream</strong> and <strong>WriteStream</strong>.</p>
+<p>The write stream implementation <em>writes values</em> using the bitpacker:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>And the read stream implementation <em>reads values in</em>:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>With the magic of C++ templates, we leave it up to the compiler to specialize the serialize function to the stream class passed in, producing optimized read and write functions.</p>
+<p>To handle safety <em><em>serialize</em>*</em>_ calls are not actually functions at all. They&rsquo;re actually macros that return false on error, thus unwinding the stack in case of error, without the need for exceptions.</p>
+<p>For example, this macro serializes an integer in a given range:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>If a value read in from the network is outside the expected range, or we read past the end of the buffer, the packet read is aborted.</p>
+<h2 id="serializing-floating-point-values">Serializing Floating Point Values</h2>
+<p>We&rsquo;re used to thinking about floating point numbers as being different to integers, but in memory they&rsquo;re just a 32 bit value like any other.</p>
+<p>The C++ language lets us work with this fundamental property, allowing us to directly access the bits of a float value as if it were an integer:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>You may prefer to do this with an aliased uint32_t* pointer, but this breaks with GCC -O2. Friends of mine point out that the only _truly standard way_ to get the float as an integer is to cast a pointer to the float value to char* and reconstruct the integer from the bytes values accessed through the char pointer.</p>
+<p>Meanwhile in the past 5 years I&rsquo;ve had no problems in the field with the union trick. Here&rsquo;s how I use it to serialize an uncompressed float value:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>This is of course wrapped with a <strong>serialize_float</strong> macro for error checking:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>We can now transmit full precision floating point values over the network.</p>
+<p>But what about situations where you don&rsquo;t need full precision? What about a floating point value in the range [0,10] with an acceptable precision of 0.01? Is there a way to send this over the network using less bits?</p>
+<p>Yes there is. The trick is to simply divide by 0.01 to get an integer in the range [0,1000] and send that value over the network. On the other side, convert back to a float by multiplying by 0.01.</p>
+<p>Here&rsquo;s a general purpose implementation of this basic idea:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>Of course we need error checking, so we wrap this with a macro:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>And now the basic interface is complete. We can serialize both compressed and uncompressed floating point values over the network.</p>
+<h1 id="serializing-vectors-and-quaternions">Serializing Vectors and Quaternions</h1>
+<p>Once you can serialize float values it&rsquo;s trivial to serialize vectors over the network. I use a modified version of the <!-- raw HTML omitted -->vectorial library<!-- raw HTML omitted --> in my projects and implement serialization for its vector type like this:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>If your vector is bounded in some range, then you can compress it:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>Notice how we are able to build more complex serialization using the primitives we&rsquo;re already created. Using this approach you can easily extend the serialization to support anything you need.</p>
+<h2 id="serializing-strings-and-arrays">Serializing Strings and Arrays</h2>
+<p>What if you need to serialize a string over the network?</p>
+<p>Is it a good idea to send a string over the network with null termination? Not really. You&rsquo;re just asking for trouble! Instead, serialize the string as an array of bytes with the string length in front. Therefore, in order to send a string over the network, we have to work out how to send an array of bytes.</p>
+<p>First observation. Why waste effort bitpacking an array of bytes into your bit stream just so they are randomly shifted by [0,7] bits? Why not align to byte so you can memcpy the array of bytes directly into the packet?</p>
+<p>To align a bitstream just work out your current bit index in the stream and how many bits of padding are needed until the current bit index divides evenly into 8, then insert that number of padding bits. </p>
+<p>For bonus points, pad up with zero bits to add entropy so that on read you can verify that yes, you are reading a byte align and yes, it is indeed padded up with zero bits to the next whole byte bit index. If a non-zero bit is discovered in the padding, <em>abort serialize read and discard the packet</em>.</p>
+<p>Here&rsquo;s my code to align a bit stream to byte:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>Now we can align to byte prior to writing an array of bytes, letting us use memcpy for the bulk of the array data. The only wrinkle is because the bitpacker works at the word level, it&rsquo;s necessary to have special handling for the head and tail portions. Because of this, the code is quite complex and is omitted for brevity. You can find it in the <a href="https://www.patreon.com/gafferongames">sample code</a> for this article.</p>
+<p>The end result of all this is a <strong>serialize_bytes</strong> primitive that we can use to serialize a string as a length followed by the string data, like so:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for <strong>'\0&rsquo;</strong> before giving up. This is important because otherwise protocol level attacks could be crafted to degrade your server&rsquo;s performance by making it do extra work.</p>
+<h2 id="serializing-array-subsets">Serializing Array Subsets</h2>
+<p>When implemeting a game network protocol, sooner or later you need to serialize an array of objects over the network. Perhaps the server needs to send object state down to the client, or there is an array of messages to be sent.</p>
+<p>This is straightforward if you are sending <em>all</em> objects in the array - just iterate across the array and serialize each object in turn. But what if you want to send a subset of the array?</p>
+<p>The simplest approach is to iterate across all objects in the array and serialize a bit per-object if that object is to be sent. If the value of the bit is 1 then the object data follows in the bit stream, otherwise it&rsquo;s ommitted:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>This approach breaks down as the size of the array gets larger. For example, for an array size of size 4096, then 4096 / 8 = 512 bytes spent on skip bits. That&rsquo;s not good. Can we switch it around so we take overhead propertional to the number of objects sent instead of the total number of objects in the array?</p>
+<p>We can but now, we&rsquo;ve done something interesting. We&rsquo;re walking one set of objects in the serialize write (all objects in the array) and are walking over a different set of objects in the serialize read (subset of objects sent).</p>
+<p>At this point the unified serialize function concept starts to breaks down, and in my opinion, it&rsquo;s best to separate the read and write back into separate functions, because they have so little in common:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>One more point. The code above walks over the set of objects <em>twice</em> on serialize write. Once to determine the number of changed objects and a second time to actually serialize the set of changed objects. Can we do it in one pass instead? Absolutely! You can use another trick, rather than serializing the # of objects in the array up front, use a <em>sentinel value</em> to indicate the end of the array:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>The above technique works great if the objects sent are a small percentage of total objects. But what if a large number of objects are sent, lets say half of the 4000 objects in the scene. That&rsquo;s 2000 object indices with each index costing 12 bits&hellip; that&rsquo;s 24000 bits or 3000 bytes (almost 3k!) in your packet wasted on indexing.</p>
+<p>You can reduce this overhead by encoding each object index relative to the previous object index. Think about it, you&rsquo;re walking from left to right along an array, so object indices start at 0 and go up to MaxObjects - 1. Statistically speaking, you&rsquo;re quite likely to have objects that are close to each other and if the next index is +1 or even +10 or +30 from the previous one, on average, you&rsquo;ll need quite a few less bits to represent that difference than an absolute index.</p>
+<p>Here&rsquo;s one way to encode the object index as an integer relative to the previous object index, while spending less bits on statistically more likely values:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>But what about the worst case? Won&rsquo;t we spent more bits when indices are &gt;= +126 apart than on an absolute index? Yes we do, but how many of these worst case indices fit in an array of size 4096? Just 32. It&rsquo;s nothing to worry about.</p>
+<h2 id="protocol-ids-crc32-and-serialization-checks">Protocol IDs, CRC32 and Serialization Checks</h2>
+<p>We are nearly at the end of this article, and you can see by now that we are sending a completely unattributed binary stream. It&rsquo;s essential that read and write match perfectly, which is of course why the serialize functions are so great, it&rsquo;s hard to desync something when you unify read and write.</p>
+<p>But accidents happen, and when they do this system can seem like a stack of cards. What if you somehow desync read and write? How can you debug this? What if somebody tries to connect to your latest server code with an old version of your client?</p>
+<p>One technique to protect against this is to include a protocol id in your packet. For example, it could be a combination of a unique number for your game, plus the hash of your protocol version and a hash of your game data. Now if a packet comes in from an incompatible game version, it&rsquo;s automatically discarded because the protocol ids don&rsquo;t match:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>The next level of protection is to pass a CRC32 over your packet and include that in the header. This lets you pick up corrupt packets (these do happen, remember that the IP checksum is just 16 bits&hellip;). Now your packet header looks like this:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>At this point you may be wincing. Wait. I have to take 8+4 = 12 bytes of overhead per-packet just to implement my own checksum and protocol id? Well actually, <em>you don&rsquo;t</em>. You can take a leaf out of how IPv4 does their checksum, and make the protocol id a <strong>magical prefix</strong>.</p>
+<p>This means you don&rsquo;t actually send it, and rely on the fact that if the CRC32 is calculated as if the packet were prefixed by the protocol id, then the CRC32 will be incorrect if the sender does not have the same protocol id as the receiver, thus saving 8 bytes per-packet:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>One final technique, perhaps as much a check against programmer error on your part and malicious senders (although redundant once you encrypt and sign your packet) is the <em>serialization check</em>. Basically, somewhere mid-packet, either before or after a complicated serialization section, just write out a known 32 bit integer value, and check that it reads back in on the other side with the same value. If the serialize check value is incorrect <em>abort read and discard the packet</em>.</p>
+<p>I like to do this between sections of my packet as I write them, so at least I know which part of my packet serialization has desynced read and write as I&rsquo;m developing my protocol. Another cool trick I like to use is to always serialize a protocol check at the very end of the packet, to detect accidental packet truncation (which happens more often than you would think).</p>
+<p>Now the packet looks something like this:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>This is great packet structure to use during development.</p>
+<!-- raw HTML omitted -->
+<p><strong>NEXT ARTICLE</strong>: <a href="/post/packet_fragmentation_and_reassembly">Packet Fragmentation and Reassembly</a></p>
+<hr>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+
+    </div>
+
+    
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/networking/">networking</a>
+  
+</div>
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+  
+  
+
+
+
+
+
+  
+  
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/authors/"></a></h5>
+      
+      
+      <ul class="network-icon" aria-hidden="true">
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+      <div class="article-widget">
+        <div class="hr-light"></div>
+        <h3>Related</h3>
+        <ul>
+          
+          <li><a href="/post/reading_and_writing_packets/">Reading and Writing Packets</a></li>
+          
+          <li><a href="/post/state_synchronization/">State Synchronization</a></li>
+          
+          <li><a href="/post/snapshot_compression/">Snapshot Compression</a></li>
+          
+          <li><a href="/post/snapshot_interpolation/">Snapshot Interpolation</a></li>
+          
+          <li><a href="/post/deterministic_lockstep/">Deterministic Lockstep</a></li>
+          
+        </ul>
+      </div>
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="/js/academia.min.281fa180ccfa1769ea3c7dd430814861.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        
+        <p>
+          Copyright © Glenn Fiedler, 2004 - 2019 
+        </p>
+      </div>
+      <div class="col-md-6">
+        <ul class="list-inline network-icon text-right">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://twitter.com/Twitter" target="_blank" rel="noopener" title="DM Me"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

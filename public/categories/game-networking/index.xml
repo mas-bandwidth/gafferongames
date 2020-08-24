@@ -1,0 +1,1122 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Game Networking on Gaffer On Games</title>
+    <link>http://127.0.0.1:1313/categories/game-networking/</link>
+    <description>Recent content in Game Networking on Gaffer On Games</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2019</copyright>
+    <lastBuildDate>Mon, 24 Aug 2020 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="http://127.0.0.1:1313/categories/game-networking/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Network Neutrality Considered Harmful</title>
+      <link>http://127.0.0.1:1313/post/network_neutrality_considered_harmful/</link>
+      <pubDate>Mon, 24 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/network_neutrality_considered_harmful/</guid>
+      <description>&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://www.linkedin.com/in/glennfiedler/&#34;&gt;Glenn Fiedler&lt;/a&gt; and I&amp;rsquo;m the founder and CEO of &lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Before starting Network Next, I worked in the game industry for 20 years as a software engineer. I was fortunate enough to have a good career and got to work on some games you&amp;rsquo;ve might have played: &lt;strong&gt;Freedom Force&lt;/strong&gt;, &lt;strong&gt;Mercenaries 2&lt;/strong&gt;, &lt;strong&gt;God of War&lt;/strong&gt;, &lt;strong&gt;Journey&lt;/strong&gt; and &lt;strong&gt;Titanfall 1 and 2&lt;/strong&gt;. Some of my netcode is still active in &lt;strong&gt;Apex Legends&lt;/strong&gt; even though I left Respawn Entertainment before it started development.&lt;/p&gt;
+&lt;p&gt;Ever since &lt;a href=&#34;https://quake.fandom.com/wiki/Qtest&#34;&gt;QTest&lt;/a&gt; I&amp;rsquo;ve found the idea that people in different physical locations could inhabit the same virtual space utterly fascinating. I wanted to understand how that worked and be part of it. So, after a few false starts in graphics programming and physics, I specialized in UDP protocol design for latency sensitive games.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;m writing this article to tell you something that you might find shocking.&lt;/p&gt;
+&lt;p&gt;Network Neutrality, the thing that we hold so dear, the foundation of the internet as we know it, may in fact be harmful for latency sensitive applications like games.&lt;/p&gt;
+&lt;p&gt;Why? Please watch this video for an explanation (sound on):&lt;/p&gt;
+
+&lt;div style=&#34;position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden;&#34;&gt;
+  &lt;iframe src=&#34;https://www.youtube.com/embed/jo1qffymv3E&#34; style=&#34;position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;&#34; allowfullscreen title=&#34;YouTube Video&#34;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;p&gt;Now of course, saying that &lt;strong&gt;the internet doesn&amp;rsquo;t care about your game&lt;/strong&gt; is a pretty strong accusation to make, so I&amp;rsquo;m going to back it up with some evidence.&lt;/p&gt;
+&lt;p&gt;First, anecdotal. Every multiplayer game I worked on, I spent years of my life working on the netcode, using every trick possible to hide packet loss and latency. Client side prediction to hide latency in player actions, lag compensation to avoid players needing to lead shots, bandwidth optimization to reduce the load on the network, redundancy to mitigate packet loss, custom UDP protocols to avoid head of line blocking&amp;hellip;&lt;/p&gt;
+&lt;p&gt;And despite all this effort, a significant portion of players would play my game and get bad network performance and there was &lt;em&gt;literally nothing I could do about it&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;Just how bad does it get? Let&amp;rsquo;s take a look at the data&amp;hellip;&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s a screenshot from Thursday August 20th, 2020:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-neutrality-considered-harmful/portal-001.png&#34; alt=&#34;Screenshot of https://portal.networknext.com&#34;&gt;&lt;/p&gt;
+&lt;p&gt;1000+ players with extra 100ms of latency courtesy of best effort delivery, one player with an additional 730ms. &lt;em&gt;Clearly, this is not a speed of light problem&amp;hellip;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;Later the same day we saw a packet loss event:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-neutrality-considered-harmful/portal-002.png&#34; alt=&#34;Graph showing AB test result for packet loss&#34;&gt;&lt;/p&gt;
+&lt;p&gt;Now you may look at this and think, oh, it&amp;rsquo;s just 0.8% packet loss at peak, it&amp;rsquo;s not that bad&amp;hellip; but this is an average across all players, and only some portion of players were affected. For these players, the effect was much more severe:&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://127.0.0.1:1313/img/network-neutrality-considered-harmful/portal-003.png&#34; alt=&#34;Graph showing absolute point reduction in packet loss percent for players on network next&#34;&gt;&lt;/p&gt;
+&lt;p&gt;During the mitigation the average packet loss reduction was an absolute reduction of 12 points of packet loss. No, not a reduction of 12%, &lt;strong&gt;a reduction of 12 points&lt;/strong&gt;. In other words, a conversion from totally unplayable to playable.&lt;/p&gt;
+&lt;p&gt;This is not an isolated incident. These things literally happen all the time. Take a look for yourself, the portal is live and updated in real-time: &lt;a href=&#34;https://portal.networknext.com&#34;&gt;https://portal.networknext.com&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;From this it should be clear: &lt;strong&gt;the internet doesn&amp;rsquo;t care about your game.&lt;/strong&gt;&lt;/p&gt;
+&lt;p&gt;So what&amp;rsquo;s going on?&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s this. The internet makes no guarantee of performance, but instead offers best effort delivery. By the orthodoxy of Network Neutrality it is hand-wavingly assumed that overall, the quality level is maintained via over provisioning. But while this may be true for browsing the web and reading email, looking at the results above we can clearly see it isn&amp;rsquo;t working for latency sensitive applications like games!&lt;/p&gt;
+&lt;p&gt;As a game developer what I want for my traffic is the lowest latency (within speed of light limits), with as little packet loss and jitter as possible. In other words, if I send 60 packets per-second, I want all of them to arrive as quickly as possible exactly 1/60th of a second apart. The internet as it exists today, is just not capable of this.&lt;/p&gt;
+&lt;p&gt;So now let&amp;rsquo;s take direct aim at one of the core tenets of Network Neutrality. That all traffic is the same. Clearly this is false. Latency sensitive traffic like game traffic is not the same as checking your email or browsing the web. It&amp;rsquo;s not even the same as watching YouTube or Netflix, which can be solved by simply buffering the stream. It&amp;rsquo;s something completely different.&lt;/p&gt;
+&lt;p&gt;Now that we acknowledge that different classes of traffic exist, how can we reconcile this with a neutral network and avoid classically described dystopias where network providers throttle the performance of competing applications, and ISPs bill you for &amp;ldquo;acceleration plans&amp;rdquo; for your internet connection on a monthly basis.&lt;/p&gt;
+&lt;p&gt;This is why I created Network Next.&lt;/p&gt;
+&lt;p&gt;Network Next is not just another network. We&amp;rsquo;re not building network infrastructure.  We&amp;rsquo;re not lighting up dark fiber. We&amp;rsquo;re not creating yet another shadow internet with private interconnects. We don&amp;rsquo;t even have an ASN.&lt;/p&gt;
+&lt;p&gt;Instead, we&amp;rsquo;re creating a &lt;strong&gt;neutral marketplace&lt;/strong&gt; where networks compete on performance and price to carry latency sensitive traffic. In this marketplace, networks cannot identify the application or even set a different price for different applications. They can only compete on performance and price.&lt;/p&gt;
+&lt;p&gt;The buyer on our marketplace is not the player, it&amp;rsquo;s the application developer who uses Network Next to communicate the quality of service they want to the network. Network Next then runs a bid on our marketplace every 10 seconds per-player and the result of this bid is the route players take across our supplier networks.&lt;/p&gt;
+&lt;p&gt;This creates a truly neutral network of networks, a new internet, with different classes of transit. An ethical, and technologically enforced alternative to the Network Neutrality Orthodoxy that covers its ears and yells &amp;ldquo;All traffic is the same!&amp;rdquo; in 2020 even though clearly it is not.&lt;/p&gt;
+&lt;p&gt;I hope you agree with me, but if even if you don&amp;rsquo;t, we&amp;rsquo;ve created this marketplace over the past three years and it&amp;rsquo;s now live. Chances are pretty good over the next 3 months when you play a game, you&amp;rsquo;re playing it over Network Next and I look forward to improving the quality of your connection.&lt;/p&gt;
+&lt;p&gt;Best wishes,&lt;/p&gt;
+&lt;p&gt;Glenn Fiedler, CEO, Network Next &lt;a href=&#34;https://networknext.com&#34;&gt;networknext.com&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Fixing the Internet for Games</title>
+      <link>http://127.0.0.1:1313/post/fixing_the_internet_for_games/</link>
+      <pubDate>Sun, 24 Mar 2019 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/fixing_the_internet_for_games/</guid>
+      <description>&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and this is my GDC 2019 talk called “Fixing the Internet for Games”.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;It&amp;rsquo;s about what we are doing at my new startup &lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;When you launch a multiplayer game, some percentage of your player base will complain they are getting a bad experience.&lt;/p&gt;
+&lt;p&gt;You only need to check your forums to see this is true.&lt;/p&gt;
+&lt;p&gt;And as a player you’ve probably experienced it too.&lt;/p&gt;
+&lt;p&gt;What’s going on?&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Is it your netcode, or maybe your matchmaker or hosting provider?&lt;/p&gt;
+&lt;p&gt;Can you fix it by running more servers in additional locations, or by switching to another hosting company?&lt;/p&gt;
+&lt;p&gt;Or maybe you’ve done all this already and now you have too many data centers, causing fragmentation in your player base?&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;It turns out that you can do all these things perfectly yet some % of your player base will still complain.&lt;/p&gt;
+&lt;p&gt;The real problem is that you don’t control the route from your player to your game server, and sometimes this route is bad.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;This happens because the internet is not optimized for what we want (lowest latency, jitter and packet loss)&lt;/p&gt;
+&lt;p&gt;No amount of good netcode that you write can compensate for this.&lt;/p&gt;
+&lt;p&gt;The problem is the internet itself.&lt;/p&gt;
+&lt;p&gt;The internet doesn’t care about your game.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The internet thinks game traffic is the same as checking emails, visiting a website or watching netflix.&lt;/p&gt;
+&lt;p&gt;But game traffic is real-time and latency sensitive. It’s not the same.&lt;/p&gt;
+&lt;p&gt;It’s interactive so it can’t be cached at the edge and buffered like streamed video.&lt;/p&gt;
+&lt;p&gt;Networks that participate in the internet do hot potato routing, they just try to get your packets off their network as fast as possible so they don’t have to deal with it anymore. Nobody is coordinating centrally to ensure that packets are delivered with the lowest overall latency, jitter and packet loss.&lt;/p&gt;
+&lt;p&gt;Sometimes ISPs or transit providers make mistakes and packets are sent on ridiculous routes that can go to the other side of the country and back on their way to a game server just 5 miles away from the player… you can call up the ISP and ask them to fix this, but it can take days to resolve.&lt;/p&gt;
+&lt;p&gt;Even from day to day, performance is not consistent. You can get a good route one day, and a terrible one the next.&lt;/p&gt;
+&lt;p&gt;For all of these problems, players tend to blame you, the developer. But it’s not actually your fault.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;What can you, the game developer, do about this?&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;One common approach is to try running as many servers in as many locations as possible, with as many different providers as you can.&lt;/p&gt;
+&lt;p&gt;This seems like a good idea at first, but there is no one data center or hosting company that is perfectly peered with every player of your game, so ultimately, it does not solve the problem.&lt;/p&gt;
+&lt;p&gt;Flaws:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Player fragmentation&lt;/li&gt;
+&lt;li&gt;Logistics of so many suppliers&lt;/li&gt;
+&lt;li&gt;Really difficult to find one data center suitable for party or team that wants to play together&lt;/li&gt;
+&lt;/ol&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Another option is to host in public clouds. Google’s private network is pretty good, right?&lt;/p&gt;
+&lt;p&gt;Game developers tend to assume that AWS, Azure and Google peering is perfect. But this is not true.&lt;/p&gt;
+&lt;p&gt;Flaws:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Egress bandwidth is expensive&lt;/li&gt;
+&lt;li&gt;Locked into one provider&lt;/li&gt;
+&lt;li&gt;Transit is not as good as you think&lt;/li&gt;
+&lt;/ol&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;You could also build your own internet for your game.&lt;/p&gt;
+&lt;p&gt;This is not a joke. It actually happened!&lt;/p&gt;
+&lt;p&gt;Riot built their own private internet for League of Legends. When you play league of legends, your game traffic goes directly from your ISP onto this private network.&lt;/p&gt;
+&lt;p&gt;Case study: Riot Direct&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://technology.riotgames.com/news/fixing-internet-real-time-applications-part-i&#34;&gt;Fixing the internet for real-time applications (part 1)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://technology.riotgames.com/news/fixing-internet-real-time-applications-part-ii&#34;&gt;Fixing the internet for real-time applications (part 2)&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://technology.riotgames.com/news/fixing-internet-real-time-applications-part-iii&#34;&gt;Fixing the internet for real-time applications (part 3)&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Flaws:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Can you really afford this?&lt;/li&gt;
+&lt;li&gt;How many internets do we really need?! :)&lt;/li&gt;
+&lt;/ol&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Right now, if you are a game developer shipping a multiplayer game, you are competing against companies that have built their own private internet for their game.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;What’s the solution? Build your own too?&lt;/p&gt;
+&lt;p&gt;Does it really make sense to build an internet for each game? This is crazy&amp;hellip;&lt;/p&gt;
+&lt;p&gt;There has to be a way to do this without building your own infrastructure.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Network Next was created to solve this problem.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Network Next steers your game’s traffic across private networks that have already been built, so you don’t have to build your own private internet for your game.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;But hold on. Aren&amp;rsquo;t all the problems at the edge?&lt;/p&gt;
+&lt;p&gt;People seem to think that all the bad stuff on the internet occurs at the edge of the network, eg. shitty DSL connections, oversubscribed cable networks…&lt;/p&gt;
+&lt;p&gt;But this is not true.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The backbone itself is not as good as you think it is.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;And I’m going to prove it.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Just two regular computers sitting in different data centers&amp;hellip; let’s send UDP ping and pong packets between them, so we can measure the quality of the network.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;We need some way to measure this quality as a scalar value.&lt;/p&gt;
+&lt;p&gt;Define cost as the sum of round trip time (rtt) in milliseconds, jitter (3rd standard deviation), and packet loss %.&lt;/p&gt;
+&lt;p&gt;Lower cost is good. Higher cost is bad.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Now let’s generalize to 4 nodes.&lt;/p&gt;
+&lt;p&gt;We measure cost between all nodes via pings, O(n^2).&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Now let’s go up to 10 nodes.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Store the cost between all nodes in a triangular matrix.&lt;/p&gt;
+&lt;p&gt;Each entry in the matrix is the cost between the node with index corresponding to the column, and node with index corresponding to the row.&lt;/p&gt;
+&lt;p&gt;The diagonal is -1, because nodes don’t ping themselves.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Now spin up instances in all the providers you can think of and all locations they support in North America.&lt;/p&gt;
+&lt;p&gt;For example: Google, AWS, Azure, Bluemix, vultr.com, multiplay, i3d, gameservers.com, servers.com and so on.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;If the internet backbone was perfectly efficient, A-B would be the lowest cost 100% of the time.&lt;/p&gt;
+&lt;p&gt;Instead, for the worst provider it is only 5-10% of the time.&lt;/p&gt;
+&lt;p&gt;And the best performing provider only 30% of the time&amp;hellip;&lt;/p&gt;
+&lt;p&gt;Of course, we are not outperforming each provider on their own internal network, those are efficient.&lt;/p&gt;
+&lt;p&gt;Instead we reveal that each node on the internet is not perfectly peered with every other node. There is some slack, and going through an intermediary node in the majority cases can fix this.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Machines on the backbone are not talking to each other as efficiently as they can.&lt;/p&gt;
+&lt;p&gt;Talking through an intermediary is often better, in terms of our cost function.&lt;/p&gt;
+&lt;p&gt;Why? Many reasons&amp;hellip; but overall, the public internet is optimized for throughput at lowest cost, not lowest latency and jitter.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;What other option is there, aside from the public internet?&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Many private networks have been built.&lt;/p&gt;
+&lt;p&gt;These include CDNs and any corporate entity that has realized the public internet is broken, and have built their own private networks (backhaul) and interconnections to compensate.&lt;/p&gt;
+&lt;p&gt;(Not many people know this, but this “shadow” private internet is actually growing at a faster rate than the public internet&amp;hellip;)&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;This private internet is currently closed. Your game packets do not traverse it.&lt;/p&gt;
+&lt;p&gt;How can we open it up?&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;With a marketplace. Network Next is a marketplace where private networks resell excess capacity to applications that want better transit than the public internet.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Every 10 seconds, per-player we run a &amp;ldquo;route shader&amp;rdquo; as a bid on our marketplace, and find the best route across multiple suppliers that satisfies this request.&lt;/p&gt;
+&lt;p&gt;Suppliers cannot identify buyers, and can only compete on performance and price.&lt;/p&gt;
+&lt;p&gt;Thus, Network Next discovers the market price for premium transit, while remaining neutral.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Now let’s see how it works in practice, with real players.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Here is a small sample of connections active at a specific time one night last week&amp;hellip;&lt;/p&gt;
+&lt;p&gt;Each dot is a player. Green dots are taking Network Next, blue dots are taking the public internet, because Network Next does not provide any improvement for them (yet).&lt;/p&gt;
+&lt;p&gt;Around 60% of player sessions are improved, fluctuating between 50% and 60% depending on the time of day. We believe that as we ramp up more suppliers, we can get the percentage of players improved up to 90%.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Of the 60% that are currently improved, the improvement breaks down into the following buckets:&lt;/p&gt;
+&lt;p&gt;49% of sessions had 0-5 cost unit improvement (cost being latency+jitter+packet loss).
+25% had 5-10cu improvement.
+12% had 10-15cu improvement.
+6% had 15-20cu improvement.
+7% had greater than 20cu improvement&amp;hellip;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Here is a look at live sessions at a random time that night. Look at the rightmost column. Some players are getting an incredible improvement&amp;hellip; there are always some players getting improvements like this at all times of the day&amp;hellip;&lt;/p&gt;
+&lt;p&gt;(My apologies for the black censoring, it is necessary for GDPR compliance).&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Drilling into the session getting the most improvement, we can see that they are not in the middle of nowhere, they are in Monterey, California&amp;hellip;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Here we can see that the improvement is in both latency and jitter. Notice how flat the blue latency line is (Network Next), vs. the red line (public internet) that is going all over the place.&lt;/p&gt;
+&lt;p&gt;Network Next not only has lower latency, it is also more consistent.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Here is a look at different data centers where our customers run game servers.&lt;/p&gt;
+&lt;p&gt;On the right is the % of players taking Network Next (getting improvement) to servers in that data center (green), and those not getting improvement and going direct over the public internet (blue).&lt;/p&gt;
+&lt;p&gt;On the left is the distribution of cost unit improvements for players that are getting improvement on Network Next to servers in that data center. The improvement depends on the peering arrangements of that data center, and on internet weather. It fluctuates somewhat from day to day.&lt;/p&gt;
+&lt;p&gt;We are able to fix this fluctuation due to internet weather and get the best result at all times.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;If you&amp;rsquo;d like to learn more, please visit us at &lt;a href=&#34;https://networknext.com&#34;&gt;networknext.com&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Floating Point Determinism</title>
+      <link>http://127.0.0.1:1313/post/floating_point_determinism/</link>
+      <pubDate>Wed, 24 Feb 2010 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/floating_point_determinism/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Lately I&amp;rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.&lt;/p&gt;
+&lt;p&gt;The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation &lt;em&gt;implicitly&lt;/em&gt; by sending just the player inputs.&lt;/p&gt;
+&lt;p&gt;This is a very attractive synchronization strategy because the amount of network traffic depends on the size of the player inputs instead of the amount of physics state in the world. In fact, this strategy has been used for many years in RTS games for precisely this reason; with thousands and thousands of units on the map, they simply have too much state to send over the network.&lt;/p&gt;
+&lt;p&gt;Perhaps you have a complex physics simulation with lots of rigid body state, or a cloth or soft body simulation which needs to stay perfectly in sync across two machines because it is gameplay affecting, but you cannot afford to send all the state. It is clear that the only possible solution in this situation is to attempt a deterministic networking strategy.&lt;/p&gt;
+&lt;p&gt;But we run into a problem. Physics simulations use floating point calculations, and for one reason or another it is considered &lt;em&gt;very difficult&lt;/em&gt; to get exactly the same result from floating point calculations on two different machines. People even report different results on the same machine from run to run, and between debug and release builds. Other folks say that AMDs give different results to Intel machines, and that SSE results are different from x87. What exactly is going on? Are floating point calculations deterministic or not?&lt;/p&gt;
+&lt;p&gt;Unfortunately, the answer is not a simple &amp;ldquo;yes&amp;rdquo; or &amp;ldquo;no&amp;rdquo; but &amp;ldquo;yes, if&amp;hellip;&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;Here is what I have discovered so far:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;If your physics simulation is itself deterministic, with a bit of work you should be able to get it to play back a replay of recorded inputs on the same machine and get the exact same result.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;It is possible to get deterministic results for floating calculations across multiple computers provided you use an executable built with the same compiler, run on machines with the same architecture, and perform some platform-specific tricks.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;It is incredibly naive to write arbitrary floating point code in C or C++ and expect it to give exactly the same result across different compilers or architectures, or even the same results across debug and release builds.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;However with a good deal of work you &lt;!-- raw HTML omitted --&gt;may&lt;!-- raw HTML omitted --&gt; be able to &lt;!-- raw HTML omitted --&gt;coax&lt;!-- raw HTML omitted --&gt; exactly the same floating point results out of different compilers or different machine architectures by using your compilers &amp;ldquo;strict&amp;rdquo; IEEE 754 compliant mode and restricting the set of floating point operations you use. This typically results in significantly lower floating point performance.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If you would like to debate these points or add your own nuance, please &lt;a href=&#34;http://127.0.0.1:1313/contact&#34;&gt;contact&lt;/a&gt; me! I consider this question by no means settled and am very interested in other peoples experiences with deterministic floating point simulations and exactly reproducible floating point calculations. Please contact me especially if you have managed to get binary exact results across different architectures and compilers in real world situations.&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Here are the resources I have discovered in my search so far&amp;hellip;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;As long as you stick to a single compiler, and a single CPU instruction set, it is possible to make floating point fully deterministic. The specifics vary by platform (i e, different between x86, x64 and PPC).&lt;/p&gt;
+&lt;p&gt;You have to make sure that the internal precision is set to 64 bits (not 80, because only Intel implements that), and that the rounding mode is consistent. Furthermore, you have to check this after calls to external DLLs, because many DLLs (Direct3D, printer drivers, sound libraries, etc) will change the precision or rounding mode without setting it back.&lt;/p&gt;
+&lt;p&gt;The ISA is IEEE compliant. If your x87 implementation isn&amp;rsquo;t IEEE, it&amp;rsquo;s not x87.&lt;/p&gt;
+&lt;p&gt;Also, you can&amp;rsquo;t use SSE or SSE2 for floating point, because it&amp;rsquo;s too under-specified to be deterministic.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Jon Watte, GameDev.net forums&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://www.gamedev.net/community/forums/topic.asp?topic_id=499435&#34;&gt;http://www.gamedev.net/community/forums/topic.asp?topic_id=499435&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;At app startup time we call:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;_controlfp(_PC_24, _MCW_PC)
+_controlfp(_RC_NEAR, _MCW_RC)
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Also, every tick we assert that these fpu settings are still set:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;gpAssert( (_controlfp(0, 0) &amp;amp;amp; _MCW_PC) == _PC_24 );
+gpAssert( (_controlfp(0, 0) &amp;amp;amp; _MCW_RC) == _RC_NEAR );
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;There are some MS API functions that can change the fpu model on you so you need to manually enforce the fpu mode after those calls to ensure the fpu stays the same across machines. The assert is there to catch if anyone has buggered the fpu mode.&lt;/p&gt;
+&lt;p&gt;FYI We have the compiler floating point model set to Fast /fp:fast ( but its not a requirement )&lt;/p&gt;
+&lt;p&gt;We have never had a problem with the IEEE standard across any PC cpu AMD and Intel with this approach. None of our SupCom or Demigod customers have had problems with their machines either, and we are talking over 1 million customers here (supcom1 + expansion pack). We would have heard if there was a problem with the fpu not having the same results as replays or multiplayer mode wouldn&amp;rsquo;t work at all.&lt;/p&gt;
+&lt;p&gt;We did however have problems when using some physics APIs because their code did not have determinism or reproducibility in mind. For example some physics APIS have solvers that take X number of iterations when solving where X can be lower with faster CPUs.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Elijah, Gas Powered Games&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;amp;t=1800&#34;&gt;http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;amp;t=1800&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;This is madness! Why don&amp;rsquo;t we make all hardware work the same? Well, we could, if we didn&amp;rsquo;t care about performance. We could say &amp;ldquo;hey Mr. Hardware Guy, forget about your crazy fused multiply-add instructions and just give us a basic IEEE implementation&amp;rdquo;, and &amp;ldquo;hey Compiler Dude, please don&amp;rsquo;t bother trying to optimize our code&amp;rdquo;. That way our programs would run consistently slowly everywhere :-)&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Shawn Hargreaves, MSDN Blog&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://blogs.msdn.com/shawnhar/archive/2009/03/25/is-floating-point-math-deterministic.aspx&#34;&gt;http://blogs.msdn.com/shawnhar/archive/2009/03/25/is-floating-point-math-deterministic.aspx&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Ken Miller, Pandemic Studios&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;amp;t=175&#34;&gt;http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;amp;t=175&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Branimir Karadžić, Pandemic Studios&lt;!-- raw HTML omitted --&gt;
+&lt;a href=&#34;http://www.google.com/buzz/100111796601236342885/8hDZ655S6x3/Floating-Point-Determinism-Gaffer-on-Games&#34;&gt;http://www.google.com/buzz/100111796601236342885/8hDZ655S6x3/Floating-Point-Determinism-Gaffer-on-Games&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Algebraic compiler optimizations
+“Complex” instructions like multiply-accumulate or sine
+x86-specific pain not available on any other platform; not that ~100% of non-embedded devices is a small market share for a pain.&lt;/p&gt;
+&lt;p&gt;The good news is that most pain comes from item 3 which can be more or less solved automatically. For the purpose of decision making (”should we invest energy into FP consistency or is it futile?”), I’d say that it’s not futile and if you can cite actual benefits you’d get from consistency, then it’s worth the (continuous) effort.&lt;/p&gt;
+&lt;p&gt;Summary: use SSE2 or SSE, and if you can’t, configure the FP CSR to use 64b intermediates and avoid 32b floats. Even the latter solution works passably in practice, as long as everybody is aware of it.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Yossi Kreinin, Personal Blog&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://www.yosefk.com/blog/consistency-how-to-defeat-the-purpose-of-ieee-floating-point.html&#34;&gt;http://www.yosefk.com/blog/consistency-how-to-defeat-the-purpose-of-ieee-floating-point.html&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The long answer to these questions and more can be found in what is probably the best reference on floating point, David Goldberg&amp;rsquo;s What Every Computer Scientist Should Know About Floating Point Arithmetic. Skip to the section on the IEEE standard for the key details.&lt;/p&gt;
+&lt;p&gt;Finally, if you are doing the same sequence of floating point calculations on the same initial inputs, then things should be replayable exactly just fine. The exact sequence can change depending on your compiler/os/standard library, so you might get some small errors this way.&lt;/p&gt;
+&lt;p&gt;Where you usually run into problems in floating point is if you have a numerically unstable method and you start with FP inputs that are approximately the same but not quite. If your method&amp;rsquo;s stable, you should be able to guarantee reproducibility within some tolerance. If you want more detail than this, then take a look at Goldberg&amp;rsquo;s FP article linked above or pick up an intro text on numerical analysis.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Todd Gamblin, Stack Overflow&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://stackoverflow.com/questions/968435/what-could-cause-a-deterministic-process-to-generate-floating-point-errors&#34;&gt;http://stackoverflow.com/questions/968435/what-could-cause-a-deterministic-process-to-generate-floating-point-errors&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Günter Obiltschnig, Cross-Platform Issues with Floating-Point arithmetics in C++&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://www.appinf.com/download/FPIssues.pdf&#34;&gt;http://www.appinf.com/download/FPIssues.pdf&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;STREFLOP Library&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://nicolas.brodu.numerimoire.net/en/programmation/streflop/index.html&#34;&gt;http://nicolas.brodu.numerimoire.net/en/programmation/streflop/index.html&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;• &lt;!-- raw HTML omitted --&gt;Accuracy&lt;!-- raw HTML omitted --&gt; - Produce results that are “close” to the correct value&lt;/p&gt;
+&lt;p&gt;• &lt;!-- raw HTML omitted --&gt;Reproducibility&lt;!-- raw HTML omitted --&gt; - Produce consistent results from one run to the next. From one set of build options to another. From one compiler to another. From one platform to another.&lt;/p&gt;
+&lt;p&gt;• &lt;!-- raw HTML omitted --&gt;Performance&lt;!-- raw HTML omitted --&gt; – Produce the most efficient code possible.&lt;/p&gt;
+&lt;p&gt;These options usually conflict! Judicious use of compiler options lets you control the tradeoffs.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Intel C++ Compiler: Floating Point Consistency&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://www.nccs.nasa.gov/images/FloatingPoint%5Fconsistency.pdf&#34;&gt;http://www.nccs.nasa.gov/images/FloatingPoint%5Fconsistency.pdf&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Intel C++ Compiler Manual&lt;!-- raw HTML omitted --&gt;
+&lt;a href=&#34;http://cache-www.intel.com/cd/00/00/34/76/347605_347605.pdf&#34;&gt;http://cache-www.intel.com/cd/00/00/34/76/347605_347605.pdf&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Microsoft Visual C++ Floating-Point Optimization&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://msdn.microsoft.com/en-us/library/aa289157(VS.71).aspx#floapoint_topic4&#34;&gt;http://msdn.microsoft.com/en-us/library/aa289157(VS.71).aspx#floapoint_topic4&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Apple Developer Support&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://developer.apple.com/hardwaredrivers/ve/sse.html&#34;&gt;http://developer.apple.com/hardwaredrivers/ve/sse.html&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Intel Software Network Support&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://software.intel.com/en-us/forums/showthread.php?t=48339&#34;&gt;http://software.intel.com/en-us/forums/showthread.php?t=48339&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;D. Monniaux on IEEE 754 mailing list&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://grouper.ieee.org/groups/754/email/msg03864.html&#34;&gt;http://grouper.ieee.org/groups/754/email/msg03864.html&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;David Hough on 754 IEEE mailing list&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://grouper.ieee.org/groups/754/email/msg03867.html&#34;&gt;http://grouper.ieee.org/groups/754/email/msg03867.html&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Nick Maclaren on 754 IEEE mailing list&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://grouper.ieee.org/groups/754/email/msg03872.html&#34;&gt;http://grouper.ieee.org/groups/754/email/msg03872.html&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Nick Maclaren on 754 IEEE mailing list&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://grouper.ieee.org/groups/754/email/msg03862.html&#34;&gt;http://grouper.ieee.org/groups/754/email/msg03862.html&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Wikipedia Page on IEEE 754-2008 standard&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/IEEE_754-2008#Reproducibility&#34;&gt;http://en.wikipedia.org/wiki/IEEE_754-2008#Reproducibility&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;A simpler solution for current personal computers is simply to force the compiler to use the SSE unit for computations on IEEE-754 types; however, most embedded systems using IA32 microprocessors or microcontrollers do not use processors equipped with this unit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;David Monniaux, The pitfalls of verifying floating-point computations&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://hal.archives-ouvertes.fr/docs/00/28/14/29/PDF/floating-point-article.pdf&#34;&gt;http://hal.archives-ouvertes.fr/docs/00/28/14/29/PDF/floating-point-article.pdf&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Even under the 1985 version of IEEE-754, if two implementations of the standard executed an operation on the same data, under the same rounding mode and default exception handling, the result of the operation would be identical. The new standard tries to go further to describe when a program will produce identical floating point results on different implementations. The operations described in the standard are all reproducible operations.&lt;/p&gt;
+&lt;p&gt;The recommended operations, such as library functions or reduction operators are not reproducible, because they are not required in all implementations. Likewise dependence on the underflow and inexact flags is not reproducible because two different methods of treating underflow are allowed to preserve conformance between IEEE-754(1985) and IEEE-754(2008). The rounding modes are reproducible attributes. Optional attributes are not reproducible.&lt;/p&gt;
+&lt;p&gt;The use of value-changing optimizations is to be avoided for reproducibility. This includes use of the associative and disributative laws, and automatic generation of fused multiply-add operations when the programmer did not explicitly use that operator.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Peter Markstein, The New IEEE Standard for Floating Point Arithmetic&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://drops.dagstuhl.de/opus/volltexte/2008/1448/pdf/08021.MarksteinPeter.ExtAbstract.1448.pdf&#34;&gt;http://drops.dagstuhl.de/opus/volltexte/2008/1448/pdf/08021.MarksteinPeter.ExtAbstract.1448.pdf&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Many programmers may not realize that even a program that uses only the numeric formats and operations prescribed by the IEEE standard can compute different results on different systems. In fact, the authors of the standard intended to allow different implementations to obtain different results. Their intent is evident in the definition of the term destination in the IEEE 754 standard: &amp;ldquo;A destination may be either explicitly designated by the user or implicitly supplied by the system (for example, intermediate results in subexpressions or arguments for procedures). Some languages place the results of intermediate calculations in destinations beyond the user&amp;rsquo;s control. Nonetheless, this standard defines the result of an operation in terms of that destination&amp;rsquo;s format and the operands&amp;rsquo; values.&amp;rdquo; (IEEE 754-1985, p. 7) In other words, the IEEE standard requires that each result be rounded correctly to the precision of the destination into which it will be placed, but the standard does not require that the precision of that destination be determined by a user&amp;rsquo;s program. Thus, different systems may deliver their results to destinations with different precisions, causing the same program to produce different results (sometimes dramatically so), even though those systems all conform to the standard.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Differences Among IEEE 754 Implementations&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;a href=&#34;http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098&#34;&gt;http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098&lt;/a&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>What Every Programmer Needs To Know About Game Networking</title>
+      <link>http://127.0.0.1:1313/post/what_every_programmer_needs_to_know_about_game_networking/</link>
+      <pubDate>Wed, 24 Feb 2010 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/what_every_programmer_needs_to_know_about_game_networking/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Have you ever wondered how multiplayer games work?&lt;/p&gt;
+&lt;p&gt;From the outside it seems magical: two or more players sharing a consistent experience across the network like they actually exist together in the same virtual world.&lt;/p&gt;
+&lt;p&gt;But as programmers we know the truth of what is actually going on underneath is quite different from what you see. It turns out it&amp;rsquo;s all an illusion. A massive sleight-of-hand. What you perceive as a shared reality is only an approximation unique to your own point of view and place in time.&lt;/p&gt;
+&lt;h2 id=&#34;peer-to-peer-lockstep&#34;&gt;Peer-to-Peer Lockstep&lt;/h2&gt;
+&lt;p&gt;In the beginning games were networked peer-to-peer, with each each computer exchanging information with each other in a fully connected mesh topology. You can still see this model alive today in RTS games, and interestingly for some reason, perhaps because it was the first way - it&amp;rsquo;s still how most people think that game networking works.&lt;/p&gt;
+&lt;p&gt;The basic idea is to abstract the game into a series of turns and a set of command messages when processed at the beginning of each turn direct the evolution of the game state. For example: move unit, attack unit, construct building. All that is needed to network this is to run exactly the same set of commands and turns on each player&amp;rsquo;s machine starting from a common initial state.&lt;/p&gt;
+&lt;p&gt;Of course this is an overly simplistic explanation and glosses over many subtle points, but it gets across the basic idea of how networking for RTS games work. You can read more about this networking model here: &lt;!-- raw HTML omitted --&gt;1500 Archers on a 28.8: Network Programming in Age of Empires and Beyond&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;It seems so simple and elegant, but unfortunately there are several limitations.&lt;/p&gt;
+&lt;p&gt;First, it&amp;rsquo;s exceptionally difficult to ensure that a game is completely deterministic; that each turn plays out identically on each machine. For example, one unit could take slightly a different path on two machines, arriving sooner to a battle and saving the day on one machine, while arriving later on the other and erm. not saving the day. Like a butterfly flapping it&amp;rsquo;s wings and causing a hurricane on the other side of the world, one &lt;!-- raw HTML omitted --&gt;tiny difference&lt;!-- raw HTML omitted --&gt; results in complete desynchronization over time.&lt;/p&gt;
+&lt;p&gt;The next limitation is that in order to ensure that the game plays out identically on all machines it is necessary to wait until all player&amp;rsquo;s commands for that turn are received &lt;!-- raw HTML omitted --&gt;before&lt;!-- raw HTML omitted --&gt; simulating that turn. This means that each player in the game has latency equal to the most lagged player. RTS games typically hide this by providing audio feedback immediately and/or playing cosmetic animation, but ultimately any truly game affecting action may occur only after this delay has passed.&lt;/p&gt;
+&lt;p&gt;The final limitation occurs because of the way the game synchronizes by sending just the command messages which change the state. In order for this to work it is necessary for all players to start from the same initial state. Typically this means that each player must join up in a lobby before commencing play, although it is technically possible to support late join, this is not common due to the difficulty of capturing and transmitting a completely deterministic starting point in the middle of a live game.&lt;/p&gt;
+&lt;p&gt;Despite these limitations this model naturally suits RTS games and it still lives on today in games like &amp;ldquo;Command and Conquer&amp;rdquo;, &amp;ldquo;Age of Empires&amp;rdquo; and &amp;ldquo;Starcraft&amp;rdquo;. The reason being that in RTS games the game state consists of many thousands of units and is simply too large to exchange between players. These games have no choice but to exchange the commands which drive the evolution of the game state.&lt;/p&gt;
+&lt;p&gt;But for other genres, the state of the art has moved on. So that&amp;rsquo;s it for the deterministic peer-to-peer lockstep networking model. Now lets look at the evolution of action games starting with Doom, Quake and Unreal.&lt;/p&gt;
+&lt;h2 id=&#34;clientserver&#34;&gt;Client/Server&lt;/h2&gt;
+&lt;p&gt;In the era of action games, the limitations of peer-to-peer lockstep became apparent in Doom, which despite playing well over the LAN played &lt;!-- raw HTML omitted --&gt;terribly&lt;!-- raw HTML omitted --&gt; over the internet for typical users:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The problem of course was that Doom was designed for networking over LAN only, and used the peer-to-peer lockstep model described previously for RTS games. Each turn player inputs (key presses etc.) were exchanged with other peers, and before any player could simulate a frame all other player&amp;rsquo;s key presses needed to be received.&lt;/p&gt;
+&lt;p&gt;In other words, before you could turn, move or shoot you had to wait for the inputs from the most lagged modem player. Just imagine the wailing and gnashing of teeth that this would have resulted in for the sort of folks with internet connections that were &amp;ldquo;of only marginal utility&amp;rdquo;. :)&lt;/p&gt;
+&lt;p&gt;In order to move beyond the LAN and the well connected elite at university networks and large companies, it was necessary to change the model. And in 1996, that&amp;rsquo;s exactly what John Carmack and his team did when he released Quake using client/server instead of peer-to-peer.&lt;/p&gt;
+&lt;p&gt;Now instead of each player running the same game code and communicating directly with each other, each player was now a &amp;ldquo;client&amp;rdquo; and they all communicated with just one computer called the &amp;ldquo;server&amp;rdquo;. There was no longer any need for the game to be deterministic across all machines, because the game really only existed on the server. Each client effectively acted as a &lt;!-- raw HTML omitted --&gt;dumb terminal&lt;!-- raw HTML omitted --&gt; showing an approximation of the game as it played out on the server.&lt;/p&gt;
+&lt;p&gt;In a pure client/server model you run no game code locally, instead sending your inputs such as key presses, mouse movement, clicks to the server. In response the server updates the state of your character in the world and replies with a packet containing the state of your character and other players near you. All the client has to do is interpolate between these updates to provide the illusion of smooth movement and &lt;!-- raw HTML omitted --&gt;BAM&lt;!-- raw HTML omitted --&gt; you have a networked game.&lt;/p&gt;
+&lt;p&gt;This was a great step forward. The quality of the game experience now depended on the connection between the client and the server instead of the most lagged peer in the game. It also became possible for players to come and go in the middle of the game, and the number of players increased as client/server reduced the bandwidth required on average per-player.&lt;/p&gt;
+&lt;p&gt;But there were still problems with the pure client/server model:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Ok, I made a bad call.  I have a T1 to my house, so I just wasn&#39;t familliar with PPP life.  I&#39;m addressing it now.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;The problem was of course latency.&lt;/p&gt;
+&lt;p&gt;What happened next would change the industry forever.&lt;/p&gt;
+&lt;h2 id=&#34;client-side-prediction&#34;&gt;Client-Side Prediction&lt;/h2&gt;
+&lt;p&gt;In the original Quake you felt the latency between your computer and the server. Press forward and you&amp;rsquo;d wait however long it took for packets to travel to the server and back to you before you&amp;rsquo;d actually start moving. Press fire and you wait for that same delay before shooting.&lt;/p&gt;
+&lt;p&gt;If you&amp;rsquo;ve played any modern FPS like Call of Duty: Modern Warfare, you know this is no longer what happens. So how exactly do modern FPS games remove the latency on your own actions in multiplayer?&lt;/p&gt;
+&lt;p&gt;When writing about his plans for the soon to be released QuakeWorld, John Carmack said:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;So now in order to remove the latency, the client runs more code than it previously did. It is no longer a dumb terminal sending inputs to the server and interpolating between state sent back. Instead it is able to predict the movement of your character locally and &lt;!-- raw HTML omitted --&gt;immediately&lt;!-- raw HTML omitted --&gt; in response to your input, running a subset of the game code for your player character on the client machine.&lt;/p&gt;
+&lt;p&gt;Now as soon as you press forward, there is no wait for a round trip between client and server - your character start moving forward right away.&lt;/p&gt;
+&lt;p&gt;The difficulty of this approach is not in the prediction, for the prediction works just as normal game code does - evolving the state of the game character forward in time according to the player&amp;rsquo;s input. The difficulty is in applying the correction back from the server to resolve cases when the client and server disagree about where the player character should be and what it is doing.&lt;/p&gt;
+&lt;p&gt;Now at this point you might wonder. Hey, if you are running code on the client - why not just make the client authoritative over their player character? The client could run the simulation code for their own character and simply tell the server where they are each time they send a packet. The problem with this is that if each player were able to simply tell the server &amp;ldquo;here is my current position&amp;rdquo; it would be trivially easy to hack the client such that a cheater could instantly dodge the RPG about to hit them, or teleport instantly behind you to shoot you in the back.&lt;/p&gt;
+&lt;p&gt;So in FPS games it is absolutely necessary that the server is the authoritative over the state of each player character, in-spite of the fact that each player is locally predicting the motion of their own character to hide latency. As Tim Sweeney writes in &lt;!-- raw HTML omitted --&gt;The Unreal Networking Architecture&lt;!-- raw HTML omitted --&gt;: &amp;ldquo;The Server Is The Man&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;Here is where it gets interesting. If the client and the server disagree, the client &lt;!-- raw HTML omitted --&gt;must&lt;!-- raw HTML omitted --&gt; accept the update for the position from the server, but due to latency between the client and server this correction is necessarily in the past. For example, if it takes 100ms from client to server and 100ms back, then any server correction for the player character position will appear to be 200ms in the past, relative to the time up to which the client has predicted their own movement.&lt;/p&gt;
+&lt;p&gt;If the client were to simply apply this server correction update verbatim, it would yank the client back in time, completely undoing any client-side prediction. How then to solve this while still allowing the client to predict ahead?&lt;/p&gt;
+&lt;p&gt;The solution is to keep a circular buffer of past character state and input for the local player on the client, then when the client receives a correction from the server, it first discards any buffered state older than the corrected state from the server, and replays the state starting from the corrected state back to the present &amp;ldquo;predicted&amp;rdquo; time on the client using player inputs stored in the circular buffer. In effect the client invisibly &amp;ldquo;rewinds and replays&amp;rdquo; the last n frames of local player character movement while holding the rest of the world fixed.&lt;/p&gt;
+&lt;p&gt;This way the player appears to control their own character without any latency, and provided that the client and server character simulation code is reasonable, giving roughly exactly the same result for the same inputs on the client and server, it is rarely corrected. It is as Tim Sweeney describes:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;In other words, only when the player&amp;rsquo;s character is affected by something external to the local player&amp;rsquo;s input, which cannot possibly be predicted on the client, will the player&amp;rsquo;s position need to be corrected. That and of course, if the player is attempting to cheat :)&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Reliability and Congestion Avoidance over UDP</title>
+      <link>http://127.0.0.1:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/</link>
+      <pubDate>Mon, 20 Oct 2008 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/virtual_connection_over_udp/&#34;&gt;previous article&lt;/a&gt;, we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.&lt;/p&gt;
+&lt;h2 id=&#34;the-problem-with-tcp&#34;&gt;The Problem with TCP&lt;/h2&gt;
+&lt;p&gt;Those of you familiar with TCP know that it already has its own concept of connection, reliability-ordering and congestion avoidance, so why are we rewriting our own mini version of TCP on top of UDP?&lt;/p&gt;
+&lt;p&gt;The issue is that multiplayer action games rely on a steady stream of packets sent at rates of 10 to 30 packets per second, and for the most part, the data contained is these packets is so time sensitive that only the most recent data is useful. This includes data such as player inputs, the position, orientation and velocity of each player character, and the state of physics objects in the world.&lt;/p&gt;
+&lt;p&gt;The problem with TCP is that it abstracts data delivery as a reliable ordered stream. Because of this, if a packet is lost, TCP has to stop and wait for that packet to be resent. This interrupts the steady stream of packets because more recent packets must wait in a queue until the resent packet arrives, so packets are received in the same order they were sent.&lt;/p&gt;
+&lt;p&gt;What we need is a different type of reliability. Instead of having all data treated as a reliable ordered stream, we want to send packets at a steady rate and get notified when packets are received by the other computer. This allows time sensitive data to get through without waiting for resent packets, while letting us make our own decision about how to handle packet loss at the application level.&lt;/p&gt;
+&lt;p&gt;It is not possible to implement a reliability system with these properties using TCP, so we have no choice but to roll our own reliability on top of UDP.&lt;/p&gt;
+&lt;h2 id=&#34;sequence-numbers&#34;&gt;Sequence Numbers&lt;/h2&gt;
+&lt;p&gt;The goal of our reliability system is simple: we want to know which packets arrive at the other side of the connection.&lt;/p&gt;
+&lt;p&gt;First we need a way to identify packets.&lt;/p&gt;
+&lt;p&gt;What if we had added the concept of a &amp;ldquo;packet id&amp;rdquo;? Let&amp;rsquo;s make it an integer value. We could start this at zero then with each packet we send, increase the number by one. The first packet we send would be packet 0, and the 100th packet sent is packet 99.&lt;/p&gt;
+&lt;p&gt;This is actually quite a common technique. It&amp;rsquo;s even used in TCP! These packet ids are called sequence numbers. While we’re not going to implement reliability exactly as TCP does, it makes sense to use the same terminology, so we’ll call them sequence numbers from now on.&lt;/p&gt;
+&lt;p&gt;Since UDP does not guarantee the order of packets, the 100th packet received is not necessarily the 100th packet sent. It follows that we need to insert the sequence number somewhere in the packet, so that the computer at the other side of the connection knows which packet it is.&lt;/p&gt;
+&lt;p&gt;We already have a simple packet header for the virtual connection from the previous article, so we&amp;rsquo;ll just add the sequence number in the header like this:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Now when the other computer receives a packet it knows its sequence number according to the computer that sent it.&lt;/p&gt;
+&lt;h2 id=&#34;acks&#34;&gt;Acks&lt;/h2&gt;
+&lt;p&gt;Now that we can identify packets using sequence numbers, the next step is to let the other side of the connection know which packets we receive.&lt;/p&gt;
+&lt;p&gt;Logically this is quite simple, we just need to take note of the sequence number of each packet we receive, and send those sequence numbers back to the computer that sent them.&lt;/p&gt;
+&lt;p&gt;Because we are sending packets continuously between both machines, we can just add the ack to the packet header, just like we did with the sequence number:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Our general approach is as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Each time we send a packet we increase the &lt;!-- raw HTML omitted --&gt;local sequence number&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When we receieve a packet, we check the sequence number of the packet against the sequence number of the most recently received packet, called the &lt;!-- raw HTML omitted --&gt;remote sequence number&lt;!-- raw HTML omitted --&gt;. If the packet is more recent, we update the remote sequence to be equal to the sequence number of the packet.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When we compose packet headers, the local sequence becomes the sequence number of the packet, and the remote sequence becomes the ack.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;This simple ack system works provided that one packet comes in for each packet we send out.&lt;/p&gt;
+&lt;p&gt;But what if packets clump up such that two packets arrive before we send a packet? We only have space for one ack per-packet, so what do we do?&lt;/p&gt;
+&lt;p&gt;Now consider the case where one side of the connection is sending packets at a faster rate. If the client sends 30 packets per-second, and the server only sends 10 packets per-second, we need &lt;!-- raw HTML omitted --&gt;at least&lt;!-- raw HTML omitted --&gt; 3 acks included in each packet sent from the server.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s make it even more complex! What if the packet containing the ack is lost? The computer that sent the packet would think the packet got lost but it was actually received!&lt;/p&gt;
+&lt;p&gt;It seems like we need to make our reliability system&amp;hellip; &lt;!-- raw HTML omitted --&gt;more reliable!&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;h2 id=&#34;reliable-acks&#34;&gt;Reliable Acks&lt;/h2&gt;
+&lt;p&gt;Here is where we diverge significantly from TCP.&lt;/p&gt;
+&lt;p&gt;What TCP does is maintain a sliding window where the ack sent is the sequence number of the next packet it expects to receive, in order. If TCP does not receive an ack for a given packet, it stops and resends a packet with that sequence number again. This is exactly the behavior we want to avoid!&lt;/p&gt;
+&lt;p&gt;In our reliability system, we never resend a packet with a given sequence number. We sequence n exactly once, then we send n+1, n+2 and so on. We never stop and resend packet n if it was lost, we leave it up to the application to compose a new packet containing the data that was lost, if necessary, and this packet gets sent with a new sequence number.&lt;/p&gt;
+&lt;p&gt;Because we&amp;rsquo;re doing things differently to TCP, its now possible to have &lt;!-- raw HTML omitted --&gt;holes&lt;!-- raw HTML omitted --&gt; in the set of packets we ack, so it is no longer sufficient to just state the sequence number of the most recent packet we have received.&lt;/p&gt;
+&lt;p&gt;We need to include multiple acks per-packet.&lt;/p&gt;
+&lt;p&gt;How many acks do we need?&lt;/p&gt;
+&lt;p&gt;As mentioned previously we have the case where one side of the connection sends packets faster than the other. Let&amp;rsquo;s assume that the worst case is one side sending no less than 10 packets per-second, while the other sends no more than 30. In this case, the average number of acks we&amp;rsquo;ll need per-packet is 3, but if packets clump up a bit, we would need more. Let&amp;rsquo;s say 6-10 worst case.&lt;/p&gt;
+&lt;p&gt;What about acks that don&amp;rsquo;t get through because the packet containing the ack is lost?&lt;/p&gt;
+&lt;p&gt;To solve this, we&amp;rsquo;re going to use a classic networking strategy of using redundancy to defeat packet loss!&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s include 33 acks per-packet, and this isn&amp;rsquo;t just going to be up to 33, but &lt;!-- raw HTML omitted --&gt;always&lt;!-- raw HTML omitted --&gt; 33. So for any given ack we &lt;!-- raw HTML omitted --&gt;redundantly&lt;!-- raw HTML omitted --&gt; send it up to 32 additional times, just in case one packet with the ack doesn&amp;rsquo;t get through!&lt;/p&gt;
+&lt;p&gt;But how can we possibly fit 33 acks in a packet? At 4 bytes per-ack thats 132 bytes!&lt;/p&gt;
+&lt;p&gt;The trick is to represent the 32 previous acks before &amp;ldquo;ack&amp;rdquo; using a bitfield:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    [uint protocol id]
+    [uint sequence]
+    [uint ack]
+    [uint ack bitfield]
+    &amp;lt;em&amp;gt;(packet data...)&amp;lt;/em&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We define &amp;ldquo;ack bitfield&amp;rdquo; such that each bit corresponds to acks of the 32 sequence numbers before &amp;ldquo;ack&amp;rdquo;. So let&amp;rsquo;s say &amp;ldquo;ack&amp;rdquo; is 100. If the first bit of &amp;ldquo;ack bitfield&amp;rdquo; is set, then the packet also includes an ack for packet 99. If the second bit is set, then packet 98 is acked. This goes all the way down to the 32nd bit for packet 68.&lt;/p&gt;
+&lt;p&gt;Our adjusted algorithm looks like this:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;Each time we send a packet we increase the &lt;!-- raw HTML omitted --&gt;local sequence number&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When we receive a packet, we check the sequence number of the packet against the &lt;!-- raw HTML omitted --&gt;remote sequence number&lt;!-- raw HTML omitted --&gt;. If the packet sequence is more recent, we update the remote sequence number.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When we compose packet headers, the local sequence becomes the sequence number of the packet, and the remote sequence becomes the ack. The ack bitfield is calculated by looking into a queue of up to 33 packets, containing sequence numbers in the range [remote sequence - 32, remote sequence]. We set bit n (in [1,32]) in ack bits to 1 if the sequence number remote sequence - n is in the received queue.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Additionally, when a packet is received, ack bitfield is scanned and if bit n is set, then we acknowledge sequence number packet sequence - n, if it has not been acked already.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;With this improved algorithm, you would have to lose 100% of packets for more than a second to stop an ack getting through. And of course, it easily handles different send rates and clumped up packet receives.&lt;/p&gt;
+&lt;h2 id=&#34;detecting-lost-packets&#34;&gt;Detecting Lost Packets&lt;/h2&gt;
+&lt;p&gt;Now that we know what packets are received by the other side of the connection, how do we detect packet loss?&lt;/p&gt;
+&lt;p&gt;The trick here is to flip it around and say that if you don&amp;rsquo;t get an ack for a packet within a certain amount of time, then we consider that packet lost.&lt;/p&gt;
+&lt;p&gt;Given that we are sending at no more than 30 packets per second, and we are redundantly sending acks roughly 30 times, if you don&amp;rsquo;t get an ack for a packet within one second, it is &lt;!-- raw HTML omitted --&gt;very&lt;!-- raw HTML omitted --&gt; likely that packet was lost.&lt;/p&gt;
+&lt;p&gt;So we are playing a bit of a trick here, while we can know 100% for sure which packets get through, but we can only be &lt;!-- raw HTML omitted --&gt;reasonably&lt;!-- raw HTML omitted --&gt; certain of the set of packets that didn&amp;rsquo;t arrive.&lt;/p&gt;
+&lt;p&gt;The implication of this is that any data which you resend using this reliability technique needs to have its own message id so that if you receive it multiple times, you can discard it. This can be done at the application level.&lt;/p&gt;
+&lt;h2 id=&#34;handling-sequence-number-wrap-around&#34;&gt;Handling Sequence Number Wrap-Around&lt;/h2&gt;
+&lt;p&gt;No discussion of sequence numbers and acks would be complete without coverage of sequence number wrap around!&lt;/p&gt;
+&lt;p&gt;Sequence numbers and acks are 32 bit unsigned integers, so they can represent numbers in the range [0,4294967295]. Thats a very high number! So high that if you sent 30 packets per-second, it would take over four and a half years for the sequence number to wrap back around to zero.&lt;/p&gt;
+&lt;p&gt;But perhaps you want to save some bandwidth so you shorten your sequence numbers and acks to 16 bit integers. You save 4 bytes per-packet, but now they wrap around in only half an hour.&lt;/p&gt;
+&lt;p&gt;So how do we handle this wrap around case?&lt;/p&gt;
+&lt;p&gt;The trick is to realize that if the current sequence number is already very high, and the next sequence number that comes in is very low, then you must have wrapped around. So even though the new sequence number is &lt;!-- raw HTML omitted --&gt;numerically&lt;!-- raw HTML omitted --&gt; lower than the current sequence value, it actually represents a more recent packet.&lt;/p&gt;
+&lt;p&gt;For example, let&amp;rsquo;s say we encoded sequence numbers in one byte (not recommended btw. :)), then they would wrap around after 255 like this:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;To handle this case we need a new function that is aware of the fact that sequence numbers wrap around to zero after 255, so that 0, 1, 2, 3 are considered more recent than 255. Otherwise, our reliability system stops working after you receive packet 255.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s a function for 16 bit sequence numbers:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    inline bool sequence_greater_than( uint16_t s1, uint16_t s2 )
+    {
+        return ( ( s1 &amp;gt; s2 ) &amp;amp;&amp;amp; ( s1 - s2 &amp;lt;= 32768 ) ) || 
+               ( ( s1 &amp;lt; s2 ) &amp;amp;&amp;amp; ( s2 - s1  &amp;gt; 32768 ) );
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This function works by comparing the two numbers &lt;!-- raw HTML omitted --&gt;and&lt;!-- raw HTML omitted --&gt; their difference. If their difference is less than 1/2 the maximum sequence number value, then they must be close together - so we just check if one is greater than the other, as usual. However, if they are far apart, their difference will be greater than 1/2 the max sequence, then we paradoxically consider the sequence number more recent if it is &lt;!-- raw HTML omitted --&gt;less&lt;!-- raw HTML omitted --&gt; than the current sequence number.&lt;/p&gt;
+&lt;p&gt;This last bit is what handles the wrap around of sequence numbers transparently, so 0,1,2 are considered more recent than 255.&lt;/p&gt;
+&lt;p&gt;Make sure you include this in any sequence number processing you do.&lt;/p&gt;
+&lt;h2 id=&#34;congestion-avoidance&#34;&gt;Congestion Avoidance&lt;/h2&gt;
+&lt;p&gt;While we have solved reliability, there is still the question of congestion avoidance. TCP provides congestion avoidance as part of the packet when you get TCP reliability, but UDP has no congestion avoidance whatsoever!&lt;/p&gt;
+&lt;p&gt;If we just send packets without some sort of flow control, we risk flooding the connection and inducing severe latency (2 seconds plus!) as routers between us and the other computer become congested and buffer up packets. This happens because routers try &lt;!-- raw HTML omitted --&gt;very hard&lt;!-- raw HTML omitted --&gt; to deliver all the packets we send, and therefore tend to buffer up packets in a queue before they consider dropping them.&lt;/p&gt;
+&lt;p&gt;While it would be nice if we could tell the routers that our packets are time sensitive and should be dropped instead of buffered if the router is overloaded, we can&amp;rsquo;t really do this without rewriting the software for all routers in the world.&lt;/p&gt;
+&lt;p&gt;Instead, we need to focus on what we can actually do which is to avoid flooding the connection in the first place. We try to avoid sending too much bandwidth in the first place, and then if we detect congestion, we attempt to back off and send even less.&lt;/p&gt;
+&lt;p&gt;The way to do this is to implement our own basic congestion avoidance algorithm. And I stress basic! Just like reliability, we have no hope of coming up with something as general and robust as TCP&amp;rsquo;s implementation on the first try, so let&amp;rsquo;s keep it as simple as possible.&lt;/p&gt;
+&lt;h2 id=&#34;measuring-round-trip-time&#34;&gt;Measuring Round Trip Time&lt;/h2&gt;
+&lt;p&gt;Since the whole point of congestion avoidance is to avoid flooding the connection and increasing round trip time (RTT), it makes sense that the most important metric as to whether or not we are flooding our connection is the RTT itself.&lt;/p&gt;
+&lt;p&gt;We need a way to measure the RTT of our connection.&lt;/p&gt;
+&lt;p&gt;Here is the basic technique:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;For each packet we send, we add an entry to a queue containing the sequence number of the packet and the time it was sent.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Each time we receive an ack, we look up this entry and note the difference in local time between the time we receive the ack, and the time we sent the packet. This is the RTT time for that packet.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Because the arrival of packets varies with network jitter, we need to smooth this value to provide something meaningful, so each time we obtain a new RTT we move a percentage of the distance between our current RTT and the packet RTT. 10% seems to work well for me in practice. This is called an exponentially smoothed moving average, and it has the effect of smoothing out noise in the RTT with a low pass filter.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;To ensure that the sent queue doesn&amp;rsquo;t grow forever, we discard packets once they have exceeded some maximum expected RTT. As discussed in the previous section on reliability, it is exceptionally likely that any packet not acked within a second was lost, so one second is a good value for this maximum RTT.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Now that we have RTT, we can use it as a metric to drive our congestion avoidance. If RTT gets too large, we send data less frequently, if its within acceptable ranges, we can try sending data more frequently.&lt;/p&gt;
+&lt;h2 id=&#34;simple-binary-congestion-avoidance&#34;&gt;Simple Binary Congestion Avoidance&lt;/h2&gt;
+&lt;p&gt;As discussed before, let&amp;rsquo;s not get greedy, we&amp;rsquo;ll implement a very basic congestion avoidance. This congestion avoidance has two modes. Good and bad. I call it simple binary congestion avoidance.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s assume you send packets of a certain size, say 256 bytes. You would like to send these packets 30 times a second, but if conditions are bad, you can drop down to 10 times a second.&lt;/p&gt;
+&lt;p&gt;So 256 byte packets 30 times a second is around 64kbits/sec, and 10 times a second is roughly 20kbit/sec. There isn&amp;rsquo;t a broadband network connection in the world that can&amp;rsquo;t handle at least 20kbit/sec, so we&amp;rsquo;ll move forward with this assumption. Unlike TCP which is entirely general for any device with any amount of send/recv bandwidth, we&amp;rsquo;re going to assume a minimum supported bandwidth for devices involved in our connections.&lt;/p&gt;
+&lt;p&gt;So the basic idea is this. When network conditions are &amp;ldquo;good&amp;rdquo; we send 30 packets per-second, and when network conditions are &amp;ldquo;bad&amp;rdquo; we drop to 10 packets per-second.&lt;/p&gt;
+&lt;p&gt;Of course, you can define &amp;ldquo;good&amp;rdquo; and &amp;ldquo;bad&amp;rdquo; however you like, but I&amp;rsquo;ve gotten good results considering only RTT. For example if RTT exceeds some threshold (say 250ms) then you know you are probably flooding the connection. Of course, this assumes that nobody would normally exceed 250ms under non-flooding conditions, which is reasonable given our broadband requirement.&lt;/p&gt;
+&lt;p&gt;How do you switch between good and bad? The algorithm I like to use operates as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;If you are currently in good mode, and conditions become bad, immediately drop to bad mode&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If you are in bad mode, and conditions have been good for a specific length of time &amp;rsquo;t&amp;rsquo;, then return to good mode&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;To avoid rapid toggling between good and bad mode, if you drop from good mode to bad in under 10 seconds, double the amount of time &amp;rsquo;t&amp;rsquo; before bad mode goes back to good. Clamp this at some maximum, say 60 seconds.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;To avoid punishing good connections when they have short periods of bad behavior, for each 10 seconds the connection is in good mode, halve the time &amp;rsquo;t&amp;rsquo; before bad mode goes back to good. Clamp this at some minimum like 1 second.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;With this algorithm you will rapidly respond to bad conditions and drop your send rate to 10 packets per-second, avoiding flooding of the connection. You&amp;rsquo;ll also &lt;!-- raw HTML omitted --&gt;conservatively&lt;!-- raw HTML omitted --&gt; try out good mode, and persist sending packets at a higher rate of 30 packets per-second, while network conditions are good.&lt;/p&gt;
+&lt;p&gt;Of course, you can implement much more sophisticated algorithms. Packet loss % can be taken into account as a metric, even the amount of network jitter (time variance in packet acks), not just RTT.&lt;/p&gt;
+&lt;p&gt;You can also get much more &lt;!-- raw HTML omitted --&gt;greedy&lt;!-- raw HTML omitted --&gt; with congestion avoidance, and attempt to discover when you can send data at a much higher bandwidth (eg. LAN), but you have to be very careful! With increased greediness comes more risk that you&amp;rsquo;ll flood the connection.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Our new reliability system let&amp;rsquo;s us send a steady stream of packets and notifies us which packets are received. From this we can infer lost packets, and resend data that didn&amp;rsquo;t get through if necessary. We also have a simple congestion avoidance system that drops from 30 packets per-second to 10 times a second so we don&amp;rsquo;t flood the connection.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/what_every_programmer_needs_to_know_about_game_networking/&#34;&gt;What Every Programmer Needs to Know About Game Networking&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Virtual Connection over UDP</title>
+      <link>http://127.0.0.1:1313/post/virtual_connection_over_udp/</link>
+      <pubDate>Wed, 08 Oct 2008 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/virtual_connection_over_udp/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/sending_and_receiving_packets&#34;&gt;previous article&lt;/a&gt; we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.&lt;/p&gt;
+&lt;p&gt;As the first step towards a general connection system, we&amp;rsquo;ll start with the simplest case possible: creating a virtual connection between two computers on top of UDP.&lt;/p&gt;
+&lt;p&gt;But first, we&amp;rsquo;re going to dig in a bit deeper about how the Internet really works!&lt;/p&gt;
+&lt;h2 id=&#34;the-internet-unotu-a-series-of-tubes&#34;&gt;The Internet &lt;!-- raw HTML omitted --&gt;NOT&lt;!-- raw HTML omitted --&gt; a series of tubes&lt;/h2&gt;
+&lt;p&gt;In 2006, Senator Ted Stevens made internet history with his &lt;!-- raw HTML omitted --&gt;famous speech&lt;!-- raw HTML omitted --&gt; on the net neutrality act:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;When I first started using the Internet, I was just like Ted. Sitting in the computer lab in University of Sydney in 1995, I was &amp;ldquo;surfing the web&amp;rdquo; with this new thing called Netscape Navigator, and I had absolutely no idea what was going on.&lt;/p&gt;
+&lt;p&gt;You see, I thought each time you connected to a website there was some actual connection going on,  like a telephone line. I wondered, how much does it cost each time I connect to a new website? 30 cents? A dollar? Was somebody from the university going to tap me on the shoulder and ask me to pay the long distance charges? :)&lt;/p&gt;
+&lt;p&gt;Of course, this all seems silly now.&lt;/p&gt;
+&lt;p&gt;There is no switchboard somewhere that directly connects you via a physical phone line to the other computer you want to talk to, let alone a series of pneumatic tubes like Sen. Stevens would have you believe.&lt;/p&gt;
+&lt;h2 id=&#34;no-direct-connections&#34;&gt;No Direct Connections&lt;/h2&gt;
+&lt;p&gt;Instead your data is sent over Internet Protocol (IP) via packets that hop from computer to computer.&lt;/p&gt;
+&lt;p&gt;A packet may pass through several computers before it reaches its destination. You cannot know the exact set of computers in advance, as it changes dynamically depending on how the network decides to route packets. You could even send two packets A and B to the same address, and they may take different routes.&lt;/p&gt;
+&lt;p&gt;On unix-like systems can inspect the route that packets take by calling &amp;ldquo;traceroute&amp;rdquo; and passing in a destination hostname or IP address.&lt;/p&gt;
+&lt;p&gt;On windows, replace &amp;ldquo;traceroute&amp;rdquo; with &amp;ldquo;tracert&amp;rdquo; to get it to work.&lt;/p&gt;
+&lt;p&gt;Try it with a few websites like this:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Take a look and you should be able to convince yourself pretty quickly that there is no direct connection.&lt;/p&gt;
+&lt;h2 id=&#34;how-packets-get-delivered&#34;&gt;How Packets Get Delivered&lt;/h2&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/udp_vs_tcp/&#34;&gt;first article&lt;/a&gt;, I presented a simple analogy for packet delivery, describing it as somewhat like a note being passed from person to person across a crowded room.&lt;/p&gt;
+&lt;p&gt;While this analogy gets the basic idea across, it is much too simple. The Internet is &lt;!-- raw HTML omitted --&gt;not&lt;!-- raw HTML omitted --&gt; a flat network of computers, it is a network of networks. And of course, we don&amp;rsquo;t just need to pass letters around a small room, we need to be able to send them anywhere in the world.&lt;/p&gt;
+&lt;p&gt;It should be pretty clear then that the best analogy is the postal service!&lt;/p&gt;
+&lt;p&gt;When you want to send a letter to somebody you put your letter in the mailbox and you trust that it will be delivered correctly. It&amp;rsquo;s not really relevant to you &lt;!-- raw HTML omitted --&gt;how&lt;!-- raw HTML omitted --&gt; it gets there, as long as it does. Somebody has to physically deliver your letter to its destination of course, so how is this done?&lt;/p&gt;
+&lt;p&gt;Well first off, the postman sure as hell doesn&amp;rsquo;t take your letter and deliver it personally! It seems that the postal service is not a series of tubes either. Instead, the postman takes your letter to the local post office for processing.&lt;/p&gt;
+&lt;p&gt;If the letter is addressed locally then the post office just sends it back out, and another postman delivers it directly. But, if the address is is non-local then it gets interesting! The local post office is not able to deliver the letter directly, so it passes it &amp;ldquo;up&amp;rdquo; to the next level of hierarchy, perhaps to a regional post office which services cities nearby, or maybe to a mail center at an airport, if the address is far away. Ideally, the actual transport of the letter would be done using a &lt;!-- raw HTML omitted --&gt;big truck&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;Lets be complicated and assume the letter is sent from Los Angeles to Sydney, Australia. The local post office receives the letter and given that it is addressed internationally, sends it directly to a mail center at LAX. The letter is processed again according to address, and gets routed on the next flight to Sydney.&lt;/p&gt;
+&lt;p&gt;The plane lands at Sydney airport where an &lt;!-- raw HTML omitted --&gt;entirely different postal system&lt;!-- raw HTML omitted --&gt; takes over. Now the whole process starts operating in reverse. The letter travels &amp;ldquo;down&amp;rdquo; the hierarchy, from the general, to the specific. From the mail hub at Sydney Airport it gets sent out to a regional center, the regional center delivers it to the local post office, and eventually the letter is hand delivered by a mailman with a funny accent. Crikey! :)&lt;/p&gt;
+&lt;p&gt;Just like post offices determine how to deliver letters via their address, networks deliver packets according to their IP address. The low-level details of this delivery and the actual routing of packets from network to network is actually quite complex, but the basic idea is that each router is just another computer, with a routing table describing where packets matching sets of addresses should go, as well as a default gateway address describing where to pass packets for which there is no matching entry in the table. It is routing tables, and the physical connections they represent that define the network of networks that is the Internet.&lt;/p&gt;
+&lt;p&gt;The job of configuring these routing tables is up to network administrators, not programmers like us. But if you want to read more about it, then this article from &lt;!-- raw HTML omitted --&gt;ars technica&lt;!-- raw HTML omitted --&gt; provides some  fascinating insight into how networks exchange packets between each other via peering and transit relationships. You can also read more details about &lt;!-- raw HTML omitted --&gt;routing tables&lt;!-- raw HTML omitted --&gt; in this linux faq, and about the &lt;!-- raw HTML omitted --&gt;border gateway protocol&lt;!-- raw HTML omitted --&gt; on wikipedia, which automatically discovers how to route packets between networks, making the internet a truly distributed system capable of dynamically routing around broken connectivity.&lt;/p&gt;
+&lt;h2 id=&#34;virtual-connections&#34;&gt;Virtual Connections&lt;/h2&gt;
+&lt;p&gt;Now back to connections.&lt;/p&gt;
+&lt;p&gt;If you have used TCP sockets then you know that they sure &lt;!-- raw HTML omitted --&gt;look&lt;!-- raw HTML omitted --&gt; like a connection, but since TCP is implemented on top of IP, and IP is just packets hopping from computer to computer, it follows that TCP&amp;rsquo;s concept of connection must be a &lt;!-- raw HTML omitted --&gt;virtual connection.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;If TCP can create a virtual connection over IP, it follows that we can do the same over UDP.&lt;/p&gt;
+&lt;p&gt;Lets define our virtual connection as two computers exchanging UDP packets at some fixed rate like 10 packets per-second. As long as the packets are flowing, we consider the two computers to be virtually connected.&lt;/p&gt;
+&lt;p&gt;Our connection has two sides:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;In our case, we only allow one client to connect to the server at any time. We&amp;rsquo;ll generalize our connection system to support multiple simultaneous connections in a later article. Also, we assume that the IP address of the server is on a fixed IP address that the client may directly connect to.&lt;/p&gt;
+&lt;h2 id=&#34;protocol-id&#34;&gt;Protocol ID&lt;/h2&gt;
+&lt;p&gt;Since UDP is connectionless our UDP socket can receive packets sent from any computer.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;d like to narrow this down so that the server only receives packets sent from the client, and the client only receives packets sent from the server. We can&amp;rsquo;t just filter out packets by address, because the server doesn&amp;rsquo;t know the address of the client in advance. So instead, we prefix each UDP packet with small header containing a 32 bit protocol id as follows:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The protocol id is just some unique number representing our game protocol. Any packet that arrives from our UDP socket first has its first four bytes inspected. If they don&amp;rsquo;t match our protocol id, then the packet is ignored. If the protocol id does match, we strip out the first four bytes of the packet and deliver the rest as payload.&lt;/p&gt;
+&lt;p&gt;You just choose some number that is reasonably unique, perhaps a hash of the name of your game and the protocol version number. But really you can use anything. The whole point is that from the point of view of our connection based protocol, packets with different protocol ids are ignored.&lt;/p&gt;
+&lt;h2 id=&#34;detecting-connection&#34;&gt;Detecting Connection&lt;/h2&gt;
+&lt;p&gt;Now we need a way to detect connection.&lt;/p&gt;
+&lt;p&gt;Sure we could do some complex handshaking involving multiple UDP packets sent back and forth. Perhaps a client &amp;ldquo;request connection&amp;rdquo; packet is sent to the server, to which the server responds with a &amp;ldquo;connection accepted&amp;rdquo; sent back to the client, or maybe an &amp;ldquo;i&amp;rsquo;m busy&amp;rdquo; packet if a client tries to connect to server which already has a connected client.&lt;/p&gt;
+&lt;p&gt;Or&amp;hellip; we could just setup our server to take the first packet it receives with the correct protocol id, and consider a connection to be established.&lt;/p&gt;
+&lt;p&gt;The client just starts sending packets to the server assuming connection, when the server receives the first packet from the client, it takes note of the IP address and port of the client, and starts sending packets back.&lt;/p&gt;
+&lt;p&gt;The client already knows the address and port of the server, since it was specified on connect. So when the client receives packets, it filters out any that don&amp;rsquo;t come from the server address. Similarly, once the server receives the first packet from the client, it gets the address and port of the client from &amp;ldquo;recvfrom&amp;rdquo;, so it is able to ignore any packets that don&amp;rsquo;t come from the client address.&lt;/p&gt;
+&lt;p&gt;We can get away with this shortcut because we only have two computers involved in the connection. In later articles, we&amp;rsquo;ll extend our connection system to support more than two computers in a client/server or peer-to-peer topology, and at this point we&amp;rsquo;ll upgrade our connection negotiation to something more robust.&lt;/p&gt;
+&lt;p&gt;But for now, why make things more complicated than they need to be?&lt;/p&gt;
+&lt;h2 id=&#34;detecting-disconnection&#34;&gt;Detecting Disconnection&lt;/h2&gt;
+&lt;p&gt;How do we detect disconnection?&lt;/p&gt;
+&lt;p&gt;Well if a connection is defined as receiving packets, we can define disconnection as &lt;!-- raw HTML omitted --&gt;not&lt;!-- raw HTML omitted --&gt; receiving packets.&lt;/p&gt;
+&lt;p&gt;To detect when we are not receiving packets, we keep track of the number of seconds since we last received a packet from the other side of the connection. We do this on both sides.&lt;/p&gt;
+&lt;p&gt;Each time we receive a packet from the other side, we reset our accumulator to 0.0, each update we increase the accumulator by the amount of time that has passed.&lt;/p&gt;
+&lt;p&gt;If this accumulator exceeds some value like 10 seconds, the connection &amp;ldquo;times out&amp;rdquo; and we disconnect.&lt;/p&gt;
+&lt;p&gt;This also gracefully handles the case of a second client trying to connect to a server that has already made a connection with another client. Since the server is already connected it ignores packets coming from any address other than the connected client, so the second client receives no packets in response to the packets it sends, so the second client times out and disconnects.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;And that&amp;rsquo;s all it takes to setup a virtual connection: some way to establish connection, filtering for packets not involved in the connection, and timeouts to detect disconnection.&lt;/p&gt;
+&lt;p&gt;Our connection is as real as any TCP connection, and the steady stream of UDP packets it provides is a suitable starting point for a multiplayer action game.&lt;/p&gt;
+&lt;p&gt;Now that you have your virtual connection over UDP, you can easily setup a client/server relationship for a two player multiplayer game without TCP.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/&#34;&gt;Reliability and Congestion Avoidance over UDP&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Sending and Receiving Packets</title>
+      <link>http://127.0.0.1:1313/post/sending_and_receiving_packets/</link>
+      <pubDate>Fri, 03 Oct 2008 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/sending_and_receiving_packets/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/udp_vs_tcp/&#34;&gt;previous article&lt;/a&gt; we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.&lt;/p&gt;
+&lt;p&gt;In this article I am going to show you how to send and receive UDP packets.&lt;/p&gt;
+&lt;h2 id=&#34;bsd-sockets&#34;&gt;BSD sockets&lt;/h2&gt;
+&lt;p&gt;For most modern platforms you have some sort of basic socket layer available based on BSD sockets.&lt;/p&gt;
+&lt;p&gt;BSD sockets are manipulated using simple functions like &amp;ldquo;socket&amp;rdquo;, &amp;ldquo;bind&amp;rdquo;, &amp;ldquo;sendto&amp;rdquo; and &amp;ldquo;recvfrom&amp;rdquo;. You can of course work directly with these functions if you wish, but it becomes difficult to keep your code platform independent because each platform is slightly different.&lt;/p&gt;
+&lt;p&gt;So although I will first show you BSD socket example code to demonstrate basic socket usage, we won&amp;rsquo;t be using BSD sockets directly for long. Once we&amp;rsquo;ve covered all basic socket functionality we&amp;rsquo;ll abstract everything away into a set of classes, making it easy to you to write platform independent socket code.&lt;/p&gt;
+&lt;h2 id=&#34;platform-specifics&#34;&gt;Platform specifics&lt;/h2&gt;
+&lt;p&gt;First let&amp;rsquo;s setup a define so we can detect what our current platform is and handle the slight differences in sockets from one platform to another:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    // platform detection
+
+    #define PLATFORM_WINDOWS  1
+    #define PLATFORM_MAC      2
+    #define PLATFORM_UNIX     3
+
+    #if defined(_WIN32)
+    #define PLATFORM PLATFORM_WINDOWS
+    #elif defined(__APPLE__)
+    #define PLATFORM PLATFORM_MAC
+    #else
+    #define PLATFORM PLATFORM_UNIX
+    #endif
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now let&amp;rsquo;s include the appropriate headers for sockets. Since the header files are platform specific, we&amp;rsquo;ll use the platform #define to include different sets of files depending on the platform:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    #if PLATFORM == PLATFORM_WINDOWS
+
+        #include &amp;lt;winsock2.h&amp;gt;
+
+    #elif PLATFORM == PLATFORM_MAC || 
+          PLATFORM == PLATFORM_UNIX
+
+        #include &amp;lt;sys/socket.h&amp;gt;
+        #include &amp;lt;netinet/in.h&amp;gt;
+        #include &amp;lt;fcntl.h&amp;gt;
+
+    #endif
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Sockets are built in to the standard system libraries on unix-based platforms so we don&amp;rsquo;t have to link to any additonal libraries. However, on Windows we need to link to the winsock library to get socket functionality.&lt;/p&gt;
+&lt;p&gt;Here is a simple trick to do this without having to change your project or makefile:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    #if PLATFORM == PLATFORM_WINDOWS
+    #pragma comment( lib, &amp;quot;wsock32.lib&amp;quot; )
+    #endif
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;I like this trick because I&amp;rsquo;m super lazy. You can always link from your project or makefile if you wish.&lt;/p&gt;
+&lt;h2 id=&#34;initializing-the-socket-layer&#34;&gt;Initializing the socket layer&lt;/h2&gt;
+&lt;p&gt;Most unix-like platforms (including macosx) don&amp;rsquo;t require any specific steps to initialize the sockets layer, however Windows requires that you jump through some hoops to get your socket code working.&lt;/p&gt;
+&lt;p&gt;You must call &amp;ldquo;WSAStartup&amp;rdquo; to initialize the sockets layer before you call any socket functions, and &amp;ldquo;WSACleanup&amp;rdquo; to shutdown when you are done.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s add two new functions:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    bool InitializeSockets()
+    {
+        #if PLATFORM == PLATFORM_WINDOWS
+        WSADATA WsaData;
+        return WSAStartup( MAKEWORD(2,2), 
+                           &amp;amp;WsaData ) 
+            == NO_ERROR;
+        #else
+        return true;
+        #endif
+    }
+
+    void ShutdownSockets()
+    {
+        #if PLATFORM == PLATFORM_WINDOWS
+        WSACleanup();
+        #endif
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now we have a platform independent way to initialize the socket layer.&lt;/p&gt;
+&lt;h2 id=&#34;creating-a-socket&#34;&gt;Creating a socket&lt;/h2&gt;
+&lt;p&gt;It&amp;rsquo;s time to create a UDP socket, here&amp;rsquo;s how to do it:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    int handle = socket( AF_INET, 
+                         SOCK_DGRAM, 
+                         IPPROTO_UDP );
+
+    if ( handle &amp;lt;= 0 )
+    {
+        printf( &amp;quot;failed to create socket\n&amp;quot; );
+        return false;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Next we bind the UDP socket to a port number (eg. 30000). Each socket must be bound to a unique port, because when a packet arrives the port number determines which socket to deliver to. Don&amp;rsquo;t use ports lower than 1024 because they are reserved for the system. Also try to avoid using ports above 50000 because they used when dynamically assigning ports.&lt;/p&gt;
+&lt;p&gt;Special case: if you don&amp;rsquo;t care what port your socket gets bound to just pass in &amp;ldquo;0&amp;rdquo; as your port, and the system will select a free port for you.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    sockaddr_in address;
+    address.sin_family = AF_INET;
+    address.sin_addr.s_addr = INADDR_ANY;
+    address.sin_port = 
+        htons( (unsigned short) port );
+
+    if ( bind( handle, 
+               (const sockaddr*) &amp;amp;address, 
+               sizeof(sockaddr_in) ) &amp;lt; 0 )
+    {
+        printf( &amp;quot;failed to bind socket\n&amp;quot; );
+        return false;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now the socket is ready to send and receive packets.&lt;/p&gt;
+&lt;p&gt;But what is this mysterious call to &amp;ldquo;htons&amp;rdquo; in the code above? This is just a helper function that converts a 16 bit integer value from host byte order (little or big-endian) to network byte order (big-endian). This is required whenever you directly set integer members in socket structures.&lt;/p&gt;
+&lt;p&gt;You&amp;rsquo;ll see &amp;ldquo;htons&amp;rdquo; (host to network short) and its 32 bit integer sized cousin &amp;ldquo;htonl&amp;rdquo; (host to network long) used several times throughout this article, so keep an eye out, and you&amp;rsquo;ll know what is going on.&lt;/p&gt;
+&lt;h2 id=&#34;setting-the-socket-as-non-blocking&#34;&gt;Setting the socket as non-blocking&lt;/h2&gt;
+&lt;p&gt;By default sockets are set in what is called &amp;ldquo;blocking mode&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;This means that if you try to read a packet using &amp;ldquo;recvfrom&amp;rdquo;, the function will not return until a packet is available to read. This is not at all suitable for our purposes. Video games are realtime programs that simulate at 30 or 60 frames per second, they can&amp;rsquo;t just sit there waiting for a packet to arrive!&lt;/p&gt;
+&lt;p&gt;The solution is to flip your sockets into &amp;ldquo;non-blocking mode&amp;rdquo; after you create them. Once this is done, the &amp;ldquo;recvfrom&amp;rdquo; function returns immediately when no packets are available to read, with a return value indicating that you should try to read packets again later.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s how put a socket in non-blocking mode:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    #if PLATFORM == PLATFORM_MAC || 
+        PLATFORM == PLATFORM_UNIX
+
+        int nonBlocking = 1;
+        if ( fcntl( handle, 
+                    F_SETFL, 
+                    O_NONBLOCK, 
+                    nonBlocking ) == -1 )
+        {
+            printf( &amp;quot;failed to set non-blocking\n&amp;quot; );
+            return false;
+        }
+
+    #elif PLATFORM == PLATFORM_WINDOWS
+
+        DWORD nonBlocking = 1;
+        if ( ioctlsocket( handle, 
+                          FIONBIO, 
+                          &amp;amp;nonBlocking ) != 0 )
+        {
+            printf( &amp;quot;failed to set non-blocking\n&amp;quot; );
+            return false;
+        }
+
+    #endif
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Windows does not provide the &amp;ldquo;fcntl&amp;rdquo; function, so we use the &amp;ldquo;ioctlsocket&amp;rdquo; function instead.&lt;/p&gt;
+&lt;h2 id=&#34;sending-packets&#34;&gt;Sending packets&lt;/h2&gt;
+&lt;p&gt;UDP is a connectionless protocol, so each time you send a packet you must specify the destination address. This means you can use one UDP socket to send packets to any number of different IP addresses, there&amp;rsquo;s no single computer at the other end of your UDP socket that you are connected to.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s how to send a packet to a specific address:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    int sent_bytes = 
+        sendto( handle, 
+                (const char*)packet_data, 
+                packet_size,
+                0, 
+                (sockaddr*)&amp;amp;address, 
+                sizeof(sockaddr_in) );
+
+    if ( sent_bytes != packet_size )
+    {
+        printf( &amp;quot;failed to send packet\n&amp;quot; );
+        return false;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Important! The return value from &amp;ldquo;sendto&amp;rdquo; only indicates if the packet was successfully sent from the local computer. It does &lt;em&gt;not&lt;/em&gt; tell you whether or not the packet was received by the destination computer. UDP has no way of knowing whether or not the the packet arrived at its destination!&lt;/p&gt;
+&lt;p&gt;In the code above we pass a &amp;ldquo;sockaddr_in&amp;rdquo; structure as the destination address. How do we setup one of these structures?&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s say we want to send to the address 207.45.186.98:30000&lt;/p&gt;
+&lt;p&gt;Starting with our address in this form:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    unsigned int a = 207;
+    unsigned int b = 45;
+    unsigned int c = 186;
+    unsigned int d = 98;
+    unsigned short port = 30000;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We have a bit of work to do to get it in the form required by &amp;ldquo;sendto&amp;rdquo;:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    unsigned int address = ( a &amp;lt;&amp;lt; 24 ) | 
+                           ( b &amp;lt;&amp;lt; 16 ) | 
+                           ( c &amp;lt;&amp;lt; 8  ) | 
+                             d;
+
+    sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = htonl( address );
+    addr.sin_port = htons( port );
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, we first combine the a,b,c,d values in range [0,255] into a single unsigned integer, with each byte of the integer now corresponding to the input values. We then initialize a &amp;ldquo;sockaddr_in&amp;rdquo; structure with the integer address and port, making sure to convert our integer address and port values from host byte order to network byte order using &amp;ldquo;htonl&amp;rdquo; and &amp;ldquo;htons&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;Special case: if you want to send a packet to yourself, there&amp;rsquo;s no need to query the IP address of your own machine, just pass in the loopback address 127.0.0.1 and the packet will be sent to your local machine.&lt;/p&gt;
+&lt;h2 id=&#34;receiving-packets&#34;&gt;Receiving packets&lt;/h2&gt;
+&lt;p&gt;Once you have a UDP socket bound to a port, any UDP packets sent to your sockets IP address and port are placed in a queue. To receive packets just loop and call &amp;ldquo;recvfrom&amp;rdquo; until it fails with EWOULDBLOCK indicating there are no more packets to receive.&lt;/p&gt;
+&lt;p&gt;Since UDP is connectionless, packets may arrive from any number of different computers. Each time you receive a packet &amp;ldquo;recvfrom&amp;rdquo; gives you the IP address and port of the sender, so you know where the packet came from.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s how to loop and receive all incoming packets:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    while ( true )
+    {
+        unsigned char packet_data[256];
+
+        unsigned int max_packet_size = 
+            sizeof( packet_data );
+
+        #if PLATFORM == PLATFORM_WINDOWS
+        typedef int socklen_t;
+        #endif
+
+        sockaddr_in from;
+        socklen_t fromLength = sizeof( from );
+
+        int bytes = recvfrom( socket, 
+                              (char*)packet_data, 
+                              max_packet_size,
+                              0, 
+                              (sockaddr*)&amp;amp;from, 
+                              &amp;amp;fromLength );
+
+        if ( bytes &amp;lt;= 0 )
+            break;
+
+        unsigned int from_address = 
+            ntohl( from.sin_addr.s_addr );
+
+        unsigned int from_port = 
+            ntohs( from.sin_port );
+
+        // process received packet
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Any packets in the queue larger than your receive buffer will be silently discarded. So if you have a 256 byte buffer to receive packets like the code above, and somebody sends you a 300 byte packet, the 300 byte packet will be dropped. You &lt;em&gt;will not&lt;/em&gt; receive just the first 256 bytes of the 300 byte packet.&lt;/p&gt;
+&lt;p&gt;Since you are writing your own game network protocol, this is no problem at all in practice, just make sure your receive buffer is big enough to receive the largest packet your code could possibly send.&lt;/p&gt;
+&lt;h2 id=&#34;destroying-a-socket&#34;&gt;Destroying a socket&lt;/h2&gt;
+&lt;p&gt;On most unix-like platforms, sockets are file handles so you use the standard file &amp;ldquo;close&amp;rdquo; function to clean up sockets once you are finished with them. However, Windows likes to be a little bit different, so we have to use &amp;ldquo;closesocket&amp;rdquo; instead:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Hooray windows.&lt;/p&gt;
+&lt;h2 id=&#34;socket-class&#34;&gt;Socket class&lt;/h2&gt;
+&lt;p&gt;So we&amp;rsquo;ve covered all the basic operations: creating a socket, binding it to a port, setting it to non-blocking, sending and receiving packets, and destroying the socket.&lt;/p&gt;
+&lt;p&gt;But you&amp;rsquo;ll notice most of these operations are slightly platform dependent, and it&amp;rsquo;s pretty annoying to have to remember to #ifdef and do platform specifics each time you want to perform socket operations.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;re going to solve this by wrapping all our socket functionality up into a &amp;ldquo;Socket&amp;rdquo; class. While we&amp;rsquo;re at it, we&amp;rsquo;ll add an &amp;ldquo;Address&amp;rdquo; class to make it easier to specify internet addresses. This avoids having to manually encode or decode a &amp;ldquo;sockaddr_in&amp;rdquo; structure each time we send or receive packets.&lt;/p&gt;
+&lt;p&gt;So let&amp;rsquo;s add a socket class:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    class Socket
+    {
+    public:
+
+        Socket();
+        
+        ~Socket();
+        
+        bool Open( unsigned short port );
+        
+        void Close();
+        
+        bool IsOpen() const;
+        
+        bool Send( const Address &amp;amp; destination, 
+                   const void * data, 
+                   int size );
+        
+        int Receive( Address &amp;amp; sender, 
+                     void * data, 
+                     int size );
+
+    private:
+
+        int handle;
+    };
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;and an address class:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    class Address
+    {
+    public:
+
+        Address();
+
+        Address( unsigned char a, 
+                 unsigned char b, 
+                 unsigned char c, 
+                 unsigned char d, 
+                 unsigned short port );
+
+        Address( unsigned int address, 
+                 unsigned short port );
+
+        unsigned int GetAddress() const;
+
+        unsigned char GetA() const;
+        unsigned char GetB() const;
+        unsigned char GetC() const;
+        unsigned char GetD() const;
+
+        unsigned short GetPort() const;
+
+    private:
+
+        unsigned int address;
+        unsigned short port;
+    };
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Here&amp;rsquo;s how to to send and receive packets with these classes:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    // create socket
+
+    const int port = 30000;
+
+    Socket socket;
+
+    if ( !socket.Open( port ) )
+    {
+        printf( &amp;quot;failed to create socket!\n&amp;quot; );
+        return false;
+    }
+
+    // send a packet
+
+    const char data[] = &amp;quot;hello world!&amp;quot;;
+
+    socket.Send( Address(127,0,0,1,port), data, sizeof( data ) );
+
+    // receive packets
+
+    while ( true )
+    {
+        Address sender;
+        unsigned char buffer[256];
+        int bytes_read = 
+            socket.Receive( sender, 
+                            buffer, 
+                            sizeof( buffer ) );
+        if ( !bytes_read )
+            break;
+     
+        // process packet
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see it&amp;rsquo;s much simpler than using BSD sockets directly.&lt;/p&gt;
+&lt;p&gt;As an added bonus the code is the same on all platforms because everything platform specific is handled inside the socket and address classes.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;You now have a platform independent way to send and receive packets. &lt;em&gt;Enjoy&lt;/em&gt; :)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/virtual_connection_over_udp/&#34;&gt;Virtual Connection over UDP&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>UDP vs. TCP</title>
+      <link>http://127.0.0.1:1313/post/udp_vs_tcp/</link>
+      <pubDate>Wed, 01 Oct 2008 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/udp_vs_tcp/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In this article we start with the most basic aspect of network programming: sending and receiving data over the network. This is perhaps the simplest and most basic part of what network programmers do, but still it is quite intricate and non-obvious as to what the best course of action is.&lt;/p&gt;
+&lt;p&gt;You have most likely heard of sockets, and are probably aware that there are two main types: TCP and UDP. When writing a network game, we first need to choose what type of socket to use. Do we use TCP sockets, UDP sockets or a mixture of both? Take care because if you get this wrong it will have terrible effects on your multiplayer game!&lt;/p&gt;
+&lt;p&gt;The choice you make depends entirely on what sort of game you want to network. So from this point on and for the rest of this article series, I assume you want to network an action game. You know, games like Halo, Battlefield 1942, Quake, Unreal, CounterStrike and Team Fortress.&lt;/p&gt;
+&lt;p&gt;In light of the fact that we want to network an action game, we&amp;rsquo;ll take a very close look at the properties of each protocol, and dig a bit into how the internet actually works. Once we have all this information, the correct choice is clear.&lt;/p&gt;
+&lt;h2 id=&#34;tcpip&#34;&gt;TCP/IP&lt;/h2&gt;
+&lt;p&gt;TCP stands for &amp;ldquo;transmission control protocol&amp;rdquo;. IP stands for &amp;ldquo;internet protocol&amp;rdquo;. Together they form the backbone for almost everything you do online, from web browsing to IRC to email, it&amp;rsquo;s all built on top of TCP/IP.&lt;/p&gt;
+&lt;p&gt;If you have ever used a TCP socket, then you know it&amp;rsquo;s a reliable connection based protocol. This means you create a connection between two machines, then you exchange data much like you&amp;rsquo;re writing to a file on one side, and reading from a file on the other.&lt;/p&gt;
+&lt;p&gt;TCP connections are reliable and ordered. All data you send is guaranteed to arrive at the other side and in the order you wrote it. It&amp;rsquo;s also a stream protocol, so TCP automatically splits your data into packets and sends them over the network for you.&lt;/p&gt;
+&lt;h2 id=&#34;ip&#34;&gt;IP&lt;/h2&gt;
+&lt;p&gt;The simplicity of TCP is in stark contrast to what actually goes on underneath TCP at the IP or &amp;ldquo;internet protocol&amp;rdquo; level.&lt;/p&gt;
+&lt;p&gt;Here there is no concept of connection, packets are simply passed from one computer to the next. You can visualize this process being somewhat like a hand-written note passed from one person to the next across a crowded room, eventually, reaching the person it&amp;rsquo;s addressed to, but only after passing through many hands.&lt;/p&gt;
+&lt;p&gt;There is also no guarantee that this note will actually reach the person it is intended for. The sender just passes the note along and hopes for the best, never knowing whether or not the note was received, unless the other person decides to write back!&lt;/p&gt;
+&lt;p&gt;Of course IP is in reality a little more complicated than this, since no one computer knows the exact sequence of computers to pass the packet along to so that it reaches its destination quickly. Sometimes IP passes along multiple copies of the same packet and these packets make their way to the destination via different paths, causing packets to arrive out of order and in duplicate.&lt;/p&gt;
+&lt;p&gt;This is because the internet is designed to be self-organizing and self-repairing, able to route around connectivity problems rather than relying on direct connections between computers. It&amp;rsquo;s actually quite cool if you think about what&amp;rsquo;s &lt;em&gt;really&lt;/em&gt; going on at the low level. You can read all about this in the classic book &lt;a href=&#34;http://www.cs.newpaltz.edu/~pletcha/NET_PY/the-protocols-tcp-ip-illustrated-volume-1.9780201633467.24290.pdf&#34;&gt;TCP/IP Illustrated&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;udp&#34;&gt;UDP&lt;/h2&gt;
+&lt;p&gt;Instead of treating communications between computers like writing to files, what if we want to send and receive packets directly?&lt;/p&gt;
+&lt;p&gt;We can do this using UDP.&lt;/p&gt;
+&lt;p&gt;UDP stands for &amp;ldquo;user datagram protocol&amp;rdquo; and it&amp;rsquo;s another protocol built on top of IP, but unlike TCP, instead of adding lots of features and complexity, UDP is a very thin layer over IP.&lt;/p&gt;
+&lt;p&gt;With UDP we can send a packet to a destination IP address (eg. 112.140.20.10) and port (say 52423), and it gets passed from computer to computer until it arrives at the destination or is lost along the way.&lt;/p&gt;
+&lt;p&gt;On the receiver side, we just sit there listening on a specific port (eg. 52423) and when a packet arrives from &lt;em&gt;any&lt;/em&gt; computer (remember there are no connections!), we get notified of the address and port of the computer that sent the packet, the size of the packet, and can read the packet data.&lt;/p&gt;
+&lt;p&gt;Like IP, UDP is an unreliable protocol. In practice however, most packets that are sent &lt;em&gt;will&lt;/em&gt; get through, but you&amp;rsquo;ll usually have around 1-5% packet loss, and occasionally you&amp;rsquo;ll get periods where no packets get through at all (remember there are lots of computers between you and your destination where things can go wrong&amp;hellip;)&lt;/p&gt;
+&lt;p&gt;There is also no guarantee of ordering of packets with UDP. You could send 5 packets in order 1,2,3,4,5 and they could arrive completely out of order like 3,1,2,5,4. In practice, packets tend to arrive in order &lt;em&gt;most&lt;/em&gt; of the time, but you cannot rely on this!&lt;/p&gt;
+&lt;p&gt;UDP also provides a 16 bit checksum, which in theory is meant to protect you from receiving invalid or truncated data, but you can&amp;rsquo;t even trust this, since 16 bits is just not enough protection when you are sending UDP packets rapidly over a long period of time. Statistically, you can&amp;rsquo;t even rely on this checksum and must add your own.&lt;/p&gt;
+&lt;p&gt;So in short, when you use UDP you&amp;rsquo;re pretty much on your own!&lt;/p&gt;
+&lt;h2 id=&#34;tcp-vs-udp&#34;&gt;TCP vs. UDP&lt;/h2&gt;
+&lt;p&gt;We have a decision to make here, do we use TCP sockets or UDP sockets?&lt;/p&gt;
+&lt;p&gt;Lets look at the properties of each:&lt;/p&gt;
+&lt;p&gt;TCP:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;UDP:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The decision seems pretty clear then, TCP does everything we want and its super easy to use, while UDP is a huge pain in the ass and we have to code everything ourselves from scratch.&lt;/p&gt;
+&lt;p&gt;So obviously we just use TCP right?&lt;/p&gt;
+&lt;p&gt;Wrong!&lt;/p&gt;
+&lt;p&gt;Using TCP is the worst possible mistake you can make when developing a multiplayer game! To understand why, you need to see what TCP is actually doing above IP to make everything look so simple.&lt;/p&gt;
+&lt;h2 id=&#34;how-tcp-really-works&#34;&gt;How TCP really works&lt;/h2&gt;
+&lt;p&gt;TCP and UDP are both built on top of IP, but they are radically different. UDP behaves very much like the IP protocol underneath it, while TCP abstracts everything so it looks like you are reading and writing to a file, hiding all complexities of packets and unreliability from you.&lt;/p&gt;
+&lt;p&gt;So how does it do this?&lt;/p&gt;
+&lt;p&gt;Firstly, TCP is a stream protocol, so you just write bytes to a stream, and TCP makes sure that they get across to the other side. Since IP is built on packets, and TCP is built on top of IP, TCP must therefore break your stream of data up into packets. So, some internal TCP code queues up the data you send, then when enough data is pending the queue, it sends a packet to the other machine.&lt;/p&gt;
+&lt;p&gt;This can be a problem for multiplayer games if you are sending very small packets. What can happen here is that TCP may decide it&amp;rsquo;s not going to send data until you have buffered up enough data to make a reasonably sized packet to send over the network.&lt;/p&gt;
+&lt;p&gt;This is a problem because you want your client player input to get to the server &lt;em&gt;as quickly as possible&lt;/em&gt;, if it is delayed or &amp;ldquo;clumped up&amp;rdquo; like TCP can do with small packets, the client&amp;rsquo;s user experience of the multiplayer game will be very poor. Game network updates will arrive late and infrequently, instead of on-time and frequently like we want.&lt;/p&gt;
+&lt;p&gt;TCP has an option to fix this behavior called &lt;a href=&#34;https://en.wikipedia.org/wiki/Nagle%27s_algorithm&#34;&gt;TCP_NODELAY&lt;/a&gt;. This option instructs TCP not to wait around until enough data is queued up, but to flush any data you write to it immediately. This is referred to as disabling Nagle&amp;rsquo;s algorithm.&lt;/p&gt;
+&lt;p&gt;Unfortunately, even if you set this option TCP still has serious problems for multiplayer games and it all stems from how TCP handles lost and out of order packets to present you with the &amp;ldquo;illusion&amp;rdquo; of a reliable, ordered stream of data.&lt;/p&gt;
+&lt;h2 id=&#34;how-tcp-implements-reliability&#34;&gt;How TCP implements reliability&lt;/h2&gt;
+&lt;p&gt;Fundamentally TCP breaks down a stream of data into packets, sends these packets over unreliable IP, then takes the packets received on the other side and reconstructs the stream.&lt;/p&gt;
+&lt;p&gt;But what happens when a packet is lost?&lt;/p&gt;
+&lt;p&gt;What happens when packets arrive out of order or are duplicated?&lt;/p&gt;
+&lt;p&gt;Without going too much into the details of how TCP works because its super-complicated (please refer to &lt;a href=&#34;http://www.cs.newpaltz.edu/~pletcha/NET_PY/the-protocols-tcp-ip-illustrated-volume-1.9780201633467.24290.pdf&#34;&gt;TCP/IP Illustrated&lt;/a&gt;) in essence TCP sends out a packet, waits a while until it detects that packet was lost because it didn&amp;rsquo;t receive an ack (or acknowledgement), then resends the lost packet to the other machine. Duplicate packets are discarded on the receiver side, and out of order packets are resequenced so everything is reliable and in order.&lt;/p&gt;
+&lt;p&gt;The problem is that if we were to send our time critical game data over TCP, whenever a packet is dropped it has to stop and wait for that data to be resent. Yes, even if more recent data arrives, that new data gets put in a queue, and you cannot access it until that lost packet has been retransmitted. How long does it take to resend the packet?&lt;/p&gt;
+&lt;p&gt;Well, it&amp;rsquo;s going to take &lt;em&gt;at least&lt;/em&gt; round trip latency for TCP to work out that data needs to be resent, but commonly it takes 2*RTT, and another one way trip from the sender to the receiver for the resent packet to get there. So if you have a 125ms ping, you&amp;rsquo;ll be waiting roughly 1/5th of a second for the packet data to be resent &lt;em&gt;at best&lt;/em&gt;, and in worst case conditions you could be waiting up to half a second or more (consider what happens if the attempt to resend the packet fails to get through?). What happens if TCP decides the packet loss indicates network congestion and it backs off? Yes it actually does this. Fun times!&lt;/p&gt;
+&lt;h2 id=&#34;never-use-tcp-for-time-critical-data&#34;&gt;Never use TCP for time critical data&lt;/h2&gt;
+&lt;p&gt;The problem with using TCP for realtime games like FPS is that unlike web browsers, or email or most other applications, these multiplayer games have a &lt;em&gt;real time requirement&lt;/em&gt; on packet delivery.&lt;/p&gt;
+&lt;p&gt;What this means is that for many parts of a game, for example player input and character positions, it really doesn&amp;rsquo;t matter what happened a second ago, the game only cares about the most recent data.&lt;/p&gt;
+&lt;p&gt;TCP was simply not designed with this in mind.&lt;/p&gt;
+&lt;p&gt;Consider a very simple example of a multiplayer game, some sort of action game like a shooter. You  want to network this in a very simple way. Every frame you send the input from the client to the server (eg. keypresses, mouse input controller input), and each frame the server processes the input from each player, updates the simulation, then sends the current position of game objects back to the client for rendering.&lt;/p&gt;
+&lt;p&gt;So in our simple multiplayer game, whenever a packet is lost, everything has to &lt;em&gt;stop and wait&lt;/em&gt; for that packet to be resent. On the client game objects stop receiving updates so they appear to be standing still, and on the server input stops getting through from the client, so the players cannot move or shoot. When the resent packet finally arrives, you receive this stale, out of date information that you don&amp;rsquo;t even care about! Plus, there are packets backed up in queue waiting for the resend which arrive at same time, so you have to process all of these packets in one frame. Everything is clumped up!&lt;/p&gt;
+&lt;p&gt;Unfortunately, there is nothing you can do to fix this behavior, it&amp;rsquo;s just the fundamental nature of TCP. This is just what it takes to make the unreliable, packet-based internet look like a reliable-ordered stream.&lt;/p&gt;
+&lt;p&gt;Thing is we don&amp;rsquo;t want a reliable ordered stream.&lt;/p&gt;
+&lt;p&gt;We want our data to get as quickly as possible from client to server without having to wait for lost data to be resent.&lt;/p&gt;
+&lt;p&gt;This is why you should &lt;strong&gt;never&lt;/strong&gt; use TCP when networking time-critical data!&lt;/p&gt;
+&lt;h2 id=&#34;wait-why-cant-i-use-_both_-udp-and-tcp&#34;&gt;Wait? Why can&amp;rsquo;t I use &lt;em&gt;both&lt;/em&gt; UDP and TCP?&lt;/h2&gt;
+&lt;p&gt;For realtime game data like player input and state, only the most recent data is relevant, but for other types of data, say perhaps a sequence of commands sent from one machine to another, reliability and ordering can be very important.&lt;/p&gt;
+&lt;p&gt;The temptation then is to use UDP for player input and state, and TCP for the reliable ordered data. If you&amp;rsquo;re sharp you&amp;rsquo;ve probably even worked out that you may have multiple &amp;ldquo;streams&amp;rdquo; of reliable ordered commands, maybe one about level loading, and another about AI. Perhaps you think to yourself, &amp;ldquo;Well, I&amp;rsquo;d really not want AI commands to stall out if a packet is lost containing a level loading command - they are completely unrelated!&amp;rdquo;. You are right, so you may be tempted to create one TCP socket for each stream of commands.&lt;/p&gt;
+&lt;p&gt;On the surface, this seems like a great idea. The problem is that since TCP and UDP are both built on top of IP, the underlying packets sent by each protocol will affect each other. Exactly how they affect each other is quite complicated and relates to how TCP performs reliability and flow control, but fundamentally you should remember that TCP tends to &lt;!-- raw HTML omitted --&gt;induce&lt;!-- raw HTML omitted --&gt; packet loss in UDP packets. For more information, read &lt;!-- raw HTML omitted --&gt;this paper&lt;!-- raw HTML omitted --&gt; on the subject.&lt;/p&gt;
+&lt;p&gt;Also, it&amp;rsquo;s pretty complicated to mix UDP and TCP. If you mix UDP and TCP you lose a certain amount of control. Maybe you can implement reliability in a more efficient way that TCP does, better suited to your needs? Even if you need reliable-ordered data, it&amp;rsquo;s possible, provided that data is small relative to the available bandwidth to get that data across faster and more reliably that it would if you sent it over TCP. Plus, if you have to do NAT to enable home internet connections to talk to each other, having to do this NAT once for UDP and once for TCP (not even sure if this is possible&amp;hellip;) is kind of painful.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;My recommendation is not only that you use UDP, but that you &lt;em&gt;only&lt;/em&gt; use UDP for your game protocol. Don&amp;rsquo;t mix TCP and UDP! Instead, learn how to implement the specific features of TCP that you need &lt;em&gt;inside&lt;/em&gt; your own custom UDP based protocol.&lt;/p&gt;
+&lt;p&gt;Of course, it is no problem to use HTTP to talk to some RESTful services while your game is running. I&amp;rsquo;m not saying you can&amp;rsquo;t do that. A few TCP connections running while your game is running isn&amp;rsquo;t going to bring everything down. The point is, don&amp;rsquo;t split your &lt;em&gt;game protocol&lt;/em&gt; across UDP and TCP. Keep your game protocol running over UDP so you are fully in control of the data you send and receive and how reliability, ordering and congestion avoidance are implemented.&lt;/p&gt;
+&lt;p&gt;The rest of this article series show you how to do this, from creating your own virtual connection on top of UDP, to creating your own reliability, flow control and congestion avoidance.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/sending_and_receiving_packets/&#34;&gt;Sending and Receiving Packets&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

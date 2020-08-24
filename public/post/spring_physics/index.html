@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academia 4.3.1">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to simulate the motion of rigid bodies in 3D. Now we&rsquo;re going to discuss how to implement spring physics.
+The physics behind springs is simple but extremely versatile and useful. You can use springs to link points together to model rope and string, cloth, and even blobs of jelly. Springs can also be used to implement basic collision response, and to create joints that constrain the motion of rigid bodies.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="http://127.0.0.1:1313/post/spring_physics/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#3f51b5">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academiaons/1.8.6/css/academiaons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Open+Sans|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academia.min.cbfe411b85bcf6c144a15531ef0c8d7b.css">
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="http://127.0.0.1:1313/post/spring_physics/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@gafferongames">
+  <meta property="twitter:creator" content="@gafferongames">
+  
+  <meta property="og:site_name" content="Gaffer On Games">
+  <meta property="og:url" content="http://127.0.0.1:1313/post/spring_physics/">
+  <meta property="og:title" content="Spring Physics | Gaffer On Games">
+  <meta property="og:description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to simulate the motion of rigid bodies in 3D. Now we&rsquo;re going to discuss how to implement spring physics.
+The physics behind springs is simple but extremely versatile and useful. You can use springs to link points together to model rope and string, cloth, and even blobs of jelly. Springs can also be used to implement basic collision response, and to create joints that constrain the motion of rigid bodies."><meta property="og:image" content="http://127.0.0.1:1313/img/icon-192.png">
+  <meta property="twitter:image" content="http://127.0.0.1:1313/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2004-09-03T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2004-09-03T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Spring Physics | Gaffer On Games</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Gaffer On Games</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"><span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Articles</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article py-5" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+    
+    
+    <div class="article-container py-3">
+      <h1 itemprop="name">Spring Physics</h1>
+
+      
+
+      
+      
+
+
+
+<meta content="2004-09-03 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2004-09-03 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Sep 3, 2004</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    9 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-physics/">Game Physics</a></span>
+  
+
+  
+    
+
+  
+
+</div>
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+      
+    </div>
+  </div>
+</div>
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      <h2 id="introduction">Introduction</h2>
+<p>Hi, I&rsquo;m <a href="https://gafferongames.com">Glenn Fiedler</a> and welcome to <strong><a href="/categories/game-physics/">Game Physics</a></strong>.</p>
+<p>In the <a href="/post/physics_in_3d/">previous article</a> we discussed how to simulate the motion of rigid bodies in 3D. Now we&rsquo;re going to discuss how to implement spring physics.</p>
+<p>The physics behind springs is simple but extremely versatile and useful. You can use springs to link points together to model rope and string, cloth, and even blobs of jelly. Springs can also be used to implement basic collision response, and to create joints that constrain the motion of rigid bodies.</p>
+<p>The more physics programming you do, the more springs pop up. Many physical phenomenon boil down to spring-like forces being applied such as buoyancy in water. Springs are everywhere so lets discover how to simulate them!</p>
+<h2 id="spring-and-dampers">Spring and Dampers</h2>
+<p>The formula to use for simulating spring-like behavior is called <!-- raw HTML omitted -->Hooke&rsquo;s Law<!-- raw HTML omitted -->.</p>
+<!-- raw HTML omitted -->
+<p>Where <!-- raw HTML omitted -->x<!-- raw HTML omitted --> is the vector displacement of the end of the spring from it&rsquo;s equilibrium position,  and k is a constant describing the tightness of the spring. Larger values of k mean that the spring is tighter and will therefore stretch less per unit of force, smaller values mean the spring is looser and will stretch further.</p>
+<p>Newton&rsquo;s third law says that every force has an equal and opposite force. If two objects a and b are connected together by a spring then the spring will apply one force which pulls object a towards object b, and an equal and opposite force pulling object b towards a. However, if you want to attach one object to a fixed point in space its you can apply the force of the object in one direction. This makes sense if you consider that point as having <!-- raw HTML omitted -->infinite mass<!-- raw HTML omitted -->.</p>
+<p>Spring forces alone are not much use though. You need to combine them with dampers to have a realistic simulation. Damping simulates energy loss, and it is used in physics simulations to make sure that springs don&rsquo;t oscillate forever but come to rest over time.</p>
+<p>A spring-damper system can be modeled as follows:</p>
+<!-- raw HTML omitted -->
+<p>Where b is the coefficient of damping and <!-- raw HTML omitted -->v<!-- raw HTML omitted --> is the relative velocity between the two points connected by the spring. Larger values for b increase the amount of damping so the object comes to rest more quickly.</p>
+<h2 id="variations-on-springs">Variations on Springs</h2>
+<p>There are many different variations on spring-damper systems, but what I want to do is explain how to think generally in terms of what the forces are doing so that you can easily design spring and damper systems to achieve whatever effect you want.</p>
+<p>The first thing is that springs don&rsquo;t only have to act to pull two points together so that they lie on top of each other. For example you can design spring forces that pull together or push apart two points apart so they maintain a desired separation distance from each other:</p>
+<!-- raw HTML omitted -->
+<p>Where |<!-- raw HTML omitted -->x<!-- raw HTML omitted -->| is the distance between the two points connected to the spring, d is the desired distance of separation, and <!-- raw HTML omitted -->x<!-- raw HTML omitted --> / |<!-- raw HTML omitted -->x<!-- raw HTML omitted -->| is the unit length direction vector between the two points: <!-- raw HTML omitted -->a<!-- raw HTML omitted --> to <!-- raw HTML omitted -->b<!-- raw HTML omitted -->, when applying the force to point <!-- raw HTML omitted -->a<!-- raw HTML omitted --> and vice versa.</p>
+<p>The overall effect of the force equation above is to have a force which pushes the two points connected by the spring apart if they are closer than distance d, and bring the two points together if they are further than d apart. Notice how the force becomes exactly zero when the two points are at the target distance? If you tune the k and b parameters correctly you can have a nicely behaving spring that quickly brings the two points together smoothly over time and comes to rest at the solution point.</p>
+<p>But why apply springs to position only? If you want to accelerate a body over time such that it accelerates to a certain speed then you can calculate a spring force proportional to the difference between the current velocity and the target velocity, combined with a damping proportional to the current velocity so that it reaches its target over time instead of cycling about it. This is usually called a motor in physics simulation.</p>
+<p>We can even apply the same concept to drive the spinning of an object at a certain speed by applying a spring torque proportional to the difference between the current angular velocity and the desired angular velocity, coupled with a damper force proportional to the current angular velocity.</p>
+<p>Another commonly implemented spring constraint is to enforce a upright orientation of a body, for example, you could apply a spring torque proportional to the difference between the current orientation and an upright orientation, coupled with a damper proportional to angular velocity. Such a constraint is called a &lsquo;stay upright constraint&rsquo; and its often used for sci-fi hover racing games.</p>
+<p>As you can see, the applications of springs are limitless. The overall pattern is to design spring forces that will attract your physics simulation into the desired state and fade off to zero when this state is has been reached. In order to make sure that your physics objects don&rsquo;t just oscillate around the solution but actually reach it, it is necessary to apply damping proportional to whatever physics state values are performing the evolution of the simulation towards the solution over time.</p>
+<h2 id="attachment-using-a-spring">Attachment using a Spring</h2>
+<p>So lets get started with an actual concrete implementation of using springs a simulation. The first thing we will implement is an attachment joint that will allow the user to click and drag a point on the cube to move it around. We will implement this by modeling a tight spring attachment between a target point and an attachment point on the body of the cube. This is effectively a ball and socket joint implemented using only spring forces and is implemented using the standard equation we are used to:</p>
+<!-- raw HTML omitted -->
+<p>Where x is the vector difference between the current target point and the attachment point on the object, and v is the point velocity at the attachment point on the object. The important thing is that this velocity v being the point velocity means that it incorporates both the linear motion of the object plus any velocity at the attachment point due to angular velocity. As was shown in the previous article we can calculate this point velocity at follows:</p>
+<!-- raw HTML omitted -->
+<p>Where <!-- raw HTML omitted -->p<!-- raw HTML omitted --> is the point on the rigid body and <!-- raw HTML omitted -->x<!-- raw HTML omitted --> is the center of mass of the object. Secondly, this spring and damper force is not just applied linearly, but is applied at the attachment point on the object. This means that the spring force will apply both a linear force and a torque component as follows:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>The overall effect of this joint then is to bring the target and attachment points together while damping the motion of the object at the attachment point. This allows the object to move as long as remains still at the attachment. In other words the object is only allowed to move by rotating about the attachment point. Our simple ball and socket joint is now complete.</p>
+<h2 id="collision-response-with-springs">Collision Response with Springs</h2>
+<p>Next we will implement a basic collision response using springs. The trick here is to apply a spring and damper force that works against what we don&rsquo;t want, eg. objects moving towards each other and penetrating other objects.</p>
+<p>So we have a collision detected and the usual information is returned to the physics system ready to apply collision response. This information is typically something like:</p>
+<ul>
+<li>A unit length collision normal</li>
+<li>The penetration depth along the normal</li>
+<li>The physics state for each of the colliding objects at the time of collision</li>
+</ul>
+<p>All this information grouped together is called a contact. Processing collision geometry and returning a series of generic contacts is a great idea because it decouples your collision response from the gritty details of collision detection.</p>
+<p>Once we have all our contact information a simple collision response can be implemented by applying a spring-like force to the colliding objects to keep them apart:</p>
+<!-- raw HTML omitted -->
+<p>Where k and b are the spring-damper coefficients, <!-- raw HTML omitted -->n<!-- raw HTML omitted --> is the contact normal and <!-- raw HTML omitted -->v<!-- raw HTML omitted --> is the relative velocity between the two objects at the point of collision. Effectively this equation calculates a spring force that pushes out along the contact normal while reducing the relative velocity of the objects towards each other at the contact point.</p>
+<p>Various different collision responses types can also be achieved using this equation, for example setting b to 0 gives a completely elastic collision response where all energy going into the collision returns in the bounce over time. Setting b to higher value tend to make the collision more inelastic because it removes more energy during the collision. Finally, by increasing and decreasing the spring constant k in concert with b you can make a collision that feels like anything from bouncing off a trampoline (low k and low b), to landing and sinking into quicksand (low k and high b), or landing with a splat on concrete (high k, high b).</p>
+<h2 id="the-weakness-of-springs">The Weakness of Springs</h2>
+<p>It seems we can achieve a large variety of different collision effects using only springs and easily make joints and constraints. Its not all good news however because springs come with their own set of weaknesses which I will now explain.</p>
+<p>The first weakness is that its difficult to tune the spring constants to get exactly the effect you want. For example, if you are attempting to model the real world physics of an object, you will need to experiment to find the spring k and b values that match the simulation. These values are usually dependent on other values of your simulation, such as the gravity constant, meaning that if you adjust gravity you&rsquo;ll need to retune your springs to get the same effect.</p>
+<p>The next problem is that tighter the spring k you use, the more difficult it becomes to solve the differential equation. Using an RK4 integrator sure help with this, but even with RK4 there is a fundamental limit to how large you can make your spring k before your simulation will explode. At this point you need to either decrease your timestep or reduce your spring k.</p>
+<p>The final, and major weakness is that springs are reactive not predictive. This is a subtle point but a very important one. A joint or constraint implemented using springs only works by correcting errors after they occur, and collision response using springs requires allowing some amount of penetration before it acts to correct it and so forth. More advanced techniques exist which can solve for the forces required to constrain the physics simulation without inducing error, such as LCP solvers or iterative methods, but they are out of scope of this simple article.</p>
+<p><strong>NEXT ARTICLE:</strong> <a href="/post/networked_physics_2004/">Networked Physics (2004)</a></p>
+<hr>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+
+    </div>
+
+    
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/physics/">physics</a>
+  
+</div>
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+  
+  
+
+
+
+
+
+  
+  
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/authors/"></a></h5>
+      
+      
+      <ul class="network-icon" aria-hidden="true">
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+      <div class="article-widget">
+        <div class="hr-light"></div>
+        <h3>Related</h3>
+        <ul>
+          
+          <li><a href="/post/physics_in_3d/">Physics in 3D</a></li>
+          
+          <li><a href="/post/fix_your_timestep/">Fix Your Timestep!</a></li>
+          
+          <li><a href="/post/integration_basics/">Integration Basics</a></li>
+          
+        </ul>
+      </div>
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="/js/academia.min.281fa180ccfa1769ea3c7dd430814861.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        
+        <p>
+          Copyright © Glenn Fiedler, 2004 - 2019 
+        </p>
+      </div>
+      <div class="col-md-6">
+        <ul class="list-inline network-icon text-right">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://twitter.com/Twitter" target="_blank" rel="noopener" title="DM Me"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

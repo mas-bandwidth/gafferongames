@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academia 4.3.1">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+Lately I&rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.
+The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation implicitly by sending just the player inputs.
+This is a very attractive synchronization strategy because the amount of network traffic depends on the size of the player inputs instead of the amount of physics state in the world.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="http://127.0.0.1:1313/post/floating_point_determinism/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#3f51b5">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academiaons/1.8.6/css/academiaons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Open+Sans|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academia.min.cbfe411b85bcf6c144a15531ef0c8d7b.css">
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="http://127.0.0.1:1313/post/floating_point_determinism/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@gafferongames">
+  <meta property="twitter:creator" content="@gafferongames">
+  
+  <meta property="og:site_name" content="Gaffer On Games">
+  <meta property="og:url" content="http://127.0.0.1:1313/post/floating_point_determinism/">
+  <meta property="og:title" content="Floating Point Determinism | Gaffer On Games">
+  <meta property="og:description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+Lately I&rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.
+The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation implicitly by sending just the player inputs.
+This is a very attractive synchronization strategy because the amount of network traffic depends on the size of the player inputs instead of the amount of physics state in the world."><meta property="og:image" content="http://127.0.0.1:1313/img/icon-192.png">
+  <meta property="twitter:image" content="http://127.0.0.1:1313/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2010-02-24T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2010-02-24T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Floating Point Determinism | Gaffer On Games</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Gaffer On Games</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"><span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Articles</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article py-5" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+    
+    
+    <div class="article-container py-3">
+      <h1 itemprop="name">Floating Point Determinism</h1>
+
+      
+
+      
+      
+
+
+
+<meta content="2010-02-24 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2010-02-24 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Feb 24, 2010</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    9 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-networking/">Game Networking</a></span>
+  
+
+  
+    
+
+  
+
+</div>
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+      
+    </div>
+  </div>
+</div>
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      <h2 id="introduction">Introduction</h2>
+<p>Hi, I&rsquo;m <a href="https://gafferongames.com">Glenn Fiedler</a> and welcome to <a href="/categories/game-networking/"><strong>Networking for Game Programmers</strong></a>.</p>
+<p>Lately I&rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.</p>
+<p>The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation <em>implicitly</em> by sending just the player inputs.</p>
+<p>This is a very attractive synchronization strategy because the amount of network traffic depends on the size of the player inputs instead of the amount of physics state in the world. In fact, this strategy has been used for many years in RTS games for precisely this reason; with thousands and thousands of units on the map, they simply have too much state to send over the network.</p>
+<p>Perhaps you have a complex physics simulation with lots of rigid body state, or a cloth or soft body simulation which needs to stay perfectly in sync across two machines because it is gameplay affecting, but you cannot afford to send all the state. It is clear that the only possible solution in this situation is to attempt a deterministic networking strategy.</p>
+<p>But we run into a problem. Physics simulations use floating point calculations, and for one reason or another it is considered <em>very difficult</em> to get exactly the same result from floating point calculations on two different machines. People even report different results on the same machine from run to run, and between debug and release builds. Other folks say that AMDs give different results to Intel machines, and that SSE results are different from x87. What exactly is going on? Are floating point calculations deterministic or not?</p>
+<p>Unfortunately, the answer is not a simple &ldquo;yes&rdquo; or &ldquo;no&rdquo; but &ldquo;yes, if&hellip;&rdquo;</p>
+<p>Here is what I have discovered so far:</p>
+<ul>
+<li>
+<p>If your physics simulation is itself deterministic, with a bit of work you should be able to get it to play back a replay of recorded inputs on the same machine and get the exact same result.</p>
+</li>
+<li>
+<p>It is possible to get deterministic results for floating calculations across multiple computers provided you use an executable built with the same compiler, run on machines with the same architecture, and perform some platform-specific tricks.</p>
+</li>
+<li>
+<p>It is incredibly naive to write arbitrary floating point code in C or C++ and expect it to give exactly the same result across different compilers or architectures, or even the same results across debug and release builds.</p>
+</li>
+<li>
+<p>However with a good deal of work you <!-- raw HTML omitted -->may<!-- raw HTML omitted --> be able to <!-- raw HTML omitted -->coax<!-- raw HTML omitted --> exactly the same floating point results out of different compilers or different machine architectures by using your compilers &ldquo;strict&rdquo; IEEE 754 compliant mode and restricting the set of floating point operations you use. This typically results in significantly lower floating point performance.</p>
+</li>
+</ul>
+<p>If you would like to debate these points or add your own nuance, please <a href="/contact">contact</a> me! I consider this question by no means settled and am very interested in other peoples experiences with deterministic floating point simulations and exactly reproducible floating point calculations. Please contact me especially if you have managed to get binary exact results across different architectures and compilers in real world situations.</p>
+<p><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Here are the resources I have discovered in my search so far&hellip;<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p>As long as you stick to a single compiler, and a single CPU instruction set, it is possible to make floating point fully deterministic. The specifics vary by platform (i e, different between x86, x64 and PPC).</p>
+<p>You have to make sure that the internal precision is set to 64 bits (not 80, because only Intel implements that), and that the rounding mode is consistent. Furthermore, you have to check this after calls to external DLLs, because many DLLs (Direct3D, printer drivers, sound libraries, etc) will change the precision or rounding mode without setting it back.</p>
+<p>The ISA is IEEE compliant. If your x87 implementation isn&rsquo;t IEEE, it&rsquo;s not x87.</p>
+<p>Also, you can&rsquo;t use SSE or SSE2 for floating point, because it&rsquo;s too under-specified to be deterministic.<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Jon Watte, GameDev.net forums<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://www.gamedev.net/community/forums/topic.asp?topic_id=499435">http://www.gamedev.net/community/forums/topic.asp?topic_id=499435</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p>At app startup time we call:</p>
+<pre><code>_controlfp(_PC_24, _MCW_PC)
+_controlfp(_RC_NEAR, _MCW_RC)
+</code></pre>
+<p>Also, every tick we assert that these fpu settings are still set:</p>
+<pre><code>gpAssert( (_controlfp(0, 0) &amp;amp; _MCW_PC) == _PC_24 );
+gpAssert( (_controlfp(0, 0) &amp;amp; _MCW_RC) == _RC_NEAR );
+</code></pre>
+<p>There are some MS API functions that can change the fpu model on you so you need to manually enforce the fpu mode after those calls to ensure the fpu stays the same across machines. The assert is there to catch if anyone has buggered the fpu mode.</p>
+<p>FYI We have the compiler floating point model set to Fast /fp:fast ( but its not a requirement )</p>
+<p>We have never had a problem with the IEEE standard across any PC cpu AMD and Intel with this approach. None of our SupCom or Demigod customers have had problems with their machines either, and we are talking over 1 million customers here (supcom1 + expansion pack). We would have heard if there was a problem with the fpu not having the same results as replays or multiplayer mode wouldn&rsquo;t work at all.</p>
+<p>We did however have problems when using some physics APIs because their code did not have determinism or reproducibility in mind. For example some physics APIS have solvers that take X number of iterations when solving where X can be lower with faster CPUs.<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Elijah, Gas Powered Games<!-- raw HTML omitted --><!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;t=1800">http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;t=1800</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p>This is madness! Why don&rsquo;t we make all hardware work the same? Well, we could, if we didn&rsquo;t care about performance. We could say &ldquo;hey Mr. Hardware Guy, forget about your crazy fused multiply-add instructions and just give us a basic IEEE implementation&rdquo;, and &ldquo;hey Compiler Dude, please don&rsquo;t bother trying to optimize our code&rdquo;. That way our programs would run consistently slowly everywhere :-)<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Shawn Hargreaves, MSDN Blog<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://blogs.msdn.com/shawnhar/archive/2009/03/25/is-floating-point-math-deterministic.aspx">http://blogs.msdn.com/shawnhar/archive/2009/03/25/is-floating-point-math-deterministic.aspx</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->Ken Miller, Pandemic Studios<!-- raw HTML omitted --><!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;t=175">http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;t=175</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->Branimir Karadžić, Pandemic Studios<!-- raw HTML omitted -->
+<a href="http://www.google.com/buzz/100111796601236342885/8hDZ655S6x3/Floating-Point-Determinism-Gaffer-on-Games">http://www.google.com/buzz/100111796601236342885/8hDZ655S6x3/Floating-Point-Determinism-Gaffer-on-Games</a></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p>Algebraic compiler optimizations
+“Complex” instructions like multiply-accumulate or sine
+x86-specific pain not available on any other platform; not that ~100% of non-embedded devices is a small market share for a pain.</p>
+<p>The good news is that most pain comes from item 3 which can be more or less solved automatically. For the purpose of decision making (”should we invest energy into FP consistency or is it futile?”), I’d say that it’s not futile and if you can cite actual benefits you’d get from consistency, then it’s worth the (continuous) effort.</p>
+<p>Summary: use SSE2 or SSE, and if you can’t, configure the FP CSR to use 64b intermediates and avoid 32b floats. Even the latter solution works passably in practice, as long as everybody is aware of it.<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Yossi Kreinin, Personal Blog<!-- raw HTML omitted --><!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://www.yosefk.com/blog/consistency-how-to-defeat-the-purpose-of-ieee-floating-point.html">http://www.yosefk.com/blog/consistency-how-to-defeat-the-purpose-of-ieee-floating-point.html</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p>The long answer to these questions and more can be found in what is probably the best reference on floating point, David Goldberg&rsquo;s What Every Computer Scientist Should Know About Floating Point Arithmetic. Skip to the section on the IEEE standard for the key details.</p>
+<p>Finally, if you are doing the same sequence of floating point calculations on the same initial inputs, then things should be replayable exactly just fine. The exact sequence can change depending on your compiler/os/standard library, so you might get some small errors this way.</p>
+<p>Where you usually run into problems in floating point is if you have a numerically unstable method and you start with FP inputs that are approximately the same but not quite. If your method&rsquo;s stable, you should be able to guarantee reproducibility within some tolerance. If you want more detail than this, then take a look at Goldberg&rsquo;s FP article linked above or pick up an intro text on numerical analysis.<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Todd Gamblin, Stack Overflow<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://stackoverflow.com/questions/968435/what-could-cause-a-deterministic-process-to-generate-floating-point-errors">http://stackoverflow.com/questions/968435/what-could-cause-a-deterministic-process-to-generate-floating-point-errors</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->Günter Obiltschnig, Cross-Platform Issues with Floating-Point arithmetics in C++<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://www.appinf.com/download/FPIssues.pdf">http://www.appinf.com/download/FPIssues.pdf</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->STREFLOP Library<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://nicolas.brodu.numerimoire.net/en/programmation/streflop/index.html">http://nicolas.brodu.numerimoire.net/en/programmation/streflop/index.html</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p>• <!-- raw HTML omitted -->Accuracy<!-- raw HTML omitted --> - Produce results that are “close” to the correct value</p>
+<p>• <!-- raw HTML omitted -->Reproducibility<!-- raw HTML omitted --> - Produce consistent results from one run to the next. From one set of build options to another. From one compiler to another. From one platform to another.</p>
+<p>• <!-- raw HTML omitted -->Performance<!-- raw HTML omitted --> – Produce the most efficient code possible.</p>
+<p>These options usually conflict! Judicious use of compiler options lets you control the tradeoffs.<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Intel C++ Compiler: Floating Point Consistency<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://www.nccs.nasa.gov/images/FloatingPoint%5Fconsistency.pdf">http://www.nccs.nasa.gov/images/FloatingPoint%5Fconsistency.pdf</a><!-- raw HTML omitted -->.</p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->Intel C++ Compiler Manual<!-- raw HTML omitted -->
+<a href="http://cache-www.intel.com/cd/00/00/34/76/347605_347605.pdf">http://cache-www.intel.com/cd/00/00/34/76/347605_347605.pdf</a></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->Microsoft Visual C++ Floating-Point Optimization<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://msdn.microsoft.com/en-us/library/aa289157(VS.71).aspx#floapoint_topic4">http://msdn.microsoft.com/en-us/library/aa289157(VS.71).aspx#floapoint_topic4</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->Apple Developer Support<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://developer.apple.com/hardwaredrivers/ve/sse.html">http://developer.apple.com/hardwaredrivers/ve/sse.html</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->Intel Software Network Support<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://software.intel.com/en-us/forums/showthread.php?t=48339">http://software.intel.com/en-us/forums/showthread.php?t=48339</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->D. Monniaux on IEEE 754 mailing list<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://grouper.ieee.org/groups/754/email/msg03864.html">http://grouper.ieee.org/groups/754/email/msg03864.html</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->David Hough on 754 IEEE mailing list<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://grouper.ieee.org/groups/754/email/msg03867.html">http://grouper.ieee.org/groups/754/email/msg03867.html</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->Nick Maclaren on 754 IEEE mailing list<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://grouper.ieee.org/groups/754/email/msg03872.html">http://grouper.ieee.org/groups/754/email/msg03872.html</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->Nick Maclaren on 754 IEEE mailing list<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://grouper.ieee.org/groups/754/email/msg03862.html">http://grouper.ieee.org/groups/754/email/msg03862.html</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p><!-- raw HTML omitted -->Wikipedia Page on IEEE 754-2008 standard<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://en.wikipedia.org/wiki/IEEE_754-2008#Reproducibility">http://en.wikipedia.org/wiki/IEEE_754-2008#Reproducibility</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p>A simpler solution for current personal computers is simply to force the compiler to use the SSE unit for computations on IEEE-754 types; however, most embedded systems using IA32 microprocessors or microcontrollers do not use processors equipped with this unit.<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->David Monniaux, The pitfalls of verifying floating-point computations<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://hal.archives-ouvertes.fr/docs/00/28/14/29/PDF/floating-point-article.pdf">http://hal.archives-ouvertes.fr/docs/00/28/14/29/PDF/floating-point-article.pdf</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p>Even under the 1985 version of IEEE-754, if two implementations of the standard executed an operation on the same data, under the same rounding mode and default exception handling, the result of the operation would be identical. The new standard tries to go further to describe when a program will produce identical floating point results on different implementations. The operations described in the standard are all reproducible operations.</p>
+<p>The recommended operations, such as library functions or reduction operators are not reproducible, because they are not required in all implementations. Likewise dependence on the underflow and inexact flags is not reproducible because two different methods of treating underflow are allowed to preserve conformance between IEEE-754(1985) and IEEE-754(2008). The rounding modes are reproducible attributes. Optional attributes are not reproducible.</p>
+<p>The use of value-changing optimizations is to be avoided for reproducibility. This includes use of the associative and disributative laws, and automatic generation of fused multiply-add operations when the programmer did not explicitly use that operator.<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Peter Markstein, The New IEEE Standard for Floating Point Arithmetic<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://drops.dagstuhl.de/opus/volltexte/2008/1448/pdf/08021.MarksteinPeter.ExtAbstract.1448.pdf">http://drops.dagstuhl.de/opus/volltexte/2008/1448/pdf/08021.MarksteinPeter.ExtAbstract.1448.pdf</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<!-- raw HTML omitted -->
+<p>Many programmers may not realize that even a program that uses only the numeric formats and operations prescribed by the IEEE standard can compute different results on different systems. In fact, the authors of the standard intended to allow different implementations to obtain different results. Their intent is evident in the definition of the term destination in the IEEE 754 standard: &ldquo;A destination may be either explicitly designated by the user or implicitly supplied by the system (for example, intermediate results in subexpressions or arguments for procedures). Some languages place the results of intermediate calculations in destinations beyond the user&rsquo;s control. Nonetheless, this standard defines the result of an operation in terms of that destination&rsquo;s format and the operands&rsquo; values.&rdquo; (IEEE 754-1985, p. 7) In other words, the IEEE standard requires that each result be rounded correctly to the precision of the destination into which it will be placed, but the standard does not require that the precision of that destination be determined by a user&rsquo;s program. Thus, different systems may deliver their results to destinations with different precisions, causing the same program to produce different results (sometimes dramatically so), even though those systems all conform to the standard.<!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->Differences Among IEEE 754 Implementations<!-- raw HTML omitted -->
+<!-- raw HTML omitted --><a href="http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098">http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098</a><!-- raw HTML omitted --></p>
+<p><!-- raw HTML omitted -->
+<!-- raw HTML omitted --></p>
+<hr>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+
+    </div>
+
+    
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/networking/">networking</a>
+  
+</div>
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+  
+  
+
+
+
+
+
+  
+  
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/authors/"></a></h5>
+      
+      
+      <ul class="network-icon" aria-hidden="true">
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+      <div class="article-widget">
+        <div class="hr-light"></div>
+        <h3>Related</h3>
+        <ul>
+          
+          <li><a href="/post/what_every_programmer_needs_to_know_about_game_networking/">What Every Programmer Needs To Know About Game Networking</a></li>
+          
+          <li><a href="/post/reliability_ordering_and_congestion_avoidance_over_udp/">Reliability and Congestion Avoidance over UDP</a></li>
+          
+          <li><a href="/post/virtual_connection_over_udp/">Virtual Connection over UDP</a></li>
+          
+          <li><a href="/post/sending_and_receiving_packets/">Sending and Receiving Packets</a></li>
+          
+          <li><a href="/post/udp_vs_tcp/">UDP vs. TCP</a></li>
+          
+        </ul>
+      </div>
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="/js/academia.min.281fa180ccfa1769ea3c7dd430814861.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        
+        <p>
+          Copyright © Glenn Fiedler, 2004 - 2019 
+        </p>
+      </div>
+      <div class="col-md-6">
+        <ul class="list-inline network-icon text-right">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://twitter.com/Twitter" target="_blank" rel="noopener" title="DM Me"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

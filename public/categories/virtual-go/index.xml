@@ -1,0 +1,681 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Virtual Go on Gaffer On Games</title>
+    <link>http://127.0.0.1:1313/categories/virtual-go/</link>
+    <description>Recent content in Virtual Go on Gaffer On Games</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2019</copyright>
+    <lastBuildDate>Sun, 24 Feb 2013 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="http://127.0.0.1:1313/categories/virtual-go/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Collision Response and Coulomb Friction</title>
+      <link>http://127.0.0.1:1313/post/collision_response_and_coulomb_friction/</link>
+      <pubDate>Sun, 24 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/collision_response_and_coulomb_friction/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;So far in this series, we have mathematically defined the go stone, rendered it, determined how it moves and rotates, and discussed how its shape affects how it responds to collisions.&lt;/p&gt;
+&lt;p&gt;Now in this article we reach our first milestone:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;A go stone bouncing and coming to rest on the go board&lt;/strong&gt;.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;We&amp;rsquo;re going do this using a technique called &lt;!-- raw HTML omitted --&gt;impulse-based collision response&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;The concept is simple. To handle a collision we apply an impulse, an instantaneous change in momentum, at the point of impact to make the go stone bounce.&lt;/p&gt;
+&lt;h2 id=&#34;linear-collision-response&#34;&gt;Linear Collision Response&lt;/h2&gt;
+&lt;p&gt;We now pick up where we left off at the end of the &lt;a href=&#34;http://127.0.0.1:1313/post/go_stone_vs_go_board/&#34;&gt;collision detection article&lt;/a&gt;.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;We have a contact point and a contact normal for the collision.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s start by calculating a collision response impulse without rotation.&lt;/p&gt;
+&lt;p&gt;First, take the dot product of the linear momentum of the go stone with the contact normal. If this value is less than zero, it means the go stone is moving towards the go board, and we need to apply an impulse.&lt;/p&gt;
+&lt;p&gt;To calculate the impulse we need the concept of &amp;lsquo;elasticity&amp;rsquo;. If the collision is perfectly elastic, the go stone bounces off the board without losing any energy:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;If the collision is inelastic then the go stone loses all its vertical motion post-collision and slides along the surface of the board:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;What we really want is something in between:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;To support this we introduce a new concept called the &amp;lsquo;coefficient of restitution&amp;rsquo;. When this value is 1 the collision is perfectly elastic, when it is 0 the collision is inelastic. At 0.5, it&amp;rsquo;s halfway between.&lt;/p&gt;
+&lt;p&gt;This gives the following formula:&lt;/p&gt;
+&lt;p&gt;[latex]j = -( 1 + e ) \boldsymbol{p} \cdot \boldsymbol{n}[/latex]&lt;/p&gt;
+&lt;p&gt;Where:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;j is the magnitude of the collision impulse&lt;/li&gt;
+&lt;li&gt;e is the coefficient of restitution [0,1]&lt;/li&gt;
+&lt;li&gt;p is the linear momentum of the go stone&lt;/li&gt;
+&lt;li&gt;n in the contact normal for the collision&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Note that the direction of the collision impulse is &lt;!-- raw HTML omitted --&gt;always&lt;!-- raw HTML omitted --&gt; along the contact normal, so to apply the impulse just multiply the contact normal by j and add it to the linear momentum vector.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s the code that does this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    void ApplyLinearCollisionImpulse( StaticContact &amp;amp; contact, float e )
+    {
+        float mass = contact.rigidBody-&amp;gt;mass;
+        float d = dot( contact.rigidBody-&amp;gt;linearMomentum, contact.normal );
+        float j = max( - ( 1 + e ) * d, 0 );
+        contact.rigidBody-&amp;gt;linearMomentum += j * contact.normal;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And here&amp;rsquo;s the result:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Now the stone is definitely bouncing, but in the real world stones don&amp;rsquo;t usually hit the board perfectly flat like this. In the common case, they hit at an angle and the collision makes the stone rotate.&lt;/p&gt;
+&lt;h2 id=&#34;collision-response-with-rotation&#34;&gt;Collision Response With Rotation&lt;/h2&gt;
+&lt;p&gt;To capture this effect we need to calculate collision response with rotation.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Above you can see the effect that we want. If a stone were to collide with the board like this, we know from experience that it would rotate in response.&lt;/p&gt;
+&lt;p&gt;We start by calculating the velocity of the stone at the contact point, and take the dot product of this vs. the contact normal to check if the stone is moving towards the board. This is necessary because when the stone is rotating, different points on the stone have different velocities.&lt;/p&gt;
+&lt;p&gt;Next, we apply a collision impulse along the contact normal with magnitude j except this impulse is applied at the contact point instead of the center of mass of the stone. This gives the collision response its rotational effect.&lt;/p&gt;
+&lt;p&gt;Here is the general equation for the magnitude of this collision impulse.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;You can find a derivation of this result on &lt;!-- raw HTML omitted --&gt;wikipedia&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;Understandably this is quite complex, but in our case the go board never moves, so we can simplify the equation by assigning zero velocity and infinite mass to the second body. This leads to the following, simpler equation:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;todo: need a solution to convert across all the latex equations&amp;hellip;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;[latex]j = \dfrac{ -( 1 + e ) \boldsymbol{v} \cdot \boldsymbol{n} } { m^{-1} + ( \boldsymbol{I^{-1}} ( \boldsymbol{r} \times \boldsymbol{n} ) \times \boldsymbol{r} ) \cdot \boldsymbol{n} }[/latex]&lt;/p&gt;
+&lt;p&gt;Where:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;j is the magnitude of the collision impulse&lt;/li&gt;
+&lt;li&gt;e is the coefficient of restitution [0,1]&lt;/li&gt;
+&lt;li&gt;n in the contact normal for the collision&lt;/li&gt;
+&lt;li&gt;v is the the go stone velocity at the contact point&lt;/li&gt;
+&lt;li&gt;r is the contact point minus the center of the go stone&lt;/li&gt;
+&lt;li&gt;I is the inertia tensor of the go stone&lt;/li&gt;
+&lt;li&gt;m is the mass of the go stone&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Here is the result of our collision response with rotational effects:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;As you can see, collision response working properly and induces rotation when the go stone hits the board at an angle. It is also able to handle the stone hitting the board while rotating.&lt;/p&gt;
+&lt;h2 id=&#34;coulomb-friction&#34;&gt;Coulomb Friction&lt;/h2&gt;
+&lt;p&gt;We don&amp;rsquo;t often get to see friction-less collisions in the real world so the video above looks a bit strange. To get realistic behavior out of the go stone, we need to add friction.&lt;/p&gt;
+&lt;p&gt;We&amp;rsquo;ll model sliding friction using the Coulomb friction model.&lt;/p&gt;
+&lt;p&gt;In this model, the friction impulse is proportional the magnitude of the normal impulse j and is limited by a friction cone defined by the coefficient of friction u:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Lower friction coefficient values mean less friction, higher values mean more friction. Typical values for the coefficient of friction are in the range [0,1].&lt;/p&gt;
+&lt;p&gt;Calculation of the Coulomb friction impulse is performed much like the calculation of the normal impulse except this time the impulse is in the tangent direction against the direction of sliding.&lt;/p&gt;
+&lt;p&gt;Here is the formula for calculating the magnitude of the friction impulse:&lt;/p&gt;
+&lt;p&gt;[latex]j_t = \dfrac{ - \boldsymbol{v} \cdot \boldsymbol{t} } { m^{-1} + ( \boldsymbol{I^{-1}} ( \boldsymbol{r} \times \boldsymbol{t} ) \times \boldsymbol{r} ) \cdot \boldsymbol{t} }[/latex]&lt;/p&gt;
+&lt;p&gt;Where:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;j&lt;!-- raw HTML omitted --&gt;t&lt;!-- raw HTML omitted --&gt; is the magnitude of the friction impulse (pre-cone limit)&lt;/li&gt;
+&lt;li&gt;u is the coefficient of friction [0,1]&lt;/li&gt;
+&lt;li&gt;t in the tangent vector in the direction of sliding&lt;/li&gt;
+&lt;li&gt;v is the the go stone velocity at the contact point&lt;/li&gt;
+&lt;li&gt;r is the contact point minus the center of the go stone&lt;/li&gt;
+&lt;li&gt;I is the inertia tensor of the go stone&lt;/li&gt;
+&lt;li&gt;m is the mass of the go stone&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Which gives the following result:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Which looks much more realistic!&lt;/p&gt;
+&lt;h2 id=&#34;rolling-friction&#34;&gt;Rolling Friction&lt;/h2&gt;
+&lt;p&gt;Due to its shape (and the inertia tensor from the previous article), the go stone really prefers to rotate about axes on the xz plane instead of around the y axis.&lt;/p&gt;
+&lt;p&gt;I was able to reproduct this effect in the simulation. Adding a torque that spins go stone around the y axis made it stand up and spin like a coin:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;This is pretty cool and is totally emergent from the shape of the go stone. The only problem is that it spins like this &lt;!-- raw HTML omitted --&gt;forever&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;Why is it spinning for so long? Shouldn&amp;rsquo;t coulomb friction handle this for us?&lt;/p&gt;
+&lt;p&gt;No. Coulomb friction only handles friction when the two surfaces are sliding relative to each other. Here at the point of contact, the stone is spinning about that point, not sliding, so from coulomb friction point of view, the contact point is stationary and no friction is applied.&lt;/p&gt;
+&lt;p&gt;It turns out that sliding friction is just one type of friction and there are &lt;!-- raw HTML omitted --&gt;many others&lt;!-- raw HTML omitted --&gt;. What we have in this case is a combination of rolling and spinning friction.&lt;/p&gt;
+&lt;p&gt;I had very little patience at this point so I came up with my own hack approximation of spinning and rolling friction that gives me the result that I want: vibrant motion at high energies but slightly damped so the stone slows down, collapses from spinning, wobbles a bit and then come to rest.&lt;/p&gt;
+&lt;p&gt;My hack was to apply exponential decay (eg. linearVelocity *= factor [0.9990-0.9999] each frame) to linear and angular velocity. The decay factor was linear interpolated between two key speeds such that there was more damping at low speeds and much less at high speeds. There is no physical basis for this, it&amp;rsquo;s just a hack to get the behavior I want.&lt;/p&gt;
+&lt;p&gt;With a bit of tuning, it seems to work reasonably well:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Rotation &amp; Inertia Tensors</title>
+      <link>http://127.0.0.1:1313/post/rotation_and_inertia_tensors/</link>
+      <pubDate>Sat, 23 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/rotation_and_inertia_tensors/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/go_stone_vs_go_board/&#34;&gt;previous article&lt;/a&gt; we detected collision between the go stone and the go board. Now we&amp;rsquo;re working up to calculating collision response so the stone bounces and wobbles before coming to rest on the board.&lt;/p&gt;
+&lt;p&gt;But in order to reach this goal we first need to lay some groundwork. It turns out that irregularly shaped objects, like go stones, are easier to rotate about some axes than others and this has a large effect on how they react to collisions.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;This is the reason go stones wobble in such an interesting way when placed on the go board, and why thick go stones wobble differently to thin ones.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s study this effect so we can reproduce it in Virtual Go.&lt;/p&gt;
+&lt;h2 id=&#34;rotation-in-3d&#34;&gt;Rotation in 3D&lt;/h2&gt;
+&lt;p&gt;Consider the following case in two dimensions:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;It&amp;rsquo;s easy because there is only one possible axis for rotation around the center of mass: clockwise or counter-clockwise.&lt;/p&gt;
+&lt;p&gt;It follows that we can represent the orientation of an object in 2D around its center of mass with a single theta value, angular velocity with a scalar radians per-second, and a scalar &amp;lsquo;moment of inertia&amp;rsquo; that works just like an angular equivalent of mass: how hard it is to rotate that object.&lt;/p&gt;
+&lt;p&gt;But when we move to three dimensions suddenly rotation can occur about any axis. Orientation becomes a quaternion, angular velocity a vector, and now for irregular shaped objects like go stones, we need a way to indicate that certain axes of rotation are easier to rotate about than others.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;But how can we represent an angular mass that depends on the shape of the object and the axis of rotation?&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The solution is to use an &lt;!-- raw HTML omitted --&gt;inertia tensor&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;An inertia tensor is a 3x3 matrix with different rules to a normal matrix. It rotates and translates differently, but otherwise behaves like a 3x3 matrix and is used to transform angular velocity to angular momentum, and the inverse of the inertia tensor transforms angular momentum to angular velocity.&lt;/p&gt;
+&lt;p&gt;Now this becomes quite interesting because Newton&amp;rsquo;s laws guarantee that in a perfectly elastic collision angular momentum is conserved but angular velocity is not necessarily.&lt;/p&gt;
+&lt;p&gt;Why is this? Because angular velocity now depends on the axis of rotation, so even if the angular momentum has exactly the same magnitude post-collision the angular velocity can be different if the axis of rotation changes and the inertia tensor is non-uniform.&lt;/p&gt;
+&lt;p&gt;Because of this we&amp;rsquo;ll switch to angular momentum as the primary quantity in our physics simulation and we&amp;rsquo;ll derive angular velocity from it. For consistency we&amp;rsquo;ll also switch from linear velocity to linear momentum.&lt;/p&gt;
+&lt;h2 id=&#34;calculating-the-inertia-tensor&#34;&gt;Calculating The Inertia Tensor&lt;/h2&gt;
+&lt;p&gt;Now we need a way to calculate the inertia tensor of our go stone.&lt;/p&gt;
+&lt;p&gt;The general case is quite complicated because inertia tensors are capable of representing shapes that are non-symmetrical about the axis of rotation.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;todo: yes, need to sort out the latex equations&amp;hellip;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;[latex]I = \begin{bmatrix} I_{xx} &amp;amp; I_{xy} &amp;amp; I_{xz} \ I_{yx} &amp;amp; I_{yy} &amp;amp; I_{yz} \ I_{zx} &amp;amp; I_{zy} &amp;amp; I_{zz} \end{bmatrix}[/latex]&lt;/p&gt;
+&lt;p&gt;For example, think of an oddly shaped object attached to a drill bit off-center and wobbling about crazily as the drill spins. Fantastic. But the good news is that we get to dodge this bullet because we are always rotating about the center of mass of the go stone, our inertia tensor is much simpler:&lt;/p&gt;
+&lt;p&gt;[latex]I = \begin{bmatrix} I_{x} &amp;amp; 0 &amp;amp; 0 \ 0 &amp;amp; I_{y} &amp;amp; 0 \ 0 &amp;amp; 0 &amp;amp; I_{z} \end{bmatrix}[/latex]&lt;/p&gt;
+&lt;p&gt;All we need to do in our case is to determine the I&lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt;, I&lt;!-- raw HTML omitted --&gt;y&lt;!-- raw HTML omitted --&gt; and I&lt;!-- raw HTML omitted --&gt;z&lt;!-- raw HTML omitted --&gt; values.&lt;/p&gt;
+&lt;p&gt;They represent how difficult it is to rotate the go stone about the x,y and z axes.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Interestingly, due to symmetry of the go stone, all axes on the xz plane are identical. So really, we only need to calculate I&lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt; and I&lt;!-- raw HTML omitted --&gt;y&lt;!-- raw HTML omitted --&gt; because I&lt;!-- raw HTML omitted --&gt;z&lt;!-- raw HTML omitted --&gt; = I&lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;numerical-integration&#34;&gt;Numerical Integration&lt;/h2&gt;
+&lt;p&gt;Let&amp;rsquo;s first calculate the inertia tensor via numerical integration.&lt;/p&gt;
+&lt;p&gt;To do this we just need to know is how difficult it is rotate a point about an axis.&lt;/p&gt;
+&lt;p&gt;Once we know this we can approximate the moment of inertia of a go stone by breaking it up into a discrete number of points and summing up the moments of inertia of all these points.&lt;/p&gt;
+&lt;p&gt;It turns out that the difficulty of rotating a point mass about an axis is proportional to the &lt;em&gt;square&lt;/em&gt; of the distance of that point from the axis and the mass of the point. [latex]I = mr^2[/latex]. This is quite interesting because it indicates that the distribution of mass has a significant effect on how difficult it is to rotate an object about an axis.&lt;/p&gt;
+&lt;p&gt;One consequence of this is that a hollow pipe is actually more difficult to rotate than a solid pipe of the same mass. Of course, this is not something we deal with in real life often, because a solid pipe of the same material would be much heavier, and therefore harder to rotate due to increased mass, but if you could find a second material of lower density such that the solid pipe was exactly the same mass as the hollow pipe, you would be able to observe this effect. Obscure.&lt;/p&gt;
+&lt;p&gt;In our case we know the go stone is solid not hollow, and we can go one step further and assume that the go stone has completely uniform density throughout. This means if we know the mass of the go stone we can divide it by the volume of the go stone to find its density. Then we can divide space around the go stone into a grid, and using this density we can assign a mass to each point in the grid proportional to the density of the go stone.&lt;/p&gt;
+&lt;p&gt;Now integration is just a triple for loop summing up the moments of inertia for points that are inside the go stone. This gives us an approximation of the inertia tensor for the go stone that becomes more accurate the more points we use.&lt;/p&gt;
+&lt;h2 id=&#34;interpreting-the-inertia-tensor&#34;&gt;Interpreting The Inertia Tensor&lt;/h2&gt;
+&lt;p&gt;A size 33 japanese go stone has width 22mm and height 9.2mm:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Using our point-based approximation to calculate its inertia tensor gives the following result:&lt;/p&gt;
+&lt;p&gt;[latex]I = \begin{bmatrix} 0.177721 &amp;amp; 0 &amp;amp; 0 \ 0 &amp;amp; 0.304776 &amp;amp; 0 \ 0 &amp;amp; 0 &amp;amp; 0.177721 \end{bmatrix}[/latex]&lt;/p&gt;
+&lt;p&gt;As expected, I&lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt; = I&lt;!-- raw HTML omitted --&gt;z&lt;!-- raw HTML omitted --&gt; due to the symmetry of the go stone.&lt;/p&gt;
+&lt;p&gt;The inertia tensor indicates that its much harder to rotate the go stone about the y axis than axes on the xz plane.&lt;/p&gt;
+&lt;p&gt;Why is this?&lt;/p&gt;
+&lt;p&gt;You can see looking top-down at the go stone when rotating about the y axis a ring of mass around the edge of the stone is multiplied by a large r&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt; and is therefore difficult to rotate.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Contrast this with the rotation about the z axis, which has a much smaller portion of mass far away from the axis:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;As you can see the distribution of mass around the axis tends to dominate the inertia tensor due to the r&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt; term. The same mass, twice the distance from the axis, is four times more difficult to rotate!&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Exact equations are known for the moments of inertia of many &lt;!-- raw HTML omitted --&gt;common objects&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;With a bit of math we can calculate closed form solutions for the moments of inertia of a go stone.&lt;/p&gt;
+&lt;p&gt;To determine the exact equation for I&lt;!-- raw HTML omitted --&gt;y&lt;!-- raw HTML omitted --&gt; we start with the moment of inertia for a solid disc:&lt;/p&gt;
+&lt;p&gt;[latex]I = 1/2mr^2[/latex]&lt;/p&gt;
+&lt;p&gt;Then we integrate again, effectively summing up the moments of inertia of an infinite number of thin discs making up the top half of the go stone.&lt;/p&gt;
+&lt;p&gt;This leads to the following integral:&lt;/p&gt;
+&lt;p&gt;[latex]\int_0^{h/2} (r^2-(y+r-h/2)^2)^2,dy[/latex]&lt;/p&gt;
+&lt;p&gt;With a little help from &lt;!-- raw HTML omitted --&gt;Wolfram Alpha&lt;!-- raw HTML omitted --&gt; we get the following result:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    float CalculateIy( const Biconvex &amp;amp; biconvex )
+    {
+        const float h = height;
+        const float r = biconvex.GetSphereRadius();
+        const float h2 = h * h;
+        const float h3 = h2 * h;
+        const float h4 = h3 * h;
+        const float h5 = h4 * h;
+        const float r2 = r * r;
+        const float r3 = r2 * r;
+        const float r4 = r3 * r;
+        return pi * p * 
+            ( 1/480.0f * h3 * 
+              ( 3*h2 - 30*h*r + 80*r2 ) );
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Plugging in the values for a size 33 stone, we get 0.303588 which is close to the approximate solution 0.304776.&lt;/p&gt;
+&lt;p&gt;Verifying exact solutions against numeric ones is a fantastic way to check your calculations.&lt;/p&gt;
+&lt;p&gt;Can &lt;!-- raw HTML omitted --&gt;you&lt;!-- raw HTML omitted --&gt; derive the equation for I&lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt;?&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/collision_response_and_coulomb_friction/&#34;&gt;Collision Response and Coulomb Friction&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Go Stone vs. Go Board</title>
+      <link>http://127.0.0.1:1313/post/go_stone_vs_go_board/</link>
+      <pubDate>Fri, 22 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/go_stone_vs_go_board/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;In this series so far we&amp;rsquo;ve defined the shape of a go stone, rendered it using 3D graphics hardware and simulated how it moves in three dimensions.&lt;/p&gt;
+&lt;p&gt;Our next goal is for the go stone to bounce and come to rest on the go board.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Understandably, this is quite complicated, so in this article we&amp;rsquo;ll focus on the first step: detecting collisions between a go stone and the go board.&lt;/p&gt;
+&lt;h2 id=&#34;voronoi-regions-and-the-minkowski-difference&#34;&gt;Voronoi Regions and The Minkowski Difference&lt;/h2&gt;
+&lt;p&gt;First, lets assume that the go board is axis aligned and does not move.&lt;/p&gt;
+&lt;p&gt;Next, because go stones are small relative to the go board, we can break down collision detection into regions which are treated differently.&lt;/p&gt;
+&lt;p&gt;The common case is with the primary surface, the actual playing surface of the go board, so lets start by looking top-down at the go board and breaking it up into 2D voronoi regions.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Each voronoi region corresponds to a subspace where all points (x,z) in that region map to the same nearest feature on the go board. This gives us one region that maps points to the top surface of the go board, four regions that map to the sides, and four corner regions.&lt;/p&gt;
+&lt;p&gt;If we were testing an infinitely small point against the go board, this would be enough, but we are colliding a go stone of a certain width and height.&lt;/p&gt;
+&lt;p&gt;One simple way to incorporate the dimensions of the go stone is to offset the regions from the edge of the go board by the the go stone&amp;rsquo;s bounding sphere radius.&lt;/p&gt;
+&lt;p&gt;This creates something like a poor man&amp;rsquo;s version of a minkowski difference:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;We can now test the center of the go stone against these regions to quickly to categorize the type of &lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;potential&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt; collision.&lt;/p&gt;
+&lt;h2 id=&#34;go-board-collision-cases&#34;&gt;Go Board Collision Cases&lt;/h2&gt;
+&lt;p&gt;Although the go board has nine different regions there only three unique types:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Primary&lt;/li&gt;
+&lt;li&gt;Edge&lt;/li&gt;
+&lt;li&gt;Corner&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Primary is the common case.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;It&amp;rsquo;s also the easiest to handle. The only possible collision is between the stone and the playing surface of the go board.&lt;/p&gt;
+&lt;p&gt;Since the go board rests on the floor and cannot move we do not need to worry about collisions with the bottom surface. This means that we can consider the go board to be infinitely thick. This is extremely useful because it removes the possibility of fast moving go stones tunneling vertically through the board.&lt;/p&gt;
+&lt;p&gt;Next is the edge case. This is more complicated because there is more than one way to collide in edge regions. Tests must be done between the go stone and the top plane, the side plane, and the side edge.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The corner case is more complicated still. Potential collisions include the top plane, the two side planes, the side edges adjacent to the corner, the vertical corner edge, and the corner point.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;h2 id=&#34;go-stone-collision-cases&#34;&gt;Go Stone Collision Cases&lt;/h2&gt;
+&lt;p&gt;When a go stone collides with another object there are three collision cases.&lt;/p&gt;
+&lt;p&gt;The first is a collision on the top surface of the biconvex. This corresponds to a collision with a portion of the &lt;!-- raw HTML omitted --&gt;bottom&lt;!-- raw HTML omitted --&gt; sphere that generated the go stone.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Next is the bottom surface of the biconvex. This corresponds to the &lt;!-- raw HTML omitted --&gt;top&lt;!-- raw HTML omitted --&gt; sphere.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Finally, the collision point can be on the circle ring at the intersection of the two sphere surfaces.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;h2 id=&#34;separating-axis-test-sat&#34;&gt;Separating Axis Test (SAT)&lt;/h2&gt;
+&lt;p&gt;We have 3 ways a stone can collide with any convex object, and 9 different regions that must be treated differently when testing vs. the go board. Within each region we have up to 7 different features on the go board that must be tested against 3 different features on the go stone.&lt;/p&gt;
+&lt;p&gt;This is all rather complicated. How can we simplify it?&lt;/p&gt;
+&lt;p&gt;The solution is to use the &lt;a href=&#34;https://gamedevelopment.tutsplus.com/tutorials/collision-detection-using-the-separating-axis-theorem--gamedev-169&#34;&gt;separating axis test&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;The basic idea is that if we can find a plane that separates the stone and the board then they must not be colliding. This gives us a robust way of thinking about collision detection and makes testing for collision between objects more general and less prone to combinatorial explosion.&lt;/p&gt;
+&lt;h2 id=&#34;calculating-the-support&#34;&gt;Calculating The Support&lt;/h2&gt;
+&lt;p&gt;In order to use the separating axis test we must first write a function that determines the support of the go stone.&lt;/p&gt;
+&lt;p&gt;The support is the projection of an object on to an axis. This can be difficult to think about in 3D, but for me it makes it easier to think of the axis not as a line, but as the normal of a plane.&lt;/p&gt;
+&lt;p&gt;Then what we are really asking is: given this plane normal, what two planes from either side tightly bound the object like book-ends on a shelf?&lt;/p&gt;
+&lt;p&gt;To calculate the support of a biconvex solid we must consider two cases.&lt;/p&gt;
+&lt;p&gt;The first is when the go stone is vertical relative to the axis. Here it is reasonably easy. To calculate the support you simply calculate the intersection of the supports of the spheres used to generate the go stone. This makes a nice sort of intuitive sense seeing as the go stone is itself the intersection of two spheres.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Unfortunately, this technique breaks down when the stone is horizontal relative to the axis because it fails to exclude the portion of the spheres that don&amp;rsquo;t contribute to the biconvex solid.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;What you need to do instead is to calculate the support of the circle edge.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The tricky part is detecting when the transition between these two cases occur. Here&amp;rsquo;s a diagram I created a while back when I first tried to work this out. If you look closely you can see the exact point where my head exploded:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;And here&amp;rsquo;s a visualization of the end result:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Now we are ready to continue with the SAT for detecting collisions.&lt;/p&gt;
+&lt;h2 id=&#34;primary-case&#34;&gt;Primary Case&lt;/h2&gt;
+&lt;p&gt;With this support we can use a one-sided variant of the SAT to detect collision with the primary surface. We&amp;rsquo;re doing one-sided because we&amp;rsquo;re treating the go board as &amp;lsquo;infinitely thick&amp;rsquo; to avoid tunneling in the common case.&lt;/p&gt;
+&lt;p&gt;First, we take the normal of the primary surface which is (0,1,0) and find the support for the go stone using this normal as the axis: s&lt;!-- raw HTML omitted --&gt;1&lt;!-- raw HTML omitted --&gt; and s&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;Next, we calculate the projection of the board surface along the normal: t&lt;/p&gt;
+&lt;p&gt;Then, if s&lt;!-- raw HTML omitted --&gt;1&lt;!-- raw HTML omitted --&gt; &amp;lt;= t then the go stone is colliding with the go board:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Unfortunately, we detect the collision after the go stone has already penetrated the go board. There are many solutions for this problem: &lt;!-- raw HTML omitted --&gt;continuous collision detection&lt;!-- raw HTML omitted --&gt;, and &lt;!-- raw HTML omitted --&gt;speculative contacts&lt;!-- raw HTML omitted --&gt; being interesting avenues I may explore later on.&lt;/p&gt;
+&lt;p&gt;But for now I just do the simplest and most pragmatic thing I can think of.&lt;/p&gt;
+&lt;p&gt;I just push the stone out of the board along the axis.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;After I push the stone out, I recalculate the nearest point between the stone and board and use this as the contact point.&lt;/p&gt;
+&lt;h2 id=&#34;edge-and-corner-cases&#34;&gt;Edge and Corner Cases&lt;/h2&gt;
+&lt;p&gt;The primary surface case is easy because only one axis needs to be tested, but in corner and edge regions multiple axes must be tested for collision.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;This is where the SAT really starts to shine. Now instead of combinatorial explosion testing each of the features of the go stone vs. each of the features on the go board, we flatten both the go stone and the go board into support and test for collision one axis at a time.&lt;/p&gt;
+&lt;p&gt;The separating axis test as applied as follows:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Test all features in the region and determine if there is any separating axis&lt;/li&gt;
+&lt;li&gt;If a separating axis exists then the go stone is not colliding with the board&lt;/li&gt;
+&lt;li&gt;Otherwise the stone must be colliding with the board&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;If the stone is colliding we must now work out what direction to push the stone out. I thought about this for a while and tried to come up with a simple pattern that worked.&lt;/p&gt;
+&lt;p&gt;First, I tried pushing the stone out along the axis with the greatest amount of penetration, but this breaks down pretty severely in the case where a go stone approaches the go board from the side:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Next, I thought that perhaps I could use the previous position of the go stone and try to determine the direction that the stone is approaching from. But then I thought about go stones that were rotating rapidly and how this wouldn&amp;rsquo;t always be correct. Then I started thinking about corner and edge cases, and the longer I thought the more this approach seemed too complicated, like I was trying to invent my own half-assed continuous collision detection method that would probably only work half the time and be almost impossible to test.&lt;/p&gt;
+&lt;p&gt;In the end I settled on the simplest solution I could come up with: push the go stone out along the axis with the &lt;!-- raw HTML omitted --&gt;least&lt;!-- raw HTML omitted --&gt; amount of penetration.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;This seems counter-intuitive at first, but it has some nice parallels with other physical laws. Nature is lazy and always takes the shortest path. Nature does the &lt;em&gt;least amount of work&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;We should probably do the same :)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/rotation_and_inertia_tensors/&#34;&gt;Rotation and Inertia Tensors&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>How The Go Stone Moves</title>
+      <link>http://127.0.0.1:1313/post/how_the_go_stone_moves/</link>
+      <pubDate>Thu, 21 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/how_the_go_stone_moves/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;In previous articles we mathematically defined the shape of a go stone and tessellated its shape so it can be drawn with 3D graphics hardware.&lt;/p&gt;
+&lt;p&gt;Now we want to make the go stone move, obeying Newton&amp;rsquo;s laws of motion so the simulation is physically accurate. The stone should be accelerated by gravity and fall downwards. I also want the stone to rotate so it tumbles as it falls through the air.&lt;/p&gt;
+&lt;h2 id=&#34;the-rigid-body-assumption&#34;&gt;The Rigid Body Assumption&lt;/h2&gt;
+&lt;p&gt;Try biting down on a go stone and you&amp;rsquo;ll agree: go stones are very, very hard.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Golf balls are pretty hard too, but if you look at a golf ball being hit by a club in super-slow motion, you&amp;rsquo;ll see that it deforms considerably during impact.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The same thing happens to all objects in the real world to some degree. Nothing is truly rigid. No real material is so hard that it never deforms.&lt;/p&gt;
+&lt;p&gt;But this is not the real world. This is Virtual Go :) It&amp;rsquo;s a simulation and here we are free to make whatever assumptions we want. And the smartest simplification we can make at this point is to assume that the go stone is perfectly rigid and does not deform under any circumstance.&lt;/p&gt;
+&lt;p&gt;This is known as the &lt;!-- raw HTML omitted --&gt;rigid body&lt;!-- raw HTML omitted --&gt; assumption.&lt;/p&gt;
+&lt;h2 id=&#34;working-in-three-dimensions&#34;&gt;Working in Three Dimensions&lt;/h2&gt;
+&lt;p&gt;Because the go stones are rigid, all we need to represent their current position is the position of the center. As the center moves, so does the rest of the stone.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;We&amp;rsquo;ll represent this position using a three dimensional vector &lt;!-- raw HTML omitted --&gt;P&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s define the axes so we know what the x,y,z components of P mean:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;This is what is known as a left-handed coordinate system. So called because I can use the fingers on my left hand to point out each positive axis direction without breaking them.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;I&amp;rsquo;ve chosen a left-handed coordinate system purely on personal preference. Also, I&amp;rsquo;m left-handed and I like my fingers :)&lt;/p&gt;
+&lt;h2 id=&#34;linear-motion&#34;&gt;Linear Motion&lt;/h2&gt;
+&lt;p&gt;Now we want to make the stone move.&lt;/p&gt;
+&lt;p&gt;To do this we need the concept of velocity. Velocity is also a vector but it&amp;rsquo;s not a point like P. Think of it more like a direction and a length. The direction of the velocity vector is the direction the stone is moving and the length is the speed it&amp;rsquo;s moving in some unit per-second. Here I&amp;rsquo;ll use centimeters per-second because go stones are small.&lt;/p&gt;
+&lt;p&gt;For example, if we the stone to move to the right at a rate of 5 centimeters per-second then the velocity vector is (5,0,0).&lt;/p&gt;
+&lt;p&gt;To make the stone move, all we have to do is add the velocity to the position once per-second:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;While this works, it&amp;rsquo;s not particularly exciting. We&amp;rsquo;d like the stone to move much more smoothly. Instead of updating once per-second, let&amp;rsquo;s update 60 times per-second or 60 fps (frames per-second). Rather than taking one big step, we&amp;rsquo;ll take 60 smaller steps per-second, each step being 1/60 of the velocity.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;You can generalize this to any framerate with the concept of delta time or &amp;ldquo;dt&amp;rdquo;. To calculate delta time invert frames per second: dt = 1/fps and you have the amount of time per-frame in seconds. Next, multiply velocity by delta time and you have the change in position per-frame.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    const float fps = 60.0f;
+    const float dt = 1 / fps;
+    while ( !quit )
+    {
+        stone.rigidBody.position += stone.rigidBody.velocity * dt;
+        RenderStone( stone );
+        UpdateDisplay();
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is actually a very simple type of &lt;a href=&#34;https://en.wikipedia.org/wiki/Euler_method&#34;&gt;numerical integration&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;gravitational-acceleration&#34;&gt;Gravitational Acceleration&lt;/h2&gt;
+&lt;p&gt;Next we want to add gravity.&lt;/p&gt;
+&lt;p&gt;To do this we need to change velocity each frame by some amount downwards due to gravity. Change in velocity is known as acceleration. Gravity provides a constant acceleration of 9.8 meters per-second, per-second, or in our case, 98 centimeters per-second, per-second because we&amp;rsquo;re working in centimeters.&lt;/p&gt;
+&lt;p&gt;Acceleration due to gravity is also a vector. Since gravity pulls objects down, the acceleration vector is (0,-98,0). Remember, +y axis is up, so -y is down.&lt;/p&gt;
+&lt;p&gt;So how much does gravity accelerate the go stone in 1/60th of a second? Well, 98 * 1/60 = 1.633&amp;hellip; Hey wait. This is exactly what we did with velocity to get position!&lt;/p&gt;
+&lt;p&gt;Yes it is. It&amp;rsquo;s exactly the same. Acceleration integrates to velocity just like velocity integrates to position. And both are multiplied by dt to find the amount to add per-frame, where dt = 1/fps.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s the code:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    float gravity = 9.8f * 10;
+    float fps = 60.0f;
+    float dt = 1 / fps;
+    while ( !quit )
+    {
+        stone.rigidBody.velocity += vec3f( 0, -gravity, 0 ) * dt;
+        stone.rigidBody.position += stone.rigidBody.velocity * dt;
+        RenderStone( stone );
+        UpdateDisplay();
+    }    
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And here&amp;rsquo;s the result:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;As you can see, now that we&amp;rsquo;ve added acceleration due to gravity the go stone moves in a parabola just like it does in the real world when it&amp;rsquo;s thrown.&lt;/p&gt;
+&lt;h2 id=&#34;angular-motion&#34;&gt;Angular Motion&lt;/h2&gt;
+&lt;p&gt;Now let&amp;rsquo;s make the stone rotate!&lt;/p&gt;
+&lt;p&gt;First we have to define how we represent the orientation of the stone. For this we&amp;rsquo;ll use a &lt;!-- raw HTML omitted --&gt;quaternion&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;Next we need the angular equivalent of velocity known as&amp;hellip; wait for it&amp;hellip; angular velocity. This too is a vector aka a direction and a length. It&amp;rsquo;s direction is the axis of rotation and the length is the rate of rotation in radians per-second. One full rotation is 2&lt;em&gt;pi radians or 360 degrees so if the length of the angular velocity vector is 2&lt;/em&gt;pi the object rotates around the axis once per-second.&lt;/p&gt;
+&lt;p&gt;Because we&amp;rsquo;re using a left handed coordinate system the direction of rotation is clockwise about the positive axis. You can remember this by sticking your thumb of your left hand in the direction of the axis of rotation and curling your fingers. The direction your fingers curl is the direction of rotation. Notice if you do the same thing with your right hand the rotation is the other way.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;How do we integrate orientation from angular velocity? Orientation is a quaternion and angular velocity is a vector. We can&amp;rsquo;t just add them together.&lt;/p&gt;
+&lt;p&gt;The solution requires a reasonably solid understanding of quaternion math and how it relates to complex numbers. Long story short, we need to convert our angular velocity into a quaternion form and then we can integrate that just like we integrate any other vector. For a full derivation of this result please refer to &lt;!-- raw HTML omitted --&gt;this excellent article&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;Here is the code I use to convert angular velocity into quaternion form:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    inline quat4f AngularVelocityToSpin( quat4f orientation, vec3f angularVelocity )
+    {
+        const float x = angularVelocity.x();
+        const float y = angularVelocity.y();
+        const float z = angularVelocity.z();
+        return 0.5f * quat4f( 0, x, y, z ) * 
+            orientation;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And once I have this spin quaternion, I can integrate it to find the change in the orientation quaternion just like any other vector.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    const float fps = 60.0f;
+    const float dt = 1 / fps;
+    while ( !quit )
+    {
+        quat4f spin = AngularVelocityToSpin( 
+            stone.rigidBody.orientation, 
+            stone.rigidBody.angularVelocity );
+        stone.rigidBody.orientation += spin * iteration_dt;
+        stone.rigidBody.orientation = normalize( stone.rigidBody.orientation );
+        RenderStone( stone );
+        UpdateDisplay();
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The only difference is that after integration I renormalize the quaternion to ensure it doesn&amp;rsquo;t drift from unit length, otherwise it stops representing a rotation.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Yep. That go stone is definitely rotating.&lt;/p&gt;
+&lt;h2 id=&#34;why-quaternions&#34;&gt;Why Quaternions?&lt;/h2&gt;
+&lt;p&gt;Graphics cards typically represent rotations with matrices, so why are we using quaternions when calculating physics instead of 4x4 matrices? Aren&amp;rsquo;t we bucking the trend a bit here?&lt;/p&gt;
+&lt;p&gt;Not really. There are many good reasons to work with quaternions:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;It&amp;rsquo;s easier to integrate angular velocity using a quaternion than a 3x3 matrix&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Normalizing a quaternion is faster than orthonormalizing a 3x3 matrix&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;It&amp;rsquo;s really easy to interpolate between two quaternions&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;We&amp;rsquo;ll still use matrices but as a secondary quantity. This means that each frame after we integrate we convert the quaternion into a 3x3 rotation matrix and combine it with the position into a 4x4 rigid body matrix and its inverse like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    mat4f RigidBodyMatrix( vec3f position, 
+                           quat4f rotation )
+    {
+        mat4f matrix;
+        rotation.toMatrix( matrix );
+        matrix.value.w = simd4f_create( position.x(), 
+                                        position.y(), 
+                                        position.z(), 
+                                        1 );
+        return matrix;
+    }
+
+    mat4f RigidBodyInverse( const mat4f &amp;amp; matrix )
+    {
+        mat4f inverse = matrix;
+        vec4f translation = matrix.value.w;
+        inverse.value.w = simd4f_create(0,0,0,1);
+        simd4x4f_transpose_inplace( &amp;amp;inverse.value );
+        vec4f x = matrix.value.x;
+        vec4f y = matrix.value.y;
+        vec4f z = matrix.value.z;
+        inverse.value.w = 
+            simd4f_create( -dot( x, translation ),
+                           -dot( y, translation ),
+                           -dot( z, translation ),
+                           1.0f );
+        return inverse;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now whenever we transform vectors want to go in/out of stone body space we&amp;rsquo;ll use this matrix and its inverse. It&amp;rsquo;s the best of both worlds.&lt;/p&gt;
+&lt;h2 id=&#34;bringing-it-all-together&#34;&gt;Bringing It All Together&lt;/h2&gt;
+&lt;p&gt;The best thing about rigid body motion is that you can calculate linear and angular motion separately and combine them together and it just works.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s the final code with linear and angular motion combined:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;const float gravity = 9.8f * 10;
+const float fps = 60.0f;
+const float dt = 1 / fps;
+
+while ( !quit )
+{
+    stone.rigidBody.velocity += vec3f( 0, -gravity, 0 ) * dt;
+
+    stone.rigidBody.position += stone.rigidBody.velocity * dt;
+
+    quat4f spin = 
+        AngularVelocityToSpin( 
+            stone.rigidBody.orientation, 
+            stone.rigidBody.angularVelocity );
+
+    stone.rigidBody.orientation += spin * dt;
+    stone.rigidBody.orientation = normalize( stone.rigidBody.orientation );
+
+    RenderStone( stone );
+
+    UpdateDisplay();
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And here is the end result:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;I think this is fairly convincing. The go stone is moving quite realistically!&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/go_stone_vs_go_board/&#34;&gt;Go Stone vs. Go Board&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Tessellating The Go Stone</title>
+      <link>http://127.0.0.1:1313/post/tessellating_the_go_stone/</link>
+      <pubDate>Wed, 20 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/tessellating_the_go_stone/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;In this article we want to draw the go stone using &lt;!-- raw HTML omitted --&gt;OpenGL&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;Unfortunately we can&amp;rsquo;t just tell the graphics card, &amp;ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r&lt;!-- raw HTML omitted --&gt;1&lt;!-- raw HTML omitted --&gt; and r&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;!&amp;rdquo;, because modern 3D graphics cards work by drawing triangles. We have to take our mathematical definition of the go stone and turn it into a set of triangles that the graphics card can render.&lt;/p&gt;
+&lt;p&gt;This is called tessellation and there are several different ways to do it.&lt;/p&gt;
+&lt;h2 id=&#34;longitude-and-lattitude&#34;&gt;Longitude And Lattitude&lt;/h2&gt;
+&lt;p&gt;The first way that I tried was to consider sphere rendering like a globe with longitude/latitude. I started with a ring around the &amp;lsquo;equator&amp;rsquo; of the go stone, stepping these rings up to the top of the sphere like the north pole on a globe.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Unfortunately, just like longitude/latitude on a globe, tessellating this way leads to very distorted mapping around the pole and a lot of wasted triangles:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;h2 id=&#34;triangle-subdivision&#34;&gt;Triangle Subdivision&lt;/h2&gt;
+&lt;p&gt;The next method is triangle subdivision. You start with an approximate shape then subdivide each triangle into four smaller triangles recursively like this:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Since the go stone only needs the top 1/3 or 1/4 of a sphere, I didn&amp;rsquo;t want to subdivide a whole sphere only to throw most of it away. So I designed my own subdivision algorithm to generate only the top section of a sphere.&lt;/p&gt;
+&lt;p&gt;After some trial and error I found that a pentagon plus a center vertex at the pole of the sphere was a good initial generator that minimized the distortion that occurs during subdivision. The only tricky part is that when subdividing you need to keep track of whether the edge is a sphere edge or a circle edge, as the subdivided vertex must be projected differently.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;With this technique I was able to generate a much more efficient tessellation:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;h2 id=&#34;tessellating-the-bevel&#34;&gt;Tessellating The Bevel&lt;/h2&gt;
+&lt;p&gt;Now we need to tesselate the bevel. To do this I take the vertices which form the circle edge at the bottom of the top sphere surface and calculate the angle of each vertex about the y axis. I then use these angles to sweep around the torus ensuring that the torus vertices weld perfectly with the top and bottom sphere sections.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;h2 id=&#34;vertex-welding&#34;&gt;Vertex Welding&lt;/h2&gt;
+&lt;p&gt;Due to how recursive subdivision works a lot of duplicate vertices are generated.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;d rather not have the graphics card waste time transforming the same vertex over and over, so as I add vertices to the mesh I hash vertex positions into a 3D grid (~1mm cells) and reuse an existing vertex if the position and normals match within some small epsilon value.&lt;/p&gt;
+&lt;p&gt;With vertex welding the reduction in vertices is dramatic: 53000 to just 6500.&lt;/p&gt;
+&lt;p&gt;For more information on vertex welding please refer to the discussion in &lt;!-- raw HTML omitted --&gt;Real-Time Collision Detection&lt;!-- raw HTML omitted --&gt; by &lt;!-- raw HTML omitted --&gt;Christer Ericson&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/how_the_go_stone_moves/&#34;&gt;How The Go Stone Moves&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Shape of The Go Stone</title>
+      <link>http://127.0.0.1:1313/post/shape_of_the_go_stone/</link>
+      <pubDate>Tue, 19 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/shape_of_the_go_stone/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;If you play Go, you know that a biconvex go stone has an interesting wobble when it&amp;rsquo;s placed on the board. This wobble is a direct consequence of its unique shape.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;d like to reproduce this wobble in Virtual Go, so let&amp;rsquo;s to spend some time studying go stone&amp;rsquo;s shape, so we can capture this wobble and simulate it on a computer :)&lt;/p&gt;
+&lt;h2 id=&#34;slate-and-shell&#34;&gt;Slate And Shell&lt;/h2&gt;
+&lt;p&gt;In Japan, Go stones are traditionally made out of slate and clam shell.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Clam shell stones come in several grades of quality. The highest being yuki or &amp;ldquo;snow&amp;rdquo; grade with fine, regularly spaced lines.&lt;/p&gt;
+&lt;p&gt;Go stones also come in different sizes. In general, the thicker the stone, the more expensive it is, as only a small portion of the clam shell is suitable for making them.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;At first glance the go stone looks like an ellipse, but side-on you can see this is not the case. This shape is called a &lt;em&gt;biconvex solid&lt;/em&gt;. I find this shape interesting because it is the intersection of two spheres.&lt;/p&gt;
+&lt;p&gt;We can study this shape by looking at the intersection of two circles:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;I quickly noticed that by varying the radius of the circles and the distance between their centers, I could generate go stones of different sizes.&lt;/p&gt;
+&lt;p&gt;But when creating a go stone I don&amp;rsquo;t really want it to be parameterized this way.&lt;/p&gt;
+&lt;p&gt;Instead I&amp;rsquo;d like to say, &amp;ldquo;Hey, I would like a stone of this width and height&amp;rdquo; and have a function that calculates the radius of the circles and how far apart they should be to generate that stone.&lt;/p&gt;
+&lt;p&gt;To write this function we first need to do some math:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;First notice that the point Q lies on the generating circle, so the line CQ has length r:&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;todo: obviously I have a bunch of work to get the latex equations ported across to Hugo. I&amp;rsquo;m researching different options&amp;hellip;&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]d + h/2 = r[/latex]
+[latex size=&amp;quot;2&amp;rdquo;]d = r - h/2[/latex]&lt;/p&gt;
+&lt;p&gt;The point P is also on the generating circle so the green line CP has length r as well. Using Pythagoras theorem and substituting for d:&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]r^2 = d^2 + (w/2)^2[/latex]
+[latex size=&amp;quot;2&amp;rdquo;]r^2 = ( r - h/2 )^2 + (w/2)^2[/latex]
+[latex size=&amp;quot;2&amp;rdquo;]r^2 = ( h^2/4 - hr + r^2 ) + w^2/4[/latex]
+[latex size=&amp;quot;2&amp;rdquo;]r^2 = h^2/4 - hr + r^2 + w^2/4[/latex]
+[latex size=&amp;quot;2&amp;rdquo;]0 = h^2/4 - hr + 0 + w^2/4[/latex]
+[latex size=&amp;quot;2&amp;rdquo;]hr = h^2/4 + w^2/4[/latex]
+[latex size=&amp;quot;2&amp;rdquo;]r = ( h^2 + w^2 ) / 4h[/latex]&lt;/p&gt;
+&lt;p&gt;Which gives us everything we need to write the function:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    void calculateBiconvex( float w,  
+                            float h, 
+                            float &amp;amp; r, 
+                            float &amp;amp; d )
+    {
+        r = ( w*w + h*h ) / ( 4*h );
+        d = r - h/2;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now we can mathematically define a go stone parameterized by its width and height. There is just one problem: the edge is very sharp!&lt;/p&gt;
+&lt;p&gt;To make our stone aesthetically pleasing, lets round the edge with a bevel. Otherwise, you might cut yourself virtually when you play with it:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Let&amp;rsquo;s parameterize the bevel by its height b:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;In three dimensions the bevel is actually a torus (donut) around the edge of the go stone. We need to calculate the major and minor radii r&lt;!-- raw HTML omitted --&gt;1&lt;!-- raw HTML omitted --&gt; and r&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt; of the torus as a function of b and the dimensions of the go stone:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The key to solving this is to realize that if the go stone and the bevel are to match perfectly then the tangent of the two circles must be equal at the point P.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;&lt;em&gt;Update&lt;/em&gt;: A few years later and it occurs to me that it would be even more beautiful if the second derivative matched at this intersection as well. Is this possible in general, or must the generating spheres become to ellipses in order to make this happen? I suspect this is the case. Mathematicians who play Go, &lt;a href=&#34;http://127.0.0.1:1313/contact&#34;&gt;let me know your thoughts&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;If the tangent is equal then the normal must be equal as well. This means that the center of the bevel circle lies at the intersection of the line CP and the x axis.&lt;/p&gt;
+&lt;p&gt;We already know C so if we can find the point P then we can find this intersection point. Once we know the intersection point we can find r&lt;!-- raw HTML omitted --&gt;1&lt;!-- raw HTML omitted --&gt; and r&lt;!-- raw HTML omitted --&gt;2&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;Since P is at the start of the bevel:&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]P_y = b/2[/latex]&lt;/p&gt;
+&lt;p&gt;Because P lies on the biconvex circle with center C and radius r we can use the equation of the circle to find x as a function of y:&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]x^2 + y^2 = r^2[/latex]
+[latex size=&amp;quot;2&amp;rdquo;]x = \sqrt{ r^2 - y^2 }[/latex]&lt;/p&gt;
+&lt;p&gt;We need y relative to the circle center C, not in go stone coordinates, so we add d and substitute y&amp;rsquo; for y:&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]y&amp;rsquo; = b/2 + d[/latex]
+[latex size=&amp;quot;2&amp;rdquo;]P_x = \sqrt{ r^2 - ( b/2 + d )^2 }[/latex]&lt;/p&gt;
+&lt;p&gt;We can now find r&lt;!-- raw HTML omitted --&gt;1&lt;!-- raw HTML omitted --&gt; by similar triangles:&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]r_1/P_x = d / ( d + b/2 )[/latex]
+[latex size=&amp;quot;2&amp;rdquo;]r_1 = P_x d / ( d + b/2 )[/latex]&lt;/p&gt;
+&lt;p&gt;and q by Pythagoras theorem:&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]q^2 = d^2 + r_1^2[/latex]
+[latex size=&amp;quot;2&amp;rdquo;]q = \sqrt{ d^2 + r_1^2 }[/latex]&lt;/p&gt;
+&lt;p&gt;Because line CP has length r and substituting for q:&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]q + r_2 = r[/latex]
+[latex size=&amp;quot;2&amp;rdquo;]r_2 = r - q[/latex]
+[latex size=&amp;quot;2&amp;rdquo;]r_2 = r - \sqrt{ d^2 + r_1^2 }[/latex]&lt;/p&gt;
+&lt;p&gt;Now we have everything we need to write the function:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    void calculate_bevel( float r, float d, float b, 
+                          float &amp;amp; r1, float &amp;amp; r2 )
+    {
+        const float y = b/2 + d;
+        const float px = sqrt( r*r - y*y );
+        r1 = px * d / ( d + b/2 ); 
+        r2 = r - sqrt( d*d + r1*r1 );
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now we can calculate the bevel torus to round off any go stone we create as the intersection of two spheres.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/tessellating_the_go_stone&#34;&gt;Tessellating The Go Stone&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Introduction to Virtual Go</title>
+      <link>http://127.0.0.1:1313/post/introduction_to_virtual_go/</link>
+      <pubDate>Mon, 18 Feb 2013 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/introduction_to_virtual_go/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://127.0.0.1:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;I&amp;rsquo;m a professional game programmer with 15 years experience in the game industry. Over the years I&amp;rsquo;ve worked for Irrational Games, Team Bondi, Pandemic Studios, Sony Santa Monica and most recently Respawn Entertainment. During my career I&amp;rsquo;m extremely proud to have worked on such games as &amp;lsquo;Freedom Force&amp;rsquo;, &amp;lsquo;L.A. Noire&amp;rsquo;, &amp;lsquo;Journey&amp;rsquo;, &amp;lsquo;God of War: Ascension&amp;rsquo; and &amp;lsquo;Titanfall&amp;rsquo;.&lt;/p&gt;
+&lt;p&gt;In my spare time I&amp;rsquo;m also an avid player of the board game &lt;a href=&#34;https://en.wikipedia.org/wiki/Go_(game)&#34;&gt;Go&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;A personal project I&amp;rsquo;ve always dreamed of combines the things I love: the game of Go, graphics programming, physics simulation and network programming.&lt;/p&gt;
+&lt;p&gt;The end result I hope to achieve is a beautiful real-time computer rendering of a go board and stones with photorealistic visuals and the laws of physics defining all interactions between the go stones and the board. To Go players reading this, yes, I do aim to reproduce that unique &amp;lsquo;wobble&amp;rsquo; and feel you are familiar with when placing a stone on the board.&lt;/p&gt;
+&lt;p&gt;During the course of this article series I&amp;rsquo;m going to build this project entirely from scratch and include &lt;!-- raw HTML omitted --&gt;you&lt;!-- raw HTML omitted --&gt; in on all the details of building it as a tutorial. I believe in sharing knowledge and my hope is you can follow this project and understand the passion I bring to it and perhaps learn a few things along the way.&lt;/p&gt;
+&lt;p&gt;If you already play Go and want to get right in to the details of building the simulation, I would recommend skipping ahead to the next article in the series: &lt;a href=&#34;http://127.0.0.1:1313/post/shape_of_the_go_stone/&#34;&gt;Shape Of The Go Stone&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Otherwise, if you would like a quick introduction to Go, please read on!&lt;/p&gt;
+&lt;h2 id=&#34;the-game-of-go&#34;&gt;The Game of Go&lt;/h2&gt;
+&lt;p&gt;Go is a board game that originated in ancient China.&lt;/p&gt;
+&lt;p&gt;Today it is played worldwide but has a particularly strong following in China, Japan and Korea. It is not particularly well known in the West, although it has featured in popular culture in the movie &amp;ldquo;A Beautiful Mind&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;Go is played on a grid with black and white stones. It is played by two people, each taking turns to place a stone of their color at one of the intersection points on the grid. Once placed on the board, stones do not move.&lt;/p&gt;
+&lt;p&gt;Each stone on the board has a number of liberties equal to the number of lines radiating out from it on the grid. A stone in the middle of the board has four liberties, a stone on the side has three, a stone in the corner has just two.&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;If the opponent is able to surround all the liberties with stones of the opposite color, the stone is removed from the board.&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;When stones of the same color are placed horizontally or vertically next to each other they become logically connected and form a &amp;ldquo;group&amp;rdquo; with its own set of liberties. For example, a group of two stones in the center has 6 liberties, while the same group on the side has only 4.&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;A group may be captured if all of its liberties are blocked with stones of the opposite color. When a group is captured it is removed from the board as a unit.&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;Of course it is not so easy to surround your opponents stones because they get to place stones too :)&lt;/p&gt;
+&lt;p&gt;For example, a single black stone in the center with just one liberty remaining is in a situation known as &amp;ldquo;Atari&amp;rdquo;, but black can escape by extending to form a group of two stones. Now the black group has three liberties and can extend to create more liberties faster than they can be taken away.&lt;/p&gt;
+&lt;p&gt;&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;It follows that it&amp;rsquo;s not really possible to capture all of your opponents stones or for them to capture all of yours. Instead, you must coexist on the board with stones of the other color and find a way to surround more points of territory than your opponent.&lt;/p&gt;
+&lt;p&gt;It sounds simple but as you play Go you&amp;rsquo;ll notice beautiful complexity emerging like a fractal: life and death - stones living even though surrounded, liberty races, seki or &amp;ldquo;dual life&amp;rdquo;, the ladder, ko, the snapback, playing under the stones, the monkey jump, the bamboo joint, the tiger mouth.&lt;/p&gt;
+&lt;p&gt;So many beautiful properties from such simple rules. Truly an amazing game!&lt;/p&gt;
+&lt;p&gt;Please visit &lt;a href=&#34;http://playgo.to/iwtg/en/&#34;&gt;The Interactive Way To Go&lt;/a&gt; if you would like to learn more.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/shape_of_the_go_stone/&#34;&gt;Shape of The Go Stone&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academia 4.3.1">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+Many people will tell you that implementing your own reliable message system on top of UDP is foolish. After all, why reimplement TCP?
+But why limit ourselves to how TCP works? But there are so many different ways to implement reliable-messages and most of them work nothing like TCP!
+So let&rsquo;s get creative and work out how we can implement a reliable message system that&rsquo;s better and more flexible than TCP for real-time games.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="http://127.0.0.1:1313/post/reliable_ordered_messages/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#3f51b5">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academiaons/1.8.6/css/academiaons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Open+Sans|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academia.min.cbfe411b85bcf6c144a15531ef0c8d7b.css">
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="http://127.0.0.1:1313/post/reliable_ordered_messages/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@gafferongames">
+  <meta property="twitter:creator" content="@gafferongames">
+  
+  <meta property="og:site_name" content="Gaffer On Games">
+  <meta property="og:url" content="http://127.0.0.1:1313/post/reliable_ordered_messages/">
+  <meta property="og:title" content="Reliable Ordered Messages | Gaffer On Games">
+  <meta property="og:description" content="Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+Many people will tell you that implementing your own reliable message system on top of UDP is foolish. After all, why reimplement TCP?
+But why limit ourselves to how TCP works? But there are so many different ways to implement reliable-messages and most of them work nothing like TCP!
+So let&rsquo;s get creative and work out how we can implement a reliable message system that&rsquo;s better and more flexible than TCP for real-time games."><meta property="og:image" content="http://127.0.0.1:1313/img/icon-192.png">
+  <meta property="twitter:image" content="http://127.0.0.1:1313/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2016-09-15T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2016-09-15T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Reliable Ordered Messages | Gaffer On Games</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Gaffer On Games</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"><span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Articles</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article py-5" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+    
+    
+    <div class="article-container py-3">
+      <h1 itemprop="name">Reliable Ordered Messages</h1>
+
+      
+
+      
+      
+
+
+
+<meta content="2016-09-15 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2016-09-15 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Sep 15, 2016</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    13 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/building-a-game-network-protocol/">Building a Game Network Protocol</a></span>
+  
+
+  
+    
+
+  
+
+</div>
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+      
+    </div>
+  </div>
+</div>
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      <h2 id="introduction">Introduction</h2>
+<p>Hi, I’m <a href="https://gafferongames.com">Glenn Fiedler</a> and welcome to <strong><a href="/categories/building-a-game-network-protocol/">Building a Game Network Protocol</a></strong>.</p>
+<p>Many people will tell you that implementing your own reliable message system on top of UDP is foolish. After all, why reimplement TCP?</p>
+<p>But why limit ourselves to how TCP works? But there are so many different ways to implement reliable-messages and most of them work <em>nothing</em> like TCP!</p>
+<p>So let&rsquo;s get creative and work out how we can implement a reliable message system that&rsquo;s <em>better</em> and <em>more flexible</em> than TCP for real-time games.</p>
+<h2 id="different-approaches">Different Approaches</h2>
+<p>A common approach to reliability in games is to have two packet types: reliable-ordered and unreliable. You&rsquo;ll see this approach in many network libraries.</p>
+<p>The basic idea is that the library resends reliable packets until they are received by the other side. This is the option that usually ends up looking a bit like TCP-lite for the reliable-packets. It&rsquo;s not that bad, but you can do much better.</p>
+<p>The way I prefer to think of it is that messages are smaller bitpacked elements that know how to serialize themselves. This makes the most sense when the overhead of length prefixing and padding bitpacked messages up to the next byte is undesirable (eg. lots of small messages included in each packet). Sent messages are placed in a queue and each time a packet is sent some of the messages in the send queue are included in the outgoing packet. This way there are no reliable packets that need to be resent. Reliable messages are simply included in outgoing packets until they are received.</p>
+<p>The easiest way to do this is to include all unacked messages in each packet sent. It goes something like this: each message sent has an id that increments each time a message is sent. Each outgoing packet includes the start <em>message id</em> followed by the data for <em>n</em> messages. The receiver continually sends back the most recent received message id to the sender as an ack and only messages newer than the most recent acked message id are included in packets.</p>
+<p>This is simple and easy to implement but if a large burst of packet loss occurs while you are sending messages you get a spike in packet size due to unacked messages.</p>
+<p>You can avoid this by extending the system to have an upper bound on the number of messages included per-packet <em>n</em>. But now if you have a high packet send rate (like 60 packets per-second) you are sending the same message multiple times until you get an ack for that message.</p>
+<p>If your round trip time is 100ms each message will be sent 6 times redundantly before being acked on average. Maybe you really need this amount of redundancy because your messages are extremely time critical, but in most cases, your bandwidth would be better spent on other things.</p>
+<p>The approach I prefer combines packet level acks with a prioritization system that picks the n most important messages to include in each packet. This combines time critical delivery and the ability to send only n messages per-packet, while distributing sends across all messages in the send queue.</p>
+<h2 id="packet-levelacks">Packet Level Acks</h2>
+<p>To implement packet level acks, we add the following packet header:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>These header elements combine to create the ack system: <strong>sequence</strong> is a number that increases with each packet sent, <strong>ack</strong> is the most recent packet sequence number received, and <strong>ack_bits</strong> is a bitfield encoding the set of acked packets.</p>
+<p>If bit <strong>n</strong> is set in <strong>ack_bits</strong>, then <strong>ack - n</strong> is acked. Not only is <strong>ack_bits</strong> a smart encoding that saves bandwidth, it also adds <em>redundancy</em> to combat packet loss. Each ack is sent 32 times. If one packet is lost, there&rsquo;s 31 other packets with the same ack. Statistically speaking, acks are very likely to get through.</p>
+<p>But bursts of packet loss do happen, so it&rsquo;s important to note that:</p>
+<ol>
+<li>
+<p>If you receive an ack for packet n then that packet was <strong>definitely received</strong>.</p>
+</li>
+<li>
+<p>If you don&rsquo;t receive an ack, the packet was <em>most likely</em> not received. But, it might have been, and the ack just didn&rsquo;t get through. <strong>This is extremely rare</strong>.</p>
+</li>
+</ol>
+<p>In my experience it&rsquo;s not necessary to send perfect acks. Building a reliability system on top of a system that very rarely drops acks adds no significant problems. But it does create a challenge for testing this system works under all situations because of the edge cases when acks are dropped.</p>
+<p>So please if you do implement this system yourself, setup a soak test with terrible network conditions to make sure your ack system is working correctly. You&rsquo;ll find such a soak test in the <a href="http://www.patreon.com/gafferongames">example source code</a> for this article, and the open source network libraries <a href="https://github.com/networkprotocol/reliable.io">reliable.io</a> and <a href="http://www.libyojimbo.com">yojimbo</a> which also implement this technique.</p>
+<h2 id="sequence-buffers">Sequence Buffers</h2>
+<p>To implement this ack system we need a data structure on the sender side to track whether a packet has been acked so we can ignore redundant acks (each packet is acked multiple times via <strong>ack_bits</strong>. We also need a data structure on the receiver side to keep track of which packets have been received so we can fill in the <strong>ack_bits</strong> value in the packet header.</p>
+<p>The data structure should have the following properties:</p>
+<ul>
+<li>Constant time insertion (inserts may be <em>random</em>, for example out of order packets&hellip;)</li>
+<li>Constant time query if an entry exists given a packet sequence number</li>
+<li>Constant time access for the data stored for a given packet sequence number</li>
+<li>Constant time removal of entries</li>
+</ul>
+<p>You might be thinking. Oh of course, <em>hash table</em>. But there&rsquo;s a much simpler way:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>As you can see the trick here is a rolling buffer indexed by sequence number:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>This works because we don&rsquo;t care about being destructive to old entries. As the sequence number increases older entries are naturally overwritten as we insert new ones. The sequence_buffer[index] value is used to test if the entry at that index actually corresponds to the sequence number you&rsquo;re looking for. A sequence buffer value of 0xFFFFFFFF indicates an empty entry and naturally returns NULL for any sequence number query without an extra branch.</p>
+<p>When entries are added in order like a send queue, all that needs to be done on insert is to update the sequence buffer value to the new sequence number and overwrite the data at that index:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>Unfortunately, on the receive side packets arrive out of order and some are lost. Under ridiculously high packet loss (99%) I&rsquo;ve seen old sequence buffer entries stick around from before the previous sequence number wrap at 65535 and break my ack logic (leading to false acks and broken reliability where the sender thinks the other side has received something they haven&rsquo;t&hellip;).</p>
+<p>The solution to this problem is to walk between the previous highest insert sequence and the new insert sequence (if it is more recent) and clear those entries in the sequence buffer to 0xFFFFFFFF. Now in the common case, insert is <em>very close</em> to constant time, but worst case is linear where n is the number of sequence entries between the previous highest insert sequence and the current insert sequence.</p>
+<p>Before we move on I would like to note that you can do much more with this data structure than just acks. For example, you could extend the per-packet data to include time sent:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>With this information you can create your own estimate of round trip time by comparing send time to current time when packets are acked and taking an <a href="https://en.wikipedia.org/wiki/Exponential_smoothing">exponentially smoothed moving average</a>. You can even look at packets in the sent packet sequence buffer older than your RTT estimate (you should have received an ack for them by now&hellip;) to create your own packet loss estimate.</p>
+<h2 id="ack-algorithm">Ack Algorithm</h2>
+<p>Now that we have the data structures and packet header, here is the algorithm for implementing packet level acks:</p>
+<p><strong>On packet send:</strong></p>
+<ol>
+<li>
+<p>Insert an entry for for the current send packet sequence number in the sent packet sequence buffer with data indicating that it hasn&rsquo;t been acked yet</p>
+</li>
+<li>
+<p>Generate <strong>ack</strong> and <strong>ack_bits</strong> from the contents of the local received packet sequence buffer and the most recent received packet sequence number</p>
+</li>
+<li>
+<p>Fill the packet header with <strong>sequence</strong>, <strong>ack</strong> and <strong>ack_bits</strong></p>
+</li>
+<li>
+<p>Send the packet and increment the send packet sequence number</p>
+</li>
+</ol>
+<p><strong>On packet receive:</strong></p>
+<ol>
+<li>
+<p>Read in <strong>sequence</strong> from the packet header</p>
+</li>
+<li>
+<p>If <strong>sequence</strong> is more recent than the previous most recent received packet sequence number, update the most recent received packet sequence number</p>
+</li>
+<li>
+<p>Insert an entry for this packet in the received packet sequence buffer</p>
+</li>
+<li>
+<p>Decode the set of acked packet sequence numbers from <strong>ack</strong> and <strong>ack_bits</strong> in the packet header.</p>
+</li>
+<li>
+<p>Iterate across all acked packet sequence numbers and for any packet that is not already acked call <strong>OnPacketAcked</strong>( uint16_t sequence ) and mark that packet as <em>acked</em> in the sent packet sequence buffer.</p>
+</li>
+</ol>
+<p>Importantly this algorithm is done on both sides so if you have a client and a server then each side of the connection runs the same logic, maintaining its own sequence number for sent packets, tracking most recent received packet sequence # from the other side and a sequence buffer of received packets from which it generates <strong>sequence</strong>, <strong>ack</strong> and <strong>ack_bits</strong> to send to the other side.</p>
+<p>And that&rsquo;s really all there is to it. Now you have a callback when a packet is received by the other side: <strong>OnPacketAcked</strong>. The main benefit of this ack system is now that you know which packets were received, you can build <em>any</em> reliability system you want on top. It&rsquo;s not limited to just reliable-ordered messages. For example, you could use it to implement delta encoding on a per-object basis.</p>
+<h2 id="message-objects">Message Objects</h2>
+<p>Messages are small objects (smaller than packet size, so that many will fit in a typical packet) that know how to serialize themselves. In my system they perform serialization using a <a href="http://gafferongames.com/building-a-game-network-protocol/serialization-strategies">unified serialize function</a>unified serialize function.</p>
+<p>The serialize function is templated so you write it once and it handles read, write and <em>measure</em>.</p>
+<p>Yes. Measure. One of my favorite tricks is to have a dummy stream class called <strong>MeasureStream</strong> that doesn&rsquo;t do any actual serialization but just measures the number of bits that <em>would</em> be written if you called the serialize function. This is particularly useful for working out which messages are going to fit into your packet, especially when messages themselves can have arbitrarily complex serialize functions.</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>The trick here is to bridge the unified templated serialize function (so you only have to write it once) to virtual serialize methods by calling into it from virtual functions per-stream type. I usually wrap this boilerplate with a macro, but it&rsquo;s expanded in the code above so you can see what&rsquo;s going on.</p>
+<p>Now when you have a base message pointer you can do this and it <em>just works</em>:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>An alternative if you know the full set of messages at compile time is to implement a big switch statement on message type casting to the correct message type before calling into the serialize function for each type. I&rsquo;ve done this in the past on console platform implementations of this message system (eg. PS3 SPUs) but for applications today (2016) the overhead of virtual functions is neglible.</p>
+<p>Messages derive from a base class that provides a common interface such as serialization, querying the type of a message and reference counting. Reference counting is necessary because messages are passed around by pointer and stored not only in the message send queue until acked, but also in outgoing packets which are themselves C++ structs.</p>
+<p>This is a strategy to avoid copying data by passing both messages and packets around by pointer. Somewhere else (ideally on a separate thread) packets and the messages inside them are serialized to a buffer. Eventually, when no references to a message exist in the message send queue (the message is acked) and no packets including that message remain in the packet send queue, the message is destroyed.</p>
+<p>We also need a way to create messages. I do this with a message factory class with a virtual function overriden to create a message by type. It&rsquo;s good if the packet factory also knows the total number of message types, so we can serialize a message type over the network with tight bounds and discard malicious packets with message type values outside of the valid range:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>Again, this is boilerplate and is usually wrapped by macros, but underneath this is what&rsquo;s going on.</p>
+<h2 id="reliable-ordered-message-algorithm">Reliable Ordered Message Algorithm</h2>
+<p>The algorithm for sending reliable-ordered messages is as follows:</p>
+<p><strong>On message send:</strong></p>
+<ol>
+<li>
+<p>Measure how many bits the message serializes to using the measure stream</p>
+</li>
+<li>
+<p>Insert the message pointer and the # of bits it serializes to into a sequence buffer indexed by message id. Set the time that message has last been sent to -1</p>
+</li>
+<li>
+<p>Increment the send message id</p>
+</li>
+</ol>
+<p><strong>On packet send:</strong></p>
+<ol>
+<li>
+<p>Walk across the set of messages in the send message sequence buffer between the oldest unacked message id and the most recent inserted message id from left -&gt; right (increasing message id order).</p>
+</li>
+<li>
+<p>Never send a message id that the receiver can&rsquo;t buffer or you&rsquo;ll break message acks (since that message won&rsquo;t be buffered, but the packet containing it will be acked, the sender thinks the message has been received, and will not resend it). This means you must <em>never</em> send a message id equal to or more recent than the oldest unacked message id plus the size of the message receive buffer.</p>
+</li>
+<li>
+<p>For any message that hasn&rsquo;t been sent in the last 0.1 seconds <em>and</em> fits in the available space we have left in the packet, add it to the list of messages to send. Messages on the left (older messages) naturally have priority due to the iteration order.</p>
+</li>
+<li>
+<p>Include the messages in the outgoing packet and add a reference to each message. Make sure the packet destructor decrements the ref count for each message.</p>
+</li>
+<li>
+<p>Store the number of messages in the packet <strong>n</strong> and the array of message ids included in the packet in a sequence buffer indexed by the outgoing packet sequence number so they can be used to map packet level acks to the set of messages included in that packet.</p>
+</li>
+<li>
+<p>Add the packet to the packet send queue.</p>
+</li>
+</ol>
+<p><strong>On packet receive:</strong></p>
+<ol>
+<li>
+<p>Walk across the set of messages included in the packet and insert them in the receive message sequence buffer indexed by their message id.</p>
+</li>
+<li>
+<p>The ack system automatically acks the packet sequence number we just received.</p>
+</li>
+</ol>
+<p><strong>On packet ack:</strong></p>
+<ol>
+<li>
+<p>Look up the set of messages ids included in the packet by sequence number.</p>
+</li>
+<li>
+<p>Remove those messages from the message send queue if they exist and decrease their ref count.</p>
+</li>
+<li>
+<p>Update the last unacked message id by walking forward from the previous unacked message id in the send message sequence buffer until a valid message entry is found, or you reach the current send message id. Whichever comes first.</p>
+</li>
+</ol>
+<p><strong>On message receive:</strong></p>
+<ol>
+<li>
+<p>Check the receive message sequence buffer to see if a message exists for the current receive message id.</p>
+</li>
+<li>
+<p>If the message exists, remove it from the receive message sequence buffer, increment the receive message id and return a pointer to the message.</p>
+</li>
+<li>
+<p>Otherwise, no message is available to receive. Return <strong>NULL</strong>.</p>
+</li>
+</ol>
+<p>In short, messages keep getting included in packets until a packet containing that message is acked. We use a data structure on the sender side to map packet sequence numbers to the set of message ids to ack. Messages are removed from the send queue when they are acked. On the receive side, messages arriving out of order are stored in a sequence buffer indexed by message id, which lets us receive them in the order they were sent.</p>
+<h2 id="the-end-result">The End Result</h2>
+<p>This provides the user with an interface that looks something like this on send:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>And on the receive side:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>Which is flexible enough to implement whatever you like on top of it.</p>
+<p><strong>NEXT ARTICLE</strong>: <a href="/post/client_server_connection/">Client Server Connection</a></p>
+<hr>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+
+    </div>
+
+    
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/networking/">networking</a>
+  
+</div>
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+  
+  
+
+
+
+
+
+  
+  
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/authors/"></a></h5>
+      
+      
+      <ul class="network-icon" aria-hidden="true">
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+      <div class="article-widget">
+        <div class="hr-light"></div>
+        <h3>Related</h3>
+        <ul>
+          
+          <li><a href="/post/sending_large_blocks_of_data/">Sending Large Blocks of Data</a></li>
+          
+          <li><a href="/post/packet_fragmentation_and_reassembly/">Packet Fragmentation and Reassembly</a></li>
+          
+          <li><a href="/post/serialization_strategies/">Serialization Strategies</a></li>
+          
+          <li><a href="/post/reading_and_writing_packets/">Reading and Writing Packets</a></li>
+          
+          <li><a href="/post/state_synchronization/">State Synchronization</a></li>
+          
+        </ul>
+      </div>
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="/js/academia.min.281fa180ccfa1769ea3c7dd430814861.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        
+        <p>
+          Copyright © Glenn Fiedler, 2004 - 2019 
+        </p>
+      </div>
+      <div class="col-md-6">
+        <ul class="list-inline network-icon text-right">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://twitter.com/Twitter" target="_blank" rel="noopener" title="DM Me"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

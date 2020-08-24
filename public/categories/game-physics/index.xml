@@ -1,0 +1,734 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Game Physics on Gaffer On Games</title>
+    <link>http://127.0.0.1:1313/categories/game-physics/</link>
+    <description>Recent content in Game Physics on Gaffer On Games</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2019</copyright>
+    <lastBuildDate>Sat, 04 Sep 2004 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="http://127.0.0.1:1313/categories/game-physics/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Networked Physics (2004)</title>
+      <link>http://127.0.0.1:1313/post/networked_physics_2004/</link>
+      <pubDate>Sat, 04 Sep 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/networked_physics_2004/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/spring_physics&#34;&gt;previous article&lt;/a&gt; we discussed how to use spring-like forces to model basic collision response, joints and motors.&lt;/p&gt;
+&lt;p&gt;In this article we&amp;rsquo;re going to discuss how to network a physics simulation.&lt;/p&gt;
+&lt;h2 id=&#34;first-person-shooters&#34;&gt;First Person Shooters&lt;/h2&gt;
+&lt;p&gt;First person shooter physics are usually very simple. The world is static and players are limited to running around and jumping and shooting.&lt;/p&gt;
+&lt;p&gt;Because of cheating, first person shooters typically operate on a client-server model where the server is authoritative over physics. This means that the true physics simulation runs on the server and the clients display an approximation of the server physics to the player.&lt;/p&gt;
+&lt;p&gt;The problem then is how to allow each client to control his own character while displaying a reasonable approximation of the motion of the other players.&lt;/p&gt;
+&lt;p&gt;In order to do this elegantly and simply, we structure the physics simulation as follows:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Character physics are completely driven from input data.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Physics state is fully encapsulated in a state structure.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;To do this we need to gather all the user input that drives the physics simulation into a single structure and the state representing each player character into another.&lt;/p&gt;
+&lt;p&gt;Here is an example from a simple run and jump shooter:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Next we need to make sure that the simulation gives the same result given the same initial state and inputs over time. Or at least, that the results are as close as possible. I&amp;rsquo;m not talking about perfect floating point determinism here, just a reasonable 1/2 second prediction giving approximately the same result.&lt;/p&gt;
+&lt;h2 id=&#34;network-fundamentals&#34;&gt;Network Fundamentals&lt;/h2&gt;
+&lt;p&gt;I will briefly discuss actually networking issues in this section before moving on to the important information of what to send over the pipe. It is after all just a pipe after all, networking is nothing special right? Beware! Ignorance of how the pipe works will really bite you. Here are the two networking fundamentals that you absolutely need to know:&lt;/p&gt;
+&lt;p&gt;Number one. If your network programmer is any good at all he will use UDP, which is an unreliable data protocol, and build some sort of application specific networking layer on top of this. The important thing that you as the physics programmer need to know is that you absolutely must design your physics communication over the network so that you can receive the most recent input and state without waiting for lost packets to be resent. This is important because otherwise your physics simulation will stall out under bad networking conditions.&lt;/p&gt;
+&lt;p&gt;Two. You will be very limited in what can be sent across the network due to bandwidth limitations. Compression is a fact of life when sending data across the network. As physics programmer you need to be very careful what data is compressed and how it is done. For the sake of determinism, some data must not be compressed, while other data is safe. Any data that is compressed in a lossy fashion should have the same quantization applied locally where possible, so that the result is the same on both machines. Bottom line you&amp;rsquo;ll need to be involved in this compression in order to make it as efficient as possible without breaking your simulation.&lt;/p&gt;
+&lt;h2 id=&#34;physics-runs-on-the-server&#34;&gt;Physics Runs On The Server&lt;/h2&gt;
+&lt;p&gt;The fundamental primitive we will use when sending data between the client and the server is an unreliable data block, or if you prefer, an unreliable non-blocking remote procedure call (rpc). Non-blocking means that the client sends the rpc to the server then continues immediately executing other code, it does not wait for the rpc to execute on the server! Unreliable means that if you call the rpc is continuously on the the server from a client, some of these calls will not reach the server, and others will arrive in a different order than they were called. We design our communications around this primitive because it suits the transport layer (UDP).&lt;/p&gt;
+&lt;p&gt;The communication between the client and the server is then structured as what I call a &amp;ldquo;stream of input&amp;rdquo; sent via repeated rpc calls. The key to making this input stream tolerant of packet loss and out of order delivery is the inclusion of a floating point time in seconds value with every input rpc sent. The server keeps track of the current time on the server and ignores any input received with a time value less than the current time. This effectively drops any input that is received out of order. Lost packets are ignored.&lt;/p&gt;
+&lt;p&gt;Thinking in terms of our standard first person shooter, the input we send from client to server is the input structure that we defined earlier:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Thats the bare minimum data required for sending a simple ground based movement plus jumping across the network. If you are going to allow your clients to shoot you&amp;rsquo;ll need to add mouse input as part of the input structure as well because weapon firing needs to be done server side.&lt;/p&gt;
+&lt;p&gt;Notice how I define the rpc as a method inside an object? I assume your network programmer has a channel structure built on top of UDP, eg. some way to indicate that a certain rpc call is directed as a specific object instance on the remote machine.&lt;/p&gt;
+&lt;p&gt;So how does the server process these rpc calls? It basically sits in a loop waiting for input from each of the clients. Each character object has its physics advanced ahead in time individually as input rpcs are received from the client that owns it. This means that the physics state of different client characters are slightly out of phase on the server, some clients being a little bit ahead and others a little bit behind in time. Overall however, the different client characters advance ahead roughly in sync with each other.&lt;/p&gt;
+&lt;p&gt;Lets see how this rpc call is implemented in code on the server:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The key to the code above is that by advancing the server physics simulation for the client character is performed only as we receive input from that client. This makes sure that the simulation is tolerant of random delays and jitter when sending the input rpc across the network.&lt;/p&gt;
+&lt;h2 id=&#34;clients-approximate-physics-locally&#34;&gt;Clients Approximate Physics Locally&lt;/h2&gt;
+&lt;p&gt;Now for the communication from the server back to the clients. This is where the bulk of the server bandwidth kicks in because the information needs to be broadcast to all the clients.&lt;/p&gt;
+&lt;p&gt;What happens now is that after every physics update on the server that occurs in response to an input rpc from a client, the server broadcasts out the physics state at the end of that physics update and the current input just received from the rpc.&lt;/p&gt;
+&lt;p&gt;This is sent to all clients in the form of an unreliable rpc:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;What is being done here is this: if the two positions are significantly different (&amp;gt;2m apart) just snap to the corrected position, otherwise if the distance between the server position and the current position on the client is more than 10cms, move 10% of the distance between the current position and the correct position. Otherwise do nothing.&lt;/p&gt;
+&lt;p&gt;Since server update rpcs are being broadcast continually from the server to the the clients, moving only a fraction towards the snap position has the effect of smoothing the correction out with what is called an exponentially smoothed moving average.&lt;/p&gt;
+&lt;p&gt;This trades a bit of extra latency for smoothness because only moving some percent towards the snapped position means that the position will be a bit behind where it should really be. You don&amp;rsquo;t get anything for free. I recommend that you perform this smoothing for immediate quantities such as position and orientation, while directly snapping derivative quantities such as velocity, angular velocity because the effect of abruptly changing derivative quantities is not as noticeable.&lt;/p&gt;
+&lt;p&gt;Of course, these are just rules of thumb. Make sure you experiment to find out what works best for your simulation.&lt;/p&gt;
+&lt;h2 id=&#34;client-side-prediction&#34;&gt;Client-Side Prediction&lt;/h2&gt;
+&lt;p&gt;So far we have a developed a solution for driving the physics on the server from client input, then broadcasting the physics to each of the clients so they can maintain a local approximation of the physics on the server. This works perfectly however it has one major disadvantage. Latency!&lt;/p&gt;
+&lt;p&gt;When the user holds down the forward input it is only when that input makes a round trip to the server and back to the client that the client&amp;rsquo;s character starts moving forward locally. Those who remember the original Quake netcode would be familiar with this effect. The solution to this problem was discovered and first applied in the followup QuakeWorld and is called client side prediction. This technique completely eliminates movement lag for the client and has since become a standard technique used in first person shooter netcode.&lt;/p&gt;
+&lt;p&gt;Client side prediction works by predicting physics ahead locally using the player&amp;rsquo;s input, simulating ahead without waiting for the server round trip. The server periodically sends corrections to the client which are required to ensure that the client stays in sync with the server physics. At all times the server is authoritative over the physics of the character so even if the client attempts to cheat all they are doing is fooling themselves locally while the server physics remains unaffected. Seeing as all game logic runs on the server according to server physics state, client side movement cheating is basically eliminated.&lt;/p&gt;
+&lt;p&gt;The most complicated part of client side prediction is handling the correction from the server. This is difficult, because the corrections from the server arrive &lt;em&gt;in the past&lt;/em&gt; due to client/server communication latency. We need to apply this correction in the past, then calculate the resulting corrected position at present time on the client.&lt;/p&gt;
+&lt;p&gt;The standard technique to do this is to store a circular buffer of saved moves on the client where each move in the buffer corresponds to an input rpc call sent from the client to the server:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;When the client receives a correction it looks through the saved move buffer to compare its physics state at that time with the corrected physics state sent from the server. If the two physics states differ above some threshold then the client rewinds to the corrected physics state and time and replays the stored moves starting from the corrected state in the past, the result of this re-simulation being the corrected physics state at the current time on the client.&lt;/p&gt;
+&lt;p&gt;Sometimes packet loss or out of order delivery occurs and the server input differs from that stored on the client. In this case the server snaps the client to the correct position automatically via rewind and replay. This snapping is quite noticeable to the player, so we reduce it with the same smoothing technique we used above for the other player characters. This smoothing is done &lt;!-- raw HTML omitted --&gt;after&lt;!-- raw HTML omitted --&gt; recalculating the corrected position via rewind and replay.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;We can easily apply the client side prediction techniques used in first person shooters to network a physics simulation, but only if there is a clear ownership of objects by clients and these object interact mostly with a static world.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Spring Physics</title>
+      <link>http://127.0.0.1:1313/post/spring_physics/</link>
+      <pubDate>Fri, 03 Sep 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/spring_physics/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/physics_in_3d/&#34;&gt;previous article&lt;/a&gt; we discussed how to simulate the motion of rigid bodies in 3D. Now we&amp;rsquo;re going to discuss how to implement spring physics.&lt;/p&gt;
+&lt;p&gt;The physics behind springs is simple but extremely versatile and useful. You can use springs to link points together to model rope and string, cloth, and even blobs of jelly. Springs can also be used to implement basic collision response, and to create joints that constrain the motion of rigid bodies.&lt;/p&gt;
+&lt;p&gt;The more physics programming you do, the more springs pop up. Many physical phenomenon boil down to spring-like forces being applied such as buoyancy in water. Springs are everywhere so lets discover how to simulate them!&lt;/p&gt;
+&lt;h2 id=&#34;spring-and-dampers&#34;&gt;Spring and Dampers&lt;/h2&gt;
+&lt;p&gt;The formula to use for simulating spring-like behavior is called &lt;!-- raw HTML omitted --&gt;Hooke&amp;rsquo;s Law&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Where &lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt; is the vector displacement of the end of the spring from it&amp;rsquo;s equilibrium position,  and k is a constant describing the tightness of the spring. Larger values of k mean that the spring is tighter and will therefore stretch less per unit of force, smaller values mean the spring is looser and will stretch further.&lt;/p&gt;
+&lt;p&gt;Newton&amp;rsquo;s third law says that every force has an equal and opposite force. If two objects a and b are connected together by a spring then the spring will apply one force which pulls object a towards object b, and an equal and opposite force pulling object b towards a. However, if you want to attach one object to a fixed point in space its you can apply the force of the object in one direction. This makes sense if you consider that point as having &lt;!-- raw HTML omitted --&gt;infinite mass&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
+&lt;p&gt;Spring forces alone are not much use though. You need to combine them with dampers to have a realistic simulation. Damping simulates energy loss, and it is used in physics simulations to make sure that springs don&amp;rsquo;t oscillate forever but come to rest over time.&lt;/p&gt;
+&lt;p&gt;A spring-damper system can be modeled as follows:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Where b is the coefficient of damping and &lt;!-- raw HTML omitted --&gt;v&lt;!-- raw HTML omitted --&gt; is the relative velocity between the two points connected by the spring. Larger values for b increase the amount of damping so the object comes to rest more quickly.&lt;/p&gt;
+&lt;h2 id=&#34;variations-on-springs&#34;&gt;Variations on Springs&lt;/h2&gt;
+&lt;p&gt;There are many different variations on spring-damper systems, but what I want to do is explain how to think generally in terms of what the forces are doing so that you can easily design spring and damper systems to achieve whatever effect you want.&lt;/p&gt;
+&lt;p&gt;The first thing is that springs don&amp;rsquo;t only have to act to pull two points together so that they lie on top of each other. For example you can design spring forces that pull together or push apart two points apart so they maintain a desired separation distance from each other:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Where |&lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt;| is the distance between the two points connected to the spring, d is the desired distance of separation, and &lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt; / |&lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt;| is the unit length direction vector between the two points: &lt;!-- raw HTML omitted --&gt;a&lt;!-- raw HTML omitted --&gt; to &lt;!-- raw HTML omitted --&gt;b&lt;!-- raw HTML omitted --&gt;, when applying the force to point &lt;!-- raw HTML omitted --&gt;a&lt;!-- raw HTML omitted --&gt; and vice versa.&lt;/p&gt;
+&lt;p&gt;The overall effect of the force equation above is to have a force which pushes the two points connected by the spring apart if they are closer than distance d, and bring the two points together if they are further than d apart. Notice how the force becomes exactly zero when the two points are at the target distance? If you tune the k and b parameters correctly you can have a nicely behaving spring that quickly brings the two points together smoothly over time and comes to rest at the solution point.&lt;/p&gt;
+&lt;p&gt;But why apply springs to position only? If you want to accelerate a body over time such that it accelerates to a certain speed then you can calculate a spring force proportional to the difference between the current velocity and the target velocity, combined with a damping proportional to the current velocity so that it reaches its target over time instead of cycling about it. This is usually called a motor in physics simulation.&lt;/p&gt;
+&lt;p&gt;We can even apply the same concept to drive the spinning of an object at a certain speed by applying a spring torque proportional to the difference between the current angular velocity and the desired angular velocity, coupled with a damper force proportional to the current angular velocity.&lt;/p&gt;
+&lt;p&gt;Another commonly implemented spring constraint is to enforce a upright orientation of a body, for example, you could apply a spring torque proportional to the difference between the current orientation and an upright orientation, coupled with a damper proportional to angular velocity. Such a constraint is called a &amp;lsquo;stay upright constraint&amp;rsquo; and its often used for sci-fi hover racing games.&lt;/p&gt;
+&lt;p&gt;As you can see, the applications of springs are limitless. The overall pattern is to design spring forces that will attract your physics simulation into the desired state and fade off to zero when this state is has been reached. In order to make sure that your physics objects don&amp;rsquo;t just oscillate around the solution but actually reach it, it is necessary to apply damping proportional to whatever physics state values are performing the evolution of the simulation towards the solution over time.&lt;/p&gt;
+&lt;h2 id=&#34;attachment-using-a-spring&#34;&gt;Attachment using a Spring&lt;/h2&gt;
+&lt;p&gt;So lets get started with an actual concrete implementation of using springs a simulation. The first thing we will implement is an attachment joint that will allow the user to click and drag a point on the cube to move it around. We will implement this by modeling a tight spring attachment between a target point and an attachment point on the body of the cube. This is effectively a ball and socket joint implemented using only spring forces and is implemented using the standard equation we are used to:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Where x is the vector difference between the current target point and the attachment point on the object, and v is the point velocity at the attachment point on the object. The important thing is that this velocity v being the point velocity means that it incorporates both the linear motion of the object plus any velocity at the attachment point due to angular velocity. As was shown in the previous article we can calculate this point velocity at follows:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Where &lt;!-- raw HTML omitted --&gt;p&lt;!-- raw HTML omitted --&gt; is the point on the rigid body and &lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt; is the center of mass of the object. Secondly, this spring and damper force is not just applied linearly, but is applied at the attachment point on the object. This means that the spring force will apply both a linear force and a torque component as follows:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The overall effect of this joint then is to bring the target and attachment points together while damping the motion of the object at the attachment point. This allows the object to move as long as remains still at the attachment. In other words the object is only allowed to move by rotating about the attachment point. Our simple ball and socket joint is now complete.&lt;/p&gt;
+&lt;h2 id=&#34;collision-response-with-springs&#34;&gt;Collision Response with Springs&lt;/h2&gt;
+&lt;p&gt;Next we will implement a basic collision response using springs. The trick here is to apply a spring and damper force that works against what we don&amp;rsquo;t want, eg. objects moving towards each other and penetrating other objects.&lt;/p&gt;
+&lt;p&gt;So we have a collision detected and the usual information is returned to the physics system ready to apply collision response. This information is typically something like:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;A unit length collision normal&lt;/li&gt;
+&lt;li&gt;The penetration depth along the normal&lt;/li&gt;
+&lt;li&gt;The physics state for each of the colliding objects at the time of collision&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;All this information grouped together is called a contact. Processing collision geometry and returning a series of generic contacts is a great idea because it decouples your collision response from the gritty details of collision detection.&lt;/p&gt;
+&lt;p&gt;Once we have all our contact information a simple collision response can be implemented by applying a spring-like force to the colliding objects to keep them apart:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Where k and b are the spring-damper coefficients, &lt;!-- raw HTML omitted --&gt;n&lt;!-- raw HTML omitted --&gt; is the contact normal and &lt;!-- raw HTML omitted --&gt;v&lt;!-- raw HTML omitted --&gt; is the relative velocity between the two objects at the point of collision. Effectively this equation calculates a spring force that pushes out along the contact normal while reducing the relative velocity of the objects towards each other at the contact point.&lt;/p&gt;
+&lt;p&gt;Various different collision responses types can also be achieved using this equation, for example setting b to 0 gives a completely elastic collision response where all energy going into the collision returns in the bounce over time. Setting b to higher value tend to make the collision more inelastic because it removes more energy during the collision. Finally, by increasing and decreasing the spring constant k in concert with b you can make a collision that feels like anything from bouncing off a trampoline (low k and low b), to landing and sinking into quicksand (low k and high b), or landing with a splat on concrete (high k, high b).&lt;/p&gt;
+&lt;h2 id=&#34;the-weakness-of-springs&#34;&gt;The Weakness of Springs&lt;/h2&gt;
+&lt;p&gt;It seems we can achieve a large variety of different collision effects using only springs and easily make joints and constraints. Its not all good news however because springs come with their own set of weaknesses which I will now explain.&lt;/p&gt;
+&lt;p&gt;The first weakness is that its difficult to tune the spring constants to get exactly the effect you want. For example, if you are attempting to model the real world physics of an object, you will need to experiment to find the spring k and b values that match the simulation. These values are usually dependent on other values of your simulation, such as the gravity constant, meaning that if you adjust gravity you&amp;rsquo;ll need to retune your springs to get the same effect.&lt;/p&gt;
+&lt;p&gt;The next problem is that tighter the spring k you use, the more difficult it becomes to solve the differential equation. Using an RK4 integrator sure help with this, but even with RK4 there is a fundamental limit to how large you can make your spring k before your simulation will explode. At this point you need to either decrease your timestep or reduce your spring k.&lt;/p&gt;
+&lt;p&gt;The final, and major weakness is that springs are reactive not predictive. This is a subtle point but a very important one. A joint or constraint implemented using springs only works by correcting errors after they occur, and collision response using springs requires allowing some amount of penetration before it acts to correct it and so forth. More advanced techniques exist which can solve for the forces required to constrain the physics simulation without inducing error, such as LCP solvers or iterative methods, but they are out of scope of this simple article.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/networked_physics_2004/&#34;&gt;Networked Physics (2004)&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Physics in 3D</title>
+      <link>http://127.0.0.1:1313/post/physics_in_3d/</link>
+      <pubDate>Thu, 02 Sep 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/physics_in_3d/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/fix_your_timestep/&#34;&gt;previous article&lt;/a&gt; we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.&lt;/p&gt;
+&lt;p&gt;In this article we are going to simulate motion in three dimensions.&lt;/p&gt;
+&lt;h2 id=&#34;rigid-bodies&#34;&gt;Rigid Bodies&lt;/h2&gt;
+&lt;p&gt;We will concentrate on a type of object called a &lt;strong&gt;rigid body&lt;/strong&gt;. Rigid bodies cannot bend, compress or deform in any way. This makes their motion much easier to calculate.&lt;/p&gt;
+&lt;p&gt;To simulate the motion of rigid bodies, we must study both rigid body kinematics and rigid body dynamics. Kinematics is the study of how an object moves in the absence of forces, while dynamics describes how an object reacts to them. Together they provide all the information you need to simulate the motion of a rigid body in three dimensions.&lt;/p&gt;
+&lt;p&gt;Along the way I will show you how to integrate vector quantities, handle rotations in three dimensions and integrate to find the motion of your object as it moves and spins around the world.&lt;/p&gt;
+&lt;h2 id=&#34;moving-in-the-third-dimension&#34;&gt;Moving in the Third Dimension&lt;/h2&gt;
+&lt;p&gt;As long as we only have single floating point values for position and velocity our physics simulation is limited to motion in a single dimension, and a point moving from side to side on the screen is pretty boring!&lt;/p&gt;
+&lt;p&gt;We want our object to be able to move in three dimensions: left and right, forward and back, up and down. If we apply the equations of motion to each dimension separately, we can integrate each dimension in turn to find the motion of the object in three dimensions.&lt;/p&gt;
+&lt;p&gt;Or&amp;hellip; we could just use vectors.&lt;/p&gt;
+&lt;p&gt;Vectors are a mathematical type representing an array of numbers. A three dimensional vector has three components x, y and z. Each component corresponds to a dimension. In this article x is left and right, y is up and down, and z is forward and back.&lt;/p&gt;
+&lt;p&gt;In C++ we implement vectors using a struct as follows:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Addition of two vectors is defined as adding each component together. Multiplying a vector by a floating point number is the same as just multiplying each component. Lets add overloaded operators to the vector struct so that we can perform these operations in code as if vectors are a native type:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Now instead of maintaining completely seperate equations of motion and integrating seperately for x, y and z, we convert our position, velocity, acceleration and force to vector quantities, then integrate the vectors directly using the equations of motion from the &lt;a href=&#34;http://127.0.0.1:1313/post/integration_basics/&#34;&gt;first article&lt;/a&gt;:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Notice how &lt;!-- raw HTML omitted --&gt;F&lt;!-- raw HTML omitted --&gt;, &lt;!-- raw HTML omitted --&gt;a&lt;!-- raw HTML omitted --&gt;, &lt;!-- raw HTML omitted --&gt;v&lt;!-- raw HTML omitted --&gt; and &lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt; are written in bold. This is the convention used to distinguish vector quantities from single value (scalar) quantities such as mass m and time t.&lt;/p&gt;
+&lt;p&gt;Now that we have the equations of motion in vector form, how do we integrate them? The answer is exactly the same as we integrated single values. This is because we have already added overloaded operators for adding two vectors together, and multiplying a vector by a scalar, and this is all we need to be able to drop in vectors in place of floats and have everything just work.&lt;/p&gt;
+&lt;p&gt;For example, here is a simple Euler integration for vector position from velocity:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Notice how the overloaded operators make it look exactly the same as an Euler integration for a single value. But what is it really doing? Lets take a look at how we would implement vector integration without the overloaded operators:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;As you can see, its exactly the same as if we integrated each component of the vector separately! This is the cool thing about vectors. Whether we integrate vectors directly, or integrate each component separately, we are doing exactly the same thing.&lt;/p&gt;
+&lt;h2 id=&#34;structuring-for-rk4&#34;&gt;Structuring for RK4&lt;/h2&gt;
+&lt;p&gt;In the example programs from previous articles we drove the simulation from acceleration assuming unit mass. This kept the code nice and simple, but from now on every object will have its own mass in kilograms so the simulation needs be driven by forces instead.&lt;/p&gt;
+&lt;p&gt;There are two ways we can do this. First, we can divide force by mass to get acceleration, then integrate this acceleration to get the velocity, and integrate velocity to get position.&lt;/p&gt;
+&lt;p&gt;The second way is to integrate force directly to get momentum, then convert this momentum to velocity by dividing it by mass, then finally integrate velocity to get position. Remember that momentum is just velocity multiplied by mass:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Both methods work, but the second way is more consistent with the way that we must approach rotation later in the article, so we&amp;rsquo;ll use that.&lt;/p&gt;
+&lt;p&gt;When we switch to momentum we need to make sure that the velocity is recalculated after each integration by dividing momentum by mass. Doing this manually everywhere that momentum is changed would be error prone, so we now separate all our state quantities into primary, secondary and constant values, and add a method called &amp;lsquo;recalculate&amp;rsquo; to the State struct which is responsible for updating all the secondary values from the primary ones:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    struct State
+    {
+        // primary
+        Vector position;
+        Vector momentum;
+
+        // secondary
+        Vector velocity;
+
+        // constant
+        float mass;
+        float inverseMass;
+
+        void recalculate()
+        {
+            velocity = momentum * inverseMass;
+        }
+    };
+
+    struct Derivative
+    {
+        Vector velocity;
+        Vector force;
+    };
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If we make sure that recalculate is called whenever any of the primary values change, then our secondary values will always stay in sync. This may seem like overkill just to handle converting momentum to velocity, but as our simulation becomes more complex we will have many more secondary values, so it is important to design a system that handles this.&lt;/p&gt;
+&lt;h2 id=&#34;spinning-around&#34;&gt;Spinning Around&lt;/h2&gt;
+&lt;p&gt;So far we have covered linear motion, we can simulate an rigid body so that it moves in 3D space, but it cannot rotate yet.&lt;/p&gt;
+&lt;p&gt;The good news is that rotational equivalents to force, momentum, velocity, position and mass exist, and once we understand how they work, integration of rotational physics state can be performed using our RK4 integrator.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s start off by talking about how rigid bodies rotate. Because our objects are rigid they cannot deform. This means that we can treat the linear and rotational parts of an object&amp;rsquo;s motion as being entirely separate: a linear component (position, velocity, momentum, mass) and a rotational component rotating about the center of mass.&lt;/p&gt;
+&lt;p&gt;How do we represent how the object is rotating? If you think about it a bit, you&amp;rsquo;ll realize that for a rigid body rotation can only ever be around a single axis, so the first thing we need to know is what that axis is. We can represent this axis with a unit length vector. Next we need to know how fast the object is rotating about this axis in radians per second.&lt;/p&gt;
+&lt;p&gt;If we know the center of mass of the object, the axis of rotation, and the speed of rotation then we have the all the information we need to describe how it is rotating.&lt;/p&gt;
+&lt;p&gt;The standard way of representing rotation over time is by combining the axis and the speed of rotation into a single vector called angular velocity. The length of the angular velocity vector is the speed of rotation in radians while the direction of the vector indicates the axis of rotation. For example, an angular velocity of (2Pi,0,0) indicates a rotation about the x axis doing one revolution per second.&lt;/p&gt;
+&lt;p&gt;But what direction is this rotation in? In the example source code I use a right handed coordinate system which is standard when using OpenGL. To find the direction of rotation just take your right hand and point your thumb down the axis, your fingers curl in the direction of rotation. If your 3D engine uses a left handed coordinate system then just use your left hand instead.&lt;/p&gt;
+&lt;p&gt;Why do we combine the axis and rate of rotation into a single vector? Doing so gives us a single vector quantity that is easy to manipulate just like velocity for linear motion. We can easily add and subtract changes to angular velocity to change how the object is rotating just like we can add and subtract from linear velocity. If we stuck with a unit length vector and scalar for rotation speed then it would be much more complicated to apply these changes.&lt;/p&gt;
+&lt;p&gt;But there is one very important difference between linear and angular velocity. Unlike linear velocity, there is no guarantee that angular velocity will remain constant over time in the absence of forces. In other words, angular momentum is conserved while angular velocity is not. This means that we cannot trust angular velocity as a primary value and we need to use angular momentum instead.&lt;/p&gt;
+&lt;h2 id=&#34;angular-momentum-inertia-and-torque&#34;&gt;Angular Momentum, Inertia and Torque&lt;/h2&gt;
+&lt;p&gt;Just as velocity and momentum are related by mass in linear motion, angular velocity and angular momentum are related by a quantity called the rotational inertia. This tensor is a measurement of how much effort it takes to spin an object around an axis. It depends on both the shape of the object and how much it weighs.&lt;/p&gt;
+&lt;p&gt;In the general case, rotational inertia is represented by a 3x3 matrix called an inertia tensor. Here we make a simplifying assumption by discussing physics in the context of simulating a cube. Because of the symmetries of the cube, we only need a single value for the rotational inertia: 1/6 x size^2 x mass, where size is the length of the sides of the cube.&lt;/p&gt;
+&lt;p&gt;Just as we integrate linear momentum from force, we integrate angular momentum directly from the rotational equivalent of force called torque. You can think of torque just like a force, except that when it is applied it induces a rotation around an axis in the direction of torque vector rather than accelerating the object linearly. For example, a torque of (1,0,0) would cause a stationary object to start rotating about the x axis.&lt;/p&gt;
+&lt;p&gt;Once we have angular momentum integrated, we multiply it by the inverse of the rotational inertia to get the angular velocity, and using this angular velocity we integrate to get the rotational equivalent of position called orientation.&lt;/p&gt;
+&lt;p&gt;However, as we will see, integrating orientation from angular velocity is a bit more complicated!&lt;/p&gt;
+&lt;h2 id=&#34;orientation-in-3d&#34;&gt;Orientation in 3D&lt;/h2&gt;
+&lt;p&gt;This complexity is due to the difficulty of representing orientations in three dimensions.&lt;/p&gt;
+&lt;p&gt;In two dimensions orientations are easy, you just keep track of an angle in radians and you are done. In three dimensions it becomes much more complex. It turns out that you must either use 3x3 rotation matrices or quaternions to correctly represent the orientation of an object.&lt;/p&gt;
+&lt;p&gt;For reasons of simplicity and efficiency I&amp;rsquo;m going to use quaternions to represent the orientation instead of matrices. This also gives us an easy way to interpolate between the previous and current physics orientation to get smooth framerate independent animation as per the time stepping scheme outlined in the &lt;a href=&#34;http://127.0.0.1:1313/post/fix_your_timestep/&#34;&gt;previous article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Now there are plenty of resources on the internet which explain what quaternions are and how unit length quaternions are used to represent rotations in three dimensions. Here is a particularly &lt;a href=&#34;http://www.sjbrown.co.uk/quaternions.html&#34;&gt;nice one&lt;/a&gt;. What you need to know however is that, effectively, unit quaternions represent an axis of rotation and an amount of rotation about that axis. This may seem similar to our angular velocity, but quaternions are four dimensional vectors instead of three, so mathematically they are actually quite different!&lt;/p&gt;
+&lt;p&gt;We will represent quaternions in code as another struct:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    struct Quaternion
+    {
+        float w,x,y,z;
+    };
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;If we define the rotation of a quaternion as being relative to an initial orientation of the object (what we will later call body coordinates) then we can use this quaternion to represent the orientation of the object at any point in time. Now that we have decided on the representation to use for orientation, we need to integrate it over time so that the object rotates according to the angular velocity.&lt;/p&gt;
+&lt;h2 id=&#34;integrating-orientation&#34;&gt;Integrating Orientation&lt;/h2&gt;
+&lt;p&gt;We are now presented with a problem. Orientation is a quaternion but angular velocity is a vector. How can we integrate orientation from angular velocity when the two quantities are in different mathematical forms?&lt;/p&gt;
+&lt;p&gt;The solution is to convert angular velocity into a quaternion form, then to use this quaternion to integrate orientation. For lack of a better term I will call this time derivative of orientation &amp;ldquo;spin&amp;rdquo;. Exactly how to calculate this spin quaternion is described in detail &lt;a href=&#34;http://www-2.cs.cmu.edu/~baraff/sigcourse/notesd1.pdf&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Here is the final result:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    d*q*/dt = spin = 0.5 *w* *q*
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Where &lt;strong&gt;q&lt;/strong&gt; is the current orientation quaternion, and &lt;strong&gt;w&lt;/strong&gt; is the current angular velocity in quaternion form (0,x,y,z) such that x, y, z are the components of the angular velocity vector. Note that the multiplication done between &lt;strong&gt;w&lt;/strong&gt; and &lt;strong&gt;q&lt;/strong&gt; is quaternion multiplication.&lt;/p&gt;
+&lt;p&gt;To implement this in code we add spin as a new secondary quantity calculated from angular velocity in the recalculate method. We also add spin to the derivatives struct as it is the derivative of orientation:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    struct State
+    {
+        // primary
+        Quaternion orientation;
+        Vector angularMomentum;
+
+        // secondary
+        Quaternion spin;
+        Vector angularVelocity;
+
+        // constant
+        float inertia;
+        float inverseInertia;
+
+        void recalculate()
+        {
+            angularVelocity = angularMomentum * 
+                               inverseInertia;
+
+            orientation.normalize();
+
+            Quaternion q( 0, 
+                          angularVelocity.x, 
+                          angularVelocity.y, 
+                          angularVelocity.z ) 
+
+            spin = 0.5f * q * orientation;
+        }
+    };
+
+    struct Derivatives
+    {
+        Quaternion spin;
+        Vector torque;
+    };
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Integrating a quaternion, just like integrating a vector, is as simple as doing the integration for each value separately. The only difference is that after integrating orientation we must renormalize the orientation quaternion to make it unit length, to ensure that it still represents a rotation.&lt;/p&gt;
+&lt;p&gt;This is required because errors in integration accumulate over time and make the quaternion &amp;lsquo;drift&amp;rsquo; away from being unit length. I like to renormalize in the recalculate method for simplicity, but you can get away with doing it less frequently if cpu cycles are tight.&lt;/p&gt;
+&lt;p&gt;Now in order to drive the rotation of the object, we need a method that can calculate the torque applied given the current rotational state and time just like the force method we use when integrating linear motion. eg:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    Vector torque( const State &amp;amp; state, double t )
+    {
+        return Vector(1,0,0) - state.angularVelocity * 0.1f;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This function returns an acceleration torque to induce a spin around the x axis, but also applies a damping over time so that at a certain speed the accelerating and damping will cancel each other out. This is done so that the rotation will reach a certain rate and stay constant instead of getting faster and faster over time.&lt;/p&gt;
+&lt;h2 id=&#34;combining-linear-and-angular-motion&#34;&gt;Combining Linear and Angular Motion&lt;/h2&gt;
+&lt;p&gt;Now that we are able to integrate linear and rotational effects, how can they be combined into one simulation? The answer is to just integrate the linear and rotational physics state separately and everything works out. This is because the objects we are simulating are rigid so we can decompose their motion into separate linear and rotational components. As far as integration is concerned, you can treat linear and angular effects as being completely independent of each other.&lt;/p&gt;
+&lt;p&gt;Now that we have an object that is translating and rotating through three dimensional space, we need a way to keep track of where it is. We must now introduce the concepts of body coordinates and world coordinates.&lt;/p&gt;
+&lt;p&gt;Think of body coordinates in terms of the object in a convenient layout, for example its center of mass would be at the origin (0,0,0) and it would be oriented in the simplest way possible. In the case of the simulation that accompanies this article, in body space the cube is oriented so that it lines up with the x, y and z axes and the center of the cube is at the origin.&lt;/p&gt;
+&lt;p&gt;The important thing to understand is that the object remains stationary in body space, and is transformed into world space using a combination of translation and rotation operations which put it in the correct position and orientation for rendering. When you see the cube animating on screen it is because it is being drawn in world space using the body to world transformation.&lt;/p&gt;
+&lt;p&gt;We have the raw materials to implement this transform from body coordinates into world coordinates in the position vector and the orientation quaternion. The trick to combining the two is to convert each of them into 4x4 matrix form which is capable of representing both rotation and translation. Then we combine the two transformations into a single matrix by multiplication. This combined matrix has the effect of first rotating the cube around the origin to get the correct orientation, then translating the cube to the correct position in world space. See &lt;a href=&#34;http://www.gamedev.net/reference/articles/article695.asp&#34;&gt;this article&lt;/a&gt; for details on how this is done.&lt;/p&gt;
+&lt;p&gt;If we then invert this matrix we get one that has the opposite effect, it transforms points in world coordinates into the body coordinates of the object. Once we have both these matrices we have the ability to convert points from body to world coordinates and back again which is very handy. These two matrices become new secondary values calculated in the &amp;lsquo;recalculate&amp;rsquo; method from the orientation quaternion and position vector.&lt;/p&gt;
+&lt;h2 id=&#34;forces-and-torques&#34;&gt;Forces and Torques&lt;/h2&gt;
+&lt;p&gt;We can apply separate forces and torques to an object individually, but we know from real life that if we push an object it usually makes it both move and rotate. So how can we break down a force applied at a point on the object into a linear force which causes a change in momentum, and a torque which changes angular momentum?&lt;/p&gt;
+&lt;p&gt;Given that our object is a rigid body, what actually happens here is that the entire force applied at the point is applied linearly, plus a torque is also generated based on the cross product of the force vector and the point on the object relative to the center of mass of the object:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Where &lt;!-- raw HTML omitted --&gt;F&lt;!-- raw HTML omitted --&gt; is the force being applied at point &lt;!-- raw HTML omitted --&gt;p&lt;!-- raw HTML omitted --&gt; in world coordinates, and &lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt; is the center of mass of the object.&lt;/p&gt;
+&lt;p&gt;This seems counterintuitive at first. Why is the force being applied twice? Once to linear and once to rotational motion?&lt;/p&gt;
+&lt;p&gt;What is happening here is our everyday experience with objects clouding the true behavior of an object under ideal conditions.&lt;/p&gt;
+&lt;p&gt;Remember your pushbike when you were a kid? You would have to change your tire and flip the bike upside down. You could spin the tire around by pushing on it. You don&amp;rsquo;t see any linear motion here, just rotation, so what is going on? The answer of course is that the axle of the wheel is counteracting the linear component of the force you applied, leaving only the rotational component. Not convinced? Imagine what would happen if you tried to ride your bike without an axle in your wheel&amp;hellip;&lt;/p&gt;
+&lt;p&gt;Another example: consider a bowling ball lying on a slippery surface such as ice so that no significant friction is present. Now in your mind try to work out a way that you can apply a force at a single point on the surface of the bowling ball such that it will stay completely still while rotating on the spot. There is no way you can do this! Any point where you push would also make the bowling ball move linearly as well as rotate. To apply a pure rotation you&amp;rsquo;d have to push on both sides of the ball, canceling the linear component of your force out leaving only torque.&lt;/p&gt;
+&lt;p&gt;So remember, whenever you apply a force to an object there will always be a linear force component which causes the object to accelerate linearly, as well as, depending on the direction of the force, a rotational component that causes the object to rotate.&lt;/p&gt;
+&lt;h2 id=&#34;velocity-at-a-pointb&#34;&gt;Velocity at a Point&lt;!-- raw HTML omitted --&gt;&lt;/h2&gt;
+&lt;p&gt;The final piece of the puzzle is how to calculate the velocity of a single point in the rigid body. To do this we start with the linear velocity of the object, because all points must move with this velocity to keep it rigid, then add the velocity at the point due to rotation.&lt;/p&gt;
+&lt;p&gt;This velocity due to rotation will not be constant for every point in the body if it is rotating, as each point in the body must be spinning around the axis of rotation. Combining the linear and angular velocities, the total velocity of a point in the rigid body is:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Where &lt;!-- raw HTML omitted --&gt;p&lt;!-- raw HTML omitted --&gt; is the point on the rigid body and &lt;!-- raw HTML omitted --&gt;x&lt;!-- raw HTML omitted --&gt; is the center of mass of the object.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;We have covered the techniques required to simulate linear and rotational movement of a rigid body in three dimensions. By combining the linear and rotational physics into a single physics state and integrating, we can simulate the motion of a rigid body in three dimensions.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/spring_physics/&#34;&gt;Spring Physics&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Fix Your Timestep!</title>
+      <link>http://127.0.0.1:1313/post/fix_your_timestep/</link>
+      <pubDate>Thu, 10 Jun 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/fix_your_timestep/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://127.0.0.1:1313/post/integration_basics/&#34;&gt;previous article&lt;/a&gt; we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&amp;rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &amp;ldquo;delta time&amp;rdquo; (or dt for short).&lt;/p&gt;
+&lt;p&gt;But how to choose this delta time value? This may seem like a trivial subject but in fact there are many different ways to do it, each with their own strengths and weaknesses - so read on!&lt;/p&gt;
+&lt;h2 id=&#34;fixed-delta-time&#34;&gt;Fixed delta time&lt;/h2&gt;
+&lt;p&gt;The simplest way to step forward is with fixed delta time, like 1/60th of a second:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    double t = 0.0;
+    double dt = 1.0 / 60.0;
+
+    while ( !quit )
+    {
+        integrate( state, t, dt );
+        render( state );
+        t += dt;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;In many ways this code is ideal. If you&amp;rsquo;re lucky enough to have your delta time match the display refresh rate, and you can ensure that your update loop takes less than one frame worth of real time, then you already have the perfect solution for updating your physics simulation and you can stop reading this article.&lt;/p&gt;
+&lt;p&gt;But in the real world you may not know the display refresh rate ahead of time. VSYNC could be turned off, or you could be running on a slow computer which cannot update and render your frame fast enough to present it at 60fps.&lt;/p&gt;
+&lt;p&gt;In these cases your simulation will run faster or slower than you intended.&lt;/p&gt;
+&lt;h2 id=&#34;variable-delta-time&#34;&gt;Variable delta time&lt;/h2&gt;
+&lt;p&gt;Fixing this &lt;em&gt;seems&lt;/em&gt; simple. Just measure how long the previous frame takes, then feed that value back in as the delta time for the next frame. This makes sense because of course, because if the computer is too slow to update at 60HZ and has to drop down to 30fps, you&amp;rsquo;ll automatically pass in 1/30 as delta time. Same thing for a display refresh rate of 75HZ instead of 60HZ or even the case where VSYNC is turned off on a fast computer:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    double t = 0.0;
+
+    double currentTime = hires_time_in_seconds();
+
+    while ( !quit )
+    {
+        double newTime = hires_time_in_seconds();
+        double frameTime = newTime - currentTime;
+        currentTime = newTime;
+
+        integrate( state, t, frameTime );
+        t += frameTime;
+
+        render( state );
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;But there is a huge problem with this approach which I will now explain. The problem is that the behavior of your physics simulation depends on the delta time you pass in. The effect could be subtle as your game having a slightly different &amp;ldquo;feel&amp;rdquo; depending on framerate or it could be as extreme as your spring simulation exploding to infinity, fast moving objects tunneling through walls and players falling through the floor!&lt;/p&gt;
+&lt;p&gt;One thing is for certain though and that is that it&amp;rsquo;s utterly unrealistic to expect your simulation to correctly handle &lt;em&gt;any&lt;/em&gt; delta time passed into it. To understand why, consider what would happen if you passed in 1/10th of a second as delta time? How about one second? 10 seconds? 100? Eventually you&amp;rsquo;ll find a breaking point.&lt;/p&gt;
+&lt;h2 id=&#34;semi-fixed-timestep&#34;&gt;Semi-fixed timestep&lt;/h2&gt;
+&lt;p&gt;It&amp;rsquo;s much more realistic to say that your simulation is well behaved only if delta time is less than or equal to some maximum value. This is usually significantly easier in practice than attempting to make your simulation bulletproof at a wide range of delta time values.&lt;/p&gt;
+&lt;p&gt;With this knowledge at hand, here&amp;rsquo;s a simple trick to ensure that you never pass in a delta time greater than the maximum value, while still running at the correct speed on different machines:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    double t = 0.0;
+    double dt = 1 / 60.0;
+
+    double currentTime = hires_time_in_seconds();
+
+    while ( !quit )
+    {
+        double newTime = hires_time_in_seconds();
+        double frameTime = newTime - currentTime;
+        currentTime = newTime;
+              
+        while ( frameTime &amp;gt; 0.0 )
+        {
+            float deltaTime = min( frameTime, dt );
+            integrate( state, t, deltaTime );
+            frameTime -= deltaTime;
+            t += deltaTime;
+        }
+
+        render( state );
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The benefit of this approach is that we now have an upper bound on delta time. It&amp;rsquo;s never larger than this value because if it is we subdivide the timestep. The disadvantage is that we&amp;rsquo;re now taking multiple steps per-display update including one additional step to consume any the remainder of frame time not divisible by dt. This is no problem if you are render bound, but if your simulation is the most expensive part of your frame you could run into the so called &amp;ldquo;spiral of death&amp;rdquo;.&lt;/p&gt;
+&lt;p&gt;What is the spiral of death? It&amp;rsquo;s what happens when your physics simulation can&amp;rsquo;t keep up with the steps it&amp;rsquo;s asked to take. For example, if your simulation is told: &amp;ldquo;OK, please simulate X seconds worth of physics&amp;rdquo; and if it takes Y seconds of real time to do so where Y &amp;gt; X, then it doesn&amp;rsquo;t take Einstein to realize that over time your simulation falls behind. It&amp;rsquo;s called the spiral of death because being behind causes your update to simulate more steps to catch up, which causes you to fall further behind, which causes you to simulate more steps&amp;hellip;&lt;/p&gt;
+&lt;p&gt;So how do we avoid this? In order to ensure a stable update I recommend leaving some headroom. You really need to ensure that it takes &lt;em&gt;significantly less&lt;/em&gt; than X seconds of real time to update X seconds worth of physics simulation. If you can do this then your physics engine can &amp;ldquo;catch up&amp;rdquo; from any temporary spike by simulating more frames. Alternatively you can clamp at a maximum # of steps  per-frame and the simulation will appear to slow down under heavy load. Arguably this is better than spiraling to death, especially if the heavy load is just a temporary spike.&lt;/p&gt;
+&lt;h2 id=&#34;free-the-physics&#34;&gt;Free the physics&lt;/h2&gt;
+&lt;p&gt;Now let&amp;rsquo;s take it one step further. What if you want exact reproducibility from one run to the next given the same inputs? This comes in handy when trying to network your physics simulation using deterministic lockstep, but it&amp;rsquo;s also generally a nice thing to know that your simulation behaves exactly the same from one run to the next without any potential for different behavior depending on the render framerate.&lt;/p&gt;
+&lt;p&gt;But you ask why is it necessary to have fully fixed delta time to do this? Surely the semi-fixed delta time with the small remainder step is &amp;ldquo;good enough&amp;rdquo;? And yes, you are right. It is &lt;em&gt;good enough&lt;/em&gt; in most cases but it is not &lt;em&gt;exactly the same&lt;/em&gt; due to to the limited precision of floating point arithmetic.&lt;/p&gt;
+&lt;p&gt;What we want then is the best of both worlds: a fixed delta time value for the simulation plus the ability to render at different framerates. These two things seem completely at odds, and they are - unless we can find a way to decouple the simulation and rendering framerates.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s how to do it. Advance the physics simulation ahead in fixed dt time steps while also making sure that it keeps up with the timer values coming from the renderer so that the simulation advances at the correct rate. For example, if the display framerate is 50fps and the simulation runs at 100fps then we need to take two physics steps every display update. Easy.&lt;/p&gt;
+&lt;p&gt;What if the display framerate is 200fps? Well in this case it we need to take half a physics step each display update, but we can&amp;rsquo;t do that, we must advance with constant dt. So we take one physics step every two display updates.&lt;/p&gt;
+&lt;p&gt;Even trickier, what if the display framerate is 60fps, but we want our simulation to run at 100fps? There is no easy multiple. What if VSYNC is disabled and the display frame rate fluctuates from frame to frame?&lt;/p&gt;
+&lt;p&gt;If you head just exploded don&amp;rsquo;t worry, all that is needed to solve this is to change your point of view. Instead of thinking that you have a certain amount of frame time you must simulate before rendering, flip your viewpoint upside down and think of it like this: the renderer &lt;strong&gt;produces time&lt;/strong&gt; and the simulation &lt;strong&gt;consumes it&lt;/strong&gt; in discrete dt sized steps.&lt;/p&gt;
+&lt;p&gt;For example:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    double t = 0.0;
+    const double dt = 0.01;
+
+    double currentTime = hires_time_in_seconds();
+    double accumulator = 0.0;
+
+    while ( !quit )
+    {
+        double newTime = hires_time_in_seconds();
+        double frameTime = newTime - currentTime;
+        currentTime = newTime;
+
+        accumulator += frameTime;
+
+        while ( accumulator &amp;gt;= dt )
+        {
+            integrate( state, t, dt );
+            accumulator -= dt;
+            t += dt;
+        }
+
+        render( state );
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Notice that unlike the semi-fixed timestep we only ever integrate with steps sized dt so it follows that in the common case we have some unsimulated time left over at the end of each frame. This left over time is passed on to the next frame via the accumulator variable and is not thrown away.&lt;/p&gt;
+&lt;h2 id=&#34;the-final-touch&#34;&gt;The final touch&lt;/h2&gt;
+&lt;p&gt;But what do to with this remaining time? It seems incorrect doesn&amp;rsquo;t it?&lt;/p&gt;
+&lt;p&gt;To understand what is going on consider a situation where the display framerate is 60fps and the physics is running at 50fps. There is no nice multiple so the accumulator causes the simulation to alternate between mostly taking one and occasionally two physics steps per-frame when the remainders &amp;ldquo;accumulate&amp;rdquo; above dt.&lt;/p&gt;
+&lt;p&gt;Now consider that the majority of render frames will have some small remainder of frame time left in the accumulator that cannot be simulated because it is less than dt. This means we&amp;rsquo;re displaying the state of the physics simulation at a time slightly different from the render time, causing a subtle but visually unpleasant stuttering of the physics simulation on the screen.&lt;/p&gt;
+&lt;p&gt;One solution to this problem is to interpolate between the previous and current physics state based on how much time is left in the accumulator:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    double t = 0.0;
+    double dt = 0.01;
+
+    double currentTime = hires_time_in_seconds();
+    double accumulator = 0.0;
+
+    State previous;
+    State current;
+
+    while ( !quit )
+    {
+        double newTime = time();
+        double frameTime = newTime - currentTime;
+        if ( frameTime &amp;gt; 0.25 )
+            frameTime = 0.25;
+        currentTime = newTime;
+
+        accumulator += frameTime;
+
+        while ( accumulator &amp;gt;= dt )
+        {
+            previousState = currentState;
+            integrate( currentState, t, dt );
+            t += dt;
+            accumulator -= dt;
+        }
+
+        const double alpha = accumulator / dt;
+
+        State state = currentState * alpha + 
+            previousState * ( 1.0 - alpha );
+
+        render( state );
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This &lt;em&gt;looks&lt;/em&gt; complicated but here is a simple way to think about it. Any remainder in the accumulator is effectively a measure of just how much more time is required before another whole physics step can be taken. For example, a remainder of dt/2 means that we are currently halfway between the current physics step and the next. A remainder of dt*0.1 means that the update is 1/10th of the way between the current and the next state.&lt;/p&gt;
+&lt;p&gt;We can use this remainder value to get a blending factor between the previous and current physics state simply by dividing by dt. This gives an alpha value in the range [0,1] which is used to perform a linear interpolation between the two physics states to get the current state to render. This interpolation is easy to do for single values and for vector state values. You can even use it with full 3D rigid body dynamics if you store your orientation as a quaternion and use a spherical linear interpolation (slerp) to blend between the previous and current orientations.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/physics_in_3d/&#34;&gt;Physics in 3D&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Integration Basics</title>
+      <link>http://127.0.0.1:1313/post/integration_basics/</link>
+      <pubDate>Tue, 01 Jun 2004 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/integration_basics/</guid>
+      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://127.0.0.1:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.&lt;/p&gt;
+&lt;p&gt;A physics simulation works by making many small predictions based on the laws of physics. These predictions are actually quite simple, and basically boil down to something like &amp;ldquo;the object is here, and is traveling this fast in that direction, so in a short amount of time it should be over there&amp;rdquo;. We perform these predictions using a mathematical technique called integration.&lt;/p&gt;
+&lt;p&gt;Exactly how to implement this integration is the subject of this article.&lt;/p&gt;
+&lt;h2 id=&#34;integrating-the-equations-of-motion&#34;&gt;Integrating the Equations of Motion&lt;/h2&gt;
+&lt;p&gt;You may remember from high school or university physics that force equals mass times acceleration.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    F = ma
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We can switch this around to see that acceleration is force divided by mass. This makes intuitive sense because heavier objects are harder to throw.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    a = F/m
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Acceleration is the rate of change in velocity over time:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    dv/dt = a = F/m
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Similarly, velocity is the rate of change in position over time:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    dx/dt = v
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This means if we know the current position and velocity of an object, and the forces that will be applied to it, we can integrate to find its position and velocity at some point in the future.&lt;/p&gt;
+&lt;h2 id=&#34;numerical-integration&#34;&gt;Numerical Integration&lt;/h2&gt;
+&lt;p&gt;For those who have not formally studied differential equations at university, take heart for you are in almost as good a position as those who have. This is because we&amp;rsquo;re not going to analytically solve the differential equations as you would do in first year mathematics. Instead, we are going to &lt;strong&gt;numerically integrate&lt;/strong&gt; to find the solution.&lt;/p&gt;
+&lt;p&gt;Here is how numerical integration works. First, start at an initial position and velocity, then take a small step forward to find the velocity and position at a future time. Then repeat this, moving forward in small time steps, using the result of the previous calculation as the starting point for the next.&lt;/p&gt;
+&lt;p&gt;But how do we find the change in velocity and position at each step?&lt;/p&gt;
+&lt;p&gt;The answer lies in the &lt;strong&gt;equations of motion&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s call our current time &lt;strong&gt;t&lt;/strong&gt;, and the time step &lt;strong&gt;dt&lt;/strong&gt; or &amp;lsquo;delta time&amp;rsquo;.&lt;/p&gt;
+&lt;p&gt;We can now put the equations of motion in a form that anyone can understand:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    acceleration = force / mass
+    change in position = velocity * dt
+    change in velocity = acceleration * dt
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This makes intuitive sense because if you&amp;rsquo;re in a car traveling 60 kilometers per-hour, in one hour you&amp;rsquo;ll be 60 kilometers further down the road. Similarly, a car accelerating 10 kilometers per-hour-per-second will be moving 100 kilometers per-hour faster after 10 seconds.&lt;/p&gt;
+&lt;p&gt;Of course this logic only holds when acceleration and velocity are constant. But even when they&amp;rsquo;re not, it&amp;rsquo;s still a pretty decent approximation to start with.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s put this into code. Starting with a stationary object at the origin weighing one kilogram, we apply a constant force of 10 newtons and step forward with time steps of one second:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    double t = 0.0;
+    float dt = 1.0f;
+
+    float velocity = 0.0f;
+    float position = 0.0f;
+    float force = 10.0f;
+    float mass = 1.0f;
+
+    while ( t &amp;lt;= 10.0 )
+    {
+        position = position + velocity * dt;
+        velocity = velocity + ( force / mass ) * dt;
+        t += dt;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Here is the result:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    t=0:    position = 0      velocity = 0
+    t=1:    position = 0      velocity = 10
+    t=2:    position = 10     velocity = 20
+    t=3:    position = 30     velocity = 30
+    t=4:    position = 60     velocity = 40
+    t=5:    position = 100    velocity = 50
+    t=6:    position = 150    velocity = 60
+    t=7:    position = 210    velocity = 70
+    t=8:    position = 280    velocity = 80
+    t=9:    position = 360    velocity = 90
+    t=10:   position = 450    velocity = 100
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, at at each step we know both the position and velocity of the object. This is numerical integration.&lt;/p&gt;
+&lt;h2 id=&#34;explicit-euler&#34;&gt;Explicit Euler&lt;/h2&gt;
+&lt;p&gt;What we just did is a type of integration called &lt;strong&gt;explicit euler&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;To save you future embarrassment, I must point out now that Euler is pronounced &amp;ldquo;Oiler&amp;rdquo; not &amp;ldquo;yew-ler&amp;rdquo; as it is the last name of the Swiss mathematician &lt;a href=&#34;https://en.wikipedia.org/wiki/Leonhard_Euler&#34;&gt;Leonhard Euler&lt;/a&gt; who first discovered this technique.&lt;/p&gt;
+&lt;p&gt;Euler integration is the most basic numerical integration technique. It is only 100% accurate when the rate of change is constant over the timestep.&lt;/p&gt;
+&lt;p&gt;Since acceleration is constant in the example above, the integration of velocity is without error. However, we are also integrating velocity to get position, and velocity is increasing due to acceleration. This means there is error in the integrated position.&lt;/p&gt;
+&lt;p&gt;Just how large is this error? Let&amp;rsquo;s find out!&lt;/p&gt;
+&lt;p&gt;There is a closed form solution for how an object moves under constant acceleration. We can use this to compare our numerically integrated position with the exact result:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    s = ut + 0.5at^2
+    s = 0.0*t + 0.5at^2
+    s = 0.5(10)(10^2)
+    s = 0.5(10)(100)
+    s = 500 meters
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;After 10 seconds, the object should have moved 500 meters, but explicit euler gives a result of 450 meters. That&amp;rsquo;s 50 meters off after just 10 seconds!&lt;/p&gt;
+&lt;p&gt;This sounds really, really bad, but it&amp;rsquo;s not common for games to step physics forward with such large time steps. In fact, physics usually steps forward at something closer to the display framerate.&lt;/p&gt;
+&lt;p&gt;Stepping forward with &lt;strong&gt;dt&lt;/strong&gt; = 1/100 yields a much better result:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    t=9.90:     position = 489.552155     velocity = 98.999062
+    t=9.91:     position = 490.542145     velocity = 99.099060
+    t=9.92:     position = 491.533142     velocity = 99.199059
+    t=9.93:     position = 492.525146     velocity = 99.299057
+    t=9.94:     position = 493.518127     velocity = 99.399055
+    t=9.95:     position = 494.512115     velocity = 99.499054
+    t=9.96:     position = 495.507111     velocity = 99.599052
+    t=9.97:     position = 496.503113     velocity = 99.699051
+    t=9.98:     position = 497.500092     velocity = 99.799049
+    t=9.99:     position = 498.498077     velocity = 99.899048
+    t=10.00:    position = 499.497070     velocity = 99.999046
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;As you can see, this is a pretty good result. Certainly good enough for a game.&lt;/p&gt;
+&lt;h2 id=&#34;why-explicit-euler-is-not-always-so-great&#34;&gt;Why explicit euler is not (always) so great&lt;/h2&gt;
+&lt;p&gt;With a small enough timestep explicit euler gives decent results for constant acceleration, but what about the case where acceleration isn&amp;rsquo;t constant?&lt;/p&gt;
+&lt;p&gt;A good example of non-constant acceleration is a &lt;a href=&#34;https://ccrma.stanford.edu/CCRMA/Courses/152/vibrating_systems.html&#34;&gt;spring damper system&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In this system a mass is attached to a spring and its motion is damped by some kind of friction. There is a force proportional to the distance of the object that pulls it towards the origin, and a force proportional to the velocity of the object, but in the opposite direction, which slows it down.&lt;/p&gt;
+&lt;p&gt;Now the acceleration is definitely not constant throughout the timestep, but is a continously changing function that is a combination of the position and velocity, which are themselves changing continuously over the timestep.&lt;/p&gt;
+&lt;p&gt;This is an example of a &lt;a href=&#34;https://en.wikipedia.org/wiki/Harmonic_oscillator#Damped_harmonic_oscillator&#34;&gt;damped harmonic oscillator&lt;/a&gt;. It&amp;rsquo;s a well studied problem and there&amp;rsquo;s a closed form solution that we can use to check our numerically integrated result.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s start with an underdamped system where the mass oscillates about the origin while slowing down.&lt;/p&gt;
+&lt;p&gt;Here are the input parameters to the mass spring system:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Mass: 1 kilogram&lt;/li&gt;
+&lt;li&gt;Initial position: 1000 meters from origin&lt;/li&gt;
+&lt;li&gt;Hooke&amp;rsquo;s law spring coefficient: k = 15&lt;/li&gt;
+&lt;li&gt;Hooke&amp;rsquo;s law damping coefficient: b = 0.1&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;And here is a graph of the exact solution:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;When we apply explicit euler to integrate this system, we get the following result, which has been scaled down vertically to fit:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Instead of damping and converging on the origin, it gains energy over time!&lt;/p&gt;
+&lt;p&gt;This system is unstable when integrated with explicit euler and &lt;strong&gt;dt&lt;/strong&gt;=1/100.&lt;/p&gt;
+&lt;p&gt;Unfortunately, since we&amp;rsquo;re already integrating with a small timestep, we don&amp;rsquo;t have a lot of practical options to improve the accuracy. Even if you reduce the timestep, there&amp;rsquo;s always a spring tightness k above which you&amp;rsquo;ll see this behavior.&lt;/p&gt;
+&lt;h2 id=&#34;semi-implicit-euler&#34;&gt;Semi-implicit Euler&lt;/h2&gt;
+&lt;p&gt;Another integrator to consider is &lt;a href=&#34;https://en.wikipedia.org/wiki/Semi-implicit_Euler_method&#34;&gt;semi-implicit euler&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Most commercial game physics engines use this integrator.&lt;/p&gt;
+&lt;p&gt;Switching from explicit to semi-implicit euler is as simple as changing:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    position += velocity * dt;
+    velocity += acceleration * dt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;to:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    velocity += acceleration * dt;
+    position += velocity * dt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Applying the semi-implicit euler integrator with &lt;strong&gt;dt&lt;/strong&gt; = 1/100 to the spring damper system gives a stable result that is very close to the exact solution:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Even though semi-implicit euler has the same order of accuracy as explicit euler (order 1), we get a much better result when integrating the equations of motion because it is &lt;a href=&#34;https://en.wikipedia.org/wiki/Symplectic_integrator&#34;&gt;symplectic&lt;/a&gt;.&lt;/p&gt;
+&lt;h2 id=&#34;many-different-integration-methods-exist&#34;&gt;Many different integration methods exist&lt;/h2&gt;
+&lt;p&gt;&lt;a href=&#34;http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html&#34;&gt;Implicit euler&lt;/a&gt; is an integration technique that is well suited for simulating stiff equations that become unstable with other methods. The drawback is that it requires solving a system of equations per-timestep.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://en.wikipedia.org/wiki/Verlet_integration&#34;&gt;Verlet integration&lt;/a&gt; provides greater accuracy than implicit euler and less memory usage when simulating a large number of particles is. This is a second order integrator which is also symplectic.&lt;/p&gt;
+&lt;p&gt;There are a whole family of integrators called the &lt;strong&gt;Runge-Kutta methods&lt;/strong&gt;. Explicit euler is part of this family, but it also includes higher order integrators, the most classic of these being the Runge Kutta order 4 or simply &lt;strong&gt;RK4&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;This Runge Kutta family of integrators is named for the German physicists who discovered them: &lt;a href=&#34;https://en.wikipedia.org/wiki/Carl_David_Tolm%C3%A9_Runge&#34;&gt;Carl Runge&lt;/a&gt; and &lt;a href=&#34;https://en.wikipedia.org/wiki/Martin_Wilhelm_Kutta&#34;&gt;Martin Kutta&lt;/a&gt;. This means the &amp;lsquo;g&amp;rsquo; is hard and the &amp;lsquo;u&amp;rsquo; is a short &amp;lsquo;oo&amp;rsquo; sound. I am sorry to inform but this means we are talking about the &lt;em&gt;&amp;lsquo;roon-geh koo-ta&amp;rsquo;&lt;/em&gt; methods and not a &lt;em&gt;&amp;lsquo;runge cutter&amp;rsquo;&lt;/em&gt;, whatever that is :)&lt;/p&gt;
+&lt;p&gt;The RK4 is a fourth order integrator, which means its accumulated error is on the order of the fourth derivative. This makes it very accurate. Much more accurate than explicit and implicit euler which are only first order.&lt;/p&gt;
+&lt;p&gt;But although it&amp;rsquo;s more accurate, that&amp;rsquo;s not to say RK4 is automatically &amp;ldquo;the best&amp;rdquo; integrator, or that it is better than semi-implicit euler. It&amp;rsquo;s much more complicated than this.&lt;/p&gt;
+&lt;p&gt;Regardless, it&amp;rsquo;s an interesting integrator and is well worth studying.&lt;/p&gt;
+&lt;h2 id=&#34;implementing-rk4&#34;&gt;Implementing RK4&lt;/h2&gt;
+&lt;p&gt;There are many great explanations of the mathematics behind RK4 already. For example: &lt;a href=&#34;https://en.wikipedia.org/wiki/Runge%E2%80%93Kutta_methods&#34;&gt;here&lt;/a&gt;, &lt;a href=&#34;http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node5.html&#34;&gt;here&lt;/a&gt; and &lt;a href=&#34;https://www.researchgate.net/publication/49587610_A_Simplified_Derivation_and_Analysis_of_Fourth_Order_Runge_Kutta_Method&#34;&gt;here&lt;/a&gt;. I highly encourage you to follow the derivation and understand how and why it works at a mathematical level. But, seeing as the target audience for this article are programmers, not mathematicians, we&amp;rsquo;re all about implementation, so let&amp;rsquo;s get started.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s define the state of an object as a struct in C++ so we have both position and velocity stored conveniently in one place:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    struct State
+    {
+        float x;      // position
+        float v;      // velocity
+    };
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;We also need a struct to store the derivatives of the state values:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    struct Derivative
+    {
+        float dx;      // dx/dt = velocity
+        float dv;      // dv/dt = acceleration
+    };
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Next we need a function to advance the physics state ahead from t to t+dt using one set of derivatives, and once there, recalculate the derivatives at this new state:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    Derivative evaluate( const State &amp;amp; initial, 
+                         double t, 
+                         float dt, 
+                         const Derivative &amp;amp; d )
+    {
+        State state;
+        state.x = initial.x + d.dx*dt;
+        state.v = initial.v + d.dv*dt;
+
+        Derivative output;
+        output.dx = state.v;
+        output.dv = acceleration( state, t+dt );
+        return output;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The acceleration function is what drives the entire simulation. Let&amp;rsquo;s set it to the spring damper system and return the acceleration assuming unit mass:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    float acceleration( const State &amp;amp; state, double t )
+    {
+        const float k = 15.0f;
+        const float b = 0.1f;
+        return -k * state.x - b * state.v;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Now we get to the RK4 integration routine itself:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    void integrate( State &amp;amp; state, 
+                    double t, 
+                    float dt )
+    {
+        Derivative a,b,c,d;
+
+        a = evaluate( state, t, 0.0f, Derivative() );
+        b = evaluate( state, t, dt*0.5f, a );
+        c = evaluate( state, t, dt*0.5f, b );
+        d = evaluate( state, t, dt, c );
+
+        float dxdt = 1.0f / 6.0f * 
+            ( a.dx + 2.0f * ( b.dx + c.dx ) + d.dx );
+        
+        float dvdt = 1.0f / 6.0f * 
+            ( a.dv + 2.0f * ( b.dv + c.dv ) + d.dv );
+
+        state.x = state.x + dxdt * dt;
+        state.v = state.v + dvdt * dt;
+    }
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;The RK4 integrator samples the derivative at four points to detect curvative. Notice how derivative a is used when calculating b, b is used when calculating c, and c into d. This feedback of the current derivative into the calculation of the next is what gives the RK4 integrator its accuracy.&lt;/p&gt;
+&lt;p&gt;Importantly, each of these derivatives a,b,c and d will be &lt;em&gt;different&lt;/em&gt; when the rate of change in these quantities is a function of time or a function of the state itself. For example, in our spring damper system acceleration is a function of the current position and velocity which change throughout the timestep.&lt;/p&gt;
+&lt;p&gt;Once the four derivatives have been evaluated, the best overall derivative is calculated as a weighted sum derived from the &lt;a href=&#34;https://en.wikipedia.org/wiki/Taylor_series&#34;&gt;taylor series&lt;/a&gt; expansion. This combined derivative is used to advance the position and velocity forward, just as we did with the explicit euler integrator.&lt;/p&gt;
+&lt;h2 id=&#34;semi-implicit-euler-vs-rk4&#34;&gt;Semi-implicit euler vs. RK4&lt;/h2&gt;
+&lt;p&gt;Now let&amp;rsquo;s put the RK4 integrator to the test.&lt;/p&gt;
+&lt;p&gt;Since it is a higher order integrator (4th order vs. 1st order) it will be visibly more accurate than semi-implicit euler, right?&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;strong&gt;Wrong&lt;/strong&gt;. Both integrators are so close to the exact result that it&amp;rsquo;s impossible to make out any difference at this scale. Both integrators are stable and track the exact solution very well with &lt;strong&gt;dt&lt;/strong&gt;=1/100.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;Zooming in confirms that RK4 &lt;em&gt;is&lt;/em&gt; more accurate than semi-implicit euler, but is it really worth the complexity and extra runtime cost of RK4? It&amp;rsquo;s hard to say.&lt;/p&gt;
+&lt;p&gt;Let&amp;rsquo;s push a bit harder and see if we can find a significant difference between the two integrators. Unfortunately, we can&amp;rsquo;t look at this system for long periods of time because it quickly damps down to zero, so let&amp;rsquo;s switch to a &lt;a href=&#34;https://en.wikipedia.org/wiki/Harmonic_oscillator#Simple_harmonic_oscillator&#34;&gt;simple harmonic oscillator&lt;/a&gt; which oscillates forever without any damping.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s the exact result we&amp;rsquo;re aiming for:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;To make it harder on the integrators, let&amp;rsquo;s increase delta time to 0.1 seconds.&lt;/p&gt;
+&lt;p&gt;Next, we let the integrators run for 90 seconds and zoom in:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;After 90 seconds the semi-implicit euler solution (orange) has drifted out of phase with the exact solution because it has a slightly different frequency, while the green line of RK4 matches the frequency, but is losing energy!&lt;/p&gt;
+&lt;p&gt;We can see this more clearly by increasing the time step to 0.25 seconds.&lt;/p&gt;
+&lt;p&gt;RK4 maintains the correct frequency but loses energy:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;While semi-implicit euler does a better job at conserving energy, on average:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;But drifts out of phase. What an interesting result! As you can see it&amp;rsquo;s not simply the case that RK4 has a higher order of accuracy and is &amp;ldquo;better&amp;rdquo;. It&amp;rsquo;s much, much more nuanced than this.&lt;/p&gt;
+&lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;Which integrator should you use in your game?&lt;/p&gt;
+&lt;p&gt;My recommendation is &lt;strong&gt;semi-implicit euler&lt;/strong&gt;. It&amp;rsquo;s cheap and easy to implement, it&amp;rsquo;s much more stable than explicit euler, and it tends to preserve energy on average even when pushed near its limit.&lt;/p&gt;
+&lt;p&gt;If you really do need more accuracy than semi-implicit euler, I recommend you look into higher order &lt;a href=&#34;https://en.wikipedia.org/wiki/Symplectic_integrator&#34;&gt;symplectic integrators&lt;/a&gt; designed for &lt;a href=&#34;https://en.wikipedia.org/wiki/Hamiltonian_system&#34;&gt;hamiltonian systems&lt;/a&gt;. This way you&amp;rsquo;ll discover more modern higher order integration techniques that are better suited to your simulation than RK4.&lt;/p&gt;
+&lt;p&gt;And finally, if you are still doing this in your game:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    position += velocity * dt;
+    velocity += acceleration * dt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;Please take a moment to change it to this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;    velocity += acceleration * dt;
+    position += velocity * dt;
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;You&amp;rsquo;ll be glad you did :)&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://127.0.0.1:1313/post/fix_your_timestep/&#34;&gt;Fix Your Timestep!&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>

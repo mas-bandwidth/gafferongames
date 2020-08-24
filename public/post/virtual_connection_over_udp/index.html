@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en-us">
+
+<head>
+
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="generator" content="Source Themes Academia 4.3.1">
+  <meta name="generator" content="Hugo 0.74.3" />
+
+  
+
+  
+  
+  
+  
+  
+  
+
+  
+
+  
+  
+  
+    
+  
+  <meta name="description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+In the previous article we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.
+As the first step towards a general connection system, we&rsquo;ll start with the simplest case possible: creating a virtual connection between two computers on top of UDP.">
+
+  
+  <link rel="alternate" hreflang="en-us" href="http://127.0.0.1:1313/post/virtual_connection_over_udp/">
+
+  
+
+
+  
+
+  
+  
+  
+  <meta name="theme-color" content="#3f51b5">
+  
+
+  
+  
+  
+  
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/academiaons/1.8.6/css/academiaons.min.css" integrity="sha256-uFVgMKfistnJAfoCUQigIl+JfUaP47GrRKjf6CTPVmw=" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.0/css/all.css" integrity="sha384-aOkxzJ5uQz7WBObEZcHvV5JvRW3TUc2rNPA7pe3AwnsUohiw1Vj2Rgx2KSOkF5+h" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.css" integrity="sha256-ygkqlh3CYSUri3LhQxzdcm0n1EQvH2Y+U5S2idbLtxs=" crossorigin="anonymous">
+
+    
+    
+    
+      
+    
+    
+      
+      
+        
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/github.min.css" crossorigin="anonymous" title="hl-light">
+          <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/styles/dracula.min.css" crossorigin="anonymous" title="hl-dark" disabled>
+        
+      
+    
+
+    
+
+    
+
+  
+
+  
+  
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700|Open+Sans|Roboto+Mono&display=swap">
+  
+
+  
+  
+  
+  <link rel="stylesheet" href="/css/academia.min.cbfe411b85bcf6c144a15531ef0c8d7b.css">
+
+  
+
+  
+  
+  
+
+  
+
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="icon" type="image/png" href="/img/icon.png">
+  <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
+
+  <link rel="canonical" href="http://127.0.0.1:1313/post/virtual_connection_over_udp/">
+
+  
+  
+  
+  
+    
+    
+  
+  <meta property="twitter:card" content="summary">
+  
+  <meta property="twitter:site" content="@gafferongames">
+  <meta property="twitter:creator" content="@gafferongames">
+  
+  <meta property="og:site_name" content="Gaffer On Games">
+  <meta property="og:url" content="http://127.0.0.1:1313/post/virtual_connection_over_udp/">
+  <meta property="og:title" content="Virtual Connection over UDP | Gaffer On Games">
+  <meta property="og:description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+In the previous article we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.
+As the first step towards a general connection system, we&rsquo;ll start with the simplest case possible: creating a virtual connection between two computers on top of UDP."><meta property="og:image" content="http://127.0.0.1:1313/img/icon-192.png">
+  <meta property="twitter:image" content="http://127.0.0.1:1313/img/icon-192.png"><meta property="og:locale" content="en-us">
+  
+  <meta property="article:published_time" content="2008-10-08T00:00:00&#43;00:00">
+  
+  <meta property="article:modified_time" content="2008-10-08T00:00:00&#43;00:00">
+  
+
+  
+
+
+  
+
+
+
+
+
+  <title>Virtual Connection over UDP | Gaffer On Games</title>
+
+</head>
+
+
+<body id="top" data-spy="scroll" data-target="#TableOfContents" data-offset="71" >
+
+  <aside class="search-results" id="search">
+  <div class="container">
+    <section class="search-header">
+
+      <div class="row no-gutters justify-content-between mb-3">
+        <div class="col-6">
+          <h1>Search</h1>
+        </div>
+        <div class="col-6 col-search-close">
+          <a class="js-search" href="#"><i class="fas fa-times-circle text-muted" aria-hidden="true"></i></a>
+        </div>
+      </div>
+
+      <div id="search-box">
+        
+        
+        
+      </div>
+
+    </section>
+    <section class="section-search-results">
+
+      <div id="search-hits">
+        
+      </div>
+
+    </section>
+  </div>
+</aside>
+
+
+  
+<nav class="navbar navbar-light fixed-top navbar-expand-lg py-0" id="navbar-main">
+  <div class="container">
+
+    
+      <a class="navbar-brand" href="/">Gaffer On Games</a>
+      
+      <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation"><span><i class="fas fa-bars"></i></span>
+      </button>
+      
+
+    
+    <div class="collapse navbar-collapse" id="navbar">
+
+      
+      
+      <ul class="navbar-nav ml-auto">
+        
+
+        
+
+        
+        
+        
+          
+        
+
+        
+        
+        
+        
+        
+        
+          
+          
+          
+            
+          
+          
+        
+
+        <li class="nav-item">
+          <a class="nav-link " href="/#posts"><span>Articles</span></a>
+        </li>
+
+        
+        
+
+      
+
+        
+
+        
+
+        
+
+        
+
+      </ul>
+
+    </div>
+  </div>
+</nav>
+
+
+  <article class="article py-5" itemscope itemtype="http://schema.org/Article">
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+    
+
+    
+    
+    
+    <div class="article-container py-3">
+      <h1 itemprop="name">Virtual Connection over UDP</h1>
+
+      
+
+      
+      
+
+
+
+<meta content="2008-10-08 00:00:00 &#43;0000 UTC" itemprop="datePublished">
+<meta content="2008-10-08 00:00:00 &#43;0000 UTC" itemprop="dateModified">
+
+<div class="article-metadata">
+
+  
+  
+
+  
+  <span class="article-date">
+    
+    
+      
+    
+    <time>Oct 8, 2008</time>
+  </span>
+  
+
+  
+
+  
+  <span class="middot-divider"></span>
+  <span class="article-reading-time">
+    10 min read
+  </span>
+  
+
+  
+  
+
+  
+  
+  <span class="middot-divider"></span>
+  <span class="article-categories">
+    <i class="fas fa-folder"></i>
+    <a href="/categories/game-networking/">Game Networking</a></span>
+  
+
+  
+    
+
+  
+
+</div>
+
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      
+      
+    </div>
+  </div>
+</div>
+
+  <div class="article-container">
+
+    <div class="article-style" itemprop="articleBody">
+      <h2 id="introduction">Introduction</h2>
+<p>Hi, I&rsquo;m <a href="https://gafferongames.com">Glenn Fiedler</a> and welcome to <a href="/categories/game-networking/"><strong>Networking for Game Programmers</strong></a>.</p>
+<p>In the <a href="/post/sending_and_receiving_packets">previous article</a> we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.</p>
+<p>As the first step towards a general connection system, we&rsquo;ll start with the simplest case possible: creating a virtual connection between two computers on top of UDP.</p>
+<p>But first, we&rsquo;re going to dig in a bit deeper about how the Internet really works!</p>
+<h2 id="the-internet-unotu-a-series-of-tubes">The Internet <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> a series of tubes</h2>
+<p>In 2006, Senator Ted Stevens made internet history with his <!-- raw HTML omitted -->famous speech<!-- raw HTML omitted --> on the net neutrality act:</p>
+<!-- raw HTML omitted -->
+<p>When I first started using the Internet, I was just like Ted. Sitting in the computer lab in University of Sydney in 1995, I was &ldquo;surfing the web&rdquo; with this new thing called Netscape Navigator, and I had absolutely no idea what was going on.</p>
+<p>You see, I thought each time you connected to a website there was some actual connection going on,  like a telephone line. I wondered, how much does it cost each time I connect to a new website? 30 cents? A dollar? Was somebody from the university going to tap me on the shoulder and ask me to pay the long distance charges? :)</p>
+<p>Of course, this all seems silly now.</p>
+<p>There is no switchboard somewhere that directly connects you via a physical phone line to the other computer you want to talk to, let alone a series of pneumatic tubes like Sen. Stevens would have you believe.</p>
+<h2 id="no-direct-connections">No Direct Connections</h2>
+<p>Instead your data is sent over Internet Protocol (IP) via packets that hop from computer to computer.</p>
+<p>A packet may pass through several computers before it reaches its destination. You cannot know the exact set of computers in advance, as it changes dynamically depending on how the network decides to route packets. You could even send two packets A and B to the same address, and they may take different routes.</p>
+<p>On unix-like systems can inspect the route that packets take by calling &ldquo;traceroute&rdquo; and passing in a destination hostname or IP address.</p>
+<p>On windows, replace &ldquo;traceroute&rdquo; with &ldquo;tracert&rdquo; to get it to work.</p>
+<p>Try it with a few websites like this:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>Take a look and you should be able to convince yourself pretty quickly that there is no direct connection.</p>
+<h2 id="how-packets-get-delivered">How Packets Get Delivered</h2>
+<p>In the <a href="/post/udp_vs_tcp/">first article</a>, I presented a simple analogy for packet delivery, describing it as somewhat like a note being passed from person to person across a crowded room.</p>
+<p>While this analogy gets the basic idea across, it is much too simple. The Internet is <!-- raw HTML omitted -->not<!-- raw HTML omitted --> a flat network of computers, it is a network of networks. And of course, we don&rsquo;t just need to pass letters around a small room, we need to be able to send them anywhere in the world.</p>
+<p>It should be pretty clear then that the best analogy is the postal service!</p>
+<p>When you want to send a letter to somebody you put your letter in the mailbox and you trust that it will be delivered correctly. It&rsquo;s not really relevant to you <!-- raw HTML omitted -->how<!-- raw HTML omitted --> it gets there, as long as it does. Somebody has to physically deliver your letter to its destination of course, so how is this done?</p>
+<p>Well first off, the postman sure as hell doesn&rsquo;t take your letter and deliver it personally! It seems that the postal service is not a series of tubes either. Instead, the postman takes your letter to the local post office for processing.</p>
+<p>If the letter is addressed locally then the post office just sends it back out, and another postman delivers it directly. But, if the address is is non-local then it gets interesting! The local post office is not able to deliver the letter directly, so it passes it &ldquo;up&rdquo; to the next level of hierarchy, perhaps to a regional post office which services cities nearby, or maybe to a mail center at an airport, if the address is far away. Ideally, the actual transport of the letter would be done using a <!-- raw HTML omitted -->big truck<!-- raw HTML omitted -->.</p>
+<p>Lets be complicated and assume the letter is sent from Los Angeles to Sydney, Australia. The local post office receives the letter and given that it is addressed internationally, sends it directly to a mail center at LAX. The letter is processed again according to address, and gets routed on the next flight to Sydney.</p>
+<p>The plane lands at Sydney airport where an <!-- raw HTML omitted -->entirely different postal system<!-- raw HTML omitted --> takes over. Now the whole process starts operating in reverse. The letter travels &ldquo;down&rdquo; the hierarchy, from the general, to the specific. From the mail hub at Sydney Airport it gets sent out to a regional center, the regional center delivers it to the local post office, and eventually the letter is hand delivered by a mailman with a funny accent. Crikey! :)</p>
+<p>Just like post offices determine how to deliver letters via their address, networks deliver packets according to their IP address. The low-level details of this delivery and the actual routing of packets from network to network is actually quite complex, but the basic idea is that each router is just another computer, with a routing table describing where packets matching sets of addresses should go, as well as a default gateway address describing where to pass packets for which there is no matching entry in the table. It is routing tables, and the physical connections they represent that define the network of networks that is the Internet.</p>
+<p>The job of configuring these routing tables is up to network administrators, not programmers like us. But if you want to read more about it, then this article from <!-- raw HTML omitted -->ars technica<!-- raw HTML omitted --> provides some  fascinating insight into how networks exchange packets between each other via peering and transit relationships. You can also read more details about <!-- raw HTML omitted -->routing tables<!-- raw HTML omitted --> in this linux faq, and about the <!-- raw HTML omitted -->border gateway protocol<!-- raw HTML omitted --> on wikipedia, which automatically discovers how to route packets between networks, making the internet a truly distributed system capable of dynamically routing around broken connectivity.</p>
+<h2 id="virtual-connections">Virtual Connections</h2>
+<p>Now back to connections.</p>
+<p>If you have used TCP sockets then you know that they sure <!-- raw HTML omitted -->look<!-- raw HTML omitted --> like a connection, but since TCP is implemented on top of IP, and IP is just packets hopping from computer to computer, it follows that TCP&rsquo;s concept of connection must be a <!-- raw HTML omitted -->virtual connection.<!-- raw HTML omitted --></p>
+<p>If TCP can create a virtual connection over IP, it follows that we can do the same over UDP.</p>
+<p>Lets define our virtual connection as two computers exchanging UDP packets at some fixed rate like 10 packets per-second. As long as the packets are flowing, we consider the two computers to be virtually connected.</p>
+<p>Our connection has two sides:</p>
+<!-- raw HTML omitted -->
+<p>In our case, we only allow one client to connect to the server at any time. We&rsquo;ll generalize our connection system to support multiple simultaneous connections in a later article. Also, we assume that the IP address of the server is on a fixed IP address that the client may directly connect to.</p>
+<h2 id="protocol-id">Protocol ID</h2>
+<p>Since UDP is connectionless our UDP socket can receive packets sent from any computer.</p>
+<p>We&rsquo;d like to narrow this down so that the server only receives packets sent from the client, and the client only receives packets sent from the server. We can&rsquo;t just filter out packets by address, because the server doesn&rsquo;t know the address of the client in advance. So instead, we prefix each UDP packet with small header containing a 32 bit protocol id as follows:</p>
+<!-- raw HTML omitted -->
+<!-- raw HTML omitted -->
+<p>The protocol id is just some unique number representing our game protocol. Any packet that arrives from our UDP socket first has its first four bytes inspected. If they don&rsquo;t match our protocol id, then the packet is ignored. If the protocol id does match, we strip out the first four bytes of the packet and deliver the rest as payload.</p>
+<p>You just choose some number that is reasonably unique, perhaps a hash of the name of your game and the protocol version number. But really you can use anything. The whole point is that from the point of view of our connection based protocol, packets with different protocol ids are ignored.</p>
+<h2 id="detecting-connection">Detecting Connection</h2>
+<p>Now we need a way to detect connection.</p>
+<p>Sure we could do some complex handshaking involving multiple UDP packets sent back and forth. Perhaps a client &ldquo;request connection&rdquo; packet is sent to the server, to which the server responds with a &ldquo;connection accepted&rdquo; sent back to the client, or maybe an &ldquo;i&rsquo;m busy&rdquo; packet if a client tries to connect to server which already has a connected client.</p>
+<p>Or&hellip; we could just setup our server to take the first packet it receives with the correct protocol id, and consider a connection to be established.</p>
+<p>The client just starts sending packets to the server assuming connection, when the server receives the first packet from the client, it takes note of the IP address and port of the client, and starts sending packets back.</p>
+<p>The client already knows the address and port of the server, since it was specified on connect. So when the client receives packets, it filters out any that don&rsquo;t come from the server address. Similarly, once the server receives the first packet from the client, it gets the address and port of the client from &ldquo;recvfrom&rdquo;, so it is able to ignore any packets that don&rsquo;t come from the client address.</p>
+<p>We can get away with this shortcut because we only have two computers involved in the connection. In later articles, we&rsquo;ll extend our connection system to support more than two computers in a client/server or peer-to-peer topology, and at this point we&rsquo;ll upgrade our connection negotiation to something more robust.</p>
+<p>But for now, why make things more complicated than they need to be?</p>
+<h2 id="detecting-disconnection">Detecting Disconnection</h2>
+<p>How do we detect disconnection?</p>
+<p>Well if a connection is defined as receiving packets, we can define disconnection as <!-- raw HTML omitted -->not<!-- raw HTML omitted --> receiving packets.</p>
+<p>To detect when we are not receiving packets, we keep track of the number of seconds since we last received a packet from the other side of the connection. We do this on both sides.</p>
+<p>Each time we receive a packet from the other side, we reset our accumulator to 0.0, each update we increase the accumulator by the amount of time that has passed.</p>
+<p>If this accumulator exceeds some value like 10 seconds, the connection &ldquo;times out&rdquo; and we disconnect.</p>
+<p>This also gracefully handles the case of a second client trying to connect to a server that has already made a connection with another client. Since the server is already connected it ignores packets coming from any address other than the connected client, so the second client receives no packets in response to the packets it sends, so the second client times out and disconnects.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>And that&rsquo;s all it takes to setup a virtual connection: some way to establish connection, filtering for packets not involved in the connection, and timeouts to detect disconnection.</p>
+<p>Our connection is as real as any TCP connection, and the steady stream of UDP packets it provides is a suitable starting point for a multiplayer action game.</p>
+<p>Now that you have your virtual connection over UDP, you can easily setup a client/server relationship for a two player multiplayer game without TCP.</p>
+<p><strong>NEXT ARTICLE:</strong> <a href="/post/reliability_ordering_and_congestion_avoidance_over_udp/">Reliability and Congestion Avoidance over UDP</a></p>
+<hr>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+
+    </div>
+
+    
+
+<div class="article-tags">
+  
+  <a class="badge badge-light" href="/tags/networking/">networking</a>
+  
+</div>
+
+
+
+    
+      
+
+
+
+
+
+
+
+
+  
+  
+  
+
+
+
+
+
+  
+  
+  
+  
+  <div class="media author-card" itemscope itemtype="http://schema.org/Person">
+    
+
+    <div class="media-body">
+      <h5 class="card-title" itemprop="name"><a href="/authors/"></a></h5>
+      
+      
+      <ul class="network-icon" aria-hidden="true">
+        
+      </ul>
+    </div>
+  </div>
+
+
+
+      
+      
+      <div class="article-widget">
+        <div class="hr-light"></div>
+        <h3>Related</h3>
+        <ul>
+          
+          <li><a href="/post/sending_and_receiving_packets/">Sending and Receiving Packets</a></li>
+          
+          <li><a href="/post/udp_vs_tcp/">UDP vs. TCP</a></li>
+          
+          <li><a href="/post/networked_physics_2004/">Networked Physics (2004)</a></li>
+          
+        </ul>
+      </div>
+      
+    
+
+    
+
+    
+
+
+  </div>
+</article>
+
+      
+
+    
+    
+    
+    <script src="/js/mathjax-config.js"></script>
+    
+
+    
+    
+    
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.imagesloaded/4.1.4/imagesloaded.pkgd.min.js" integrity="sha256-lqvxZrPLtfffUl2G/e7szqSvPBILGbwmsGE1MKlOi0Q=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery.isotope/3.0.6/isotope.pkgd.min.js" integrity="sha256-CBrpuqrMhXwcLLUd5tvQ4euBHCdh7wGlDfNz8vbu/iI=" crossorigin="anonymous"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/fancybox/3.2.5/jquery.fancybox.min.js" integrity="sha256-X5PoE3KU5l+JcX+w09p/wHl9AzK333C4hJ2I9S5mD4M=" crossorigin="anonymous"></script>
+
+      
+
+      
+        
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.15.6/highlight.min.js" integrity="sha256-aYTdUrn6Ow1DDgh5JTc3aDGnnju48y/1c8s1dgkYPQ8=" crossorigin="anonymous"></script>
+        
+      
+
+      
+      
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS_CHTML-full" integrity="sha256-GhM+5JHb6QUzOQPXSJLEWP7R73CbkisjzK5Eyij4U9w=" crossorigin="anonymous" async></script>
+      
+    
+
+    
+    
+
+    
+    
+    
+
+    
+    
+    <script>hljs.initHighlightingOnLoad();</script>
+    
+
+    
+    
+    <script>
+      const search_index_filename = "/index.json";
+      const i18n = {
+        'placeholder': "Search...",
+        'results': "results found",
+        'no_results': "No results found"
+      };
+      const content_type = {
+        'post': "Posts",
+        'project': "Projects",
+        'publication' : "Publications",
+        'talk' : "Talks"
+        };
+    </script>
+    
+
+    
+    
+
+    
+
+    
+    
+
+    
+    
+
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    <script src="/js/academia.min.281fa180ccfa1769ea3c7dd430814861.js"></script>
+
+    
+
+
+
+
+
+
+  
+  <div class="container">
+    <footer class="site-footer">
+
+  <div class="container">
+    <div class="row">
+      <div class="col-md-6">
+        
+        <p>
+          Copyright © Glenn Fiedler, 2004 - 2019 
+        </p>
+      </div>
+      <div class="col-md-6">
+        <ul class="list-inline network-icon text-right">
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          
+          <li class="list-inline-item">
+            <a href="https://twitter.com/Twitter" target="_blank" rel="noopener" title="DM Me"><i class="fab fa-twitter" aria-hidden="true"></i></a>
+          </li>
+          
+        </ul>
+      </div>
+    </div>
+  </div>
+</footer>
+  </div>
+  
+
+  
+<div id="modal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Cite</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <pre><code class="tex hljs"></code></pre>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-outline-primary my-1 js-copy-cite" href="#" target="_blank">
+          <i class="fas fa-copy"></i> Copy
+        </a>
+        <a class="btn btn-outline-primary my-1 js-download-cite" href="#" target="_blank">
+          <i class="fas fa-download"></i> Download
+        </a>
+        <div id="modal-error"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

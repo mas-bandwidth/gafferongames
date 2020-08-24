@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>vr on Gaffer On Games</title>
+    <link>http://127.0.0.1:1313/tags/vr/</link>
+    <description>Recent content in vr on Gaffer On Games</description>
+    <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
+    <language>en-us</language>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2019</copyright>
+    <lastBuildDate>Thu, 22 Feb 2018 00:00:00 +0000</lastBuildDate>
+    
+	    <atom:link href="http://127.0.0.1:1313/tags/vr/index.xml" rel="self" type="application/rss+xml" />
+    
+    
+    <item>
+      <title>Networked Physics in Virtual Reality</title>
+      <link>http://127.0.0.1:1313/post/networked_physics_in_virtual_reality/</link>
+      <pubDate>Thu, 22 Feb 2018 00:00:00 +0000</pubDate>
+      
+      <guid>http://127.0.0.1:1313/post/networked_physics_in_virtual_reality/</guid>
+      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+&lt;p&gt;About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &amp;ldquo;Hey Glenn, there&amp;rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?&amp;rdquo;&lt;/p&gt;
+&lt;p&gt;I replied ~~&amp;quot;F*** yes!&amp;ldquo;~~ **cough** &amp;ldquo;Sure. This could be a lot of fun!&amp;rdquo;. But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good. Two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.&lt;/p&gt;
+&lt;p&gt;Oculus agreed. Welcome to that article! Also, the source for the networked physics sample is &lt;a href=&#34;https://github.com/OculusVR/oculus-networked-physics-sample&#34;&gt;here&lt;/a&gt;, wherein the code that I wrote is released under a BSD licence. I hope the next generation of programmers can learn from my research into networked physics and create some really cool things. Good luck!&lt;/p&gt;
+&lt;h1 id=&#34;what-are-we-building&#34;&gt;What are we building?&lt;/h1&gt;
+&lt;p&gt;When I first started discussions with Oculus, we imagined creating something like a table where four players could sit around and interact with physically simulated cubes on the table. For example, throwing, catching and stacking cubes, maybe knocking each other&amp;rsquo;s stacks over with a swipe of their hand.&lt;/p&gt;
+&lt;p&gt;But after a few days spent learning Unity and C#, I found myself actually &lt;em&gt;inside&lt;/em&gt; the Rift. In VR, scale is &lt;em&gt;so important&lt;/em&gt;. When the cubes were small, everything felt much less interesting, but when the cubes were scaled up to around a meter cubed, everything had this really cool sense of scale. You could make these &lt;em&gt;huge&lt;/em&gt; stacks of cubes, up to 20 or 30 meters high. This felt really cool!&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s impossible to communicate visually what this feels like outside of VR, but it looks something like this&amp;hellip;&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&amp;hellip; where you can select, grab and throw cubes using the touch controller, and any cubes you release from your hand interact with the other cubes in the simulation. You can throw a cube at a stack of cubes and knock them over. You can pick up a cube in each hand and juggle them. You can build a stack of cubes and see how high you can make it go.&lt;/p&gt;
+&lt;p&gt;Even though this was a lot of fun, it&amp;rsquo;s not all rainbows and unicorns. Working with Oculus as a client, I had to define tasks and deliverables before I could actually start the work.&lt;/p&gt;
+&lt;p&gt;I suggested the following criteria we would use to define success:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Players should be able to pick up, throw and catch cubes without latency.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Players should be able to stack cubes, and these stacks should be stable (come to rest) and be without visible jitter.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When cubes thrown by any player interact with the simulation, wherever possible, these interactions should be without latency.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;At the same time I created a set of tasks to work in order of greatest risk to least, since this was R&amp;amp;D, there was no guarantee we would actually succeed at what we were trying to do.&lt;/p&gt;
+&lt;h1 id=&#34;network-models&#34;&gt;Network Models&lt;/h1&gt;
+&lt;p&gt;First up, we had to pick a network model. A network model is basically a strategy, exactly &lt;em&gt;how&lt;/em&gt; we are going to hide latency and keep the simulation in sync.&lt;/p&gt;
+&lt;p&gt;There are three main network models to choose from:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Deterministic lockstep&lt;/li&gt;
+&lt;li&gt;Client/server with client-side prediction&lt;/li&gt;
+&lt;li&gt;Distributed simulation with authority scheme&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;I was instantly confident of the correct network model: a distributed simulation model where players take over authority of cubes they interact with. But let me share with you my reasoning behind this.&lt;/p&gt;
+&lt;p&gt;First, I could trivially rule out a deterministic lockstep network model, since the physics engine inside Unity (PhysX) is not deterministic. Furthermore, even if PhysX was deterministic I could &lt;em&gt;still&lt;/em&gt; rule it out because of the requirement that player interactions with the simulation be without latency.&lt;/p&gt;
+&lt;p&gt;The reason for this is that to hide latency with deterministic lockstep I needed to maintain two copies of the simulation and predict the authoritative simulation ahead with local inputs prior to render (GGPO style). At 90HZ simulation rate and with up to 250ms of latency to hide, this meant 25 physics simulation steps for each visual render frame. 25X cost is simply not realistic for a CPU intensive physics simulation.&lt;/p&gt;
+&lt;p&gt;This leaves two options: a client/server network model with client-side prediction (perhaps with dedicated server) and a less secure distributed simulation network model.&lt;/p&gt;
+&lt;p&gt;Since this was a non-competitive sample, there was little justification to incur the cost of running dedicated servers. Therefore, whether I implemented a client/server model with client-side prediction or distributed simulation model, the security would be effectively the same. The only difference would be if only one of the players in the game could theoretically cheat, or &lt;em&gt;all&lt;/em&gt; of them could.&lt;/p&gt;
+&lt;p&gt;For this reason, a distributed simulation model made the most sense. It had effectively the same amount of security, and would not require any expensive rollback and resimulation, since players simply take authority over cubes they interact with and send the state for those cubes to other players.&lt;/p&gt;
+&lt;h1 id=&#34;authority-scheme&#34;&gt;Authority Scheme&lt;/h1&gt;
+&lt;p&gt;While it makes intuitive sense that taking authority (acting like the server) for objects you interact can hide latency &amp;ndash; since, well if you&amp;rsquo;re the server, you don&amp;rsquo;t experience any lag, right? &amp;ndash; what&amp;rsquo;s not immediately obvious is how to resolve conflicts.&lt;/p&gt;
+&lt;p&gt;What if two players interact with the same stack? What if two players, masked by latency, grab the same cube? In the case of conflict: who wins, who gets corrected, and how is this decided?&lt;/p&gt;
+&lt;p&gt;My intuition at this point was that because I would be exchanging state for objects rapidly (up to 60 times per-second), that it would be best to implement this as an encoding in the state exchanged between players over my network protocol, rather than as events.&lt;/p&gt;
+&lt;p&gt;I thought about this for a while and came up with two key concepts:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Authority&lt;/li&gt;
+&lt;li&gt;Ownership&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Each cube would have authority, either set to default (white), or to whatever color of the player that last interacted with it. If another player interacted with an object, authority would switch and update to that player. I planned to use authority for interactions of thrown objects with the scene. I imagined that a cube thrown by player 2 could take authority over any objects it interacted with, and in turn any objects those objects interacted with, recursively.&lt;/p&gt;
+&lt;p&gt;Ownership was a bit different. Once a cube is owned by a player, no other player could take ownership until that player reliquished ownership. I planned to use ownership for players grabbing cubes, because I didn&amp;rsquo;t want to make it possible for players to grab cubes out of other player&amp;rsquo;s hands after they picked them up.&lt;/p&gt;
+&lt;p&gt;I had an intuition that I could represent and communicate authority and ownership as state by including two different sequence numbers per-cube as I sent them: an authority sequence, and an ownership sequence number. This intuition ultimately proved correct, but turned out to be much more complicated in implementation than I expected. More on this later.&lt;/p&gt;
+&lt;h1 id=&#34;state-synchronization&#34;&gt;State Synchronization&lt;/h1&gt;
+&lt;p&gt;Trusting I could implement the authority rules described above, my first task was to prove that synchronizing physics in one direction of flow could actually work with Unity and PhysX. In previous work I had networked simulations built with ODE, so really, I had no idea if it was really possible.&lt;/p&gt;
+&lt;p&gt;To find out, I setup a loopback scene in Unity where cubes fall into a pile in front of the player. There are two sets of cubes. The cubes on the left represent the authority side. The cubes on the right represent the non-authority side, which we want to be in sync with the cubes on the left.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;At the start, without anything in place to keep the cubes in sync, even though both sets of cubes start from the same initial state, they give slightly different end results. You can see this most easily from top-down:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;This happens because PhysX is non-deterministic. Rather than tilting at non-determinstic windmills, I &lt;em&gt;fight&lt;/em&gt; non-determinism by grabbing state from the left side (authority) and applying it to the right side (non-authority) 10 times per-second:&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;The state I grab from each cube looks like this:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;struct CubeState
+{
+    Vector3 position;
+    Quaternion rotation;
+    Vector3 linear_velocity;
+    Vector3 angular_velocity;
+};
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;And when I apply this state to the simulation on the right side, I simply &lt;em&gt;snap&lt;/em&gt; the position, rotation, linear and angular velocity of each cube to the state captured from the left side.&lt;/p&gt;
+&lt;p&gt;This simple change is enough to keep the left and right simulations in sync. PhysX doesn&amp;rsquo;t even diverge enough in the 1/10th of a second between updates to show any noticeable pops.&lt;/p&gt;
+&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;This &lt;strong&gt;proves&lt;/strong&gt; that a state synchronization based approach for networking can work with PhysX. &lt;em&gt;(Sigh of relief)&lt;/em&gt;. The only problem of course, is that sending uncompressed physics state uses way too much bandwidth&amp;hellip;&lt;/p&gt;
+&lt;h1 id=&#34;bandwidth-optimization&#34;&gt;Bandwidth Optimization&lt;/h1&gt;
+&lt;p&gt;To make sure the networked physics sample is playable over the internet, I needed to get bandwidth under control.&lt;/p&gt;
+&lt;p&gt;The easiest gain I found was to simply encode the state for at rest cubes more efficiently. For example, instead of repeatedly sending (0,0,0) for linear velocity and (0,0,0) for angular velocity for at rest cubes, I send just one bit:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;[position] (vector3)
+[rotation] (quaternion)
+[at rest] (bool)
+&amp;lt;if not at rest&amp;gt;
+{
+    [linear_velocity] (vector3)
+    [angular_velocity] (vector3)
+}
+&lt;/code&gt;&lt;/pre&gt;
+&lt;p&gt;This is &lt;em&gt;lossless&lt;/em&gt; technique because it doesn&amp;rsquo;t change the state sent over the network in any way. It&amp;rsquo;s also extremely effective, since statistically speaking, most of the time the majority of cubes are at rest.&lt;/p&gt;
+&lt;p&gt;To optimize bandwidth further we need to use &lt;em&gt;lossy techniques&lt;/em&gt;. For example, we can reduce the precision of the physics state sent over the network by bounding position in some min/max range and quantizing it to a resolution of 1/1000th of a centimeter and sending that quantized position as an integer value in some known range. The same basic approach can be used for linear and angular velocity. For rotation I used the &lt;em&gt;smallest three representation&lt;/em&gt; of a quaternion.&lt;/p&gt;
+&lt;p&gt;But while this saves bandwidth, it also adds risk. My concern was that if we are networking a stack of cubes (for example, 10 or 20 cubes placed on top of each other), maybe the quantization would create errors that add jitter to that stack. Perhaps it would even cause the stack to become &lt;em&gt;unstable&lt;/em&gt;, but in a particularly annoying and hard to debug way, where the stack looks fine for you, and is only unstable in the remote view (eg. the non-authority simulation), where another player is watching what you do.&lt;/p&gt;
+&lt;p&gt;The best solution to this problem that I found was to quantize the state on &lt;em&gt;both sides&lt;/em&gt;. This means that before each physics simulation step, I capture and quantize the physics state &lt;em&gt;exactly the same way&lt;/em&gt; as when it&amp;rsquo;s sent over the network, then I apply this quantized state back to the local simulation.&lt;/p&gt;
+&lt;p&gt;Now the extrapolation from quantized state on the non-authority side &lt;em&gt;exactly&lt;/em&gt; matches the authority simulation, minimizing jitter in large stacks. At least, in theory.&lt;/p&gt;
+&lt;h1 id=&#34;coming-to-america-rest&#34;&gt;Coming To &lt;del&gt;America&lt;/del&gt; Rest&lt;/h1&gt;
+&lt;p&gt;But quantizing the physics state created some &lt;em&gt;very interesting&lt;/em&gt; side-effects!&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;PhysX doesn&amp;rsquo;t really like you forcing the state of each rigid body at the start of every frame and makes sure you know by taking up a bunch of CPU.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Quantization adds error to position which PhysX tries very hard to correct, snapping cubes immediately out of penetration with huge pops!&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Rotations can&amp;rsquo;t be represented exactly either, again causing penetration. Interestingly in this case, cubes can get stuck in a feedback loop where they slide across the floor!&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Although cubes in large stacks &lt;em&gt;seem&lt;/em&gt; to be at rest, close inspection in the editor reveals that they are actually jittering by tiny amounts, as cubes are quantized just above surface and falling towards it.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;There&amp;rsquo;s not much I could do about the PhysX CPU usage, but the solution I found for the depenetration was to set &lt;em&gt;maxDepenetrationVelocity&lt;/em&gt; on each rigid body, limiting the velocity that cubes are pushed apart with. I found that one meter per-second works very well.&lt;/p&gt;
+&lt;p&gt;Getting cubes to come to rest reliably was much harder. The solution I found was to disable the PhysX at rest calculation entirely and replace it with a ring-buffer of positions and rotations per-cube. If a cube has not moved or rotated significantly in the last 16 frames, I force it to rest. Boom. Perfectly stable stacks &lt;em&gt;with&lt;/em&gt; quantization.&lt;/p&gt;
+&lt;p&gt;Now this might seem like a hack, but short of actually getting in the PhysX source code and rewriting the PhysX solver and at rest calculations, which I&amp;rsquo;m certainly not qualified to do, I didn&amp;rsquo;t see any other option. I&amp;rsquo;m happy to be proven wrong though, so if you find a better way to do this, please let me know :)&lt;/p&gt;
+&lt;h1 id=&#34;priority-accumulator&#34;&gt;Priority Accumulator&lt;/h1&gt;
+&lt;p&gt;The next big bandwidth optimization I did was to send only a subset of cubes in each packet. This gave me fine control over the amount of bandwidth sent, by setting a maximum packet size and sending only the set of updates that fit in each packet.&lt;/p&gt;
+&lt;p&gt;Here&amp;rsquo;s how it works in practice:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;Each cube has a &lt;em&gt;priority factor&lt;/em&gt; which is calculated each frame. Higher values are more likely to be sent. Negative values mean &lt;em&gt;&amp;ldquo;don&amp;rsquo;t send this cube&amp;rdquo;&lt;/em&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;If the priority factor is positive, it&amp;rsquo;s added to the &lt;em&gt;priority accumulator&lt;/em&gt; value for that cube. This value persists between simulation updates such that the priority accumulator increases each frame, so cubes with higher priority rise faster than cubes with low priority.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Negative priority factors clear the priority accumulator to -1.0.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;When a packet is sent, cubes are sorted in order of highest priority accumulator to lowest. The first n cubes become the set of cubes to potentially include in the packet. Objects with negative priority accumulator values are excluded.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The packet is written and cubes are serialized to the packet in order of importance. Not all state updates will necessarily fit in the packet, since cube updates have a variable encoding depending on their current state (at rest vs. not at rest and so on). Therefore, packet serialization returns a flag per-cube indicating whether it was included in the packet.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Priority accumulator values for cubes sent in the packet are cleared to 0.0, giving other cubes a fair chance to be included in the next packet.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;For this demo I found some value in boosting priority for cubes recently involved in high energy collisions, since high energy collision was the largest source of divergence due to non-deterministic results. I also boosted priority for cubes recently thrown by players.&lt;/p&gt;
+&lt;p&gt;Somewhat counter-intuitively, reducing priority for at rest cubes gave bad results. My theory is that since the simulation runs on both sides, at rest cubes would get slightly out of sync and not be corrected quickly enough, causing divergence when other cubes collided with them.&lt;/p&gt;
+&lt;h1 id=&#34;delta-compression&#34;&gt;Delta Compression&lt;/h1&gt;
+&lt;p&gt;Even with all the techniques so far, it still wasn&amp;rsquo;t optimized enough. With four players I really wanted to get the cost per-player down under 256kbps, so the entire simulation could fit into 1mbps for the host.&lt;/p&gt;
+&lt;p&gt;I had one last trick remaining: &lt;strong&gt;delta compression&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;First person shooters often implement delta compression by compressing the entire state of the world relative to a previous state. In this technique, a previous complete world state or &amp;lsquo;snapshot&amp;rsquo; acts as the &lt;em&gt;baseline&lt;/em&gt;, and a set of differences, or &lt;em&gt;delta&lt;/em&gt;, between the &lt;em&gt;baseline&lt;/em&gt; and the &lt;em&gt;current&lt;/em&gt; snapshot is generated and sent down to the client.&lt;/p&gt;
+&lt;p&gt;This technique is (relatively) easy to implement because the state for all objects are included in each snapshot, thus all the server needs to do is track the most recent snapshot received by each client, and generate deltas from that snapshot to the current.&lt;/p&gt;
+&lt;p&gt;However, when a priority accumulator is used, packets don&amp;rsquo;t contain updates for all objects and delta encoding becomes more complicated. Now the server (or authority-side) can&amp;rsquo;t simply encode cubes relative to a previous snapshot number. Instead, the baseline must be specified &lt;em&gt;per-cube&lt;/em&gt;, so the receiver knows which state each cube is encoded relative to.&lt;/p&gt;
+&lt;p&gt;The supporting systems and data structures are also much more complicated:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;A reliability system is required that can report back to the sender which packets were received, not just the most recently received snapshot #.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The sender needs to track the states included in each packet sent, so it can map packet level acks to sent states and update the most recently acked state per-cube. The next time a cube is sent, its delta is encoded relative to this state as a baseline.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;The receiver needs to store a ring-buffer of received states per-cube, so it can reconstruct the current cube state from a delta by looking up the baseline in this ring-buffer.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;But ultimately, it&amp;rsquo;s worth the extra complexity, because this system combines the flexibility of being able to dynamically adjust bandwidth usage, with the orders of magnitude bandwidth improvement you get from delta encoding.&lt;/p&gt;
+&lt;h1 id=&#34;delta-encoding&#34;&gt;Delta Encoding&lt;/h1&gt;
+&lt;p&gt;Now that I have the supporting structures in place, I actually have to encode the difference of a cube relative to a previous baseline state. How is this done?&lt;/p&gt;
+&lt;p&gt;The simplest way is to encode cubes that haven&amp;rsquo;t changed from the baseline value as just one bit: &lt;em&gt;not changed&lt;/em&gt;. This is also the easiest gain you&amp;rsquo;ll ever see, because at any time most cubes are at rest, and therefore aren&amp;rsquo;t changing state.&lt;/p&gt;
+&lt;p&gt;A more advanced strategy is to encode the &lt;em&gt;difference&lt;/em&gt; between the current and baseline values, aiming to encode small differences with fewer bits. For example, delta position could be (-1,+2,+5) from baseline. I found this works well for linear values, but breaks down for deltas of the smallest three quaternion representation, as the largest component of a quaternion is often different between the baseline and current rotation.&lt;/p&gt;
+&lt;p&gt;Furthermore, while encoding the difference gives some gains, it didn&amp;rsquo;t provide the order of magnitude improvement I was hoping for. In a desperate, last hope, I came up with a delta encoding strategy that included &lt;em&gt;prediction&lt;/em&gt;. In this approach, I predict the current state from the baseline assuming the cube is moving ballistically under acceleration due to gravity.&lt;/p&gt;
+&lt;p&gt;Prediction was complicated by the fact that the predictor must be written in fixed point, because floating point calculations are not necessarily guaranteed to be deterministic. But after a few days of tweaking and experimentation, I was able to write a ballistic predictor for position, linear and angular velocity that matched the PhysX integrator within quantize resolution about 90% of the time.&lt;/p&gt;
+&lt;p&gt;These lucky cubes get encoded with another bit: &lt;em&gt;perfect prediction&lt;/em&gt;, leading to another order of magnitude improvement. For cases where the prediction doesn&amp;rsquo;t match exactly, I encoded small error offset relative to the prediction.&lt;/p&gt;
+&lt;p&gt;In the time I had to spend, I not able to get a good predictor for rotation. I blame this on the smallest three representation, which is highly numerically unstable, especially in fixed point. In the future, I would not use the smallest three representation for quantized rotations.&lt;/p&gt;
+&lt;p&gt;It was also painfully obvious while encoding differences and error offsets that using a bitpacker was not the best way to read and write these quantities. I&amp;rsquo;m certain that something like a range coder or arithmetic compressor that can represent fractional bits, and dynamically adjust its model to the differences would give much better results, but I was already within my bandwidth budget at this point and couldn&amp;rsquo;t justify any further noodling :)&lt;/p&gt;
+&lt;h1 id=&#34;synchronizing-avatars&#34;&gt;Synchronizing Avatars&lt;/h1&gt;
+&lt;p&gt;After several months of work, I had made the following progress:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Proof that state synchronization works with Unity and PhysX&lt;/li&gt;
+&lt;li&gt;Stable stacks in the remote view while quantizing state on both sides&lt;/li&gt;
+&lt;li&gt;Bandwidth reduced to the point where all four players can fit in 1mbps&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;The next thing I needed to implement was interaction with the simulation via the touch controllers. This part was a lot of fun, and was my favorite part of the project :)&lt;/p&gt;
+&lt;p&gt;I hope you enjoy these interactions. There was a lot of experimentation and tuning to make simple things like picking up, throwing, passing from hand to hand feel good, even crazy adjustments to ensure throwing worked great, while placing objects on top of high stacks could still be done with high accuracy.&lt;/p&gt;
+&lt;p&gt;But when it comes to networking, in this case the game code doesn&amp;rsquo;t count. All the networking cares about is that avatars are represented by a head and two hands driven by the tracked headset and touch controller positions and orientations.&lt;/p&gt;
+&lt;p&gt;To synchronize this I captured the position and orientation of the avatar components in &lt;em&gt;FixedUpdate&lt;/em&gt; along the rest of the physics state, and applied this state to the avatar components in the remote view.&lt;/p&gt;
+&lt;p&gt;But when I first tried this it looked &lt;em&gt;absolutely awful&lt;/em&gt;. Why?&lt;/p&gt;
+&lt;p&gt;After a bunch of debugging I worked out that the avatar state was sampled from the touch hardware at render framerate in &lt;em&gt;Update&lt;/em&gt;, and was applied on the other machine at &lt;em&gt;FixedUpdate&lt;/em&gt;, causing jitter because the avatar sample time didn&amp;rsquo;t line up with the current time in the remote view.&lt;/p&gt;
+&lt;p&gt;To fix this I stored the difference between physics and render time when sampling avatar state, and included this in the avatar state in each packet. Then I added a jitter buffer with 100ms delay to received packets, solving network jitter from time variance in packet delivery and enabling interpolation between avatar states to reconstruct a sample at the correct time.&lt;/p&gt;
+&lt;p&gt;To synchronize cubes held by avatars, while a cube is parented to an avatar&amp;rsquo;s hand, I set the cube&amp;rsquo;s &lt;em&gt;priority factor&lt;/em&gt; to -1, stopping it from being sent with regular physics state updates. While a cube is attached to a hand, I include its id and relative position and rotation as part of the avatar state. In the remote view, cubes are attached to the avatar hand when the first avatar state arrives with that cube parented to it, and detached when regular physics state updates resume, corresponding to the cube being thrown or released.&lt;/p&gt;
+&lt;h1 id=&#34;bidirectional-flow&#34;&gt;Bidirectional Flow&lt;/h1&gt;
+&lt;p&gt;Now that I had player interaction with the scene working with the touch controllers, it was time to start thinking about how the second player can interact with the scene as well.&lt;/p&gt;
+&lt;p&gt;To do this without going insane switching between two headsets all the time (!!!), I extended my Unity test scene to be able to switch between the context of player one (left) and player two (right).&lt;/p&gt;
+&lt;p&gt;I called the first player the &amp;ldquo;host&amp;rdquo; and the second player the &amp;ldquo;guest&amp;rdquo;. In this model, the host is the &amp;ldquo;real&amp;rdquo; simulation, and by default synchronizes all cubes to the guest player, but as the guest interacts with the world, it takes authority over these objects and sends state for them back to the host player.&lt;/p&gt;
+&lt;p&gt;To make this work without inducing obvious conflicts the host and guest both check the local state of cubes before taking authority and ownership. For example, the host won&amp;rsquo;t take ownership over a cube already under ownership of the guest, and vice versa, while authority is allowed to be taken, to let players throw cubes at somebody else&amp;rsquo;s stack and knock it over while it&amp;rsquo;s being built.&lt;/p&gt;
+&lt;p&gt;Generalizing further to four players, in the networked physics sample, all packets flow through the host player, making the host the &lt;em&gt;arbiter&lt;/em&gt;. In effect, rather than being truly peer-to-peer, a topology is chosen that all guests in the game communicate only with the host player. This lets the host decide which updates to accept, and which updates to ignore and subsequently correct.&lt;/p&gt;
+&lt;p&gt;To apply these corrections I needed some way for the host to override guests and say, no, you don&amp;rsquo;t have authority/ownership over this cube, and you should accept this update. I also needed some way for the host to determine &lt;em&gt;ordering&lt;/em&gt; for guest interactions with the world, so if one client experiences a burst of lag and delivers a bunch of packets late, these packets won&amp;rsquo;t take precedence over more recent actions from other guests.&lt;/p&gt;
+&lt;p&gt;As per my hunch earlier, this was achieved with two sequence numbers per-cube:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Authority sequence&lt;/li&gt;
+&lt;li&gt;Ownership sequence&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;These sequence numbers are sent along with each state update and included in avatar state when cubes are held by players. They are used by the host to determine if it should accept an update from guests, and by guests to determine if the state update from the server is more recent and should be accepted, even when that guest thinks it has authority or ownership over a cube.&lt;/p&gt;
+&lt;p&gt;Authority sequence increments each time a player takes authority over a cube and when a cube under authority of a player comes to rest. When a cube has authority on a guest machine, it holds authority on that machine until it receives &lt;em&gt;confirmation&lt;/em&gt; from the host before returning to default authority. This ensures that the final at rest state for cubes under guest authority are committed back to the host, even under significant packet loss.&lt;/p&gt;
+&lt;p&gt;Ownership sequence increments each time a player grabs a cube. Ownership is stronger than authority, such that an increase in ownership sequence wins over an increase in authority sequence number. For example, if a player interacts with a cube just before another player grabs it, the player who grabbed it wins.&lt;/p&gt;
+&lt;p&gt;In my experience working on this demo I found these rules to be sufficient to resolve conflicts, while letting host and guest players interact with the world lag free. Conflicts requiring corrections are rare in practice even under significant latency, and when they do occur, the simulation quickly converges to a consistent state.&lt;/p&gt;
+&lt;h1 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h1&gt;
+&lt;p&gt;High quality networked physics with stable stacks of cubes &lt;em&gt;is&lt;/em&gt; possible with Unity and PhysX using a distributed simulation network model.&lt;/p&gt;
+&lt;p&gt;This approach is best used for &lt;em&gt;cooperative experiences only&lt;/em&gt;, as it does not provide the security of a server-authoritative network model with dedicated servers and client-side prediction.&lt;/p&gt;
+&lt;p&gt;Thanks to Oculus for sponsoring my work and making this research possible!&lt;/p&gt;
+&lt;p&gt;The source code for the networked physics sample can be downloaded &lt;a href=&#34;https://github.com/OculusVR/oculus-networked-physics-sample&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;hr&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
