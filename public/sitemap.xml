@@ -4,36 +4,41 @@
   
   <url>
     <loc>http://127.0.0.1:1313/categories/</loc>
-    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://127.0.0.1:1313/post/fixing_the_internet_for_games/</loc>
-    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
+    <lastmod>2020-08-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>http://127.0.0.1:1313/</loc>
-    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
+    <lastmod>2020-08-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>http://127.0.0.1:1313/categories/game-networking/</loc>
-    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
+    <lastmod>2020-08-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1:1313/post/network_neutrality_considered_harmful/</loc>
+    <lastmod>2020-08-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>http://127.0.0.1:1313/tags/networking/</loc>
-    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
+    <lastmod>2020-08-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>http://127.0.0.1:1313/post/</loc>
-    <lastmod>2019-03-24T00:00:00+00:00</lastmod>
+    <lastmod>2020-08-24T00:00:00+00:00</lastmod>
   </url>
   
   <url>
     <loc>http://127.0.0.1:1313/tags/</loc>
+    <lastmod>2020-08-24T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1:1313/post/fixing_the_internet_for_games/</loc>
     <lastmod>2019-03-24T00:00:00+00:00</lastmod>
   </url>
   
@@ -129,11 +134,6 @@
   
   <url>
     <loc>http://127.0.0.1:1313/post/collision_response_and_coulomb_friction/</loc>
-    <lastmod>2013-02-24T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>http://127.0.0.1:1313/tags/go/baduk/weiqi/</loc>
     <lastmod>2013-02-24T00:00:00+00:00</lastmod>
   </url>
   
@@ -234,6 +234,10 @@
   
   <url>
     <loc>http://127.0.0.1:1313/authors/</loc>
+  </url>
+  
+  <url>
+    <loc>http://127.0.0.1:1313/tags/go/baduk/weiqi/</loc>
   </url>
   
   <url>

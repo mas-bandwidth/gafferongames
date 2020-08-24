@@ -7,7 +7,7 @@
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
     <copyright>Copyright © Glenn Fiedler, 2004 - 2019</copyright>
-    <lastBuildDate>Sun, 24 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 24 Aug 2020 00:00:00 +0000</lastBuildDate>
     
 	    <atom:link href="http://127.0.0.1:1313/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,18 +15,9 @@
     <item>
       <title>Posts</title>
       <link>http://127.0.0.1:1313/post/</link>
-      <pubDate>Sun, 24 Mar 2019 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 24 Aug 2020 00:00:00 +0000</pubDate>
       
       <guid>http://127.0.0.1:1313/post/</guid>
-      <description></description>
-    </item>
-    
-    <item>
-      <title></title>
-      <link></link>
-      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
-      
-      <guid></guid>
       <description></description>
     </item>
     

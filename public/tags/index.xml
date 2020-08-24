@@ -7,7 +7,7 @@
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
     <copyright>Copyright © Glenn Fiedler, 2004 - 2019</copyright>
-    <lastBuildDate>Sun, 24 Mar 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 24 Aug 2020 00:00:00 +0000</lastBuildDate>
     
 	    <atom:link href="http://127.0.0.1:1313/tags/index.xml" rel="self" type="application/rss+xml" />
     
@@ -15,7 +15,7 @@
     <item>
       <title>networking</title>
       <link>http://127.0.0.1:1313/tags/networking/</link>
-      <pubDate>Sun, 24 Mar 2019 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 24 Aug 2020 00:00:00 +0000</pubDate>
       
       <guid>http://127.0.0.1:1313/tags/networking/</guid>
       <description></description>
@@ -42,7 +42,7 @@
     <item>
       <title>go/baduk/weiqi</title>
       <link>http://127.0.0.1:1313/tags/go/baduk/weiqi/</link>
-      <pubDate>Sun, 24 Feb 2013 00:00:00 +0000</pubDate>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>http://127.0.0.1:1313/tags/go/baduk/weiqi/</guid>
       <description></description>
