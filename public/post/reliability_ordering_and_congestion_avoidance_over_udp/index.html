@@ -287,7 +287,7 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    15 min read
+    16 min read
   </span>
   
 
@@ -349,22 +349,25 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
 <p>This is actually quite a common technique. It&rsquo;s even used in TCP! These packet ids are called sequence numbers. While we’re not going to implement reliability exactly as TCP does, it makes sense to use the same terminology, so we’ll call them sequence numbers from now on.</p>
 <p>Since UDP does not guarantee the order of packets, the 100th packet received is not necessarily the 100th packet sent. It follows that we need to insert the sequence number somewhere in the packet, so that the computer at the other side of the connection knows which packet it is.</p>
 <p>We already have a simple packet header for the virtual connection from the previous article, so we&rsquo;ll just add the sequence number in the header like this:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>   [uint protocol id]
+   [uint sequence]
+   <em>(packet data...)</em></pre>
 <p>Now when the other computer receives a packet it knows its sequence number according to the computer that sent it.</p>
 <h2 id="acks">Acks</h2>
 <p>Now that we can identify packets using sequence numbers, the next step is to let the other side of the connection know which packets we receive.</p>
 <p>Logically this is quite simple, we just need to take note of the sequence number of each packet we receive, and send those sequence numbers back to the computer that sent them.</p>
 <p>Because we are sending packets continuously between both machines, we can just add the ack to the packet header, just like we did with the sequence number:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>    [uint protocol id]
+    [uint sequence]
+    [uint ack]
+    <em>(packet data...)</em></pre>
 <p>Our general approach is as follows:</p>
 <ul>
 <li>
-<p>Each time we send a packet we increase the <!-- raw HTML omitted -->local sequence number<!-- raw HTML omitted --></p>
+<p>Each time we send a packet we increase the <em>local sequence number</em></p>
 </li>
 <li>
-<p>When we receieve a packet, we check the sequence number of the packet against the sequence number of the most recently received packet, called the <!-- raw HTML omitted -->remote sequence number<!-- raw HTML omitted -->. If the packet is more recent, we update the remote sequence to be equal to the sequence number of the packet.</p>
+<p>When we receieve a packet, we check the sequence number of the packet against the sequence number of the most recently received packet, called the <em>remote sequence number</em>. If the packet is more recent, we update the remote sequence to be equal to the sequence number of the packet.</p>
 </li>
 <li>
 <p>When we compose packet headers, the local sequence becomes the sequence number of the packet, and the remote sequence becomes the ack.</p>
@@ -372,20 +375,20 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
 </ul>
 <p>This simple ack system works provided that one packet comes in for each packet we send out.</p>
 <p>But what if packets clump up such that two packets arrive before we send a packet? We only have space for one ack per-packet, so what do we do?</p>
-<p>Now consider the case where one side of the connection is sending packets at a faster rate. If the client sends 30 packets per-second, and the server only sends 10 packets per-second, we need <!-- raw HTML omitted -->at least<!-- raw HTML omitted --> 3 acks included in each packet sent from the server.</p>
+<p>Now consider the case where one side of the connection is sending packets at a faster rate. If the client sends 30 packets per-second, and the server only sends 10 packets per-second, we need <em>at least</em> 3 acks included in each packet sent from the server.</p>
 <p>Let&rsquo;s make it even more complex! What if the packet containing the ack is lost? The computer that sent the packet would think the packet got lost but it was actually received!</p>
-<p>It seems like we need to make our reliability system&hellip; <!-- raw HTML omitted -->more reliable!<!-- raw HTML omitted --></p>
+<p>It seems like we need to make our reliability system&hellip; <em>more reliable!</em></p>
 <h2 id="reliable-acks">Reliable Acks</h2>
 <p>Here is where we diverge significantly from TCP.</p>
 <p>What TCP does is maintain a sliding window where the ack sent is the sequence number of the next packet it expects to receive, in order. If TCP does not receive an ack for a given packet, it stops and resends a packet with that sequence number again. This is exactly the behavior we want to avoid!</p>
 <p>In our reliability system, we never resend a packet with a given sequence number. We sequence n exactly once, then we send n+1, n+2 and so on. We never stop and resend packet n if it was lost, we leave it up to the application to compose a new packet containing the data that was lost, if necessary, and this packet gets sent with a new sequence number.</p>
-<p>Because we&rsquo;re doing things differently to TCP, its now possible to have <!-- raw HTML omitted -->holes<!-- raw HTML omitted --> in the set of packets we ack, so it is no longer sufficient to just state the sequence number of the most recent packet we have received.</p>
+<p>Because we&rsquo;re doing things differently to TCP, its now possible to have <em>holes</em> in the set of packets we ack, so it is no longer sufficient to just state the sequence number of the most recent packet we have received.</p>
 <p>We need to include multiple acks per-packet.</p>
 <p>How many acks do we need?</p>
 <p>As mentioned previously we have the case where one side of the connection sends packets faster than the other. Let&rsquo;s assume that the worst case is one side sending no less than 10 packets per-second, while the other sends no more than 30. In this case, the average number of acks we&rsquo;ll need per-packet is 3, but if packets clump up a bit, we would need more. Let&rsquo;s say 6-10 worst case.</p>
 <p>What about acks that don&rsquo;t get through because the packet containing the ack is lost?</p>
 <p>To solve this, we&rsquo;re going to use a classic networking strategy of using redundancy to defeat packet loss!</p>
-<p>Let&rsquo;s include 33 acks per-packet, and this isn&rsquo;t just going to be up to 33, but <!-- raw HTML omitted -->always<!-- raw HTML omitted --> 33. So for any given ack we <!-- raw HTML omitted -->redundantly<!-- raw HTML omitted --> send it up to 32 additional times, just in case one packet with the ack doesn&rsquo;t get through!</p>
+<p>Let&rsquo;s include 33 acks per-packet, and this isn&rsquo;t just going to be up to 33, but <em>always</em> 33. So for any given ack we <span style="text-decoration:underline;">redundantly</span> send it up to 32 additional times, just in case one packet with the ack doesn&rsquo;t get through!</p>
 <p>But how can we possibly fit 33 acks in a packet? At 4 bytes per-ack thats 132 bytes!</p>
 <p>The trick is to represent the 32 previous acks before &ldquo;ack&rdquo; using a bitfield:</p>
 <pre><code>    [uint protocol id]
@@ -398,10 +401,10 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
 <p>Our adjusted algorithm looks like this:</p>
 <ul>
 <li>
-<p>Each time we send a packet we increase the <!-- raw HTML omitted -->local sequence number<!-- raw HTML omitted --></p>
+<p>Each time we send a packet we increase the <em>local sequence number</em></p>
 </li>
 <li>
-<p>When we receive a packet, we check the sequence number of the packet against the <!-- raw HTML omitted -->remote sequence number<!-- raw HTML omitted -->. If the packet sequence is more recent, we update the remote sequence number.</p>
+<p>When we receive a packet, we check the sequence number of the packet against the <em>remote sequence number</em>. If the packet sequence is more recent, we update the remote sequence number.</p>
 </li>
 <li>
 <p>When we compose packet headers, the local sequence becomes the sequence number of the packet, and the remote sequence becomes the ack. The ack bitfield is calculated by looking into a queue of up to 33 packets, containing sequence numbers in the range [remote sequence - 32, remote sequence]. We set bit n (in [1,32]) in ack bits to 1 if the sequence number remote sequence - n is in the received queue.</p>
@@ -414,17 +417,17 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
 <h2 id="detecting-lost-packets">Detecting Lost Packets</h2>
 <p>Now that we know what packets are received by the other side of the connection, how do we detect packet loss?</p>
 <p>The trick here is to flip it around and say that if you don&rsquo;t get an ack for a packet within a certain amount of time, then we consider that packet lost.</p>
-<p>Given that we are sending at no more than 30 packets per second, and we are redundantly sending acks roughly 30 times, if you don&rsquo;t get an ack for a packet within one second, it is <!-- raw HTML omitted -->very<!-- raw HTML omitted --> likely that packet was lost.</p>
-<p>So we are playing a bit of a trick here, while we can know 100% for sure which packets get through, but we can only be <!-- raw HTML omitted -->reasonably<!-- raw HTML omitted --> certain of the set of packets that didn&rsquo;t arrive.</p>
+<p>Given that we are sending at no more than 30 packets per second, and we are redundantly sending acks roughly 30 times, if you don&rsquo;t get an ack for a packet within one second, it is <em>very</em> likely that packet was lost.</p>
+<p>So we are playing a bit of a trick here, while we can know 100% for sure which packets get through, but we can only be <em>reasonably</em> certain of the set of packets that didn&rsquo;t arrive.</p>
 <p>The implication of this is that any data which you resend using this reliability technique needs to have its own message id so that if you receive it multiple times, you can discard it. This can be done at the application level.</p>
 <h2 id="handling-sequence-number-wrap-around">Handling Sequence Number Wrap-Around</h2>
 <p>No discussion of sequence numbers and acks would be complete without coverage of sequence number wrap around!</p>
 <p>Sequence numbers and acks are 32 bit unsigned integers, so they can represent numbers in the range [0,4294967295]. Thats a very high number! So high that if you sent 30 packets per-second, it would take over four and a half years for the sequence number to wrap back around to zero.</p>
 <p>But perhaps you want to save some bandwidth so you shorten your sequence numbers and acks to 16 bit integers. You save 4 bytes per-packet, but now they wrap around in only half an hour.</p>
 <p>So how do we handle this wrap around case?</p>
-<p>The trick is to realize that if the current sequence number is already very high, and the next sequence number that comes in is very low, then you must have wrapped around. So even though the new sequence number is <!-- raw HTML omitted -->numerically<!-- raw HTML omitted --> lower than the current sequence value, it actually represents a more recent packet.</p>
+<p>The trick is to realize that if the current sequence number is already very high, and the next sequence number that comes in is very low, then you must have wrapped around. So even though the new sequence number is <em>numerically</em> lower than the current sequence value, it actually represents a more recent packet.</p>
 <p>For example, let&rsquo;s say we encoded sequence numbers in one byte (not recommended btw. :)), then they would wrap around after 255 like this:</p>
-<!-- raw HTML omitted -->
+<pre>    ... 252, 253, 254, 255, 0, 1, 2, 3, ...</pre>
 <p>To handle this case we need a new function that is aware of the fact that sequence numbers wrap around to zero after 255, so that 0, 1, 2, 3 are considered more recent than 255. Otherwise, our reliability system stops working after you receive packet 255.</p>
 <p>Here&rsquo;s a function for 16 bit sequence numbers:</p>
 <pre><code>    inline bool sequence_greater_than( uint16_t s1, uint16_t s2 )
@@ -433,12 +436,12 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
                ( ( s1 &lt; s2 ) &amp;&amp; ( s2 - s1  &gt; 32768 ) );
     }
 </code></pre>
-<p>This function works by comparing the two numbers <!-- raw HTML omitted -->and<!-- raw HTML omitted --> their difference. If their difference is less than 1/2 the maximum sequence number value, then they must be close together - so we just check if one is greater than the other, as usual. However, if they are far apart, their difference will be greater than 1/2 the max sequence, then we paradoxically consider the sequence number more recent if it is <!-- raw HTML omitted -->less<!-- raw HTML omitted --> than the current sequence number.</p>
+<p>This function works by comparing the two numbers <em>and</em> their difference. If their difference is less than 1/2 the maximum sequence number value, then they must be close together - so we just check if one is greater than the other, as usual. However, if they are far apart, their difference will be greater than 1/2 the max sequence, then we paradoxically consider the sequence number more recent if it is <em>less</em> than the current sequence number.</p>
 <p>This last bit is what handles the wrap around of sequence numbers transparently, so 0,1,2 are considered more recent than 255.</p>
 <p>Make sure you include this in any sequence number processing you do.</p>
 <h2 id="congestion-avoidance">Congestion Avoidance</h2>
 <p>While we have solved reliability, there is still the question of congestion avoidance. TCP provides congestion avoidance as part of the packet when you get TCP reliability, but UDP has no congestion avoidance whatsoever!</p>
-<p>If we just send packets without some sort of flow control, we risk flooding the connection and inducing severe latency (2 seconds plus!) as routers between us and the other computer become congested and buffer up packets. This happens because routers try <!-- raw HTML omitted -->very hard<!-- raw HTML omitted --> to deliver all the packets we send, and therefore tend to buffer up packets in a queue before they consider dropping them.</p>
+<p>If we just send packets without some sort of flow control, we risk flooding the connection and inducing severe latency (2 seconds plus!) as routers between us and the other computer become congested and buffer up packets. This happens because routers try <em>very hard</em> to deliver all the packets we send, and therefore tend to buffer up packets in a queue before they consider dropping them.</p>
 <p>While it would be nice if we could tell the routers that our packets are time sensitive and should be dropped instead of buffered if the router is overloaded, we can&rsquo;t really do this without rewriting the software for all routers in the world.</p>
 <p>Instead, we need to focus on what we can actually do which is to avoid flooding the connection in the first place. We try to avoid sending too much bandwidth in the first place, and then if we detect congestion, we attempt to back off and send even less.</p>
 <p>The way to do this is to implement our own basic congestion avoidance algorithm. And I stress basic! Just like reliability, we have no hope of coming up with something as general and robust as TCP&rsquo;s implementation on the first try, so let&rsquo;s keep it as simple as possible.</p>
@@ -482,14 +485,14 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
 <p>To avoid punishing good connections when they have short periods of bad behavior, for each 10 seconds the connection is in good mode, halve the time &rsquo;t&rsquo; before bad mode goes back to good. Clamp this at some minimum like 1 second.</p>
 </li>
 </ul>
-<p>With this algorithm you will rapidly respond to bad conditions and drop your send rate to 10 packets per-second, avoiding flooding of the connection. You&rsquo;ll also <!-- raw HTML omitted -->conservatively<!-- raw HTML omitted --> try out good mode, and persist sending packets at a higher rate of 30 packets per-second, while network conditions are good.</p>
+<p>With this algorithm you will rapidly respond to bad conditions and drop your send rate to 10 packets per-second, avoiding flooding of the connection. You&rsquo;ll also <em>conservatively</em> try out good mode, and persist sending packets at a higher rate of 30 packets per-second, while network conditions are good.</p>
 <p>Of course, you can implement much more sophisticated algorithms. Packet loss % can be taken into account as a metric, even the amount of network jitter (time variance in packet acks), not just RTT.</p>
-<p>You can also get much more <!-- raw HTML omitted -->greedy<!-- raw HTML omitted --> with congestion avoidance, and attempt to discover when you can send data at a much higher bandwidth (eg. LAN), but you have to be very careful! With increased greediness comes more risk that you&rsquo;ll flood the connection.</p>
+<p>You can also get much more <em>greedy</em> with congestion avoidance, and attempt to discover when you can send data at a much higher bandwidth (eg. LAN), but you have to be very careful! With increased greediness comes more risk that you&rsquo;ll flood the connection.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>Our new reliability system let&rsquo;s us send a steady stream of packets and notifies us which packets are received. From this we can infer lost packets, and resend data that didn&rsquo;t get through if necessary. We also have a simple congestion avoidance system that drops from 30 packets per-second to 10 times a second so we don&rsquo;t flood the connection.</p>
 <p><strong>NEXT:</strong> <a href="/post/what_every_programmer_needs_to_know_about_game_networking/">What Every Programmer Needs to Know About Game Networking</a></p>
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
 
     </div>
 

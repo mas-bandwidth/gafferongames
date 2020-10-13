@@ -338,9 +338,9 @@ As the first step towards a general connection system, we&rsquo;ll start with th
 <p>In the <a href="/post/sending_and_receiving_packets">previous article</a> we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.</p>
 <p>As the first step towards a general connection system, we&rsquo;ll start with the simplest case possible: creating a virtual connection between two computers on top of UDP.</p>
 <p>But first, we&rsquo;re going to dig in a bit deeper about how the Internet really works!</p>
-<h2 id="the-internet-unotu-a-series-of-tubes">The Internet <!-- raw HTML omitted -->NOT<!-- raw HTML omitted --> a series of tubes</h2>
-<p>In 2006, Senator Ted Stevens made internet history with his <!-- raw HTML omitted -->famous speech<!-- raw HTML omitted --> on the net neutrality act:</p>
-<!-- raw HTML omitted -->
+<h2 id="the-internet-unotu-a-series-of-tubes">The Internet <u>NOT</u> a series of tubes</h2>
+<p>In 2006, Senator Ted Stevens made internet history with his <a href="http://en.wikipedia.org/wiki/Series_of_tubes">famous speech</a> on the net neutrality act:</p>
+<blockquote>"The internet is not something that you just dump something on. It's not a big truck. It's a series of tubes"</blockquote>
 <p>When I first started using the Internet, I was just like Ted. Sitting in the computer lab in University of Sydney in 1995, I was &ldquo;surfing the web&rdquo; with this new thing called Netscape Navigator, and I had absolutely no idea what was going on.</p>
 <p>You see, I thought each time you connected to a website there was some actual connection going on,  like a telephone line. I wondered, how much does it cost each time I connect to a new website? 30 cents? A dollar? Was somebody from the university going to tap me on the shoulder and ask me to pay the long distance charges? :)</p>
 <p>Of course, this all seems silly now.</p>
@@ -351,33 +351,43 @@ As the first step towards a general connection system, we&rsquo;ll start with th
 <p>On unix-like systems can inspect the route that packets take by calling &ldquo;traceroute&rdquo; and passing in a destination hostname or IP address.</p>
 <p>On windows, replace &ldquo;traceroute&rdquo; with &ldquo;tracert&rdquo; to get it to work.</p>
 <p>Try it with a few websites like this:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+    traceroute slashdot.org
+    traceroute amazon.com
+    traceroute google.com
+    traceroute bbc.co.uk
+    traceroute news.com.au
+</pre>
 <p>Take a look and you should be able to convince yourself pretty quickly that there is no direct connection.</p>
 <h2 id="how-packets-get-delivered">How Packets Get Delivered</h2>
 <p>In the <a href="/post/udp_vs_tcp/">first article</a>, I presented a simple analogy for packet delivery, describing it as somewhat like a note being passed from person to person across a crowded room.</p>
-<p>While this analogy gets the basic idea across, it is much too simple. The Internet is <!-- raw HTML omitted -->not<!-- raw HTML omitted --> a flat network of computers, it is a network of networks. And of course, we don&rsquo;t just need to pass letters around a small room, we need to be able to send them anywhere in the world.</p>
+<p>While this analogy gets the basic idea across, it is much too simple. The Internet is <u>not</u> a flat network of computers, it is a network of networks. And of course, we don&rsquo;t just need to pass letters around a small room, we need to be able to send them anywhere in the world.</p>
 <p>It should be pretty clear then that the best analogy is the postal service!</p>
-<p>When you want to send a letter to somebody you put your letter in the mailbox and you trust that it will be delivered correctly. It&rsquo;s not really relevant to you <!-- raw HTML omitted -->how<!-- raw HTML omitted --> it gets there, as long as it does. Somebody has to physically deliver your letter to its destination of course, so how is this done?</p>
+<p>When you want to send a letter to somebody you put your letter in the mailbox and you trust that it will be delivered correctly. It&rsquo;s not really relevant to you <i>how</i> it gets there, as long as it does. Somebody has to physically deliver your letter to its destination of course, so how is this done?</p>
 <p>Well first off, the postman sure as hell doesn&rsquo;t take your letter and deliver it personally! It seems that the postal service is not a series of tubes either. Instead, the postman takes your letter to the local post office for processing.</p>
-<p>If the letter is addressed locally then the post office just sends it back out, and another postman delivers it directly. But, if the address is is non-local then it gets interesting! The local post office is not able to deliver the letter directly, so it passes it &ldquo;up&rdquo; to the next level of hierarchy, perhaps to a regional post office which services cities nearby, or maybe to a mail center at an airport, if the address is far away. Ideally, the actual transport of the letter would be done using a <!-- raw HTML omitted -->big truck<!-- raw HTML omitted -->.</p>
+<p>If the letter is addressed locally then the post office just sends it back out, and another postman delivers it directly. But, if the address is is non-local then it gets interesting! The local post office is not able to deliver the letter directly, so it passes it &ldquo;up&rdquo; to the next level of hierarchy, perhaps to a regional post office which services cities nearby, or maybe to a mail center at an airport, if the address is far away. Ideally, the actual transport of the letter would be done using a <u>big truck</u>.</p>
 <p>Lets be complicated and assume the letter is sent from Los Angeles to Sydney, Australia. The local post office receives the letter and given that it is addressed internationally, sends it directly to a mail center at LAX. The letter is processed again according to address, and gets routed on the next flight to Sydney.</p>
-<p>The plane lands at Sydney airport where an <!-- raw HTML omitted -->entirely different postal system<!-- raw HTML omitted --> takes over. Now the whole process starts operating in reverse. The letter travels &ldquo;down&rdquo; the hierarchy, from the general, to the specific. From the mail hub at Sydney Airport it gets sent out to a regional center, the regional center delivers it to the local post office, and eventually the letter is hand delivered by a mailman with a funny accent. Crikey! :)</p>
+<p>The plane lands at Sydney airport where an <i>entirely different postal system</i> takes over. Now the whole process starts operating in reverse. The letter travels &ldquo;down&rdquo; the hierarchy, from the general, to the specific. From the mail hub at Sydney Airport it gets sent out to a regional center, the regional center delivers it to the local post office, and eventually the letter is hand delivered by a mailman with a funny accent. Crikey! :)</p>
 <p>Just like post offices determine how to deliver letters via their address, networks deliver packets according to their IP address. The low-level details of this delivery and the actual routing of packets from network to network is actually quite complex, but the basic idea is that each router is just another computer, with a routing table describing where packets matching sets of addresses should go, as well as a default gateway address describing where to pass packets for which there is no matching entry in the table. It is routing tables, and the physical connections they represent that define the network of networks that is the Internet.</p>
-<p>The job of configuring these routing tables is up to network administrators, not programmers like us. But if you want to read more about it, then this article from <!-- raw HTML omitted -->ars technica<!-- raw HTML omitted --> provides some  fascinating insight into how networks exchange packets between each other via peering and transit relationships. You can also read more details about <!-- raw HTML omitted -->routing tables<!-- raw HTML omitted --> in this linux faq, and about the <!-- raw HTML omitted -->border gateway protocol<!-- raw HTML omitted --> on wikipedia, which automatically discovers how to route packets between networks, making the internet a truly distributed system capable of dynamically routing around broken connectivity.</p>
+<p>The job of configuring these routing tables is up to network administrators, not programmers like us. But if you want to read more about it, then this article from <a href="http://arstechnica.com/guides/other/peering-and-transit.ars">ars technica</a> provides some  fascinating insight into how networks exchange packets between each other via peering and transit relationships. You can also read more details about <a href="http://www.faqs.org/docs/linux_network/x-087-2-issues.routing.html">routing tables</a> in this linux faq, and about the <a href="http://en.wikipedia.org/wiki/Border_Gateway_Protocol">border gateway protocol</a> on wikipedia, which automatically discovers how to route packets between networks, making the internet a truly distributed system capable of dynamically routing around broken connectivity.</p>
 <h2 id="virtual-connections">Virtual Connections</h2>
 <p>Now back to connections.</p>
-<p>If you have used TCP sockets then you know that they sure <!-- raw HTML omitted -->look<!-- raw HTML omitted --> like a connection, but since TCP is implemented on top of IP, and IP is just packets hopping from computer to computer, it follows that TCP&rsquo;s concept of connection must be a <!-- raw HTML omitted -->virtual connection.<!-- raw HTML omitted --></p>
+<p>If you have used TCP sockets then you know that they sure <i>look</i> like a connection, but since TCP is implemented on top of IP, and IP is just packets hopping from computer to computer, it follows that TCP&rsquo;s concept of connection must be a <i>virtual connection.</i></p>
 <p>If TCP can create a virtual connection over IP, it follows that we can do the same over UDP.</p>
 <p>Lets define our virtual connection as two computers exchanging UDP packets at some fixed rate like 10 packets per-second. As long as the packets are flowing, we consider the two computers to be virtually connected.</p>
 <p>Our connection has two sides:</p>
-<!-- raw HTML omitted -->
+<ul>
+<li>One computer sits there and <i>listens</i> for another computer to connect to it. We'll call this computer the <u>server</u>.</li>
+<li>Another computer <i>connects</i> to a server by specifying an IP address and port. We'll call this computer the <u>client</u>.</li>
+</ul>
 <p>In our case, we only allow one client to connect to the server at any time. We&rsquo;ll generalize our connection system to support multiple simultaneous connections in a later article. Also, we assume that the IP address of the server is on a fixed IP address that the client may directly connect to.</p>
 <h2 id="protocol-id">Protocol ID</h2>
 <p>Since UDP is connectionless our UDP socket can receive packets sent from any computer.</p>
 <p>We&rsquo;d like to narrow this down so that the server only receives packets sent from the client, and the client only receives packets sent from the server. We can&rsquo;t just filter out packets by address, because the server doesn&rsquo;t know the address of the client in advance. So instead, we prefix each UDP packet with small header containing a 32 bit protocol id as follows:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+    [uint protocol id]
+    <i>(packet data...)</i>
+</pre>
 <p>The protocol id is just some unique number representing our game protocol. Any packet that arrives from our UDP socket first has its first four bytes inspected. If they don&rsquo;t match our protocol id, then the packet is ignored. If the protocol id does match, we strip out the first four bytes of the packet and deliver the rest as payload.</p>
 <p>You just choose some number that is reasonably unique, perhaps a hash of the name of your game and the protocol version number. But really you can use anything. The whole point is that from the point of view of our connection based protocol, packets with different protocol ids are ignored.</p>
 <h2 id="detecting-connection">Detecting Connection</h2>
@@ -390,7 +400,7 @@ As the first step towards a general connection system, we&rsquo;ll start with th
 <p>But for now, why make things more complicated than they need to be?</p>
 <h2 id="detecting-disconnection">Detecting Disconnection</h2>
 <p>How do we detect disconnection?</p>
-<p>Well if a connection is defined as receiving packets, we can define disconnection as <!-- raw HTML omitted -->not<!-- raw HTML omitted --> receiving packets.</p>
+<p>Well if a connection is defined as receiving packets, we can define disconnection as <i>not</i> receiving packets.</p>
 <p>To detect when we are not receiving packets, we keep track of the number of seconds since we last received a packet from the other side of the connection. We do this on both sides.</p>
 <p>Each time we receive a packet from the other side, we reset our accumulator to 0.0, each update we increase the accumulator by the amount of time that has passed.</p>
 <p>If this accumulator exceeds some value like 10 seconds, the connection &ldquo;times out&rdquo; and we disconnect.</p>
@@ -401,7 +411,7 @@ As the first step towards a general connection system, we&rsquo;ll start with th
 <p>Now that you have your virtual connection over UDP, you can easily setup a client/server relationship for a two player multiplayer game without TCP.</p>
 <p><strong>NEXT ARTICLE:</strong> <a href="/post/reliability_ordering_and_congestion_avoidance_over_udp/">Reliability and Congestion Avoidance over UDP</a></p>
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
 
     </div>
 

@@ -349,29 +349,65 @@ Rigid Bodies We will concentrate on a type of object called a rigid body. Rigid 
 <p>Or&hellip; we could just use vectors.</p>
 <p>Vectors are a mathematical type representing an array of numbers. A three dimensional vector has three components x, y and z. Each component corresponds to a dimension. In this article x is left and right, y is up and down, and z is forward and back.</p>
 <p>In C++ we implement vectors using a struct as follows:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+    struct Vector
+    {
+         float x,y,z;
+    };
+</pre>
 <p>Addition of two vectors is defined as adding each component together. Multiplying a vector by a floating point number is the same as just multiplying each component. Lets add overloaded operators to the vector struct so that we can perform these operations in code as if vectors are a native type:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+    struct Vector
+    {
+         float x,y,z;
+
+         Vector operator + ( const Vector &amp;other )
+         {
+              Vector result;
+              result.x = x + other.x;
+              result.y = y + other.y;
+              result.z = z + other.z;
+              return result;
+         }
+
+         Vector operator*( float scalar )
+         {
+              Vector result;
+              result.x = x * scalar;
+              result.y = y * scalar;
+              result.z = z * scalar;
+              return result;
+         }
+    };
+</pre>
 <p>Now instead of maintaining completely seperate equations of motion and integrating seperately for x, y and z, we convert our position, velocity, acceleration and force to vector quantities, then integrate the vectors directly using the equations of motion from the <a href="/post/integration_basics/">first article</a>:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
-<p>Notice how <!-- raw HTML omitted -->F<!-- raw HTML omitted -->, <!-- raw HTML omitted -->a<!-- raw HTML omitted -->, <!-- raw HTML omitted -->v<!-- raw HTML omitted --> and <!-- raw HTML omitted -->x<!-- raw HTML omitted --> are written in bold. This is the convention used to distinguish vector quantities from single value (scalar) quantities such as mass m and time t.</p>
+<pre>
+    <b>F</b> = m<b>a</b>
+    d<b>v</b>/dt = <b>a</b>
+    d<b>x</b>/dt = <b>v</b>
+</pre>
+<p>Notice how <b>F</b>, <b>a</b>, <b>v</b> and <b>x</b> are written in bold. This is the convention used to distinguish vector quantities from single value (scalar) quantities such as mass m and time t.</p>
 <p>Now that we have the equations of motion in vector form, how do we integrate them? The answer is exactly the same as we integrated single values. This is because we have already added overloaded operators for adding two vectors together, and multiplying a vector by a scalar, and this is all we need to be able to drop in vectors in place of floats and have everything just work.</p>
 <p>For example, here is a simple Euler integration for vector position from velocity:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+    position = position + velocity * dt;
+</pre>
 <p>Notice how the overloaded operators make it look exactly the same as an Euler integration for a single value. But what is it really doing? Lets take a look at how we would implement vector integration without the overloaded operators:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+    position.x = position.x + velocity.x * dt;
+    position.y = position.y + velocity.y * dt;
+    position.z = position.z + velocity.z * dt;
+</pre>
 <p>As you can see, its exactly the same as if we integrated each component of the vector separately! This is the cool thing about vectors. Whether we integrate vectors directly, or integrate each component separately, we are doing exactly the same thing.</p>
 <h2 id="structuring-for-rk4">Structuring for RK4</h2>
 <p>In the example programs from previous articles we drove the simulation from acceleration assuming unit mass. This kept the code nice and simple, but from now on every object will have its own mass in kilograms so the simulation needs be driven by forces instead.</p>
 <p>There are two ways we can do this. First, we can divide force by mass to get acceleration, then integrate this acceleration to get the velocity, and integrate velocity to get position.</p>
 <p>The second way is to integrate force directly to get momentum, then convert this momentum to velocity by dividing it by mass, then finally integrate velocity to get position. Remember that momentum is just velocity multiplied by mass:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+    d<b>p</b>/dt = <b>F</b>
+    <b>v</b> = <b>p</b>/m
+    d<b>x</b>/dt = <b>v</b>
+</pre>
 <p>Both methods work, but the second way is more consistent with the way that we must approach rotation later in the article, so we&rsquo;ll use that.</p>
 <p>When we switch to momentum we need to make sure that the velocity is recalculated after each integration by dividing momentum by mass. Doing this manually everywhere that momentum is changed would be error prone, so we now separate all our state quantities into primary, secondary and constant values, and add a method called &lsquo;recalculate&rsquo; to the State struct which is responsible for updating all the secondary values from the primary ones:</p>
 <pre><code>    struct State
@@ -491,25 +527,28 @@ Rigid Bodies We will concentrate on a type of object called a rigid body. Rigid 
 <h2 id="forces-and-torques">Forces and Torques</h2>
 <p>We can apply separate forces and torques to an object individually, but we know from real life that if we push an object it usually makes it both move and rotate. So how can we break down a force applied at a point on the object into a linear force which causes a change in momentum, and a torque which changes angular momentum?</p>
 <p>Given that our object is a rigid body, what actually happens here is that the entire force applied at the point is applied linearly, plus a torque is also generated based on the cross product of the force vector and the point on the object relative to the center of mass of the object:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
-<p>Where <!-- raw HTML omitted -->F<!-- raw HTML omitted --> is the force being applied at point <!-- raw HTML omitted -->p<!-- raw HTML omitted --> in world coordinates, and <!-- raw HTML omitted -->x<!-- raw HTML omitted --> is the center of mass of the object.</p>
+<pre>
+    <b>F</b><sub>linear</sub> = <b>F</b>
+    <b>F</b><sub>torque</sub> = <b>F</b> x (<b>p</b> - <b>x</b>)
+</pre>
+<p>Where <b>F</b> is the force being applied at point <b>p</b> in world coordinates, and <b>x</b> is the center of mass of the object.</p>
 <p>This seems counterintuitive at first. Why is the force being applied twice? Once to linear and once to rotational motion?</p>
 <p>What is happening here is our everyday experience with objects clouding the true behavior of an object under ideal conditions.</p>
 <p>Remember your pushbike when you were a kid? You would have to change your tire and flip the bike upside down. You could spin the tire around by pushing on it. You don&rsquo;t see any linear motion here, just rotation, so what is going on? The answer of course is that the axle of the wheel is counteracting the linear component of the force you applied, leaving only the rotational component. Not convinced? Imagine what would happen if you tried to ride your bike without an axle in your wheel&hellip;</p>
 <p>Another example: consider a bowling ball lying on a slippery surface such as ice so that no significant friction is present. Now in your mind try to work out a way that you can apply a force at a single point on the surface of the bowling ball such that it will stay completely still while rotating on the spot. There is no way you can do this! Any point where you push would also make the bowling ball move linearly as well as rotate. To apply a pure rotation you&rsquo;d have to push on both sides of the ball, canceling the linear component of your force out leaving only torque.</p>
 <p>So remember, whenever you apply a force to an object there will always be a linear force component which causes the object to accelerate linearly, as well as, depending on the direction of the force, a rotational component that causes the object to rotate.</p>
-<h2 id="velocity-at-a-pointb">Velocity at a Point<!-- raw HTML omitted --></h2>
+<h2 id="velocity-at-a-pointb">Velocity at a Point</b></h2>
 <p>The final piece of the puzzle is how to calculate the velocity of a single point in the rigid body. To do this we start with the linear velocity of the object, because all points must move with this velocity to keep it rigid, then add the velocity at the point due to rotation.</p>
 <p>This velocity due to rotation will not be constant for every point in the body if it is rotating, as each point in the body must be spinning around the axis of rotation. Combining the linear and angular velocities, the total velocity of a point in the rigid body is:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
-<p>Where <!-- raw HTML omitted -->p<!-- raw HTML omitted --> is the point on the rigid body and <!-- raw HTML omitted -->x<!-- raw HTML omitted --> is the center of mass of the object.</p>
+<pre>
+    <b>v</b><sub>point</sub> = <b>v</b><sub>linear</sub> + <b>v</b><sub>angular</sub> cross (<b>p</b> - <b>x</b>)
+</pre>
+<p>Where <b>p</b> is the point on the rigid body and <b>x</b> is the center of mass of the object.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>We have covered the techniques required to simulate linear and rotational movement of a rigid body in three dimensions. By combining the linear and rotational physics into a single physics state and integrating, we can simulate the motion of a rigid body in three dimensions.</p>
 <p><strong>NEXT ARTICLE:</strong> <a href="/post/spring_physics/">Spring Physics</a></p>
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
 
     </div>
 

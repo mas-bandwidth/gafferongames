@@ -289,7 +289,7 @@ So let&rsquo;s get creative and work out how we can implement a reliable message
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    13 min read
+    14 min read
   </span>
   
 
@@ -351,8 +351,14 @@ So let&rsquo;s get creative and work out how we can implement a reliable message
 <p>The approach I prefer combines packet level acks with a prioritization system that picks the n most important messages to include in each packet. This combines time critical delivery and the ability to send only n messages per-packet, while distributing sends across all messages in the send queue.</p>
 <h2 id="packet-levelacks">Packet Level Acks</h2>
 <p>To implement packet level acks, we add the following packet header:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+struct Header
+{
+    uint16_t sequence;
+    uint16_t ack;
+    uint32_t ack_bits;
+};
+</pre>
 <p>These header elements combine to create the ack system: <strong>sequence</strong> is a number that increases with each packet sent, <strong>ack</strong> is the most recent packet sequence number received, and <strong>ack_bits</strong> is a bitfield encoding the set of acked packets.</p>
 <p>If bit <strong>n</strong> is set in <strong>ack_bits</strong>, then <strong>ack - n</strong> is acked. Not only is <strong>ack_bits</strong> a smart encoding that saves bandwidth, it also adds <em>redundancy</em> to combat packet loss. Each ack is sent 32 times. If one packet is lost, there&rsquo;s 31 other packets with the same ack. Statistically speaking, acks are very likely to get through.</p>
 <p>But bursts of packet loss do happen, so it&rsquo;s important to note that:</p>
@@ -376,20 +382,50 @@ So let&rsquo;s get creative and work out how we can implement a reliable message
 <li>Constant time removal of entries</li>
 </ul>
 <p>You might be thinking. Oh of course, <em>hash table</em>. But there&rsquo;s a much simpler way:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+const int BufferSize = 1024;
+
+uint32_t sequence_buffer[BufferSize];
+
+struct PacketData
+{
+    bool acked;
+};
+
+PacketData packet_data[BufferSize];
+
+PacketData * GetPacketData( uint16_t sequence )
+{
+    const int index = sequence % BufferSize;
+    if ( sequence_buffer[index] == sequence )
+        return &amp;packet_data[index];
+    else
+        return NULL;
+}
+</pre>
 <p>As you can see the trick here is a rolling buffer indexed by sequence number:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+const int index = sequence % BufferSize;
+</pre>
 <p>This works because we don&rsquo;t care about being destructive to old entries. As the sequence number increases older entries are naturally overwritten as we insert new ones. The sequence_buffer[index] value is used to test if the entry at that index actually corresponds to the sequence number you&rsquo;re looking for. A sequence buffer value of 0xFFFFFFFF indicates an empty entry and naturally returns NULL for any sequence number query without an extra branch.</p>
 <p>When entries are added in order like a send queue, all that needs to be done on insert is to update the sequence buffer value to the new sequence number and overwrite the data at that index:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+PacketData &amp; InsertPacketData( uint16_t sequence )
+{
+    const int index = sequence % BufferSize;
+    sequence_buffer[index] = sequence;
+    return packet_data[index];
+}
+</pre>
 <p>Unfortunately, on the receive side packets arrive out of order and some are lost. Under ridiculously high packet loss (99%) I&rsquo;ve seen old sequence buffer entries stick around from before the previous sequence number wrap at 65535 and break my ack logic (leading to false acks and broken reliability where the sender thinks the other side has received something they haven&rsquo;t&hellip;).</p>
 <p>The solution to this problem is to walk between the previous highest insert sequence and the new insert sequence (if it is more recent) and clear those entries in the sequence buffer to 0xFFFFFFFF. Now in the common case, insert is <em>very close</em> to constant time, but worst case is linear where n is the number of sequence entries between the previous highest insert sequence and the current insert sequence.</p>
 <p>Before we move on I would like to note that you can do much more with this data structure than just acks. For example, you could extend the per-packet data to include time sent:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>struct PacketData
+{
+    bool acked;
+    double send_time;
+};
+</pre>
 <p>With this information you can create your own estimate of round trip time by comparing send time to current time when packets are acked and taking an <a href="https://en.wikipedia.org/wiki/Exponential_smoothing">exponentially smoothed moving average</a>. You can even look at packets in the sent packet sequence buffer older than your RTT estimate (you should have received an ack for them by now&hellip;) to create your own packet loss estimate.</p>
 <h2 id="ack-algorithm">Ack Algorithm</h2>
 <p>Now that we have the data structures and packet header, here is the algorithm for implementing packet level acks:</p>
@@ -432,18 +468,83 @@ So let&rsquo;s get creative and work out how we can implement a reliable message
 <p>Messages are small objects (smaller than packet size, so that many will fit in a typical packet) that know how to serialize themselves. In my system they perform serialization using a <a href="http://gafferongames.com/building-a-game-network-protocol/serialization-strategies">unified serialize function</a>unified serialize function.</p>
 <p>The serialize function is templated so you write it once and it handles read, write and <em>measure</em>.</p>
 <p>Yes. Measure. One of my favorite tricks is to have a dummy stream class called <strong>MeasureStream</strong> that doesn&rsquo;t do any actual serialization but just measures the number of bits that <em>would</em> be written if you called the serialize function. This is particularly useful for working out which messages are going to fit into your packet, especially when messages themselves can have arbitrarily complex serialize functions.</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+struct TestMessage : public Message
+{
+    uint32_t a,b,c;
+
+    TestMessage()
+    {
+        a = 0;
+        b = 0;
+        c = 0;
+    }
+
+    template &lt;typename Stream&gt; bool Serialize( Stream &amp; stream )
+    { 
+        serialize_bits( stream, a, 32 );
+        serialize_bits( stream, b, 32 );
+        serialize_bits( stream, c, 32 );
+        return true;
+    }
+
+    virtual SerializeInternal( WriteStream &amp; stream )
+    {
+        return Serialize( stream );
+    }
+
+    virtual SerializeInternal( ReadStream &amp; stream )
+    {
+        return Serialize( stream );
+    }
+
+    virtual SerializeInternal( MeasureStream &amp; stream )
+    {
+        return Serialize( stream );        
+    }
+};
+</pre>
 <p>The trick here is to bridge the unified templated serialize function (so you only have to write it once) to virtual serialize methods by calling into it from virtual functions per-stream type. I usually wrap this boilerplate with a macro, but it&rsquo;s expanded in the code above so you can see what&rsquo;s going on.</p>
 <p>Now when you have a base message pointer you can do this and it <em>just works</em>:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+Message * message = CreateSomeMessage();
+message-&gt;SerializeInternal( stream );
+</pre>
 <p>An alternative if you know the full set of messages at compile time is to implement a big switch statement on message type casting to the correct message type before calling into the serialize function for each type. I&rsquo;ve done this in the past on console platform implementations of this message system (eg. PS3 SPUs) but for applications today (2016) the overhead of virtual functions is neglible.</p>
 <p>Messages derive from a base class that provides a common interface such as serialization, querying the type of a message and reference counting. Reference counting is necessary because messages are passed around by pointer and stored not only in the message send queue until acked, but also in outgoing packets which are themselves C++ structs.</p>
 <p>This is a strategy to avoid copying data by passing both messages and packets around by pointer. Somewhere else (ideally on a separate thread) packets and the messages inside them are serialized to a buffer. Eventually, when no references to a message exist in the message send queue (the message is acked) and no packets including that message remain in the packet send queue, the message is destroyed.</p>
 <p>We also need a way to create messages. I do this with a message factory class with a virtual function overriden to create a message by type. It&rsquo;s good if the packet factory also knows the total number of message types, so we can serialize a message type over the network with tight bounds and discard malicious packets with message type values outside of the valid range:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+enum TestMessageTypes
+{
+    TEST_MESSAGE_A,
+    TEST_MESSAGE_B,
+    TEST_MESSAGE_C,
+    TEST_MESSAGE_NUM_TYPES
+};
+
+// message definitions omitted
+
+class TestMessageFactory : public MessageFactory
+{ 
+public:
+
+    Message * Create( int type )
+    {
+        switch ( type )
+        {
+            case TEST_MESSAGE_A: return new TestMessageA();
+            case TEST_MESSAGE_B: return new TestMessageB();
+            case TEST_MESSAGE_C: return new TestMessageC();
+        }
+    }
+
+    virtual int GetNumTypes() const
+    {
+        return TEST_MESSAGE_NUM_TYPES;
+    }
+};
+</pre>
 <p>Again, this is boilerplate and is usually wrapped by macros, but underneath this is what&rsquo;s going on.</p>
 <h2 id="reliable-ordered-message-algorithm">Reliable Ordered Message Algorithm</h2>
 <p>The algorithm for sending reliable-ordered messages is as follows:</p>
@@ -516,15 +617,36 @@ So let&rsquo;s get creative and work out how we can implement a reliable message
 <p>In short, messages keep getting included in packets until a packet containing that message is acked. We use a data structure on the sender side to map packet sequence numbers to the set of message ids to ack. Messages are removed from the send queue when they are acked. On the receive side, messages arriving out of order are stored in a sequence buffer indexed by message id, which lets us receive them in the order they were sent.</p>
 <h2 id="the-end-result">The End Result</h2>
 <p>This provides the user with an interface that looks something like this on send:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+TestMessage * message = (TestMessage*) factory.Create( TEST_MESSAGE );
+if ( message )
+{
+    message-&gt;a = 1;
+    message-&gt;b = 2;
+    message-&gt;c = 3;
+    connection.SendMessage( message );
+}</pre>
 <p>And on the receive side:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>
+while ( true )
+{
+    Message * message = connection.ReceiveMessage();
+    if ( !message )
+        break;
+
+    if ( message-&gt;GetType() == TEST_MESSAGE )
+    {
+        TestMessage * testMessage = (TestMessage*) message;
+        // process test message
+    }
+
+    factory.Release( message );
+}
+</pre>
 <p>Which is flexible enough to implement whatever you like on top of it.</p>
 <p><strong>NEXT ARTICLE</strong>: <a href="/post/client_server_connection/">Client Server Connection</a></p>
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
 
     </div>
 

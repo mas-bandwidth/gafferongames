@@ -287,7 +287,7 @@ You have most likely heard of sockets, and are probably aware that there are two
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    12 min read
+    13 min read
   </span>
   
 
@@ -363,9 +363,22 @@ You have most likely heard of sockets, and are probably aware that there are two
 <p>We have a decision to make here, do we use TCP sockets or UDP sockets?</p>
 <p>Lets look at the properties of each:</p>
 <p>TCP:</p>
-<!-- raw HTML omitted -->
+<ul>
+    <li>Connection based</li>
+    <li>Guaranteed reliable and ordered</li>
+    <li>Automatically breaks up your data into packets for you</li>
+    <li>Makes sure it doesn't send data too fast for the internet connection to handle (flow control)</li>
+    <li>Easy to use, you just read and write data like its a file</li>
+</ul>
 <p>UDP:</p>
-<!-- raw HTML omitted -->
+<ul>
+    <li>No concept of connection, you have to code this yourself</li>
+    <li>No guarantee of reliability or ordering of packets, they may arrive out of order, be duplicated, or not arrive at all!</li>
+    <li>You have to manually break your data up into packets and send them</li>
+    <li>You have to make sure you don't send data too fast for your internet connection to handle</li>
+    <li>If a packet is lost, you need to devise some way to detect this, and resend that data if necessary</li>
+    <li>You can't even rely on the UDP checksum so you must add your own</li>
+</ul>
 <p>The decision seems pretty clear then, TCP does everything we want and its super easy to use, while UDP is a huge pain in the ass and we have to code everything ourselves from scratch.</p>
 <p>So obviously we just use TCP right?</p>
 <p>Wrong!</p>
@@ -398,7 +411,7 @@ You have most likely heard of sockets, and are probably aware that there are two
 <h2 id="wait-why-cant-i-use-_both_-udp-and-tcp">Wait? Why can&rsquo;t I use <em>both</em> UDP and TCP?</h2>
 <p>For realtime game data like player input and state, only the most recent data is relevant, but for other types of data, say perhaps a sequence of commands sent from one machine to another, reliability and ordering can be very important.</p>
 <p>The temptation then is to use UDP for player input and state, and TCP for the reliable ordered data. If you&rsquo;re sharp you&rsquo;ve probably even worked out that you may have multiple &ldquo;streams&rdquo; of reliable ordered commands, maybe one about level loading, and another about AI. Perhaps you think to yourself, &ldquo;Well, I&rsquo;d really not want AI commands to stall out if a packet is lost containing a level loading command - they are completely unrelated!&rdquo;. You are right, so you may be tempted to create one TCP socket for each stream of commands.</p>
-<p>On the surface, this seems like a great idea. The problem is that since TCP and UDP are both built on top of IP, the underlying packets sent by each protocol will affect each other. Exactly how they affect each other is quite complicated and relates to how TCP performs reliability and flow control, but fundamentally you should remember that TCP tends to <!-- raw HTML omitted -->induce<!-- raw HTML omitted --> packet loss in UDP packets. For more information, read <!-- raw HTML omitted -->this paper<!-- raw HTML omitted --> on the subject.</p>
+<p>On the surface, this seems like a great idea. The problem is that since TCP and UDP are both built on top of IP, the underlying packets sent by each protocol will affect each other. Exactly how they affect each other is quite complicated and relates to how TCP performs reliability and flow control, but fundamentally you should remember that TCP tends to <em>induce</em> packet loss in UDP packets. For more information, read <a href="http://www.isoc.org/INET97/proceedings/F3/F3_1.HTM">this paper</a> on the subject.</p>
 <p>Also, it&rsquo;s pretty complicated to mix UDP and TCP. If you mix UDP and TCP you lose a certain amount of control. Maybe you can implement reliability in a more efficient way that TCP does, better suited to your needs? Even if you need reliable-ordered data, it&rsquo;s possible, provided that data is small relative to the available bandwidth to get that data across faster and more reliably that it would if you sent it over TCP. Plus, if you have to do NAT to enable home internet connections to talk to each other, having to do this NAT once for UDP and once for TCP (not even sure if this is possible&hellip;) is kind of painful.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>My recommendation is not only that you use UDP, but that you <em>only</em> use UDP for your game protocol. Don&rsquo;t mix TCP and UDP! Instead, learn how to implement the specific features of TCP that you need <em>inside</em> your own custom UDP based protocol.</p>
@@ -406,7 +419,7 @@ You have most likely heard of sockets, and are probably aware that there are two
 <p>The rest of this article series show you how to do this, from creating your own virtual connection on top of UDP, to creating your own reliability, flow control and congestion avoidance.</p>
 <p><strong>NEXT ARTICLE:</strong> <a href="/post/sending_and_receiving_packets/">Sending and Receiving Packets</a></p>
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
 
     </div>
 

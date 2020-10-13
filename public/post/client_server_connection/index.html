@@ -342,7 +342,7 @@ Now in this article we&rsquo;re going to bring everything together and build a c
 <p>The reason is that games send <strong>time critical data</strong>.</p>
 <p>Why don&rsquo;t games use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP (which is unreliable, unordered) it holds more recent packets hostage in a queue while older packets are resent over the network.</p>
 <p>This is known as <strong>head of line blocking</strong> and it&rsquo;s a <em>huuuuuge</em> problem for games. To understand why, consider a game server broadcasting the state of the world to clients 10 times per-second. Each client advances time forward and wants to display the most recent state it receives from the server.</p>
-<!-- raw HTML omitted -->
+<img src="/img/network-protocol/client-time.png" width="100%"/>
 <p>But if the packet containing state for time t = 10.0 is lost, under TCP we must wait for it to be resent before we can access t = 10.1 and 10.2, even though those packets have already arrived and contain the state the client wants to display.</p>
 <p>Worse still, by the time the resent packet arrives, it&rsquo;s far too late for the client to actually do anything useful with it. The client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!</p>
 <p>So why resend dropped packets at all? <strong>BINGO!</strong> What we&rsquo;d really like is an option to tell TCP: &ldquo;Hey, I don&rsquo;t care about old packets being resent, by they time they arrive I can&rsquo;t use them anyway, so just let me skip over them and access the most recent data&rdquo;.</p>
@@ -354,16 +354,16 @@ Now in this article we&rsquo;re going to bring everything together and build a c
 <p>But, using UDP comes at a cost:</p>
 <p><strong>UDP doesn&rsquo;t provide any concept of connection.</strong></p>
 <p>We have to build that ourselves. This is a lot of work! So strap in, get ready, because we&rsquo;re going to build it all up from scratch using the same basic techniques first person shooters use when creating their protocols over UDP. You can use this client/server protocol for games or non-gaming applications and, provided the data you send is time critical, I promise you, it&rsquo;s well worth the effort.</p>
-<p><!-- raw HTML omitted --><!-- raw HTML omitted --> <em>* These days even web servers are transitioning to UDP via <a href="https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/">Google&rsquo;s QUIC</a>. If you still think TCP is good enough for time critical data in 2016, I encourage you to put that in your pipe and smoke it :)</em></p>
+<p><a name="quic_footnote"></a> <em>* These days even web servers are transitioning to UDP via <a href="https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/">Google&rsquo;s QUIC</a>. If you still think TCP is good enough for time critical data in 2016, I encourage you to put that in your pipe and smoke it :)</em></p>
 <h2 id="clientserver-abstraction">Client/Server Abstraction</h2>
 <p>The goal is to create an abstraction on top of a UDP socket where our server presents a number of <em>virtual slots</em> for clients to connect to:</p>
-<!-- raw HTML omitted -->
+<img src="/img/network-protocol/connection-request.png" width="100%"/>
 <p>When a client requests a connection, it gets assigned to one of these slots:</p>
-<!-- raw HTML omitted -->
+<img src="/img/network-protocol/connection-accepted.png" width="100%"/>
 <p>If a client requests connection, but no slots are available, the server is full and the connection request is denied:</p>
-<!-- raw HTML omitted -->
+<img src="/img/network-protocol/server-is-full.png" width="100%"/>
 <p>Once a client is connected, packets are exchanged in both directions. These packets form the basis for the custom protocol between the client and server which is game specific.</p>
-<!-- raw HTML omitted -->
+<img src="/img/network-protocol/client-server-packets.png" width="100%"/>
 <p>In a first person shooter, packets are sent continuously in both directions. Clients send input to the server as quickly as possible, often 30 or 60 times per-second, and the server broadcasts the state of the world to clients 10, 20 or even 60 times per-second.</p>
 <p>Because of this steady flow of packets in both directions there is no need for keep-alive packets. If at any point packets stop being received from the other side, the connection simply times out. No packets for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want.</p>
 <p>When a client slot times out on the server, it becomes available for other clients to connect. When the client times out, it transitions to an error state.</p>
@@ -378,7 +378,7 @@ Now in this article we&rsquo;re going to bring everything together and build a c
 </ul>
 <p>Initially the client starts in <em>disconnected</em>.</p>
 <p>When a client connects to a server, it transitions to the <em>connecting</em> state and sends <strong>connection request</strong> packets to the server:</p>
-<!-- raw HTML omitted -->
+<img src="/img/network-protocol/connection-request-packet.png" width="100%"/>
 <p>The CRC32 and implicit protocol id in the packet header allow the server to trivially reject UDP packets not belonging to this protocol or from a different version of it.</p>
 <p>Since connection request packets are sent over UDP, they may be lost, received out of order or in duplicate.</p>
 <p>Because of this we do two things: 1) we keep sending packets for the client state until we get a response from the server or the client times out, and 2) on both client and server we ignore any packets that don&rsquo;t correspond to what we are expecting, since a lot of redundant packets are flying over the network.</p>
@@ -440,7 +440,7 @@ class Server
 </li>
 </ul>
 <p>The connection accepted packet tells the client which client index it was assigned, which the client needs to know which player it is in the game:</p>
-<!-- raw HTML omitted -->
+<img src="/img/network-protocol/connection-accepted-packet.png" width="100%"/>
 <p>Once the server sends a connection accepted packet, from its point of view it considers that client connected. As the server ticks forward, it watches connected client slots, and if no packets have been received from a client for 5 seconds, the slot times out and is reset, ready for another client to connect.</p>
 <p>Back to the client. While the client is in the <em>connecting</em> state the client listens for <strong>connection denied</strong> and <strong>connection accepted</strong> packets from the server. Any other packets are ignored.</p>
 <p>If the client receives <strong>connection accepted</strong>, it transitions to connected. If it receives <strong>connection denied</strong>, or after 5 seconds hasn&rsquo;t received any response from the server, it transitions to disconnected.</p>
@@ -478,23 +478,23 @@ class Server
 <p>The first thing we want to do is only allow clients to connect if they can prove they are actually at the IP address and port they say they are.</p>
 <p>To do this, we no longer accept client connections immediately on connection request, instead we send back a challenge packet, and only complete connection when a client replies with information that can only be obtained by receiving the challenge packet.</p>
 <p>The sequence of operations in a typical connect now looks like this:</p>
-<!-- raw HTML omitted -->
+<img src="/img/network-protocol/challenge-response.png" width="100%"/>
 <p>To implement this we need an additional data structure on the server. Somewhere to store the challenge data for pending connections, so when a challenge response comes in from a client we can check against the corresponding entry in the data structure and make sure it&rsquo;s a valid response to the challenge sent to that address.</p>
 <p>While the pending connect data structure can be made larger than the maximum number of connected clients, it&rsquo;s still ultimately finite and is therefore subject to attack. We&rsquo;ll cover some defenses against this in the next article. But for the moment, be happy at least that attackers can&rsquo;t progress to the <strong>connected</strong> state with spoofed packet source addresses.</p>
 <p>Next, to guard against our protocol being used in a DDoS amplification attack, we&rsquo;ll inflate client to server packets so they&rsquo;re large relative to the response packet sent from the server. This means we add padding to both <strong>connection request</strong> and <strong>challenge response</strong> packets and enforce this padding on the server, ignoring any packets without it. Now our protocol effectively has DDoS <em>minification</em> for requests -&gt; responses, making it highly unattractive for anyone thinking of launching this kind of attack.</p>
 <p>Finally, we&rsquo;ll do one last small thing to improve the robustness and security of the protocol. It&rsquo;s not perfect, we need authentication and encryption for that, but it at least it ups the ante, requiring attackers to actually sniff traffic in order to impersonate the client or server. We&rsquo;ll add some unique random identifiers, or &lsquo;salts&rsquo;, to make each client connection unique from previous ones coming from the same IP address and port.</p>
 <p>The connection request packet now looks like this:</p>
-<!-- raw HTML omitted -->
+<img src="/img/network-protocol/connection-request-packet-2.0.png" width="100%"/>
 <p>The client salt in the packet is a random 64 bit integer rolled each time the client starts a new connect. Connection requests are now uniquely identified by the IP address and port combined with this client salt value. This distinguishes packets from the current connection from any packets belonging to a previous connection, which makes connection and reconnection to the server much more robust.</p>
 <p>Now when a connection request arrives and a pending connection entry can&rsquo;t be found in the data structure (according to IP, port and client salt) the server rolls a server salt and stores it with the rest of the data for the pending connection before sending a challange packet back to the client. If a pending connection is found, the salt value stored in the data structure is used for the challenge. This way there is always a consistent pair of client and server salt values corresponding to each client session.</p>
-<!-- raw HTML omitted -->
+<img src="/img/network-protocol/challenge-packet.png" width="100%"/>
 <p>The client state machine has been expanded so <em>connecting</em> is replaced with two new states: <em>sending connection request</em> and <em>sending challenge response</em>, but it&rsquo;s the same idea as before. Client states repeatedly send the packet corresponding to that state to the server while listening for the response that moves it forward to the next state, or back to an error state. If no response is received, the client times out and transitions to <em>disconnected</em>.</p>
 <p>The challenge response sent from the client to the server looks like this:</p>
-<!-- raw HTML omitted -->
+<img src="/img/network-protocol/challenge-response-packet.png" width="100%"/>
 <p>The utility of this being that once the client and server have established connection, we prefix all payload packets with the xor of the client and server salt values and discard any packets with the incorrect salt values. This neatly filters out packets from previous sessions and requires an attacker to sniff packets in order to impersonate a client or server.</p>
-<!-- raw HTML omitted -->
+<img src="/img/network-protocol/connection-payload-packet.png" width="100%"/>
 <p>Now that we have at least a <em>basic</em> level of security, it&rsquo;s not much, but at least it&rsquo;s <em>something</em>, we can implement a disconnect packet:</p>
-<!-- raw HTML omitted -->
+<img src="/img/network-protocol/disconnect-packet.png" width="100%"/>
 <p>And when the client or server want to disconnect clean, they simply fire 10 of these over the network to the other side, in the hope that some of them get through, and the other side disconnects cleanly instead of waiting for timeout.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>We now have a much more robust protocol. It&rsquo;s secure against spoofed IP packet headers. It&rsquo;s no longer able to be used as port of DDoS amplification attacks, and with a trivial xor based authentication, we are protected against <em>casual</em> attackers while client reconnects are much more robust.</p>
@@ -513,7 +513,7 @@ class Server
 <p>To solve this, we need to get serious with cryptography to encrypt and sign packets so they can&rsquo;t be read or modified by a third party.</p>
 <p><strong>NEXT ARTICLE</strong>: <a href="http://patreon.com/gafferongames">Securing Dedicated Servers</a>.</p>
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
 
     </div>
 

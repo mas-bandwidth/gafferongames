@@ -439,9 +439,9 @@ A physics simulation works by making many small predictions based on the laws of
 <li>Hooke&rsquo;s law damping coefficient: b = 0.1</li>
 </ul>
 <p>And here is a graph of the exact solution:</p>
-<!-- raw HTML omitted -->
+<img src="/img/game-physics/integration_basics_damped_exact_solution.png" width="100%"/>
 <p>When we apply explicit euler to integrate this system, we get the following result, which has been scaled down vertically to fit:</p>
-<!-- raw HTML omitted -->
+<img src="/img/game-physics/integration_basics_damped_explicit_euler.png" width="100%"/>
 <p>Instead of damping and converging on the origin, it gains energy over time!</p>
 <p>This system is unstable when integrated with explicit euler and <strong>dt</strong>=1/100.</p>
 <p>Unfortunately, since we&rsquo;re already integrating with a small timestep, we don&rsquo;t have a lot of practical options to improve the accuracy. Even if you reduce the timestep, there&rsquo;s always a spring tightness k above which you&rsquo;ll see this behavior.</p>
@@ -457,7 +457,7 @@ A physics simulation works by making many small predictions based on the laws of
     position += velocity * dt;
 </code></pre>
 <p>Applying the semi-implicit euler integrator with <strong>dt</strong> = 1/100 to the spring damper system gives a stable result that is very close to the exact solution:</p>
-<!-- raw HTML omitted -->
+<img src="/img/game-physics/integration_basics_damped_semi_implicit_euler.png" width="100%"/>
 <p>Even though semi-implicit euler has the same order of accuracy as explicit euler (order 1), we get a much better result when integrating the equations of motion because it is <a href="https://en.wikipedia.org/wiki/Symplectic_integrator">symplectic</a>.</p>
 <h2 id="many-different-integration-methods-exist">Many different integration methods exist</h2>
 <p><a href="http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html">Implicit euler</a> is an integration technique that is well suited for simulating stiff equations that become unstable with other methods. The drawback is that it requires solving a system of equations per-timestep.</p>
@@ -535,22 +535,22 @@ A physics simulation works by making many small predictions based on the laws of
 <h2 id="semi-implicit-euler-vs-rk4">Semi-implicit euler vs. RK4</h2>
 <p>Now let&rsquo;s put the RK4 integrator to the test.</p>
 <p>Since it is a higher order integrator (4th order vs. 1st order) it will be visibly more accurate than semi-implicit euler, right?</p>
-<!-- raw HTML omitted -->
+<img src="/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler.png" width="100%"/>
 <p><strong>Wrong</strong>. Both integrators are so close to the exact result that it&rsquo;s impossible to make out any difference at this scale. Both integrators are stable and track the exact solution very well with <strong>dt</strong>=1/100.</p>
-<!-- raw HTML omitted -->
+<img src="/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler_zoomed_in.png" width="100%"/>
 <p>Zooming in confirms that RK4 <em>is</em> more accurate than semi-implicit euler, but is it really worth the complexity and extra runtime cost of RK4? It&rsquo;s hard to say.</p>
 <p>Let&rsquo;s push a bit harder and see if we can find a significant difference between the two integrators. Unfortunately, we can&rsquo;t look at this system for long periods of time because it quickly damps down to zero, so let&rsquo;s switch to a <a href="https://en.wikipedia.org/wiki/Harmonic_oscillator#Simple_harmonic_oscillator">simple harmonic oscillator</a> which oscillates forever without any damping.</p>
 <p>Here&rsquo;s the exact result we&rsquo;re aiming for:</p>
-<!-- raw HTML omitted -->
+<img src="/img/game-physics/integration_basics_undamped_exact_solution.png" width="100%"/>
 <p>To make it harder on the integrators, let&rsquo;s increase delta time to 0.1 seconds.</p>
 <p>Next, we let the integrators run for 90 seconds and zoom in:</p>
-<!-- raw HTML omitted -->
+<img src="/img/game-physics/integration_basics_undamped_rk4_vs_semi_implicit_euler.png" width="100%"/>
 <p>After 90 seconds the semi-implicit euler solution (orange) has drifted out of phase with the exact solution because it has a slightly different frequency, while the green line of RK4 matches the frequency, but is losing energy!</p>
 <p>We can see this more clearly by increasing the time step to 0.25 seconds.</p>
 <p>RK4 maintains the correct frequency but loses energy:</p>
-<!-- raw HTML omitted -->
+<img src="/img/game-physics/integration_basics_undamped_rk4_5fps.png" width="100%"/>
 <p>While semi-implicit euler does a better job at conserving energy, on average:</p>
-<!-- raw HTML omitted -->
+<img src="/img/game-physics/integration_basics_undamped_semi_implicit_euler_5fps.png" width="100%"/>
 <p>But drifts out of phase. What an interesting result! As you can see it&rsquo;s not simply the case that RK4 has a higher order of accuracy and is &ldquo;better&rdquo;. It&rsquo;s much, much more nuanced than this.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>Which integrator should you use in your game?</p>
@@ -567,7 +567,7 @@ A physics simulation works by making many small predictions based on the laws of
 <p>You&rsquo;ll be glad you did :)</p>
 <p><strong>NEXT ARTICLE:</strong> <a href="/post/fix_your_timestep/">Fix Your Timestep!</a></p>
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
 
     </div>
 

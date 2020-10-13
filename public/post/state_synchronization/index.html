@@ -28,7 +28,7 @@
   <meta name="description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we discussed techniques for compressing snapshots.
 In this article we round out our discussion of networked physics strategies with state synchronization, the third and final strategy in this article series.
-State Synchronization What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, unlike deterministic lockstep, we don&rsquo;t just send input, we send both input andstate.">
+State Synchronization What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, unlike deterministic lockstep, we don&rsquo;t just send input, we send both input and state.">
 
   
   <link rel="alternate" hreflang="en-us" href="https://gafferongames.com/post/state_synchronization/">
@@ -116,7 +116,7 @@ State Synchronization What is state synchronization? The basic idea is that, som
   <meta property="og:description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we discussed techniques for compressing snapshots.
 In this article we round out our discussion of networked physics strategies with state synchronization, the third and final strategy in this article series.
-State Synchronization What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, unlike deterministic lockstep, we don&rsquo;t just send input, we send both input andstate."><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
+State Synchronization What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, unlike deterministic lockstep, we don&rsquo;t just send input, we send both input and state."><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
   <meta property="twitter:image" content="https://gafferongames.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
   <meta property="article:published_time" content="2015-01-05T00:00:00&#43;00:00">
@@ -340,24 +340,59 @@ State Synchronization What is state synchronization? The basic idea is that, som
 <p>In the <a href="/post/snapshot_compression/">previous article</a> we discussed techniques for compressing snapshots.</p>
 <p>In this article we round out our discussion of networked physics strategies with <strong>state synchronization</strong>, the third and final strategy in this article series.</p>
 <h2 id="state-synchronization">State Synchronization</h2>
-<p>What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, <em>unlike</em> deterministic lockstep, we don&rsquo;t just send input, we send both input <!-- raw HTML omitted -->and<!-- raw HTML omitted --> state.</p>
+<p>What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, <em>unlike</em> deterministic lockstep, we don&rsquo;t just send input, we send both input <u>and</u> state.</p>
 <p>This gives state synchronization interesting properties. Because we send state, we don&rsquo;t need perfect determinism to stay in sync, and because the simulation runs on both sides, objects continue moving forward between updates.</p>
 <p>This lets us approach state synchronization differently to snapshot interpolation. Instead of sending state updates for every object in each packet, we can now send updates for only a few, and if we&rsquo;re smart about how we select the objects for each packet, we can save bandwidth by concentrating updates on the most important objects.</p>
 <p>So what&rsquo;s the catch? State synchronization is an approximate and lossy synchronization strategy. In practice, this means you&rsquo;ll spend a lot of time tracking down sources of extrapolation divergence and pops. But other than that, it&rsquo;s a quick and easy strategy to get started with.</p>
 <h2 id="implementation">Implementation</h2>
 <p>Here&rsquo;s the state sent over the network per-object:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>struct StateUpdate
+{
+    int index;
+    vec3f position;
+    quat4f orientation;
+    vec3f linear_velocity;
+    vec3f angular_velocity;
+};
+</pre>
 <p>Unlike snapshot interpolation, we&rsquo;re not just sending visual quantities like position and orientation, we&rsquo;re also sending <em>non-visual</em> state such as linear and angular velocity. Why is this?</p>
 <p>The reason is that state synchronization runs the simulation on both sides, so it&rsquo;s <em>always extrapolating</em> from the last state update applied to each object. If linear and angular velocity aren&rsquo;t synchronized, this extrapolation is done with incorrect velocities, leading to pops when objects are updated.</p>
 <p>While we must send the velocities, there&rsquo;s no point wasting bandwidth sending (0,0,0) over and over while an object is at rest. We can fix this with a trivial optimization, like so:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>void serialize_state_update( Stream &amp; stream, 
+                             int &amp; index, 
+                             StateUpdate &amp; state_update )
+{
+    serialize_int( stream, index, 0, NumCubes - 1 );
+    serialize_vector( stream, state_update.position );
+    serialize_quaternion( stream, state_update.orientation );
+    bool at_rest = stream.IsWriting() ? state_update.AtRest() : false;    
+    serialize_bool( stream, at_rest );
+    if ( !at_rest )
+    {
+        serialize_vector( stream, state_update.linear_velocity );
+        serialize_vector( stream, state_update.angular_velocity );
+    }
+    else if ( stream.IsReading() )
+    {
+        state_update.linear_velocity = vec3f(0,0,0);
+        state_update.angular_velocity = vec3f(0,0,0);
+    }
+}
+</pre>
 <p>What you see above is a <em>serialize function</em>. It&rsquo;s a trick I like to use to unify packet read and write. I like it because it&rsquo;s expressive while at the same time it&rsquo;s difficult to desync read and write. You can read more about them <a href="/post/serialization_strategies/">here</a>.</p>
 <h2 id="packet-structure">Packet Structure</h2>
 <p>Now let&rsquo;s look at the overall structure of packets being sent:</p>
-<!-- raw HTML omitted -->
-<!-- raw HTML omitted -->
+<pre>const int MaxInputsPerPacket = 32;
+const int MaxStateUpdatesPerPacket = 64;
+
+struct Packet
+{
+    uint32_t sequence;
+    Input inputs[MaxInputsPerPacket];
+    int num_object_updates;
+    StateUpdate state_updates[MaxStateUpdatesPerPacket];
+};
+</pre>
 <p>First we include a sequence number in each packet so we can determine out of order, lost or duplicate packets. I recommend you run the simulation at the same framerate on both sides (for example 60HZ) and in this case the sequence number can work double duty as the frame number.</p>
 <p>Input is included in each packet because it&rsquo;s needed for extrapolation. Like deterministic lockstep we send multiple redundant inputs so in the case of packet loss it&rsquo;s very unlikely that an input gets dropped. Unlike deterministic lockstep, if don&rsquo;t have the next input we don&rsquo;t stop the simulation and wait for it, we continue extrapolating forward with the last input received.</p>
 <p>Next you can see that we only send a maximum of 64 state updates per-packet. Since we have a total of 901 cubes in the simulation so we need some way to select the n most important state updates to include in each packet. We need some sort of prioritization scheme.</p>
@@ -376,15 +411,27 @@ State Synchronization What is state synchronization? The basic idea is that, som
 <p>Once the packet comes out of the jitter how do you apply state updates? My recommendation is that you should snap the physics state hard. This means you apply the values in the state update directly to the simulation.</p>
 <p>I recommend against trying to apply some smoothing between the state update and the current state at the simulation level. This may sound counterintuitive but the reason for this is that the simulation extrapolates from the state update so you want to make sure it extrapolates from a valid physics state for that object rather than some smoothed, total bullshit made-up one. This is especially important when you are networking large stacks of objects.</p>
 <p>Surprisingly, without any smoothing the result is already pretty good:</p>
-<!-- raw HTML omitted -->
+<video preload="auto" controls="controls" width="100%">
+<source src="http://gafferongames.com/videos/state_synchronization_uncompressed.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/state_synchronization_uncompressed.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
 <p>As you can see it&rsquo;s already looking quite good and barely any bandwidth optimization has been performed. Contrast this with the first video for snapshot interpolation which was at 18mbit/sec and you can see that using the simulation to extrapolate between state updates is a great way to use less bandwidth.</p>
 <p>Of course we can do a lot better than this and each optimization we do lets us squeeze more state updates in the same amount of bandwidth. The next obvious thing we can do is to apply all the standard quantization compression techniques such as bounding and quantizing position, linear and angular velocity value and using the smallest three compression as described in <a href="/post/snapshot_compression/">snapshot compression</a>.</p>
 <p>But here it gets a bit more complex. We are extrapolating from those state updates so if we quantize these values over the network then the state that arrives on the right side is slightly different from the left side, leading to a slightly different extrapolation and a pop when the next state update arrives for that object.</p>
-<!-- raw HTML omitted -->
+<video preload="auto" controls="controls" width="100%">
+<source src="http://gafferongames.com/videos/state_synchronization_compressed.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/state_synchronization_compressed.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
 <h2 id="quantize-both-sides">Quantize Both Sides</h2>
 <p>The solution is to quantize the state on both sides. This means that on both sides before each simulation step you quantize the entire simulation state as if it had been transmitted over the network. Once this is done the left and right side are both extrapolating from quantized state and their extrapolations are very similar.</p>
 <p>Because these quantized values are being fed back into the simulation, you&rsquo;ll find that much more precision is required than snapshot interpolation where they were just visual quantities used for interpolation. In the cube simulation I found it necessary to have 4096 position values per-meter, up from 512 with snapshot interpolation, and a whopping 15 bits per-quaternion component in smallest three (up from 9). Without this extra precision significant popping occurs because the quantization forces physics objects into penetration with each other, fighting against the simulation which tries to keep the objects out of penetration. I also found that softening the constraints and reducing the maximum velocity which the simulation used to push apart penetrating objects also helped reduce the amount of popping.</p>
-<!-- raw HTML omitted -->
+<video preload="auto" controls="controls" width="100%">
+<source src="http://gafferongames.com/videos/state_synchronization_quantize_both_sides.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/state_synchronization_quantize_both_sides.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
 <p>With quantization applied to both sides you can see the result is perfect once again. It may look visually about the same as the uncompressed version but in fact we&rsquo;re able to fit many more state updates per-packet into the 256kbit/sec bandwidth limit. This means we are better able to handle packet loss because state updates for each object are sent more rapidly. If a packet is lost, it&rsquo;s less of a problem because state updates for those objects are being continually included in future packets.</p>
 <p>Be aware that when a burst of packet loss occurs like 1/4 a second with no packets getting through, and this is inevitable that eventually something like this will happen, you will probably get a different result on the left and the right sides. We have to plan for this. In spite of all effort that we have made to ensure that the extrapolation is as close as possible (quantizing both sides and so on) pops can and will occur if the network stops delivering packets.</p>
 <h2 id="visual-smoothing">Visual Smoothing</h2>
@@ -394,10 +441,18 @@ State Synchronization What is state synchronization? The basic idea is that, som
 <p>The trick to making this all work is that when a state update comes in you take the current simulation position and add the position error to that, and subtract that from the new position, giving the new position error offset which gives an identical result to the current (smoothed) visual position.</p>
 <p>The same process is then applied to the error quaternion (using multiplication by the conjugate instead of subtraction) and this way you effectively calculate on each state update the new position error and orientation error relative to the new state such that the object appears to have not moved at all. Thus state updates are smooth and have no immediate visual effect, and the error reduction smoothes out any error in the extrapolation over time without the player noticing in the common case.</p>
 <p>I find that using a single smoothing factor gives unacceptable results. A factor of 0.95 is perfect for small jitters because it smooths out high frequency jitter really well, but at the same time it is too slow for large position errors, like those that happen after multiple seconds of packet loss:</p>
-<!-- raw HTML omitted -->
+<video preload="auto" controls="controls" width="100%">
+<source src="http://gafferongames.com/videos/state_synchronization_basic_smoothing.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/state_synchronization_basic_smoothing.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
 <p>The solution I use is two different scale factors at different error distances, and to make sure the transition is smooth I blend between those two factors linearly according to the amount of positional error that needs to be reduced. In this simulation, having 0.95 for small position errors (25cms or less) while having a tighter blend factor of 0.85 for larger distances (1m error or above) gives a good result. The same strategy works well for orientation using the dot product between the orientation error and the identity matrix. I found that in this case a blend of the same factors between dot 0.1 and 0.5 works well.</p>
 <p>The end result is smooth error reduction for small position and orientation errors combined with a tight error reduction for large pops. As you can see above you don&rsquo;t want to drag out correction of these large pops, they need to be fast and so they&rsquo;re over quickly otherwise they&rsquo;re really disorienting for players, but at the same time you want to have really smooth error reduction when the error is small hence the adaptive error reduction approach works really well.</p>
-<!-- raw HTML omitted -->
+<video preload="auto" controls="controls" width="100%">
+<source src="http://gafferongames.com/videos/state_synchronization_adaptive_smoothing.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/state_synchronization_adaptive_smoothing.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
 <h2 id="delta-compression">Delta Compression</h2>
 <p>Even though I would argue the result above is probably good enough already it is possible to improve the synchronization considerably from this point. For example to support a world with larger objects or more objects being interacted with. So lets work through some of those techniques and push this technique as far as it can go.</p>
 <p>There is an easy compression that can be performed. Instead of encoding absolute position, if it is within a range of the player cube center, encode position as a relative offset to the player center position. In the common cases where bandwidth is high and state updates need to be more frequent (katamari ball) this provides a large win.</p>
@@ -411,7 +466,7 @@ State Synchronization What is state synchronization? The basic idea is that, som
 <h2 id="conclusion">Conclusion</h2>
 <p>And that&rsquo;s really about it for this technique. Without anything fancy it&rsquo;s already pretty good, and on top of that another order of magnitude improvement is available with delta compression, at the cost of significant complexity!</p>
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
 
     </div>
 

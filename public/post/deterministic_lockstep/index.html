@@ -342,11 +342,17 @@ Deterministic lockstep is a method of networking a system from one computer to a
 <h2 id="determinism">Determinism</h2>
 <p>Determinism means that given the same initial condition and the same set of inputs your simulation gives exactly the same result. And I do mean <em>exactly</em> the same result.</p>
 <p>Not close. Not near enough. <strong>Exactly the same</strong>. Exact down to the bit-level. So exact, you could take a checksum of your entire physics state at the end of each frame and it would be identical.</p>
-<!-- raw HTML omitted -->
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+  <source src="http://gafferongames.com/videos/deterministic_lockstep_desync.mp4" type="video/mp4"/>
+  <source src="http://gafferongames.com/videos/deterministic_lockstep_desync.webm" type="video/webm"/>
+</video>
 <p>Above you can see a simulation that is <em>almost</em> deterministic. The simulation on the left is controlled by the player. The simulation on the right has exactly the same inputs applied with a two second delay starting from the same initial condition. Both simulations step forward with the same delta time (a necessary precondition to ensure exactly the same result) and both simulations apply the same inputs. Notice how after the smallest divergence the simulation gets further and further out of sync. This simulation is <strong>non-deterministic</strong>.</p>
 <p>What&rsquo;s going on is that the physics engine I&rsquo;m using (<a href="http://www.ode.org/">Open Dynamics Engine</a>) uses a random number generator inside its solver to randomize the order of constraint processing to improve stability. It&rsquo;s open source. Take a look and see! Unfortunately this breaks determinism because the simulation on the left processes constraints in a different order to the simulation on the right, leading to slightly different results.</p>
 <p>Luckily all that is required to make ODE deterministic on the same machine, with the same complied binary and on the same OS (is that enough qualifications?) is to set its internal random seed to the current frame number before running the simulation via dSetRandomSeed. Once this is done ODE gives exactly the same result and the left and right simulations stay in sync.</p>
-<!-- raw HTML omitted -->
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+  <source src="http://gafferongames.com/videos/deterministic_lockstep.mp4" type="video/mp4"/>
+  <source src="http://gafferongames.com/videos/deterministic_lockstep.webm" type="video/webm"/>
+</video>
 <p>And now a word of warning. Even though the simulation above is deterministic on the same machine, that does <em>not</em> necessarily mean it would also be deterministic across different compilers, a different OS or different machine architectures (eg. PowerPC vs. Intel). In fact, it&rsquo;s probably not even deterministic between debug and release builds due to floating point optimizations.</p>
 <p>Floating point determinism is a complicated subject and there&rsquo;s no silver bullet.</p>
 <p>For more information please refer to this <a href="/post/floating_point_determinism/">article</a>.</p>
@@ -382,21 +388,27 @@ Deterministic lockstep is a method of networking a system from one computer to a
 <p>In fact, It&rsquo;s a common thing out there on the Internet for pundits to say stuff like:</p>
 <ul>
 <li>
-<p><!-- raw HTML omitted -->If you need reliable-ordered, you can&rsquo;t do better than TCP!<!-- raw HTML omitted --></p>
+<p><a href="http://www.reddit.com/r/gamedev/comments/1tvbe0/is_it_just_me_or_is_networking_really_hard/">If you need reliable-ordered, you can&rsquo;t do better than TCP!</a></p>
 </li>
 <li>
-<p><!-- raw HTML omitted -->Your game doesn&rsquo;t need UDP (yet)<!-- raw HTML omitted --></p>
+<p><a href="https://thoughtstreams.io/glyph/your-game-doesnt-need-udp-yet/">Your game doesn&rsquo;t need UDP (yet)</a></p>
 </li>
 </ul>
 <p>But I&rsquo;m here to tell you this kind of thinking is <strong>dead wrong</strong>.</p>
-<!-- raw HTML omitted -->
+<video autoplay preload="auto" loop="true" width="100%">
+<source src="http://gafferongames.com/videos/deterministic_lockstep_tcp_100ms_1pc.mp4" type="video/mp4"/>
+<source src="http://gafferongames.com/videos/deterministic_lockstep_tcp_100ms_1pc.webm" type="video/webm"/>
+</video>
 <p>Above you can see the simulation networked using deterministic lockstep over TCP at 100ms latency and 1% packet loss. If you look closely on the right side you can see hitches every few seconds. What&rsquo;s happening here is that each time a packet is lost, TCP has to wait RTT*2 while it is resent (actually it can be much worse, but I&rsquo;m being generous&hellip;). The hitches happen because with deterministic lockstep the right simulation can&rsquo;t simulate frame n without input n, so it has to pause to wait for input n to be resent!</p>
 <p>That&rsquo;s not all. It gets significantly worse as latency and packet loss increase. Here is the same simulation networked using deterministic lockstep over TCP at 250ms latency and 5% packet loss:</p>
-<!-- raw HTML omitted -->
+<video autoplay preload="auto" loop="true" width="100%">
+  <source src="http://gafferongames.com/videos/deterministic_lockstep_tcp_250ms_5pc.mp4" type="video/mp4"/>
+  <source src="http://gafferongames.com/videos/deterministic_lockstep_tcp_250ms_5pc.webm" type="video/webm"/>
+</video>
 <p>Now I will concede that if you have no packet loss and/or a very small amount of latency then you very well may get acceptable results with TCP. But please be aware that if you use TCP it behaves <em>terribly</em> under bad network conditions.</p>
 <h2 id="can-we-do-better-than-tcp">Can we do better than TCP?</h2>
 <p>Can we beat TCP at its own game. Reliable-ordered delivery?</p>
-<p>The answer is an emphatic <!-- raw HTML omitted -->YES<!-- raw HTML omitted -->. But <em>only</em> if we change the rules of the game.</p>
+<p>The answer is an emphatic <b>YES</b>. But <em>only</em> if we change the rules of the game.</p>
 <p>Here&rsquo;s the trick. We need to ensure that all inputs arrive reliably and in order. But if we send inputs in UDP packets, some of those packets will be lost. What if, instead of detecting packet loss after the fact and resending lost packets, we redundantly include <em>all inputs</em> in each UDP packet until we know for sure the other side has received them?</p>
 <p>Inputs are very small (6 bits). Let&rsquo;s say we&rsquo;re sending 60 inputs per-second (60fps simulation) and round trip time we know is going the be somewhere in 30-250ms range. Let&rsquo;s say just for fun that it could be up to 2 seconds worst case and at this point we&rsquo;ll time out the connection (screw that guy). This means that on average we only need to include between 2-15 frames of input and worst case we&rsquo;ll need 120 inputs. Worst case is 120*6 = 720 bits. That&rsquo;s only 90 bytes of input! That&rsquo;s totally reasonable.</p>
 <p>We can do even better. It&rsquo;s not common for inputs to change every frame. What if when we send our packet instead we start with the sequence number of the most recent input, and the 6 bits of the first (oldest) input, and the number of un-acked inputs. Then as we iterate across these inputs to write them to the packet we can write a single bit (1) if the next input is different to the previous, and (0) if the input is the same. So if the input is different from the previous frame we write 7 bits (rare). If the input is identical we write just one (common). Where inputs change infrequently this is a big win and in the worst case this really isn&rsquo;t that bad. 120 bits of extra data sent. Just 15 bytes overhead worst case.</p>
@@ -407,12 +419,15 @@ Deterministic lockstep is a method of networking a system from one computer to a
 <p>Instead of &ldquo;implementing 95% of TCP on top of UDP&rdquo; we have implemented something <em>totally different</em> and better suited to our requirements. A protocol that redundantly sends inputs because we know they are small, so we never have to wait for retransmission.</p>
 <p>So exactly how much better is this approach than sending inputs over TCP?</p>
 <p>Let&rsquo;s take a look&hellip;</p>
-<!-- raw HTML omitted -->
+<video autoplay preload="auto" loop="true" width="100%">
+  <source src="http://gafferongames.com/videos/deterministic_lockstep_udp_2sec_25pc.mp4" type="video/mp4"/>
+  <source src="http://gafferongames.com/videos/deterministic_lockstep_udp_2sec_25pc.webm" type="video/webm"/>
+</video>
 <p>The video above shows deterministic lockstep synchronized over UDP using this technique with <strong>2 seconds</strong> of latency and <strong>25% packet loss</strong>. Imagine how awful TCP would look under these conditions.</p>
 <p>So in conclusion, even where TCP should have the most advantage, in the only networking model that relies on reliable-ordered data, we can still easily whip its ass with a simple protocol built on top of UDP.</p>
 <p><strong>NEXT ARTICLE:</strong> <a href="/post/snapshot_interpolation/">Snapshot Interpolation</a></p>
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
 
     </div>
 

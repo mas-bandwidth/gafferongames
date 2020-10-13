@@ -340,30 +340,30 @@
   <iframe src="https://www.youtube.com/embed/jo1qffymv3E" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; border:0;" allowfullscreen title="YouTube Video"></iframe>
 </div>
 
-<p>Now of course, saying that <strong>the internet doesn&rsquo;t care about your game</strong> is a pretty strong accusation to make, so I&rsquo;m going to back it up with some evidence.</p>
+<p>Now of course, saying <strong>the internet doesn&rsquo;t care about your game</strong> is a pretty strong accusation, so I&rsquo;m going to back it up with some evidence.</p>
 <p>First, anecdotal. Every multiplayer game I worked on, I spent years of my life working on the netcode, using every trick possible to hide packet loss and latency. Client side prediction to hide latency in player actions, lag compensation to avoid players needing to lead shots, bandwidth optimization to reduce the load on the network, redundancy to mitigate packet loss, custom UDP protocols to avoid head of line blocking&hellip;</p>
 <p>And despite all this effort, a significant portion of players would play my game and get bad network performance and there was <em>literally nothing I could do about it</em>.</p>
 <p>Just how bad does it get? Let&rsquo;s take a look at the data&hellip;</p>
 <p>Here&rsquo;s a screenshot from Thursday August 20th, 2020:</p>
 <p><img src="/img/network-neutrality-considered-harmful/portal-001.png" alt="Screenshot of https://portal.networknext.com"></p>
-<p>1000+ players with an additional 100ms+ of latency courtesy of best effort delivery, one player with a whooping 730ms extra. <em>Clearly, this is not a speed of light problem&hellip;</em></p>
+<p>1000+ players with 100ms or greater added latency courtesy of best effort delivery, one player with a whooping 730ms extra. <em>Clearly, this is not a speed of light problem&hellip;</em></p>
 <p>Later the same day we saw a packet loss event:</p>
 <p><img src="/img/network-neutrality-considered-harmful/portal-002.png" alt="Graph showing AB test result for packet loss"></p>
 <p>Now you may look at this and think, oh, it&rsquo;s just 0.8% packet loss at peak, it&rsquo;s not that bad&hellip; but this is an average across all players, and only some portion of players were affected. For these players, the effect was much more severe:</p>
 <p><img src="/img/network-neutrality-considered-harmful/portal-003.png" alt="Graph showing absolute point reduction in packet loss percent for players on network next"></p>
 <p>During the mitigation the average packet loss reduction was an absolute reduction of 12 points of packet loss. No, not a reduction of 12%, <strong>a reduction of 12 points</strong>. In other words, a conversion from totally unplayable to playable.</p>
-<p>This is not an isolated incident. These things literally happen all the time. Take a look for yourself, the portal is live and updated in real-time: <a href="https://portal.networknext.com">https://portal.networknext.com</a></p>
+<p>This is not an isolated incident. These things literally happen all the time. Take a look for yourself, our portal is live and updated in real-time: <a href="https://portal.networknext.com">https://portal.networknext.com</a></p>
 <p>From this point on it should be clear: <strong>the internet really doesn&rsquo;t care about your game.</strong></p>
-<p>So&hellip; what&rsquo;s going on, and why is the case?</p>
+<p>So&hellip; what&rsquo;s going on?</p>
 <p>It&rsquo;s this. The internet makes no guarantee of performance, but instead offers best effort delivery. By the orthodoxy of Network Neutrality it is hand-wavingly assumed that overall, the quality level is maintained via over provisioning. But while this may be true for browsing the web and reading email, looking at the results above we can clearly see it isn&rsquo;t working for latency sensitive applications like games!</p>
 <p>As a game developer what I want for my traffic is the lowest latency (within speed of light limits), with as little packet loss and jitter as possible. In other words, if I send 60 packets per-second, I want all of them to arrive as quickly as possible exactly 1/60th of a second apart. The internet as it exists today, is just not capable of this.</p>
 <p>So now let&rsquo;s take direct aim at one of the core tenets of Network Neutrality. That all traffic is the same. Clearly this is false. Latency sensitive traffic like game traffic is not the same as checking your email or browsing the web. It&rsquo;s not even the same as watching YouTube or Netflix, which can be solved by simply buffering the stream. It&rsquo;s something completely different.</p>
 <p>Now that we acknowledge that different classes of traffic exist, how can we reconcile this with a neutral network and avoid classically described dystopias where network providers throttle the performance of competing applications, and ISPs bill you for &ldquo;acceleration plans&rdquo; for your internet connection on a monthly basis.</p>
 <p>This is why I created Network Next.</p>
-<p>Network Next is not just another network. We&rsquo;re not building network infrastructure.  We&rsquo;re not lighting up dark fiber. We&rsquo;re not creating yet another shadow internet with private interconnects. We don&rsquo;t even have an ASN.</p>
-<p>Instead, we&rsquo;re creating a <strong>neutral marketplace</strong> where networks compete on performance and price to carry latency sensitive traffic. In this marketplace, networks cannot identify the application or even set a different price for different applications. They can only compete on performance and price.</p>
+<p>Network Next is not just another network. We&rsquo;re not building network infrastructure. We&rsquo;re not lighting up dark fiber. We&rsquo;re not creating yet another shadow internet with private interconnects. We don&rsquo;t even have an ASN.</p>
+<p>Instead, we&rsquo;re creating a <strong>neutral marketplace</strong> where networks compete to carry latency sensitive traffic. In this marketplace, networks cannot identify the application or even set a different price for different applications. They can only compete on performance and price.</p>
 <p>The buyer on our marketplace is not the player, it&rsquo;s the application developer who uses Network Next to communicate the quality of service they want to the network. Network Next then runs a bid on our marketplace every 10 seconds per-player and the result of this bid is the route players take across our supplier networks.</p>
-<p>This creates a truly neutral network of networks, a new internet, with different classes of transit. An ethical, and technologically enforced alternative to the Network Neutrality Orthodoxy that covers its ears and yells &ldquo;All traffic is the same!&rdquo; in 2020 even though clearly it is not.</p>
+<p>This creates a truly neutral network of networks - a new internet - with different classes of transit. An ethical, and technologically enforced alternative to the Network Neutrality Orthodoxy that covers its ears and yells &ldquo;All traffic is the same!&rdquo; in 2020 even though clearly it is not.</p>
 <p>I hope you agree with me, but if even if you don&rsquo;t, we&rsquo;ve created this marketplace over the past three years and it&rsquo;s now live. Chances are pretty good over the next 3 months when you play a game, you&rsquo;re playing it over Network Next and I look forward to improving the quality of your connection.</p>
 <p>Best wishes,</p>
 <p>Glenn Fiedler, CEO, Network Next <a href="https://networknext.com">networknext.com</a></p>

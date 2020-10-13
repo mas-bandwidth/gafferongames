@@ -27,7 +27,7 @@
   
   <meta name="description" content="Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 In this article we want to draw the go stone using OpenGL.
-Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r1and r2!&rdquo;, because modern 3D graphics cards work by drawing triangles.">
+Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r1 and r2!&rdquo;, because modern 3D graphics cards work by drawing triangles.">
 
   
   <link rel="alternate" hreflang="en-us" href="https://gafferongames.com/post/tessellating_the_go_stone/">
@@ -114,7 +114,7 @@ Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please dra
   <meta property="og:title" content="Tessellating The Go Stone | Gaffer On Games">
   <meta property="og:description" content="Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 In this article we want to draw the go stone using OpenGL.
-Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r1and r2!&rdquo;, because modern 3D graphics cards work by drawing triangles."><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
+Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r1 and r2!&rdquo;, because modern 3D graphics cards work by drawing triangles."><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
   <meta property="twitter:image" content="https://gafferongames.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
   <meta property="article:published_time" content="2013-02-20T00:00:00&#43;00:00">
@@ -335,33 +335,33 @@ Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please dra
     <div class="article-style" itemprop="articleBody">
       <h2 id="introduction">Introduction</h2>
 <p>Hi, I&rsquo;m <a href="https://gafferongames.com">Glenn Fiedler</a>. Welcome to <a href="/categories/virtual-go/"><strong>Virtual Go</strong></a>, my project to create a physically accurate computer simulation of a Go board and stones.</p>
-<p>In this article we want to draw the go stone using <!-- raw HTML omitted -->OpenGL<!-- raw HTML omitted -->.</p>
-<p>Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r<!-- raw HTML omitted -->1<!-- raw HTML omitted --> and r<!-- raw HTML omitted -->2<!-- raw HTML omitted -->!&rdquo;, because modern 3D graphics cards work by drawing triangles. We have to take our mathematical definition of the go stone and turn it into a set of triangles that the graphics card can render.</p>
+<p>In this article we want to draw the go stone using <a href="http://www.opengl.org">OpenGL</a>.</p>
+<p>Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r<sub>1</sub> and r<sub>2</sub>!&rdquo;, because modern 3D graphics cards work by drawing triangles. We have to take our mathematical definition of the go stone and turn it into a set of triangles that the graphics card can render.</p>
 <p>This is called tessellation and there are several different ways to do it.</p>
 <h2 id="longitude-and-lattitude">Longitude And Lattitude</h2>
 <p>The first way that I tried was to consider sphere rendering like a globe with longitude/latitude. I started with a ring around the &lsquo;equator&rsquo; of the go stone, stepping these rings up to the top of the sphere like the north pole on a globe.</p>
-<!-- raw HTML omitted -->
+<img src="/img/virtualgo/naive-tesselation-side-view.gif" alt="naive tesselation side view" width="100%"/>
 <p>Unfortunately, just like longitude/latitude on a globe, tessellating this way leads to very distorted mapping around the pole and a lot of wasted triangles:</p>
-<!-- raw HTML omitted -->
+<img src="/img/virtualgo/inefficient-tesselation-at-pole.gif" alt="inefficient tesselation at pole" width="100%"/>
 <h2 id="triangle-subdivision">Triangle Subdivision</h2>
 <p>The next method is triangle subdivision. You start with an approximate shape then subdivide each triangle into four smaller triangles recursively like this:</p>
-<!-- raw HTML omitted -->
+<img src="/img/virtualgo/sphere-tessellation.gif" alt="sphere tessellation" width="100%"/>
 <p>Since the go stone only needs the top 1/3 or 1/4 of a sphere, I didn&rsquo;t want to subdivide a whole sphere only to throw most of it away. So I designed my own subdivision algorithm to generate only the top section of a sphere.</p>
 <p>After some trial and error I found that a pentagon plus a center vertex at the pole of the sphere was a good initial generator that minimized the distortion that occurs during subdivision. The only tricky part is that when subdividing you need to keep track of whether the edge is a sphere edge or a circle edge, as the subdivided vertex must be projected differently.</p>
-<!-- raw HTML omitted -->
+<img src="/img/virtualgo/generating-shape.gif" alt="generating shape" width="100%"/>
 <p>With this technique I was able to generate a much more efficient tessellation:</p>
-<!-- raw HTML omitted -->
+<img src="/img/virtualgo/regular-tessellation.gif" alt="regular tessellation" width="100%"/>
 <h2 id="tessellating-the-bevel">Tessellating The Bevel</h2>
 <p>Now we need to tesselate the bevel. To do this I take the vertices which form the circle edge at the bottom of the top sphere surface and calculate the angle of each vertex about the y axis. I then use these angles to sweep around the torus ensuring that the torus vertices weld perfectly with the top and bottom sphere sections.</p>
-<!-- raw HTML omitted -->
+<img src="/img/virtualgo/go-stone-with-bevel.gif" alt="go stone with bevel" width="100%"/>
 <h2 id="vertex-welding">Vertex Welding</h2>
 <p>Due to how recursive subdivision works a lot of duplicate vertices are generated.</p>
 <p>I&rsquo;d rather not have the graphics card waste time transforming the same vertex over and over, so as I add vertices to the mesh I hash vertex positions into a 3D grid (~1mm cells) and reuse an existing vertex if the position and normals match within some small epsilon value.</p>
 <p>With vertex welding the reduction in vertices is dramatic: 53000 to just 6500.</p>
-<p>For more information on vertex welding please refer to the discussion in <!-- raw HTML omitted -->Real-Time Collision Detection<!-- raw HTML omitted --> by <!-- raw HTML omitted -->Christer Ericson<!-- raw HTML omitted -->.</p>
+<p>For more information on vertex welding please refer to the discussion in <a href="http://www.amazon.com/Real-Time-Collision-Detection-Interactive-Technology/dp/1558607323/ref=sr_1_1?ie=UTF8&qid=1363029675&sr=8-1&keywords=real+time+collision+detection">Real-Time Collision Detection</a> by <a href="http://realtimecollisiondetection.net/blog/">Christer Ericson</a>.</p>
 <p><strong>NEXT ARTICLE:</strong> <a href="/post/how_the_go_stone_moves/">How The Go Stone Moves</a></p>
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
 
     </div>
 

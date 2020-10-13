@@ -59,7 +59,7 @@
 &lt;p&gt;It falls down because WebRTC is &lt;em&gt;extremely complex&lt;/em&gt;. This complexity is understandable, being designed primarily to support peer-to-peer communication between browsers, WebRTC needs STUN, ICE and TURN support for NAT traversal and packet forwarding in the worst case.&lt;/p&gt;
 &lt;p&gt;But from a game developer point of view, all this complexity seems like dead weight, when STUN, ICE and TURN are completely completely unnecessary to communicate with dedicated servers, which have public IPs.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;!-- raw HTML omitted --&gt;&amp;quot;I feel what is needed is a UDP version of WebSockets. That&amp;rsquo;s all I wish we had.&amp;ldquo;&lt;!-- raw HTML omitted --&gt;
+&lt;p&gt;&lt;b&gt;&amp;quot;I feel what is needed is a UDP version of WebSockets. That&amp;rsquo;s all I wish we had.&amp;ldquo;&lt;/b&gt;
 Matheus Valadares, creator of agar.io&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;In short, game developers appreciate simplicity and desire a &amp;ldquo;WebSockets for UDP&amp;rdquo;-like approach over the complexity of WebRTC.&lt;/p&gt;
@@ -147,7 +147,7 @@ Matheus Valadares, creator of agar.io&lt;/p&gt;
 &lt;p&gt;Alternatively, &lt;a href=&#34;http://netcode.io&#34;&gt;netcode.io&lt;/a&gt; provides a much simpler &amp;lsquo;WebSockets for UDP&amp;rsquo;-like approach, which would also solve the problem, if it were standardized and incorporated into browsers.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;UPDATE:&lt;/strong&gt; netcode.io is now &lt;a href=&#34;https://github.com/RedpointGames/netcode.io-browser&#34;&gt;available in browsers&lt;/a&gt;!&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
 </description>
     </item>
     

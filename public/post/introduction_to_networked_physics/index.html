@@ -28,7 +28,7 @@
   <meta name="description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to the first article in Networked Physics.
 In this article series we&rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.
 But before we get to this, let&rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:
-Here I’ve setup a simple simulation of a cube in the open source physics engine ODE.">
+Your browser does not support the video tag.  Here I’ve setup a simple simulation of a cube in the open source physics engine ODE.">
 
   
   <link rel="alternate" hreflang="en-us" href="https://gafferongames.com/post/introduction_to_networked_physics/">
@@ -116,7 +116,7 @@ Here I’ve setup a simple simulation of a cube in the open source physics engin
   <meta property="og:description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to the first article in Networked Physics.
 In this article series we&rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.
 But before we get to this, let&rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:
-Here I’ve setup a simple simulation of a cube in the open source physics engine ODE."><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
+Your browser does not support the video tag.  Here I’ve setup a simple simulation of a cube in the open source physics engine ODE."><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
   <meta property="twitter:image" content="https://gafferongames.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
   <meta property="article:published_time" content="2014-11-28T00:00:00&#43;00:00">
@@ -289,7 +289,7 @@ Here I’ve setup a simple simulation of a cube in the open source physics engin
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    2 min read
+    3 min read
   </span>
   
 
@@ -339,26 +339,42 @@ Here I’ve setup a simple simulation of a cube in the open source physics engin
 <p>Hi, I&rsquo;m <a href="https://gafferongames.com">Glenn Fiedler</a> and welcome to the first article in <strong><a href="/categories/networked-physics/">Networked Physics</a></strong>.</p>
 <p>In this article series we&rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.</p>
 <p>But before we get to this, let&rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:</p>
-<!-- raw HTML omitted -->
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+<source src="http://gafferongames.com/videos/the_physics_simulation_cube.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/the_physics_simulation_cube.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
 <p>Here I’ve setup a simple simulation of a cube in the open source physics engine <a href="http://www.ode.org">ODE</a>. The player moves around by applying forces at its center of mass. The physics simulation takes this linear motion and calculates friction as the cube collides with the ground, inducing a rolling and tumbling motion.</p>
 <p>This is why I chose a cube instead a sphere. I <em>want</em> this complex, unpredictable motion because rigid bodies in general move in interesting ways according to their shape.</p>
 <h2 id="an-interactive-world">An Interactive World</h2>
 <p>Networked physics get interesting when the player interacts with other physically simulated objects, <em>especially</em> when those objects push back and affect the motion of the player.</p>
 <p>So let&rsquo;s add some more cubes to the simulation:</p>
-<!-- raw HTML omitted -->
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+<source src="http://gafferongames.com/videos/the_physics_simulation_cubes_roll.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/the_physics_simulation_cubes_roll.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
 <p>When the player interacts with a cube it turns red. When that cube comes to rest it turns back to grey (non-interacting).</p>
 <p>While it’s cool to roll around and interact with other cubes, what I really wanted was a way to push <em>lots</em> of cubes around. What I came up with is this:</p>
-<!-- raw HTML omitted -->
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+<source src="http://gafferongames.com/videos/the_physics_simulation_cubes_blow.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/the_physics_simulation_cubes_blow.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
 <p>As you can see, interactions aren’t just direct. Red cubes pushed around by the player turn other cubes they touch red as well. This way, interactions fan out to cover all affected objects.</p>
 <h2 id="a-complicated-case">A Complicated Case</h2>
 <p>I also wanted a very complex coupled motion between the player and non-player cubes such they become one system: a group of rigid bodies joined together by constraints.</p>
 <p>To implement this I thought it would be cool if the player could roll around and create a ball of cubes, like in one of my favorite games <a href="https://en.wikipedia.org/wiki/Katamari_Damacy">Katamari Damacy</a>.</p>
-<!-- raw HTML omitted -->
+<video preload="auto" autoplay="autoplay" loop="loop" width="100%">
+<source src="http://gafferongames.com/videos/the_physics_simulation_cubes_katamari.mp4" type="video/mp4" />
+<source src="http://gafferongames.com/videos/the_physics_simulation_cubes_katamari.webm" type="video/webm" />
+Your browser does not support the video tag.
+</video>
 <p>Cubes within a certain distance of the player have a force applied towards the center of the cube. These cubes remain physically simulated while in the katamari ball, they are not just “stuck” to the player like in the original game.</p>
 <p>This is a very difficult situation for networked physics!</p>
 <p><strong>NEXT ARTICLE:</strong> <a href="/post/deterministic_lockstep/">Deterministic Lockstep</a></p>
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
 
     </div>
 

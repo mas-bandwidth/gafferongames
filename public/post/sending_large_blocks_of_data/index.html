@@ -450,7 +450,7 @@ struct SlicePacket : public protocol2::Packet
 <ul>
 <li>1mbps = 2 seconds</li>
 <li>512kbps = 4 seconds</li>
-<li>256kbps = <strong>8 seconds<!-- raw HTML omitted --> :(</strong></li>
+<li>256kbps = <strong>8 seconds</span> :(</strong></li>
 </ul>
 <p>Which kinda sucks. The whole point here is quickly and reliably. Emphasis on <em>quickly</em>. Wouldn&rsquo;t it be nice to be able to get the chunk across faster? The typical use case of the chunk system supports this. For example, a large block of data sent down to the client immediately on connect or a block of data that has to get through before the client exits a load screen and starts to play. You want this to be over as quickly as possible and in both cases the user really doesn&rsquo;t have anything better to do with their bandwidth, so why not use as much of it as possible?</p>
 <p>One thing I&rsquo;ve tried in the past with excellent results is an initial burst. Assuming your chunk size isn&rsquo;t so large, and your chunk sends are infrequent, I can see no reason why you can&rsquo;t just fire across the entire chunk, all slices of it, in separate packets in one glorious burst of bandwidth, wait 100ms, and then resume the regular bandwidth limited slice sending strategy.</p>
@@ -485,7 +485,7 @@ struct SlicePacket : public protocol2::Packet
 <p>The chunk system is simple in concept, but the implementation is certainly not. I encourage you to take a close look at the <a href="http://www.patreon.com/gafferongames">source code</a> for this article for further details.</p>
 <p><strong>NEXT ARTICLE:</strong> <a href="/post/reliable_ordered_messages/">Reliable Ordered Messages</a></p>
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
 
     </div>
 

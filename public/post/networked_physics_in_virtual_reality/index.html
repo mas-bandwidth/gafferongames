@@ -339,7 +339,7 @@ I replied ~~&quot;F*** yes!&ldquo;~~ **cough** &ldquo;Sure. This could be a lot 
 <p>When I first started discussions with Oculus, we imagined creating something like a table where four players could sit around and interact with physically simulated cubes on the table. For example, throwing, catching and stacking cubes, maybe knocking each other&rsquo;s stacks over with a swipe of their hand.</p>
 <p>But after a few days spent learning Unity and C#, I found myself actually <em>inside</em> the Rift. In VR, scale is <em>so important</em>. When the cubes were small, everything felt much less interesting, but when the cubes were scaled up to around a meter cubed, everything had this really cool sense of scale. You could make these <em>huge</em> stacks of cubes, up to 20 or 30 meters high. This felt really cool!</p>
 <p>It&rsquo;s impossible to communicate visually what this feels like outside of VR, but it looks something like this&hellip;</p>
-<!-- raw HTML omitted -->
+<img src="/img/networked-physics-in-vr/stack-of-cubes.jpg" width="100%"/>
 <p>&hellip; where you can select, grab and throw cubes using the touch controller, and any cubes you release from your hand interact with the other cubes in the simulation. You can throw a cube at a stack of cubes and knock them over. You can pick up a cube in each hand and juggle them. You can build a stack of cubes and see how high you can make it go.</p>
 <p>Even though this was a lot of fun, it&rsquo;s not all rainbows and unicorns. Working with Oculus as a client, I had to define tasks and deliverables before I could actually start the work.</p>
 <p>I suggested the following criteria we would use to define success:</p>
@@ -384,11 +384,11 @@ I replied ~~&quot;F*** yes!&ldquo;~~ **cough** &ldquo;Sure. This could be a lot 
 <h1 id="state-synchronization">State Synchronization</h1>
 <p>Trusting I could implement the authority rules described above, my first task was to prove that synchronizing physics in one direction of flow could actually work with Unity and PhysX. In previous work I had networked simulations built with ODE, so really, I had no idea if it was really possible.</p>
 <p>To find out, I setup a loopback scene in Unity where cubes fall into a pile in front of the player. There are two sets of cubes. The cubes on the left represent the authority side. The cubes on the right represent the non-authority side, which we want to be in sync with the cubes on the left.</p>
-<!-- raw HTML omitted -->
+<img src="/img/networked-physics-in-vr/authority-and-non-authority-cubes.png" width="100%"/>
 <p>At the start, without anything in place to keep the cubes in sync, even though both sets of cubes start from the same initial state, they give slightly different end results. You can see this most easily from top-down:</p>
-<!-- raw HTML omitted -->
+<img src="/img/networked-physics-in-vr/out-of-sync.png" width="100%"/>
 <p>This happens because PhysX is non-deterministic. Rather than tilting at non-determinstic windmills, I <em>fight</em> non-determinism by grabbing state from the left side (authority) and applying it to the right side (non-authority) 10 times per-second:</p>
-<!-- raw HTML omitted -->
+<img src="/img/networked-physics-in-vr/left-to-right.png" width="100%"/>
 <p>The state I grab from each cube looks like this:</p>
 <pre><code>struct CubeState
 {
@@ -400,7 +400,7 @@ I replied ~~&quot;F*** yes!&ldquo;~~ **cough** &ldquo;Sure. This could be a lot 
 </code></pre>
 <p>And when I apply this state to the simulation on the right side, I simply <em>snap</em> the position, rotation, linear and angular velocity of each cube to the state captured from the left side.</p>
 <p>This simple change is enough to keep the left and right simulations in sync. PhysX doesn&rsquo;t even diverge enough in the 1/10th of a second between updates to show any noticeable pops.</p>
-<!-- raw HTML omitted -->
+<img src="/img/networked-physics-in-vr/in-sync.png" width="100%"/>
 <p>This <strong>proves</strong> that a state synchronization based approach for networking can work with PhysX. <em>(Sigh of relief)</em>. The only problem of course, is that sending uncompressed physics state uses way too much bandwidth&hellip;</p>
 <h1 id="bandwidth-optimization">Bandwidth Optimization</h1>
 <p>To make sure the networked physics sample is playable over the internet, I needed to get bandwidth under control.</p>
@@ -528,7 +528,7 @@ I replied ~~&quot;F*** yes!&ldquo;~~ **cough** &ldquo;Sure. This could be a lot 
 <p>Thanks to Oculus for sponsoring my work and making this research possible!</p>
 <p>The source code for the networked physics sample can be downloaded <a href="https://github.com/OculusVR/oculus-networked-physics-sample">here</a>.</p>
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<!-- raw HTML omitted --><!-- raw HTML omitted -->Network Next is fixing the internet for games by creating a marketplace for premium network transit.<!-- raw HTML omitted --></p>
+<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
 
     </div>
 

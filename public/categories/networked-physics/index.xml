@@ -26,7 +26,7 @@
 &lt;p&gt;When I first started discussions with Oculus, we imagined creating something like a table where four players could sit around and interact with physically simulated cubes on the table. For example, throwing, catching and stacking cubes, maybe knocking each other&amp;rsquo;s stacks over with a swipe of their hand.&lt;/p&gt;
 &lt;p&gt;But after a few days spent learning Unity and C#, I found myself actually &lt;em&gt;inside&lt;/em&gt; the Rift. In VR, scale is &lt;em&gt;so important&lt;/em&gt;. When the cubes were small, everything felt much less interesting, but when the cubes were scaled up to around a meter cubed, everything had this really cool sense of scale. You could make these &lt;em&gt;huge&lt;/em&gt; stacks of cubes, up to 20 or 30 meters high. This felt really cool!&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s impossible to communicate visually what this feels like outside of VR, but it looks something like this&amp;hellip;&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;img src=&#34;https://gafferongames.com/img/networked-physics-in-vr/stack-of-cubes.jpg&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;&amp;hellip; where you can select, grab and throw cubes using the touch controller, and any cubes you release from your hand interact with the other cubes in the simulation. You can throw a cube at a stack of cubes and knock them over. You can pick up a cube in each hand and juggle them. You can build a stack of cubes and see how high you can make it go.&lt;/p&gt;
 &lt;p&gt;Even though this was a lot of fun, it&amp;rsquo;s not all rainbows and unicorns. Working with Oculus as a client, I had to define tasks and deliverables before I could actually start the work.&lt;/p&gt;
 &lt;p&gt;I suggested the following criteria we would use to define success:&lt;/p&gt;
@@ -71,11 +71,11 @@
 &lt;h1 id=&#34;state-synchronization&#34;&gt;State Synchronization&lt;/h1&gt;
 &lt;p&gt;Trusting I could implement the authority rules described above, my first task was to prove that synchronizing physics in one direction of flow could actually work with Unity and PhysX. In previous work I had networked simulations built with ODE, so really, I had no idea if it was really possible.&lt;/p&gt;
 &lt;p&gt;To find out, I setup a loopback scene in Unity where cubes fall into a pile in front of the player. There are two sets of cubes. The cubes on the left represent the authority side. The cubes on the right represent the non-authority side, which we want to be in sync with the cubes on the left.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;img src=&#34;https://gafferongames.com/img/networked-physics-in-vr/authority-and-non-authority-cubes.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;At the start, without anything in place to keep the cubes in sync, even though both sets of cubes start from the same initial state, they give slightly different end results. You can see this most easily from top-down:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;img src=&#34;https://gafferongames.com/img/networked-physics-in-vr/out-of-sync.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;This happens because PhysX is non-deterministic. Rather than tilting at non-determinstic windmills, I &lt;em&gt;fight&lt;/em&gt; non-determinism by grabbing state from the left side (authority) and applying it to the right side (non-authority) 10 times per-second:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;img src=&#34;https://gafferongames.com/img/networked-physics-in-vr/left-to-right.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;The state I grab from each cube looks like this:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;struct CubeState
 {
@@ -87,7 +87,7 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;And when I apply this state to the simulation on the right side, I simply &lt;em&gt;snap&lt;/em&gt; the position, rotation, linear and angular velocity of each cube to the state captured from the left side.&lt;/p&gt;
 &lt;p&gt;This simple change is enough to keep the left and right simulations in sync. PhysX doesn&amp;rsquo;t even diverge enough in the 1/10th of a second between updates to show any noticeable pops.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;img src=&#34;https://gafferongames.com/img/networked-physics-in-vr/in-sync.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;This &lt;strong&gt;proves&lt;/strong&gt; that a state synchronization based approach for networking can work with PhysX. &lt;em&gt;(Sigh of relief)&lt;/em&gt;. The only problem of course, is that sending uncompressed physics state uses way too much bandwidth&amp;hellip;&lt;/p&gt;
 &lt;h1 id=&#34;bandwidth-optimization&#34;&gt;Bandwidth Optimization&lt;/h1&gt;
 &lt;p&gt;To make sure the networked physics sample is playable over the internet, I needed to get bandwidth under control.&lt;/p&gt;
@@ -215,7 +215,7 @@
 &lt;p&gt;Thanks to Oculus for sponsoring my work and making this research possible!&lt;/p&gt;
 &lt;p&gt;The source code for the networked physics sample can be downloaded &lt;a href=&#34;https://github.com/OculusVR/oculus-networked-physics-sample&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -230,24 +230,59 @@
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;previous article&lt;/a&gt; we discussed techniques for compressing snapshots.&lt;/p&gt;
 &lt;p&gt;In this article we round out our discussion of networked physics strategies with &lt;strong&gt;state synchronization&lt;/strong&gt;, the third and final strategy in this article series.&lt;/p&gt;
 &lt;h2 id=&#34;state-synchronization&#34;&gt;State Synchronization&lt;/h2&gt;
-&lt;p&gt;What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, &lt;em&gt;unlike&lt;/em&gt; deterministic lockstep, we don&amp;rsquo;t just send input, we send both input &lt;!-- raw HTML omitted --&gt;and&lt;!-- raw HTML omitted --&gt; state.&lt;/p&gt;
+&lt;p&gt;What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, &lt;em&gt;unlike&lt;/em&gt; deterministic lockstep, we don&amp;rsquo;t just send input, we send both input &lt;u&gt;and&lt;/u&gt; state.&lt;/p&gt;
 &lt;p&gt;This gives state synchronization interesting properties. Because we send state, we don&amp;rsquo;t need perfect determinism to stay in sync, and because the simulation runs on both sides, objects continue moving forward between updates.&lt;/p&gt;
 &lt;p&gt;This lets us approach state synchronization differently to snapshot interpolation. Instead of sending state updates for every object in each packet, we can now send updates for only a few, and if we&amp;rsquo;re smart about how we select the objects for each packet, we can save bandwidth by concentrating updates on the most important objects.&lt;/p&gt;
 &lt;p&gt;So what&amp;rsquo;s the catch? State synchronization is an approximate and lossy synchronization strategy. In practice, this means you&amp;rsquo;ll spend a lot of time tracking down sources of extrapolation divergence and pops. But other than that, it&amp;rsquo;s a quick and easy strategy to get started with.&lt;/p&gt;
 &lt;h2 id=&#34;implementation&#34;&gt;Implementation&lt;/h2&gt;
 &lt;p&gt;Here&amp;rsquo;s the state sent over the network per-object:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;pre&gt;struct StateUpdate
+{
+    int index;
+    vec3f position;
+    quat4f orientation;
+    vec3f linear_velocity;
+    vec3f angular_velocity;
+};
+&lt;/pre&gt;
 &lt;p&gt;Unlike snapshot interpolation, we&amp;rsquo;re not just sending visual quantities like position and orientation, we&amp;rsquo;re also sending &lt;em&gt;non-visual&lt;/em&gt; state such as linear and angular velocity. Why is this?&lt;/p&gt;
 &lt;p&gt;The reason is that state synchronization runs the simulation on both sides, so it&amp;rsquo;s &lt;em&gt;always extrapolating&lt;/em&gt; from the last state update applied to each object. If linear and angular velocity aren&amp;rsquo;t synchronized, this extrapolation is done with incorrect velocities, leading to pops when objects are updated.&lt;/p&gt;
 &lt;p&gt;While we must send the velocities, there&amp;rsquo;s no point wasting bandwidth sending (0,0,0) over and over while an object is at rest. We can fix this with a trivial optimization, like so:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;pre&gt;void serialize_state_update( Stream &amp;amp; stream, 
+                             int &amp;amp; index, 
+                             StateUpdate &amp;amp; state_update )
+{
+    serialize_int( stream, index, 0, NumCubes - 1 );
+    serialize_vector( stream, state_update.position );
+    serialize_quaternion( stream, state_update.orientation );
+    bool at_rest = stream.IsWriting() ? state_update.AtRest() : false;    
+    serialize_bool( stream, at_rest );
+    if ( !at_rest )
+    {
+        serialize_vector( stream, state_update.linear_velocity );
+        serialize_vector( stream, state_update.angular_velocity );
+    }
+    else if ( stream.IsReading() )
+    {
+        state_update.linear_velocity = vec3f(0,0,0);
+        state_update.angular_velocity = vec3f(0,0,0);
+    }
+}
+&lt;/pre&gt;
 &lt;p&gt;What you see above is a &lt;em&gt;serialize function&lt;/em&gt;. It&amp;rsquo;s a trick I like to use to unify packet read and write. I like it because it&amp;rsquo;s expressive while at the same time it&amp;rsquo;s difficult to desync read and write. You can read more about them &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;packet-structure&#34;&gt;Packet Structure&lt;/h2&gt;
 &lt;p&gt;Now let&amp;rsquo;s look at the overall structure of packets being sent:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;pre&gt;const int MaxInputsPerPacket = 32;
+const int MaxStateUpdatesPerPacket = 64;
+
+struct Packet
+{
+    uint32_t sequence;
+    Input inputs[MaxInputsPerPacket];
+    int num_object_updates;
+    StateUpdate state_updates[MaxStateUpdatesPerPacket];
+};
+&lt;/pre&gt;
 &lt;p&gt;First we include a sequence number in each packet so we can determine out of order, lost or duplicate packets. I recommend you run the simulation at the same framerate on both sides (for example 60HZ) and in this case the sequence number can work double duty as the frame number.&lt;/p&gt;
 &lt;p&gt;Input is included in each packet because it&amp;rsquo;s needed for extrapolation. Like deterministic lockstep we send multiple redundant inputs so in the case of packet loss it&amp;rsquo;s very unlikely that an input gets dropped. Unlike deterministic lockstep, if don&amp;rsquo;t have the next input we don&amp;rsquo;t stop the simulation and wait for it, we continue extrapolating forward with the last input received.&lt;/p&gt;
 &lt;p&gt;Next you can see that we only send a maximum of 64 state updates per-packet. Since we have a total of 901 cubes in the simulation so we need some way to select the n most important state updates to include in each packet. We need some sort of prioritization scheme.&lt;/p&gt;
@@ -266,15 +301,27 @@
 &lt;p&gt;Once the packet comes out of the jitter how do you apply state updates? My recommendation is that you should snap the physics state hard. This means you apply the values in the state update directly to the simulation.&lt;/p&gt;
 &lt;p&gt;I recommend against trying to apply some smoothing between the state update and the current state at the simulation level. This may sound counterintuitive but the reason for this is that the simulation extrapolates from the state update so you want to make sure it extrapolates from a valid physics state for that object rather than some smoothed, total bullshit made-up one. This is especially important when you are networking large stacks of objects.&lt;/p&gt;
 &lt;p&gt;Surprisingly, without any smoothing the result is already pretty good:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; controls=&#34;controls&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/state_synchronization_uncompressed.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/state_synchronization_uncompressed.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;p&gt;As you can see it&amp;rsquo;s already looking quite good and barely any bandwidth optimization has been performed. Contrast this with the first video for snapshot interpolation which was at 18mbit/sec and you can see that using the simulation to extrapolate between state updates is a great way to use less bandwidth.&lt;/p&gt;
 &lt;p&gt;Of course we can do a lot better than this and each optimization we do lets us squeeze more state updates in the same amount of bandwidth. The next obvious thing we can do is to apply all the standard quantization compression techniques such as bounding and quantizing position, linear and angular velocity value and using the smallest three compression as described in &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;snapshot compression&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;But here it gets a bit more complex. We are extrapolating from those state updates so if we quantize these values over the network then the state that arrives on the right side is slightly different from the left side, leading to a slightly different extrapolation and a pop when the next state update arrives for that object.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; controls=&#34;controls&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/state_synchronization_compressed.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/state_synchronization_compressed.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;h2 id=&#34;quantize-both-sides&#34;&gt;Quantize Both Sides&lt;/h2&gt;
 &lt;p&gt;The solution is to quantize the state on both sides. This means that on both sides before each simulation step you quantize the entire simulation state as if it had been transmitted over the network. Once this is done the left and right side are both extrapolating from quantized state and their extrapolations are very similar.&lt;/p&gt;
 &lt;p&gt;Because these quantized values are being fed back into the simulation, you&amp;rsquo;ll find that much more precision is required than snapshot interpolation where they were just visual quantities used for interpolation. In the cube simulation I found it necessary to have 4096 position values per-meter, up from 512 with snapshot interpolation, and a whopping 15 bits per-quaternion component in smallest three (up from 9). Without this extra precision significant popping occurs because the quantization forces physics objects into penetration with each other, fighting against the simulation which tries to keep the objects out of penetration. I also found that softening the constraints and reducing the maximum velocity which the simulation used to push apart penetrating objects also helped reduce the amount of popping.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; controls=&#34;controls&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/state_synchronization_quantize_both_sides.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/state_synchronization_quantize_both_sides.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;p&gt;With quantization applied to both sides you can see the result is perfect once again. It may look visually about the same as the uncompressed version but in fact we&amp;rsquo;re able to fit many more state updates per-packet into the 256kbit/sec bandwidth limit. This means we are better able to handle packet loss because state updates for each object are sent more rapidly. If a packet is lost, it&amp;rsquo;s less of a problem because state updates for those objects are being continually included in future packets.&lt;/p&gt;
 &lt;p&gt;Be aware that when a burst of packet loss occurs like 1/4 a second with no packets getting through, and this is inevitable that eventually something like this will happen, you will probably get a different result on the left and the right sides. We have to plan for this. In spite of all effort that we have made to ensure that the extrapolation is as close as possible (quantizing both sides and so on) pops can and will occur if the network stops delivering packets.&lt;/p&gt;
 &lt;h2 id=&#34;visual-smoothing&#34;&gt;Visual Smoothing&lt;/h2&gt;
@@ -284,10 +331,18 @@
 &lt;p&gt;The trick to making this all work is that when a state update comes in you take the current simulation position and add the position error to that, and subtract that from the new position, giving the new position error offset which gives an identical result to the current (smoothed) visual position.&lt;/p&gt;
 &lt;p&gt;The same process is then applied to the error quaternion (using multiplication by the conjugate instead of subtraction) and this way you effectively calculate on each state update the new position error and orientation error relative to the new state such that the object appears to have not moved at all. Thus state updates are smooth and have no immediate visual effect, and the error reduction smoothes out any error in the extrapolation over time without the player noticing in the common case.&lt;/p&gt;
 &lt;p&gt;I find that using a single smoothing factor gives unacceptable results. A factor of 0.95 is perfect for small jitters because it smooths out high frequency jitter really well, but at the same time it is too slow for large position errors, like those that happen after multiple seconds of packet loss:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; controls=&#34;controls&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/state_synchronization_basic_smoothing.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/state_synchronization_basic_smoothing.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;p&gt;The solution I use is two different scale factors at different error distances, and to make sure the transition is smooth I blend between those two factors linearly according to the amount of positional error that needs to be reduced. In this simulation, having 0.95 for small position errors (25cms or less) while having a tighter blend factor of 0.85 for larger distances (1m error or above) gives a good result. The same strategy works well for orientation using the dot product between the orientation error and the identity matrix. I found that in this case a blend of the same factors between dot 0.1 and 0.5 works well.&lt;/p&gt;
 &lt;p&gt;The end result is smooth error reduction for small position and orientation errors combined with a tight error reduction for large pops. As you can see above you don&amp;rsquo;t want to drag out correction of these large pops, they need to be fast and so they&amp;rsquo;re over quickly otherwise they&amp;rsquo;re really disorienting for players, but at the same time you want to have really smooth error reduction when the error is small hence the adaptive error reduction approach works really well.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; controls=&#34;controls&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/state_synchronization_adaptive_smoothing.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/state_synchronization_adaptive_smoothing.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;h2 id=&#34;delta-compression&#34;&gt;Delta Compression&lt;/h2&gt;
 &lt;p&gt;Even though I would argue the result above is probably good enough already it is possible to improve the synchronization considerably from this point. For example to support a world with larger objects or more objects being interacted with. So lets work through some of those techniques and push this technique as far as it can go.&lt;/p&gt;
 &lt;p&gt;There is an easy compression that can be performed. Instead of encoding absolute position, if it is within a range of the player cube center, encode position as a relative offset to the player center position. In the common cases where bandwidth is high and state updates need to be more frequent (katamari ball) this provides a large win.&lt;/p&gt;
@@ -301,7 +356,7 @@
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;And that&amp;rsquo;s really about it for this technique. Without anything fancy it&amp;rsquo;s already pretty good, and on top of that another order of magnitude improvement is available with delta compression, at the cost of significant complexity!&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -319,7 +374,10 @@
 &lt;p&gt;Our target bandwidth is &lt;strong&gt;256 kilobits per-second&lt;/strong&gt;.&lt;/p&gt;
 &lt;h1 id=&#34;starting-point--60hz&#34;&gt;Starting Point @ 60HZ&lt;/h1&gt;
 &lt;p&gt;Life is rarely easy, and the life of a network programmer, even less so. As network programmers we&amp;rsquo;re often tasked with the impossible, so in that spirit, let&amp;rsquo;s increase the snapshot send rate from 10 to 60 snapshots per-second and see exactly how far away we are from our target bandwidth.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; controls=&#34;controls&#34; width=&#34;100%&#34;&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_uncompressed.mp4&#34; type=&#34;video/mp4&#34;/&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_uncompressed.webm&#34; type=&#34;video/webm&#34;/&gt;
+&lt;/video&gt;
 &lt;p&gt;That&amp;rsquo;s a &lt;em&gt;LOT&lt;/em&gt; of bandwidth: &lt;strong&gt;17.37 megabits per-second!&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s break it down and see where all the bandwidth is going.&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s the per-cube state sent in the snapshot:&lt;/p&gt;
@@ -332,7 +390,12 @@
     };
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;And here&amp;rsquo;s the size of each field:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;ul&gt;
+    &lt;li&gt;quat orientation: &lt;b&gt;128 bits&lt;/b&gt;&lt;/li&gt;
+    &lt;li&gt;vec3 linear_velocity: &lt;b&gt;96 bits&lt;/b&gt;&lt;/li&gt;
+    &lt;li&gt;vec3 position: &lt;b&gt;96 bits&lt;/b&gt;&lt;/li&gt;
+    &lt;li&gt;bool interacting: &lt;b&gt;1 bit&lt;/b&gt;&lt;/li&gt;
+&lt;/ul&gt;
 &lt;p&gt;This gives a total of 321 bits bits per-cube (or 40.125 bytes per-cube).&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s do a quick calculation to see if the bandwidth checks out. The scene has 901 cubes so &lt;strong&gt;901*40.125 = 36152.625&lt;/strong&gt; bytes of cube data per-snapshot. 60 snapshots per-second so &lt;strong&gt;36152.625 * 60 = 2169157.5&lt;/strong&gt; bytes per-second. Add in packet header estimate: &lt;strong&gt;2169157.5 + 32*60 = 2170957.5&lt;/strong&gt;. Convert bytes per-second to megabits per-second: &lt;strong&gt;2170957.5 * 8 / ( 1000 * 1000 ) = 17.38mbps&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Everything checks out. There&amp;rsquo;s no easy way around this, we&amp;rsquo;re sending a hell of a lot of bandwidth, and we have to reduce that to something around 1-2% of it&amp;rsquo;s current bandwidth to hit our target of 256 kilobits per-second.&lt;/p&gt;
@@ -344,7 +407,11 @@
 &lt;p&gt;Don&amp;rsquo;t always drop the same component due to numerical precision issues. Instead, find the component with the largest absolute value and encode its index using two bits [0,3] (0=x, 1=y, 2=z, 3=w), then send the index of the largest component and the smallest three components over the network (hence the name). On the other side use the index of the largest bit to know which component you have to reconstruct from the other three.&lt;/p&gt;
 &lt;p&gt;One final improvement. If v is the absolute value of the largest quaternion component, the next largest possible component value occurs when two components have the same absolute value and the other two components are zero. The length of that quaternion (v,v,0,0) is 1, therefore v^2 + v^2 = 1, 2v^2 = 1, v = 1/sqrt(2). This means you can encode the smallest three components in [-0.707107,+0.707107] instead of [-1,+1] giving you more precision with the same number of bits.&lt;/p&gt;
 &lt;p&gt;With this technique I&amp;rsquo;ve found that minimum sufficient precision for my simulation is 9 bits per-smallest component. This gives a result of 2 + 9 + 9 + 9 = 29 bits per-orientation (down from 128 bits).&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video controls=&#34;controls&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_compressed_orientation.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_compressed_orientation.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;p&gt;This optimization reduces bandwidth by over 5 megabits per-second, and I think if you look at the right side, you&amp;rsquo;d be hard pressed to spot any artifacts from the compression.&lt;/p&gt;
 &lt;h2 id=&#34;optimizing-linear-velocity&#34;&gt;Optimizing Linear Velocity&lt;/h2&gt;
 &lt;p&gt;What should we optimize next? It&amp;rsquo;s a tie between linear velocity and position. Both are 96 bits. In my experience position is the harder quantity to compress so let&amp;rsquo;s start here.&lt;/p&gt;
@@ -352,23 +419,39 @@
 &lt;p&gt;Linear velocity has been bounded and quantized and is now three integers in the range [-1024,1023]. That breaks down as follows: [-32,+31] (6 bits) for integer component and multiply 5 bits fraction precision. I hate messing around with sign bits so I just add 1024 to get the value in range [0,2047] and send that instead. To decode on receive just subtract 1024 to get back to signed integer range before converting to float.&lt;/p&gt;
 &lt;p&gt;11 bits per-component gives 33 bits total per-linear velocity. Just over 1/3 the original uncompressed size!&lt;/p&gt;
 &lt;p&gt;We can do even better than this because most cubes are stationary. To take advantage of this we just write a single bit &amp;ldquo;at rest&amp;rdquo;. If this bit is 1, then velocity is implicitly zero and is not sent. Otherwise, the compressed velocity follows after the bit (33 bits). Cubes at rest now cost just 127 bits, while cubes that are moving cost one bit more than they previously did: 159 + 1 = 160 bits.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
-&lt;p&gt;But why are we sending linear velocity at all? In the &lt;!-- raw HTML omitted --&gt;previous article&lt;!-- raw HTML omitted --&gt; we decided to send it because it improved the quality of interpolation at 10 snapshots per-second, but now that we&amp;rsquo;re sending 60 snapshots per-second is this still necessary? As you can see below the answer is &lt;em&gt;no&lt;/em&gt;.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video controls=&#34;controls&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_at_rest_flag.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_at_rest_flag.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
+&lt;p&gt;But why are we sending linear velocity at all? In the &lt;a href=&#34;http://gafferongames.com/networked-physics/snapshots-and-interpolation/&#34;&gt;previous article&lt;/a&gt; we decided to send it because it improved the quality of interpolation at 10 snapshots per-second, but now that we&amp;rsquo;re sending 60 snapshots per-second is this still necessary? As you can see below the answer is &lt;em&gt;no&lt;/em&gt;.&lt;/p&gt;
+&lt;video controls=&#34;controls&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_no_velocity.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_no_velocity.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;p&gt;Linear interpolation is good enough at 60HZ. This means we can avoid sending linear velocity entirely. Sometimes the best bandwidth optimizations aren&amp;rsquo;t about optimizing what you send, they&amp;rsquo;re about what you &lt;em&gt;don&amp;rsquo;t&lt;/em&gt; send.&lt;/p&gt;
 &lt;h2 id=&#34;optimizing-position&#34;&gt;Optimizing Position&lt;/h2&gt;
 &lt;p&gt;Now we have only position to compress. We&amp;rsquo;ll use the same trick we used for linear velocity: bound and quantize. I chose a position bound of [-256,255] meters in the horizontal plane (xy) and since in the cube simulation the floor is at z=0, I chose a range of [0,32] meters for z.&lt;/p&gt;
 &lt;p&gt;Now we need to work out how much precision is required. With experimentation I found that 512 values per-meter (roughly 2mm precision) provides enough precision. This gives position x and y components in [-131072,+131071] and z components in range [0,16383]. That&amp;rsquo;s 18 bits for x, 18 bits for y and 14 bits for z giving a total of 50 bits per-position (originally 96).&lt;/p&gt;
 &lt;p&gt;This reduces our cube state to 80 bits, or just 10 bytes per-cube.&lt;/p&gt;
 &lt;p&gt;This is approximately 1/4 of the original cost. Definite progress!&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video controls=&#34;controls&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_compressed_position.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_compressed_position.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;p&gt;Now that we&amp;rsquo;ve compressed position and orientation we&amp;rsquo;ve run out of simple optimizations. Any further reduction in precision results in unacceptable artifacts.&lt;/p&gt;
 &lt;h2 id=&#34;delta-compression&#34;&gt;Delta Compression&lt;/h2&gt;
 &lt;p&gt;Can we optimize further? The answer is yes, but only if we embrace a completely new technique: &lt;strong&gt;delta compression&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Delta compression sounds mysterious. Magical. Hard. Actually, it&amp;rsquo;s not hard at all. Here&amp;rsquo;s how it works: the left side sends packets to the right like this: &amp;ldquo;This is snapshot 110 encoded relative to snapshot 100&amp;rdquo;. The snapshot being encoded relative to is called the baseline. How you do this encoding is up to you, there are many fancy tricks, but the basic, big order of magnitude win comes when you say: &amp;ldquo;Cube n in snapshot 110 is the same as the baseline. One bit: Not changed!&amp;rdquo;&lt;/p&gt;
 &lt;p&gt;To implement delta encoding it is of course essential that the sender only encodes snapshots relative to baselines that the other side has received, otherwise they cannot decode the snapshot. Therefore, to handle packet loss the receiver has to continually send &amp;ldquo;ack&amp;rdquo; packets back to the sender saying: &amp;ldquo;the most recent snapshot I have received is snapshot n&amp;rdquo;. The sender takes this most recent ack and if it is more recent than the previous ack updates the baseline snapshot to this value. The next time a packet is sent out the snapshot is encoded relative to this more recent baseline. This process happens continuously such that the steady state becomes the sender encoding snapshots relative to a baseline that is roughly RTT (round trip time) in the past.&lt;/p&gt;
 &lt;p&gt;There is one slight wrinkle: for one round trip time past initial connection the sender doesn&amp;rsquo;t have any baseline to encode against because it hasn&amp;rsquo;t received an ack from the receiver yet. I handle this by adding a single flag to the packet that says: &amp;ldquo;this snapshot is encoded relative to the initial state of the simulation&amp;rdquo; which is known on both sides. Another option if the receiver doesn&amp;rsquo;t know the initial state is to send down the initial state using a non-delta encoded path, eg. as one large data block, and once that data block has been received delta encoded snapshots are sent first relative to the initial baseline in the data block, then eventually converge to the steady state of baselines at RTT.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video controls=&#34;controls&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_delta_not_changed.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_delta_not_changed.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;p&gt;As you can see above this is a big win. We can refine this approach and lock in more gains but we&amp;rsquo;re not going to get another order of magnitude improvement past this point. From now on we&amp;rsquo;re going to have to work pretty hard to get a number of small, cumulative gains to reach our goal of 256 kilobits per-second.&lt;/p&gt;
 &lt;h2 id=&#34;incremental-improvements&#34;&gt;Incremental Improvements&lt;/h2&gt;
 &lt;p&gt;First small improvement. Each cube that isn&amp;rsquo;t sent costs 1 bit (not changed). There are 901 cubes so we send 901 bits in each packet even if no cubes have changed. At 60 packets per-second this adds up to 54kbps of bandwidth. Seeing as there are usually significantly less than 901 changed cubes per-snapshot in the common case, we can reduce bandwidth by sending only changed cubes with a cube index [0,900] identifying which cube it is. To do this we need to add a 10 bit index per-cube to identify it.&lt;/p&gt;
@@ -377,11 +460,19 @@
 &lt;p&gt;Next small gain. What if we encoded the cube index relative to the previous cube index? Since we are iterating across and sending changed cube indices in-order: cube 0, cube 10, cube 11, 50, 52, 55 and so on we could easily encode the 2nd and remaining cube indices relative to the previous changed index, e.g.: +10, +1, +39, +2, +3. If we are smart about how we encode this index offset we should be able to, on average, represent a cube index with less than 10 bits.&lt;/p&gt;
 &lt;p&gt;The best encoding depends on the set of objects you interact with. If you spend a lot of time moving horizontally while blowing cubes from the initial cube grid then you hit lots of +1s. If you move vertically from initial state you hit lots of +30s (sqrt(900)). What we need then is a general purpose encoding capable of representing statistically common index offsets with less bits.&lt;/p&gt;
 &lt;p&gt;After a small amount of experimentation I came up with this simple encoding:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;ul&gt;
+    &lt;li&gt;[1,8] =&amp;gt; 1 + 3 (4 bits)&lt;/li&gt;
+    &lt;li&gt;[9,40] =&amp;gt; 1 + 1 + 5 (7 bits)&lt;/li&gt;
+    &lt;li&gt;[41,900] =&amp;gt; 1 + 1 + 10 (12 bits)&lt;/li&gt;
+&lt;/ul&gt;
 &lt;p&gt;Notice how large relative offsets are actually more expensive than 10 bits. It&amp;rsquo;s a statistical game. The bet is that we&amp;rsquo;re going to get a much larger number of small offsets so that the win there cancels out the increased cost of large offsets. It works. With this encoding I was able to get an average of 5.5 bits per-relative index.&lt;/p&gt;
 &lt;p&gt;Now we have a slight problem. We can no longer easily determine whether changed bits or relative indices are the best encoding. The solution I used is to run through a mock encoding of all changed cubes on packet write and count the number of bits required to encode relative indices. If the number of bits required is larger than 901, fallback to changed bits.&lt;/p&gt;
 &lt;p&gt;Here is where we are so far, which is a significant improvement:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video controls=&#34;controls&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_delta_relative_index.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_delta_relative_index.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;p&gt;Next small improvement. Encoding position relative to (offset from) the baseline position. Here there are a lot of different options. You can just do the obvious thing, eg. 1 bit relative position, and then say 8-10 bits per-component if all components have deltas within the range provided by those bits, otherwise send the absolute position (50 bits).&lt;/p&gt;
 &lt;p&gt;This gives a decent encoding but we can do better. If you think about it then there will be situations where one position component is large but the others are small. It would be nice if we could take advantage of this and send these small components using less bits.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s a statistical game and the best selection of small and large ranges per-component depend on the data set. I couldn&amp;rsquo;t really tell looking at a noisy bandwidth meter if I was making any gains so I captured the position vs. position base data set and wrote it to a text file for analysis.&lt;/p&gt;
@@ -394,15 +485,19 @@
 &lt;p&gt;The end result is an average of 23.3 bits per-relative quaternion. That&amp;rsquo;s 80.3% of the absolute smallest three.&lt;/p&gt;
 &lt;p&gt;That&amp;rsquo;s just about it but there is one small win left. Doing one final analysis pass over the position and orientation data sets I noticed that 5% of positions are unchanged from the base position after being quantized to 0.5mm resolution, and 5% of orientations in smallest three format are also unchanged from base.&lt;/p&gt;
 &lt;p&gt;These two probabilities are mutually exclusive, because if both are the same then the cube would be unchanged and therefore not sent, meaning a small statistical win exists for 10% of cube state if we send one bit for position changing, and one bit for orientation changing. Yes, 90% of cubes have 2 bits overhead added, but the 10% of cubes that save 20+ bits by sending 2 bits instead of 23.3 bit orientation or 26.1 bits position make up for that providing a small overall win of roughly 2 bits per-cube.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video controls=&#34;controls&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_delta_end_result.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/snapshot_compression_delta_end_result.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;p&gt;As you can see the end result is pretty good.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
-&lt;p&gt;And that&amp;rsquo;s about as far as I can take it using traditional hand-rolled bit-packing techniques. You can find source code for my implementation of all compression techniques mentioned in this article &lt;!-- raw HTML omitted --&gt;here&lt;!-- raw HTML omitted --&gt;.&lt;/p&gt;
-&lt;p&gt;It&amp;rsquo;s possible to get even better compression using a different approach. Bit-packing is inefficient because not all bit values have equal probability of 0 vs 1. No matter how hard you tune your bit-packer a context aware arithmetic encoding can beat your result by more accurately modeling the probability of values that occur in your data set. This &lt;!-- raw HTML omitted --&gt;implementation&lt;!-- raw HTML omitted --&gt; by Fabian Giesen beat my best bit-packed result by 25%.&lt;/p&gt;
+&lt;p&gt;And that&amp;rsquo;s about as far as I can take it using traditional hand-rolled bit-packing techniques. You can find source code for my implementation of all compression techniques mentioned in this article &lt;a href=&#34;https://gist.github.com/gafferongames/bb7e593ba1b05da35ab6&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;It&amp;rsquo;s possible to get even better compression using a different approach. Bit-packing is inefficient because not all bit values have equal probability of 0 vs 1. No matter how hard you tune your bit-packer a context aware arithmetic encoding can beat your result by more accurately modeling the probability of values that occur in your data set. This &lt;a href=&#34;https://github.com/rygorous/gaffer_net/blob/master/main.cpp&#34;&gt;implementation&lt;/a&gt; by Fabian Giesen beat my best bit-packed result by 25%.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/state_synchronization/&#34;&gt;State Synchronization&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -433,23 +528,35 @@
 &lt;p&gt;At this point I would like everybody to relax, take a deep breath, and imagine we live in a world where I can actually send a packet this large 60 times per-second over the internet and not have everything explode. Imagine I have FIOS &lt;em&gt;(I do)&lt;/em&gt;, or I&amp;rsquo;m sitting over a backbone link to another computer that is also on the backbone. Imagine I live in South Korea. Do whatever you need to do to suspend disbelief, but most of all, don&amp;rsquo;t worry, because I&amp;rsquo;m going to spend the entire next article showing you how to optimize snapshot bandwidth.&lt;/p&gt;
 &lt;p&gt;When we send snapshot data in packets, we include at the top a 16 bit sequence number. This sequence number starts at zero and increases with each packet sent. We use this sequence number on receive to determine if the snapshot in a packet is newer or older than the most recent snapshot received. If it&amp;rsquo;s older then it&amp;rsquo;s thrown away.&lt;/p&gt;
 &lt;p&gt;Each frame we just render the most recent snapshot received on the right:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; autoplay=&#34;autoplay&#34; loop=&#34;loop&#34; width=&#34;100%&#34;&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/snapshot_interpolation_60pps_jitter.mp4&#34; type=&#34;video/mp4&#34;/&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/snapshot_interpolation_60pps_jitter.webm&#34; type=&#34;video/webm&#34;/&gt;
+&lt;/video&gt;
 &lt;p&gt;Look closely though, and even though we&amp;rsquo;re sending the data as rapidly as possible (one packet per-frame) you can still see hitches on the right side. This is because the internet makes no guarantee that packets sent 60 times per-second arrive nicely spaced 1/60 of a second apart. Packets are jittered. Some frames you receive two snapshot packets. Other frames you receive none.&lt;/p&gt;
 &lt;h1 id=&#34;jitter-and-hitches&#34;&gt;Jitter and Hitches&lt;/h1&gt;
 &lt;p&gt;This is actually a really common thing when you first start networking. You start out playing your game over LAN and notice you can just slam out packets really fast (60pps) and most of the time your game looks great because over the LAN those packets actually do tend to arrive at the same rate they were sent&amp;hellip; and then you start trying to play your game over wireless or the internet and you start seeing hitches. Don&amp;rsquo;t worry. There are ways to handle this!&lt;/p&gt;
 &lt;p&gt;First, let&amp;rsquo;s look at how much bandwidth we&amp;rsquo;re sending with this naive approach. Each packet is 25312.5 bytes plus 28 bytes for IP + UDP header and 2 bytes for sequence number. That&amp;rsquo;s 25342.5 bytes per-packet and at 60 packets per-second this gives a total of 1520550 bytes per-second or 11.6 megabit/sec. Now there are certainly internet connections out there that can support that amount of traffic&amp;hellip; but since, let&amp;rsquo;s be honest, we&amp;rsquo;re not really getting a lot of benefit blasting packets out 60 times per-second with all the jitter, let&amp;rsquo;s pull it back a bit and send only 10 snapshots per-second:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; autoplay=&#34;autoplay&#34; loop=&#34;loop&#34; width=&#34;100%&#34;&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/snapshot_interpolation_10pps_no_interpolation.mp4&#34; type=&#34;video/mp4&#34;/&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/snapshot_interpolation_10pps_no_interpolation.webm&#34; type=&#34;video/webm&#34;/&gt;
+&lt;/video&gt;
 &lt;p&gt;You can see how this looks above. Not so great on the right side but at least we&amp;rsquo;ve reduced bandwidth by a factor of six to around 2 megabit/sec. We&amp;rsquo;re definitely headed in the right direction.&lt;/p&gt;
 &lt;h2 id=&#34;linear-interpolation&#34;&gt;Linear Interpolation&lt;/h2&gt;
 &lt;p&gt;Now for the trick with snapshots. What we do is instead of immediately rendering snapshot data received is that we buffer snapshots for a short amount of time in an interpolation buffer. This interpolation buffer holds on to snapshots for a period of time such that you have not only the snapshot you want to render but also, statistically speaking, you are very likely to have the next snapshot as well. Then as the right side moves forward in time we interpolate between the position and orientation for the two slightly delayed snapshots providing the illusion of smooth movement. In effect, we&amp;rsquo;ve traded a small amount of added latency for smoothness.&lt;/p&gt;
 &lt;p&gt;You may be surprised at just how good it looks with linear interpolation @ 10pps:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
-&lt;p&gt;Look closely though and you can see some artifacts on the right side. The first is a subtle position jitter when the player cube is hovering in the air. This is your brain detecting 1st order discontinuity at the sample points of position interpolation. The other artifact occurs when a bunch of cubes are in a katamari ball, you can see a sort of &amp;ldquo;pulsing&amp;rdquo; as the speed of rotation increases and decreases. This occurs because attached cubes interpolate linearly between two sample points rotating around the player cube, effectively interpolating &lt;!-- raw HTML omitted --&gt;through&lt;!-- raw HTML omitted --&gt; the player cube as they take the shortest linear path between two points on a circle.&lt;/p&gt;
+&lt;video preload=&#34;auto&#34; autoplay=&#34;autoplay&#34; loop=&#34;loop&#34; width=&#34;100%&#34;&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/snapshot_interpolation_10pps_linear_interpolation.mp4&#34; type=&#34;video/mp4&#34;/&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/snapshot_interpolation_10pps_linear_interpolation.webm&#34; type=&#34;video/webm&#34;/&gt;
+&lt;/video&gt;
+&lt;p&gt;Look closely though and you can see some artifacts on the right side. The first is a subtle position jitter when the player cube is hovering in the air. This is your brain detecting 1st order discontinuity at the sample points of position interpolation. The other artifact occurs when a bunch of cubes are in a katamari ball, you can see a sort of &amp;ldquo;pulsing&amp;rdquo; as the speed of rotation increases and decreases. This occurs because attached cubes interpolate linearly between two sample points rotating around the player cube, effectively interpolating &lt;em&gt;through&lt;/em&gt; the player cube as they take the shortest linear path between two points on a circle.&lt;/p&gt;
 &lt;h2 id=&#34;hermite-interpolation&#34;&gt;Hermite Interpolation&lt;/h2&gt;
 &lt;p&gt;I find these artifacts unacceptable but I don&amp;rsquo;t want to increase the packet send rate to fix them. Let&amp;rsquo;s see what we can do to make it look better at the same send rate instead. One thing we can try is upgrading to a more accurate interpolation scheme for position, one that interpolates between position samples while considering the linear velocity at each sample point.&lt;/p&gt;
-&lt;p&gt;This can be done with an &lt;!-- raw HTML omitted --&gt;hermite spline&lt;!-- raw HTML omitted --&gt; (pronounced &amp;ldquo;air-mitt&amp;rdquo;)&lt;/p&gt;
+&lt;p&gt;This can be done with an &lt;a href=&#34;http://en.wikipedia.org/wiki/Hermite_interpolation&#34;&gt;hermite spline&lt;/a&gt; (pronounced &amp;ldquo;air-mitt&amp;rdquo;)&lt;/p&gt;
 &lt;p&gt;Unlike other splines with control points that affect the curve indirectly, the hermite spline is guaranteed to pass through the start and end points while matching the start and end velocities. This means that velocity is smooth across sample points and cubes in the katamari ball tend to rotate around the cube rather than interpolate through it at speed.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; autoplay=&#34;autoplay&#34; loop=&#34;loop&#34; width=&#34;100%&#34;&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/snapshot_interpolation_10pps_hermite_interpolation.mp4&#34; type=&#34;video/mp4&#34;/&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/snapshot_interpolation_10pps_hermite_interpolation.webm&#34; type=&#34;video/webm&#34;/&gt;
+&lt;/video&gt;
 &lt;p&gt;Above you can see hermite interpolation for position @ 10pps. Bandwidth has increased slightly because we need to include linear velocity with each cube in the snapshot, but we&amp;rsquo;re able to significantly increase the quality at the same send rate. I can no longer see any artifacts. Go back and compare this with the raw, non-interpolated 10pps version. It really is amazing that we&amp;rsquo;re able to reconstruct the simulation with this level of quality at such a low send rate.&lt;/p&gt;
 &lt;p&gt;As an aside, I found it was not necessary to perform higher order interpolation for orientation quaternions to get smooth interpolation. This is great because I did a lot of research into exactly interpolating between orientation quaternions with a specified angular velocity at sample points and it seemed difficult. All that was needed to achieve an acceptable result was to switch from linear interpolation + normalize (nlerp) to spherical linear interpolation (slerp) to ensure constant angular speed for orientation interpolation.&lt;/p&gt;
 &lt;p&gt;I believe this is because cubes in the simulation tend to have mostly constant angular velocity while in the air and large angular velocity changes occur only discontinuously when collisions occur. It could also be because orientation tends to change slowly while in the air vs. position which changes rapidly relative to the number of pixels affected on screen. Either way, it seems that slerp is good enough and that&amp;rsquo;s great because it means we don&amp;rsquo;t need to send angular velocity in the snapshot.&lt;/p&gt;
@@ -459,7 +566,10 @@
 &lt;p&gt;I&amp;rsquo;ll let you in on a secret. Not only were the linear and hermite interpolation videos above recorded at a send rate of 10 packets per-second, they were also recorded at 5% packet loss with +/- 2 frames of jitter @ 60fps. How I handled packet loss and jitter for those videos is by simply ensuring that snapshots are held in the interpolation buffer for an appropriate amount of time before interpolation.&lt;/p&gt;
 &lt;p&gt;My rule of thumb is that the interpolation buffer should have enough delay so that I can lose two packets in a row and still have something to interpolate towards. Experimentally I&amp;rsquo;ve found that the amount of delay that works best at 2-5% packet loss is 3X the packet send rate. At 10 packets per-second this is 300ms. I also need some extra delay to handle jitter, which in my experience is typically only one or two frames @ 60fps, so the interpolation videos above were recorded with a delay of 350ms.&lt;/p&gt;
 &lt;p&gt;Adding 350 milliseconds delay seems like a lot. And it is. But, if you try to skimp you end up hitching for 1/10th of a second each time a packet is lost. One technique that people often use to hide the delay added by the interpolation buffer in other areas (such as FPS, flight simulator, racing games and so on) is to use extrapolation. But in my experience, extrapolation doesn&amp;rsquo;t work very well for rigid bodies because their motion is non-linear and unpredictable. Here you can see an extrapolation of 200ms, reducing overall delay from 350 ms to just 150ms:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; autoplay=&#34;autoplay&#34; loop=&#34;loop&#34; width=&#34;100%&#34;&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/snapshot_interpolation_10pps_extrapolation.mp4&#34; type=&#34;video/mp4&#34;/&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/snapshot_interpolation_10pps_extrapolation.webm&#34; type=&#34;video/webm&#34;/&gt;
+&lt;/video&gt;
 &lt;p&gt;Problem is it&amp;rsquo;s just not very good. The reason is that the extrapolation doesn&amp;rsquo;t know anything about the physics simulation. Extrapolation doesn&amp;rsquo;t know about collision with the floor so cubes extrapolate down through the floor and then spring back up to correct. Prediction doesn&amp;rsquo;t know about the spring force holding the player cube up in the air so it the cube moves slower initially upwards than it should and has to snap to catch up. It also doesn&amp;rsquo;t know anything about collision and how collision response works, so the cube rolling across the floor and other cubes are also mispredicted. Finally, if you watch the katamari ball you&amp;rsquo;ll see that the extrapolation predicts the attached cubes as continuing to move along their tangent velocity when they should rotate with the player cube.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;You could conceivably spend a great deal of time to improve the quality of this extrapolation and make it aware of various movement modes for the cubes. You could take each cube and make sure that at minimum the cube doesn&amp;rsquo;t go through the floor. You could add some approximate collision detection or response using bounding spheres between cubes. You could even take the cubes in the katamari ball and make them predict motion to rotate around with the player cube.&lt;/p&gt;
@@ -468,7 +578,7 @@
 &lt;p&gt;In order to increase the send rate we&amp;rsquo;re going to need some pretty good bandwidth optimizations. But don&amp;rsquo;t worry, there&amp;rsquo;s a &lt;em&gt;lot&lt;/em&gt; we can do to optimize bandwidth. So much so that there was too much stuff to fit in this article and I had to insert an extra unplanned article just to cover all of it!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;Snapshot Compression&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -487,11 +597,17 @@
 &lt;h2 id=&#34;determinism&#34;&gt;Determinism&lt;/h2&gt;
 &lt;p&gt;Determinism means that given the same initial condition and the same set of inputs your simulation gives exactly the same result. And I do mean &lt;em&gt;exactly&lt;/em&gt; the same result.&lt;/p&gt;
 &lt;p&gt;Not close. Not near enough. &lt;strong&gt;Exactly the same&lt;/strong&gt;. Exact down to the bit-level. So exact, you could take a checksum of your entire physics state at the end of each frame and it would be identical.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; autoplay=&#34;autoplay&#34; loop=&#34;loop&#34; width=&#34;100%&#34;&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/deterministic_lockstep_desync.mp4&#34; type=&#34;video/mp4&#34;/&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/deterministic_lockstep_desync.webm&#34; type=&#34;video/webm&#34;/&gt;
+&lt;/video&gt;
 &lt;p&gt;Above you can see a simulation that is &lt;em&gt;almost&lt;/em&gt; deterministic. The simulation on the left is controlled by the player. The simulation on the right has exactly the same inputs applied with a two second delay starting from the same initial condition. Both simulations step forward with the same delta time (a necessary precondition to ensure exactly the same result) and both simulations apply the same inputs. Notice how after the smallest divergence the simulation gets further and further out of sync. This simulation is &lt;strong&gt;non-deterministic&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;What&amp;rsquo;s going on is that the physics engine I&amp;rsquo;m using (&lt;a href=&#34;http://www.ode.org/&#34;&gt;Open Dynamics Engine&lt;/a&gt;) uses a random number generator inside its solver to randomize the order of constraint processing to improve stability. It&amp;rsquo;s open source. Take a look and see! Unfortunately this breaks determinism because the simulation on the left processes constraints in a different order to the simulation on the right, leading to slightly different results.&lt;/p&gt;
 &lt;p&gt;Luckily all that is required to make ODE deterministic on the same machine, with the same complied binary and on the same OS (is that enough qualifications?) is to set its internal random seed to the current frame number before running the simulation via dSetRandomSeed. Once this is done ODE gives exactly the same result and the left and right simulations stay in sync.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; autoplay=&#34;autoplay&#34; loop=&#34;loop&#34; width=&#34;100%&#34;&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/deterministic_lockstep.mp4&#34; type=&#34;video/mp4&#34;/&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/deterministic_lockstep.webm&#34; type=&#34;video/webm&#34;/&gt;
+&lt;/video&gt;
 &lt;p&gt;And now a word of warning. Even though the simulation above is deterministic on the same machine, that does &lt;em&gt;not&lt;/em&gt; necessarily mean it would also be deterministic across different compilers, a different OS or different machine architectures (eg. PowerPC vs. Intel). In fact, it&amp;rsquo;s probably not even deterministic between debug and release builds due to floating point optimizations.&lt;/p&gt;
 &lt;p&gt;Floating point determinism is a complicated subject and there&amp;rsquo;s no silver bullet.&lt;/p&gt;
 &lt;p&gt;For more information please refer to this &lt;a href=&#34;https://gafferongames.com/post/floating_point_determinism/&#34;&gt;article&lt;/a&gt;.&lt;/p&gt;
@@ -527,21 +643,27 @@
 &lt;p&gt;In fact, It&amp;rsquo;s a common thing out there on the Internet for pundits to say stuff like:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;!-- raw HTML omitted --&gt;If you need reliable-ordered, you can&amp;rsquo;t do better than TCP!&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;http://www.reddit.com/r/gamedev/comments/1tvbe0/is_it_just_me_or_is_networking_really_hard/&#34;&gt;If you need reliable-ordered, you can&amp;rsquo;t do better than TCP!&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;&lt;!-- raw HTML omitted --&gt;Your game doesn&amp;rsquo;t need UDP (yet)&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;a href=&#34;https://thoughtstreams.io/glyph/your-game-doesnt-need-udp-yet/&#34;&gt;Your game doesn&amp;rsquo;t need UDP (yet)&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;But I&amp;rsquo;m here to tell you this kind of thinking is &lt;strong&gt;dead wrong&lt;/strong&gt;.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video autoplay preload=&#34;auto&#34; loop=&#34;true&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/deterministic_lockstep_tcp_100ms_1pc.mp4&#34; type=&#34;video/mp4&#34;/&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/deterministic_lockstep_tcp_100ms_1pc.webm&#34; type=&#34;video/webm&#34;/&gt;
+&lt;/video&gt;
 &lt;p&gt;Above you can see the simulation networked using deterministic lockstep over TCP at 100ms latency and 1% packet loss. If you look closely on the right side you can see hitches every few seconds. What&amp;rsquo;s happening here is that each time a packet is lost, TCP has to wait RTT*2 while it is resent (actually it can be much worse, but I&amp;rsquo;m being generous&amp;hellip;). The hitches happen because with deterministic lockstep the right simulation can&amp;rsquo;t simulate frame n without input n, so it has to pause to wait for input n to be resent!&lt;/p&gt;
 &lt;p&gt;That&amp;rsquo;s not all. It gets significantly worse as latency and packet loss increase. Here is the same simulation networked using deterministic lockstep over TCP at 250ms latency and 5% packet loss:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video autoplay preload=&#34;auto&#34; loop=&#34;true&#34; width=&#34;100%&#34;&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/deterministic_lockstep_tcp_250ms_5pc.mp4&#34; type=&#34;video/mp4&#34;/&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/deterministic_lockstep_tcp_250ms_5pc.webm&#34; type=&#34;video/webm&#34;/&gt;
+&lt;/video&gt;
 &lt;p&gt;Now I will concede that if you have no packet loss and/or a very small amount of latency then you very well may get acceptable results with TCP. But please be aware that if you use TCP it behaves &lt;em&gt;terribly&lt;/em&gt; under bad network conditions.&lt;/p&gt;
 &lt;h2 id=&#34;can-we-do-better-than-tcp&#34;&gt;Can we do better than TCP?&lt;/h2&gt;
 &lt;p&gt;Can we beat TCP at its own game. Reliable-ordered delivery?&lt;/p&gt;
-&lt;p&gt;The answer is an emphatic &lt;!-- raw HTML omitted --&gt;YES&lt;!-- raw HTML omitted --&gt;. But &lt;em&gt;only&lt;/em&gt; if we change the rules of the game.&lt;/p&gt;
+&lt;p&gt;The answer is an emphatic &lt;b&gt;YES&lt;/b&gt;. But &lt;em&gt;only&lt;/em&gt; if we change the rules of the game.&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s the trick. We need to ensure that all inputs arrive reliably and in order. But if we send inputs in UDP packets, some of those packets will be lost. What if, instead of detecting packet loss after the fact and resending lost packets, we redundantly include &lt;em&gt;all inputs&lt;/em&gt; in each UDP packet until we know for sure the other side has received them?&lt;/p&gt;
 &lt;p&gt;Inputs are very small (6 bits). Let&amp;rsquo;s say we&amp;rsquo;re sending 60 inputs per-second (60fps simulation) and round trip time we know is going the be somewhere in 30-250ms range. Let&amp;rsquo;s say just for fun that it could be up to 2 seconds worst case and at this point we&amp;rsquo;ll time out the connection (screw that guy). This means that on average we only need to include between 2-15 frames of input and worst case we&amp;rsquo;ll need 120 inputs. Worst case is 120*6 = 720 bits. That&amp;rsquo;s only 90 bytes of input! That&amp;rsquo;s totally reasonable.&lt;/p&gt;
 &lt;p&gt;We can do even better. It&amp;rsquo;s not common for inputs to change every frame. What if when we send our packet instead we start with the sequence number of the most recent input, and the 6 bits of the first (oldest) input, and the number of un-acked inputs. Then as we iterate across these inputs to write them to the packet we can write a single bit (1) if the next input is different to the previous, and (0) if the input is the same. So if the input is different from the previous frame we write 7 bits (rare). If the input is identical we write just one (common). Where inputs change infrequently this is a big win and in the worst case this really isn&amp;rsquo;t that bad. 120 bits of extra data sent. Just 15 bytes overhead worst case.&lt;/p&gt;
@@ -552,12 +674,15 @@
 &lt;p&gt;Instead of &amp;ldquo;implementing 95% of TCP on top of UDP&amp;rdquo; we have implemented something &lt;em&gt;totally different&lt;/em&gt; and better suited to our requirements. A protocol that redundantly sends inputs because we know they are small, so we never have to wait for retransmission.&lt;/p&gt;
 &lt;p&gt;So exactly how much better is this approach than sending inputs over TCP?&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s take a look&amp;hellip;&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video autoplay preload=&#34;auto&#34; loop=&#34;true&#34; width=&#34;100%&#34;&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/deterministic_lockstep_udp_2sec_25pc.mp4&#34; type=&#34;video/mp4&#34;/&gt;
+  &lt;source src=&#34;http://gafferongames.com/videos/deterministic_lockstep_udp_2sec_25pc.webm&#34; type=&#34;video/webm&#34;/&gt;
+&lt;/video&gt;
 &lt;p&gt;The video above shows deterministic lockstep synchronized over UDP using this technique with &lt;strong&gt;2 seconds&lt;/strong&gt; of latency and &lt;strong&gt;25% packet loss&lt;/strong&gt;. Imagine how awful TCP would look under these conditions.&lt;/p&gt;
 &lt;p&gt;So in conclusion, even where TCP should have the most advantage, in the only networking model that relies on reliable-ordered data, we can still easily whip its ass with a simple protocol built on top of UDP.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;Snapshot Interpolation&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
 </description>
     </item>
     
@@ -571,26 +696,42 @@
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to the first article in &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In this article series we&amp;rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.&lt;/p&gt;
 &lt;p&gt;But before we get to this, let&amp;rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; autoplay=&#34;autoplay&#34; loop=&#34;loop&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/the_physics_simulation_cube.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/the_physics_simulation_cube.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;p&gt;Here I’ve setup a simple simulation of a cube in the open source physics engine &lt;a href=&#34;http://www.ode.org&#34;&gt;ODE&lt;/a&gt;. The player moves around by applying forces at its center of mass. The physics simulation takes this linear motion and calculates friction as the cube collides with the ground, inducing a rolling and tumbling motion.&lt;/p&gt;
 &lt;p&gt;This is why I chose a cube instead a sphere. I &lt;em&gt;want&lt;/em&gt; this complex, unpredictable motion because rigid bodies in general move in interesting ways according to their shape.&lt;/p&gt;
 &lt;h2 id=&#34;an-interactive-world&#34;&gt;An Interactive World&lt;/h2&gt;
 &lt;p&gt;Networked physics get interesting when the player interacts with other physically simulated objects, &lt;em&gt;especially&lt;/em&gt; when those objects push back and affect the motion of the player.&lt;/p&gt;
 &lt;p&gt;So let&amp;rsquo;s add some more cubes to the simulation:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; autoplay=&#34;autoplay&#34; loop=&#34;loop&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/the_physics_simulation_cubes_roll.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/the_physics_simulation_cubes_roll.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;p&gt;When the player interacts with a cube it turns red. When that cube comes to rest it turns back to grey (non-interacting).&lt;/p&gt;
 &lt;p&gt;While it’s cool to roll around and interact with other cubes, what I really wanted was a way to push &lt;em&gt;lots&lt;/em&gt; of cubes around. What I came up with is this:&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; autoplay=&#34;autoplay&#34; loop=&#34;loop&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/the_physics_simulation_cubes_blow.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/the_physics_simulation_cubes_blow.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;p&gt;As you can see, interactions aren’t just direct. Red cubes pushed around by the player turn other cubes they touch red as well. This way, interactions fan out to cover all affected objects.&lt;/p&gt;
 &lt;h2 id=&#34;a-complicated-case&#34;&gt;A Complicated Case&lt;/h2&gt;
 &lt;p&gt;I also wanted a very complex coupled motion between the player and non-player cubes such they become one system: a group of rigid bodies joined together by constraints.&lt;/p&gt;
 &lt;p&gt;To implement this I thought it would be cool if the player could roll around and create a ball of cubes, like in one of my favorite games &lt;a href=&#34;https://en.wikipedia.org/wiki/Katamari_Damacy&#34;&gt;Katamari Damacy&lt;/a&gt;.&lt;/p&gt;
-&lt;!-- raw HTML omitted --&gt;
+&lt;video preload=&#34;auto&#34; autoplay=&#34;autoplay&#34; loop=&#34;loop&#34; width=&#34;100%&#34;&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/the_physics_simulation_cubes_katamari.mp4&#34; type=&#34;video/mp4&#34; /&gt;
+&lt;source src=&#34;http://gafferongames.com/videos/the_physics_simulation_cubes_katamari.webm&#34; type=&#34;video/webm&#34; /&gt;
+Your browser does not support the video tag.
+&lt;/video&gt;
 &lt;p&gt;Cubes within a certain distance of the player have a force applied towards the center of the cube. These cubes remain physically simulated while in the katamari ball, they are not just “stuck” to the player like in the original game.&lt;/p&gt;
 &lt;p&gt;This is a very difficult situation for networked physics!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;Deterministic Lockstep&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;!-- raw HTML omitted --&gt;&lt;!-- raw HTML omitted --&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;!-- raw HTML omitted --&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
 </description>
     </item>
     
