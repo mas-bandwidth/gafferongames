@@ -611,16 +611,16 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-unknowns.png&#34; alt=&#34;biconvex unknowns&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;First notice that the point Q lies on the generating circle, so the line CQ has length r:&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;todo: obviously I have a bunch of work to get the latex equations ported across to Hugo. I&amp;rsquo;m researching different options&amp;hellip;&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]d + h/2 = r[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]d = r - h/2[/latex]&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]d + h/2 = r[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]d = r - h/2[/latex]&lt;/p&gt;
 &lt;p&gt;The point P is also on the generating circle so the green line CP has length r as well. Using Pythagoras theorem and substituting for d:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]r^2 = d^2 + (w/2)^2[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]r^2 = ( r - h/2 )^2 + (w/2)^2[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]r^2 = ( h^2/4 - hr + r^2 ) + w^2/4[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]r^2 = h^2/4 - hr + r^2 + w^2/4[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]0 = h^2/4 - hr + 0 + w^2/4[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]hr = h^2/4 + w^2/4[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]r = ( h^2 + w^2 ) / 4h[/latex]&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]r^2 = d^2 + (w/2)^2[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]r^2 = ( r - h/2 )^2 + (w/2)^2[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]r^2 = ( h^2/4 - hr + r^2 ) + w^2/4[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]r^2 = h^2/4 - hr + r^2 + w^2/4[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]0 = h^2/4 - hr + 0 + w^2/4[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]hr = h^2/4 + w^2/4[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]r = ( h^2 + w^2 ) / 4h[/latex]&lt;/p&gt;
 &lt;p&gt;Which gives us everything we need to write the function:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;    void calculateBiconvex( float w,  
                             float h, 
@@ -644,23 +644,23 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;If the tangent is equal then the normal must be equal as well. This means that the center of the bevel circle lies at the intersection of the line CP and the x axis.&lt;/p&gt;
 &lt;p&gt;We already know C so if we can find the point P then we can find this intersection point. Once we know the intersection point we can find r&lt;sub&gt;1&lt;/sub&gt; and r&lt;sub&gt;2&lt;/sub&gt;.&lt;/p&gt;
 &lt;p&gt;Since P is at the start of the bevel:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]P_y = b/2[/latex]&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]P_y = b/2[/latex]&lt;/p&gt;
 &lt;p&gt;Because P lies on the biconvex circle with center C and radius r we can use the equation of the circle to find x as a function of y:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]x^2 + y^2 = r^2[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]x = \sqrt{ r^2 - y^2 }[/latex]&lt;/p&gt;
-&lt;p&gt;We need y relative to the circle center C, not in go stone coordinates, so we add d and substitute y&amp;rsquo; for y:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]y&amp;rsquo; = b/2 + d[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]P_x = \sqrt{ r^2 - ( b/2 + d )^2 }[/latex]&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]x^2 + y^2 = r^2[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]x = \sqrt{ r^2 - y^2 }[/latex]&lt;/p&gt;
+&lt;p&gt;We need y relative to the circle center C, not in go stone coordinates, so we add d and substitute y&#39; for y:&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]y&#39; = b/2 + d[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]P_x = \sqrt{ r^2 - ( b/2 + d )^2 }[/latex]&lt;/p&gt;
 &lt;p&gt;We can now find r&lt;sub&gt;1&lt;/sub&gt; by similar triangles:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]r_1/P_x = d / ( d + b/2 )[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]r_1 = P_x d / ( d + b/2 )[/latex]&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]r_1/P_x = d / ( d + b/2 )[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]r_1 = P_x d / ( d + b/2 )[/latex]&lt;/p&gt;
 &lt;p&gt;and q by Pythagoras theorem:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]q^2 = d^2 + r_1^2[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]q = \sqrt{ d^2 + r_1^2 }[/latex]&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]q^2 = d^2 + r_1^2[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]q = \sqrt{ d^2 + r_1^2 }[/latex]&lt;/p&gt;
 &lt;p&gt;Because line CP has length r and substituting for q:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]q + r_2 = r[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]r_2 = r - q[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]r_2 = r - \sqrt{ d^2 + r_1^2 }[/latex]&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]q + r_2 = r[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]r_2 = r - q[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]r_2 = r - \sqrt{ d^2 + r_1^2 }[/latex]&lt;/p&gt;
 &lt;p&gt;Now we have everything we need to write the function:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;    void calculate_bevel( float r, float d, float b, 
                           float &amp;amp; r1, float &amp;amp; r2 )

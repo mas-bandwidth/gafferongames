@@ -8,7 +8,7 @@ weight = 10  # Order that this section will appear.
 title = "Gaffer On Games"
 
 # Hero image (optional). Enter filename of an image in the `static/img/` folder.
-hero_media = "sanjuro.jpg"
+#hero_media = "sanjuro.jpg"
 
 # Call to action links (optional).
 #   Display link(s) by specifying a URL and label below. Icon is optional for `[cta]`.
@@ -21,3 +21,5 @@ hero_media = "sanjuro.jpg"
 ## My name is **Glenn Fiedler** and I'm the founder and CEO of **Network Next**
 
 I spent a career writing netcode for games. Now I'm making the internet better for games at [Network Next](https://networknext.com).
+
+{{< youtube -EvO2DOuGos >}}

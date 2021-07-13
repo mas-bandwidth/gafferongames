@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="generator" content="Source Themes Academia 4.3.1">
-  <meta name="generator" content="Hugo 0.74.3" />
+  <meta name="generator" content="Hugo 0.85.0" />
 
   
 
@@ -81,7 +81,7 @@ I&rsquo;d like to reproduce this wobble in Virtual Go, so let&rsquo;s to spend s
   
   
   
-  <link rel="stylesheet" href="/css/academia.min.cbfe411b85bcf6c144a15531ef0c8d7b.css">
+  <link rel="stylesheet" href="/css/academia.min.14ac857b31b62b740274a8d6faef62f3.css">
 
   
 
@@ -353,16 +353,16 @@ I&rsquo;d like to reproduce this wobble in Virtual Go, so let&rsquo;s to spend s
 <img src="/img/virtualgo/biconvex-unknowns.png" alt="biconvex unknowns" width="75%"/>
 <p>First notice that the point Q lies on the generating circle, so the line CQ has length r:</p>
 <p><em>todo: obviously I have a bunch of work to get the latex equations ported across to Hugo. I&rsquo;m researching different options&hellip;</em></p>
-<p>[latex size=&quot;2&rdquo;]d + h/2 = r[/latex]
-[latex size=&quot;2&rdquo;]d = r - h/2[/latex]</p>
+<p>[latex size=&ldquo;2&rdquo;]d + h/2 = r[/latex]
+[latex size=&ldquo;2&rdquo;]d = r - h/2[/latex]</p>
 <p>The point P is also on the generating circle so the green line CP has length r as well. Using Pythagoras theorem and substituting for d:</p>
-<p>[latex size=&quot;2&rdquo;]r^2 = d^2 + (w/2)^2[/latex]
-[latex size=&quot;2&rdquo;]r^2 = ( r - h/2 )^2 + (w/2)^2[/latex]
-[latex size=&quot;2&rdquo;]r^2 = ( h^2/4 - hr + r^2 ) + w^2/4[/latex]
-[latex size=&quot;2&rdquo;]r^2 = h^2/4 - hr + r^2 + w^2/4[/latex]
-[latex size=&quot;2&rdquo;]0 = h^2/4 - hr + 0 + w^2/4[/latex]
-[latex size=&quot;2&rdquo;]hr = h^2/4 + w^2/4[/latex]
-[latex size=&quot;2&rdquo;]r = ( h^2 + w^2 ) / 4h[/latex]</p>
+<p>[latex size=&ldquo;2&rdquo;]r^2 = d^2 + (w/2)^2[/latex]
+[latex size=&ldquo;2&rdquo;]r^2 = ( r - h/2 )^2 + (w/2)^2[/latex]
+[latex size=&ldquo;2&rdquo;]r^2 = ( h^2/4 - hr + r^2 ) + w^2/4[/latex]
+[latex size=&ldquo;2&rdquo;]r^2 = h^2/4 - hr + r^2 + w^2/4[/latex]
+[latex size=&ldquo;2&rdquo;]0 = h^2/4 - hr + 0 + w^2/4[/latex]
+[latex size=&ldquo;2&rdquo;]hr = h^2/4 + w^2/4[/latex]
+[latex size=&ldquo;2&rdquo;]r = ( h^2 + w^2 ) / 4h[/latex]</p>
 <p>Which gives us everything we need to write the function:</p>
 <pre><code>    void calculateBiconvex( float w,  
                             float h, 
@@ -386,23 +386,23 @@ I&rsquo;d like to reproduce this wobble in Virtual Go, so let&rsquo;s to spend s
 <p>If the tangent is equal then the normal must be equal as well. This means that the center of the bevel circle lies at the intersection of the line CP and the x axis.</p>
 <p>We already know C so if we can find the point P then we can find this intersection point. Once we know the intersection point we can find r<sub>1</sub> and r<sub>2</sub>.</p>
 <p>Since P is at the start of the bevel:</p>
-<p>[latex size=&quot;2&rdquo;]P_y = b/2[/latex]</p>
+<p>[latex size=&ldquo;2&rdquo;]P_y = b/2[/latex]</p>
 <p>Because P lies on the biconvex circle with center C and radius r we can use the equation of the circle to find x as a function of y:</p>
-<p>[latex size=&quot;2&rdquo;]x^2 + y^2 = r^2[/latex]
-[latex size=&quot;2&rdquo;]x = \sqrt{ r^2 - y^2 }[/latex]</p>
-<p>We need y relative to the circle center C, not in go stone coordinates, so we add d and substitute y&rsquo; for y:</p>
-<p>[latex size=&quot;2&rdquo;]y&rsquo; = b/2 + d[/latex]
-[latex size=&quot;2&rdquo;]P_x = \sqrt{ r^2 - ( b/2 + d )^2 }[/latex]</p>
+<p>[latex size=&ldquo;2&rdquo;]x^2 + y^2 = r^2[/latex]
+[latex size=&ldquo;2&rdquo;]x = \sqrt{ r^2 - y^2 }[/latex]</p>
+<p>We need y relative to the circle center C, not in go stone coordinates, so we add d and substitute y' for y:</p>
+<p>[latex size=&ldquo;2&rdquo;]y' = b/2 + d[/latex]
+[latex size=&ldquo;2&rdquo;]P_x = \sqrt{ r^2 - ( b/2 + d )^2 }[/latex]</p>
 <p>We can now find r<sub>1</sub> by similar triangles:</p>
-<p>[latex size=&quot;2&rdquo;]r_1/P_x = d / ( d + b/2 )[/latex]
-[latex size=&quot;2&rdquo;]r_1 = P_x d / ( d + b/2 )[/latex]</p>
+<p>[latex size=&ldquo;2&rdquo;]r_1/P_x = d / ( d + b/2 )[/latex]
+[latex size=&ldquo;2&rdquo;]r_1 = P_x d / ( d + b/2 )[/latex]</p>
 <p>and q by Pythagoras theorem:</p>
-<p>[latex size=&quot;2&rdquo;]q^2 = d^2 + r_1^2[/latex]
-[latex size=&quot;2&rdquo;]q = \sqrt{ d^2 + r_1^2 }[/latex]</p>
+<p>[latex size=&ldquo;2&rdquo;]q^2 = d^2 + r_1^2[/latex]
+[latex size=&ldquo;2&rdquo;]q = \sqrt{ d^2 + r_1^2 }[/latex]</p>
 <p>Because line CP has length r and substituting for q:</p>
-<p>[latex size=&quot;2&rdquo;]q + r_2 = r[/latex]
-[latex size=&quot;2&rdquo;]r_2 = r - q[/latex]
-[latex size=&quot;2&rdquo;]r_2 = r - \sqrt{ d^2 + r_1^2 }[/latex]</p>
+<p>[latex size=&ldquo;2&rdquo;]q + r_2 = r[/latex]
+[latex size=&ldquo;2&rdquo;]r_2 = r - q[/latex]
+[latex size=&ldquo;2&rdquo;]r_2 = r - \sqrt{ d^2 + r_1^2 }[/latex]</p>
 <p>Now we have everything we need to write the function:</p>
 <pre><code>    void calculate_bevel( float r, float d, float b, 
                           float &amp; r1, float &amp; r2 )
@@ -582,7 +582,7 @@ I&rsquo;d like to reproduce this wobble in Virtual Go, so let&rsquo;s to spend s
     
     
     
-    <script src="/js/academia.min.281fa180ccfa1769ea3c7dd430814861.js"></script>
+    <script src="/js/academia.min.03abf8f1acc4873177d4b4fb31ca377e.js"></script>
 
     
 

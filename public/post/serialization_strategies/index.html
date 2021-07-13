@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="generator" content="Source Themes Academia 4.3.1">
-  <meta name="generator" content="Hugo 0.74.3" />
+  <meta name="generator" content="Hugo 0.85.0" />
 
   
 
@@ -81,7 +81,7 @@ In this article, we&rsquo;re going to transform the bitpacker into a system wher
   
   
   
-  <link rel="stylesheet" href="/css/academia.min.cbfe411b85bcf6c144a15531ef0c8d7b.css">
+  <link rel="stylesheet" href="/css/academia.min.14ac857b31b62b740274a8d6faef62f3.css">
 
   
 
@@ -724,7 +724,7 @@ do                                                                   \
     }                                                                \
 } while (0)
 </pre>
-<p>This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for <strong>'\0&rsquo;</strong> before giving up. This is important because otherwise protocol level attacks could be crafted to degrade your server&rsquo;s performance by making it do extra work.</p>
+<p>This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for <strong>'\0'</strong> before giving up. This is important because otherwise protocol level attacks could be crafted to degrade your server&rsquo;s performance by making it do extra work.</p>
 <h2 id="serializing-array-subsets">Serializing Array Subsets</h2>
 <p>When implemeting a game network protocol, sooner or later you need to serialize an array of objects over the network. Perhaps the server needs to send object state down to the client, or there is an array of messages to be sent.</p>
 <p>This is straightforward if you are sending <em>all</em> objects in the array - just iterate across the array and serialize each object in turn. But what if you want to send a subset of the array?</p>
@@ -1187,7 +1187,7 @@ bool serialize_scene_d( Stream &amp; stream, Scene &amp; scene )
     
     
     
-    <script src="/js/academia.min.281fa180ccfa1769ea3c7dd430814861.js"></script>
+    <script src="/js/academia.min.03abf8f1acc4873177d4b4fb31ca377e.js"></script>
 
     
 

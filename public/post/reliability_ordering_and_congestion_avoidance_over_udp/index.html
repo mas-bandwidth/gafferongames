@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="generator" content="Source Themes Academia 4.3.1">
-  <meta name="generator" content="Hugo 0.74.3" />
+  <meta name="generator" content="Hugo 0.85.0" />
 
   
 
@@ -81,7 +81,7 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
   
   
   
-  <link rel="stylesheet" href="/css/academia.min.cbfe411b85bcf6c144a15531ef0c8d7b.css">
+  <link rel="stylesheet" href="/css/academia.min.14ac857b31b62b740274a8d6faef62f3.css">
 
   
 
@@ -476,13 +476,13 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
 <p>If you are currently in good mode, and conditions become bad, immediately drop to bad mode</p>
 </li>
 <li>
-<p>If you are in bad mode, and conditions have been good for a specific length of time &rsquo;t&rsquo;, then return to good mode</p>
+<p>If you are in bad mode, and conditions have been good for a specific length of time &rsquo;t', then return to good mode</p>
 </li>
 <li>
-<p>To avoid rapid toggling between good and bad mode, if you drop from good mode to bad in under 10 seconds, double the amount of time &rsquo;t&rsquo; before bad mode goes back to good. Clamp this at some maximum, say 60 seconds.</p>
+<p>To avoid rapid toggling between good and bad mode, if you drop from good mode to bad in under 10 seconds, double the amount of time &rsquo;t' before bad mode goes back to good. Clamp this at some maximum, say 60 seconds.</p>
 </li>
 <li>
-<p>To avoid punishing good connections when they have short periods of bad behavior, for each 10 seconds the connection is in good mode, halve the time &rsquo;t&rsquo; before bad mode goes back to good. Clamp this at some minimum like 1 second.</p>
+<p>To avoid punishing good connections when they have short periods of bad behavior, for each 10 seconds the connection is in good mode, halve the time &rsquo;t' before bad mode goes back to good. Clamp this at some minimum like 1 second.</p>
 </li>
 </ul>
 <p>With this algorithm you will rapidly respond to bad conditions and drop your send rate to 10 packets per-second, avoiding flooding of the connection. You&rsquo;ll also <em>conservatively</em> try out good mode, and persist sending packets at a higher rate of 30 packets per-second, while network conditions are good.</p>
@@ -654,7 +654,7 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
     
     
     
-    <script src="/js/academia.min.281fa180ccfa1769ea3c7dd430814861.js"></script>
+    <script src="/js/academia.min.03abf8f1acc4873177d4b4fb31ca377e.js"></script>
 
     
 

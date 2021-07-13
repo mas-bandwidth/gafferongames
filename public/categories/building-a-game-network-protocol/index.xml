@@ -1311,7 +1311,7 @@ do                                                                   \
     }                                                                \
 } while (0)
 &lt;/pre&gt;
-&lt;p&gt;This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for &lt;strong&gt;&#39;\0&amp;rsquo;&lt;/strong&gt; before giving up. This is important because otherwise protocol level attacks could be crafted to degrade your server&amp;rsquo;s performance by making it do extra work.&lt;/p&gt;
+&lt;p&gt;This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for &lt;strong&gt;&#39;\0&#39;&lt;/strong&gt; before giving up. This is important because otherwise protocol level attacks could be crafted to degrade your server&amp;rsquo;s performance by making it do extra work.&lt;/p&gt;
 &lt;h2 id=&#34;serializing-array-subsets&#34;&gt;Serializing Array Subsets&lt;/h2&gt;
 &lt;p&gt;When implemeting a game network protocol, sooner or later you need to serialize an array of objects over the network. Perhaps the server needs to send object state down to the client, or there is an array of messages to be sent.&lt;/p&gt;
 &lt;p&gt;This is straightforward if you are sending &lt;em&gt;all&lt;/em&gt; objects in the array - just iterate across the array and serialize each object in turn. But what if you want to send a subset of the array?&lt;/p&gt;
@@ -1791,7 +1791,7 @@ bool serialize_scene_d( Stream &amp;amp; stream, Scene &amp;amp; scene )
 &lt;p&gt;The text representation of numerical values are variable length: &lt;strong&gt;“5”&lt;/strong&gt;, &lt;strong&gt;“12345”&lt;/strong&gt;, &lt;strong&gt;“3.141593”. &lt;/strong&gt;Because of this we need to spend one byte on a separator after each value so we know when it ends.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;Newlines &lt;strong&gt;&#39;\n&amp;rsquo;&lt;/strong&gt; or some other separator are required to distinguish between the set of variables belonging to one object and the next. When you have thousands of objects, this really adds up.&lt;/p&gt;
+&lt;p&gt;Newlines &lt;strong&gt;&#39;\n&#39;&lt;/strong&gt; or some other separator are required to distinguish between the set of variables belonging to one object and the next. When you have thousands of objects, this really adds up.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;In short, if we wish to optimize any further, it&amp;rsquo;s necessary to switch to a binary format.&lt;/p&gt;

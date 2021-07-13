@@ -230,7 +230,7 @@
       <guid>https://gafferongames.com/post/networked_physics_in_virtual_reality/</guid>
       <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &amp;ldquo;Hey Glenn, there&amp;rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?&amp;rdquo;&lt;/p&gt;
-&lt;p&gt;I replied ~~&amp;quot;F*** yes!&amp;ldquo;~~ **cough** &amp;ldquo;Sure. This could be a lot of fun!&amp;rdquo;. But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good. Two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.&lt;/p&gt;
+&lt;p&gt;I replied ~~&amp;ldquo;F*** yes!&amp;quot;~~ **cough** &amp;ldquo;Sure. This could be a lot of fun!&amp;rdquo;. But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good. Two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.&lt;/p&gt;
 &lt;p&gt;Oculus agreed. Welcome to that article! Also, the source for the networked physics sample is &lt;a href=&#34;https://github.com/OculusVR/oculus-networked-physics-sample&#34;&gt;here&lt;/a&gt;, wherein the code that I wrote is released under a BSD licence. I hope the next generation of programmers can learn from my research into networked physics and create some really cool things. Good luck!&lt;/p&gt;
 &lt;h1 id=&#34;what-are-we-building&#34;&gt;What are we building?&lt;/h1&gt;
 &lt;p&gt;When I first started discussions with Oculus, we imagined creating something like a table where four players could sit around and interact with physically simulated cubes on the table. For example, throwing, catching and stacking cubes, maybe knocking each other&amp;rsquo;s stacks over with a swipe of their hand.&lt;/p&gt;
@@ -476,7 +476,7 @@
 &lt;p&gt;It falls down because WebRTC is &lt;em&gt;extremely complex&lt;/em&gt;. This complexity is understandable, being designed primarily to support peer-to-peer communication between browsers, WebRTC needs STUN, ICE and TURN support for NAT traversal and packet forwarding in the worst case.&lt;/p&gt;
 &lt;p&gt;But from a game developer point of view, all this complexity seems like dead weight, when STUN, ICE and TURN are completely completely unnecessary to communicate with dedicated servers, which have public IPs.&lt;/p&gt;
 &lt;blockquote&gt;
-&lt;p&gt;&lt;b&gt;&amp;quot;I feel what is needed is a UDP version of WebSockets. That&amp;rsquo;s all I wish we had.&amp;ldquo;&lt;/b&gt;
+&lt;p&gt;&lt;b&gt;&amp;ldquo;I feel what is needed is a UDP version of WebSockets. That&amp;rsquo;s all I wish we had.&amp;quot;&lt;/b&gt;
 Matheus Valadares, creator of agar.io&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;In short, game developers appreciate simplicity and desire a &amp;ldquo;WebSockets for UDP&amp;rdquo;-like approach over the complexity of WebRTC.&lt;/p&gt;
@@ -1867,7 +1867,7 @@ do                                                                   \
     }                                                                \
 } while (0)
 &lt;/pre&gt;
-&lt;p&gt;This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for &lt;strong&gt;&#39;\0&amp;rsquo;&lt;/strong&gt; before giving up. This is important because otherwise protocol level attacks could be crafted to degrade your server&amp;rsquo;s performance by making it do extra work.&lt;/p&gt;
+&lt;p&gt;This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for &lt;strong&gt;&#39;\0&#39;&lt;/strong&gt; before giving up. This is important because otherwise protocol level attacks could be crafted to degrade your server&amp;rsquo;s performance by making it do extra work.&lt;/p&gt;
 &lt;h2 id=&#34;serializing-array-subsets&#34;&gt;Serializing Array Subsets&lt;/h2&gt;
 &lt;p&gt;When implemeting a game network protocol, sooner or later you need to serialize an array of objects over the network. Perhaps the server needs to send object state down to the client, or there is an array of messages to be sent.&lt;/p&gt;
 &lt;p&gt;This is straightforward if you are sending &lt;em&gt;all&lt;/em&gt; objects in the array - just iterate across the array and serialize each object in turn. But what if you want to send a subset of the array?&lt;/p&gt;
@@ -2347,7 +2347,7 @@ bool serialize_scene_d( Stream &amp;amp; stream, Scene &amp;amp; scene )
 &lt;p&gt;The text representation of numerical values are variable length: &lt;strong&gt;“5”&lt;/strong&gt;, &lt;strong&gt;“12345”&lt;/strong&gt;, &lt;strong&gt;“3.141593”. &lt;/strong&gt;Because of this we need to spend one byte on a separator after each value so we know when it ends.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;Newlines &lt;strong&gt;&#39;\n&amp;rsquo;&lt;/strong&gt; or some other separator are required to distinguish between the set of variables belonging to one object and the next. When you have thousands of objects, this really adds up.&lt;/p&gt;
+&lt;p&gt;Newlines &lt;strong&gt;&#39;\n&#39;&lt;/strong&gt; or some other separator are required to distinguish between the set of variables belonging to one object and the next. When you have thousands of objects, this really adds up.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;In short, if we wish to optimize any further, it&amp;rsquo;s necessary to switch to a binary format.&lt;/p&gt;
@@ -3804,16 +3804,16 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-unknowns.png&#34; alt=&#34;biconvex unknowns&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;First notice that the point Q lies on the generating circle, so the line CQ has length r:&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;todo: obviously I have a bunch of work to get the latex equations ported across to Hugo. I&amp;rsquo;m researching different options&amp;hellip;&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]d + h/2 = r[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]d = r - h/2[/latex]&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]d + h/2 = r[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]d = r - h/2[/latex]&lt;/p&gt;
 &lt;p&gt;The point P is also on the generating circle so the green line CP has length r as well. Using Pythagoras theorem and substituting for d:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]r^2 = d^2 + (w/2)^2[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]r^2 = ( r - h/2 )^2 + (w/2)^2[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]r^2 = ( h^2/4 - hr + r^2 ) + w^2/4[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]r^2 = h^2/4 - hr + r^2 + w^2/4[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]0 = h^2/4 - hr + 0 + w^2/4[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]hr = h^2/4 + w^2/4[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]r = ( h^2 + w^2 ) / 4h[/latex]&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]r^2 = d^2 + (w/2)^2[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]r^2 = ( r - h/2 )^2 + (w/2)^2[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]r^2 = ( h^2/4 - hr + r^2 ) + w^2/4[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]r^2 = h^2/4 - hr + r^2 + w^2/4[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]0 = h^2/4 - hr + 0 + w^2/4[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]hr = h^2/4 + w^2/4[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]r = ( h^2 + w^2 ) / 4h[/latex]&lt;/p&gt;
 &lt;p&gt;Which gives us everything we need to write the function:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;    void calculateBiconvex( float w,  
                             float h, 
@@ -3837,23 +3837,23 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;If the tangent is equal then the normal must be equal as well. This means that the center of the bevel circle lies at the intersection of the line CP and the x axis.&lt;/p&gt;
 &lt;p&gt;We already know C so if we can find the point P then we can find this intersection point. Once we know the intersection point we can find r&lt;sub&gt;1&lt;/sub&gt; and r&lt;sub&gt;2&lt;/sub&gt;.&lt;/p&gt;
 &lt;p&gt;Since P is at the start of the bevel:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]P_y = b/2[/latex]&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]P_y = b/2[/latex]&lt;/p&gt;
 &lt;p&gt;Because P lies on the biconvex circle with center C and radius r we can use the equation of the circle to find x as a function of y:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]x^2 + y^2 = r^2[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]x = \sqrt{ r^2 - y^2 }[/latex]&lt;/p&gt;
-&lt;p&gt;We need y relative to the circle center C, not in go stone coordinates, so we add d and substitute y&amp;rsquo; for y:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]y&amp;rsquo; = b/2 + d[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]P_x = \sqrt{ r^2 - ( b/2 + d )^2 }[/latex]&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]x^2 + y^2 = r^2[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]x = \sqrt{ r^2 - y^2 }[/latex]&lt;/p&gt;
+&lt;p&gt;We need y relative to the circle center C, not in go stone coordinates, so we add d and substitute y&#39; for y:&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]y&#39; = b/2 + d[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]P_x = \sqrt{ r^2 - ( b/2 + d )^2 }[/latex]&lt;/p&gt;
 &lt;p&gt;We can now find r&lt;sub&gt;1&lt;/sub&gt; by similar triangles:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]r_1/P_x = d / ( d + b/2 )[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]r_1 = P_x d / ( d + b/2 )[/latex]&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]r_1/P_x = d / ( d + b/2 )[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]r_1 = P_x d / ( d + b/2 )[/latex]&lt;/p&gt;
 &lt;p&gt;and q by Pythagoras theorem:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]q^2 = d^2 + r_1^2[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]q = \sqrt{ d^2 + r_1^2 }[/latex]&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]q^2 = d^2 + r_1^2[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]q = \sqrt{ d^2 + r_1^2 }[/latex]&lt;/p&gt;
 &lt;p&gt;Because line CP has length r and substituting for q:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;quot;2&amp;rdquo;]q + r_2 = r[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]r_2 = r - q[/latex]
-[latex size=&amp;quot;2&amp;rdquo;]r_2 = r - \sqrt{ d^2 + r_1^2 }[/latex]&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]q + r_2 = r[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]r_2 = r - q[/latex]
+[latex size=&amp;ldquo;2&amp;rdquo;]r_2 = r - \sqrt{ d^2 + r_1^2 }[/latex]&lt;/p&gt;
 &lt;p&gt;Now we have everything we need to write the function:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;    void calculate_bevel( float r, float d, float b, 
                           float &amp;amp; r1, float &amp;amp; r2 )
@@ -4086,7 +4086,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;&lt;/p&gt;
 &lt;blockquote&gt;Unfortunately, the IEEE standard does not guarantee that the same program will deliver identical results on all conforming systems. Most programs will actually produce different results on different systems for a variety of reasons. For one, most programs involve the conversion of numbers between decimal and binary formats, and the IEEE standard does not completely specify the accuracy with which such conversions must be performed. For another, many programs use elementary functions supplied by a system library, and the standard doesn&#39;t specify these functions at all. Of course, most programmers know that these features lie beyond the scope of the IEEE standard.
-&lt;p&gt;Many programmers may not realize that even a program that uses only the numeric formats and operations prescribed by the IEEE standard can compute different results on different systems. In fact, the authors of the standard intended to allow different implementations to obtain different results. Their intent is evident in the definition of the term destination in the IEEE 754 standard: &amp;ldquo;A destination may be either explicitly designated by the user or implicitly supplied by the system (for example, intermediate results in subexpressions or arguments for procedures). Some languages place the results of intermediate calculations in destinations beyond the user&amp;rsquo;s control. Nonetheless, this standard defines the result of an operation in terms of that destination&amp;rsquo;s format and the operands&amp;rsquo; values.&amp;rdquo; (IEEE 754-1985, p. 7) In other words, the IEEE standard requires that each result be rounded correctly to the precision of the destination into which it will be placed, but the standard does not require that the precision of that destination be determined by a user&amp;rsquo;s program. Thus, different systems may deliver their results to destinations with different precisions, causing the same program to produce different results (sometimes dramatically so), even though those systems all conform to the standard.&lt;/blockquote&gt;&lt;/p&gt;
+&lt;p&gt;Many programmers may not realize that even a program that uses only the numeric formats and operations prescribed by the IEEE standard can compute different results on different systems. In fact, the authors of the standard intended to allow different implementations to obtain different results. Their intent is evident in the definition of the term destination in the IEEE 754 standard: &amp;ldquo;A destination may be either explicitly designated by the user or implicitly supplied by the system (for example, intermediate results in subexpressions or arguments for procedures). Some languages place the results of intermediate calculations in destinations beyond the user&amp;rsquo;s control. Nonetheless, this standard defines the result of an operation in terms of that destination&amp;rsquo;s format and the operands&#39; values.&amp;rdquo; (IEEE 754-1985, p. 7) In other words, the IEEE standard requires that each result be rounded correctly to the precision of the destination into which it will be placed, but the standard does not require that the precision of that destination be determined by a user&amp;rsquo;s program. Thus, different systems may deliver their results to destinations with different precisions, causing the same program to produce different results (sometimes dramatically so), even though those systems all conform to the standard.&lt;/blockquote&gt;&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Differences Among IEEE 754 Implementations&lt;/b&gt;
 &lt;a href=&#34;http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098&#34;&gt;&lt;a href=&#34;http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098&#34;&gt;http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
@@ -4301,13 +4301,13 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;If you are currently in good mode, and conditions become bad, immediately drop to bad mode&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;If you are in bad mode, and conditions have been good for a specific length of time &amp;rsquo;t&amp;rsquo;, then return to good mode&lt;/p&gt;
+&lt;p&gt;If you are in bad mode, and conditions have been good for a specific length of time &amp;rsquo;t&#39;, then return to good mode&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;To avoid rapid toggling between good and bad mode, if you drop from good mode to bad in under 10 seconds, double the amount of time &amp;rsquo;t&amp;rsquo; before bad mode goes back to good. Clamp this at some maximum, say 60 seconds.&lt;/p&gt;
+&lt;p&gt;To avoid rapid toggling between good and bad mode, if you drop from good mode to bad in under 10 seconds, double the amount of time &amp;rsquo;t&#39; before bad mode goes back to good. Clamp this at some maximum, say 60 seconds.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;To avoid punishing good connections when they have short periods of bad behavior, for each 10 seconds the connection is in good mode, halve the time &amp;rsquo;t&amp;rsquo; before bad mode goes back to good. Clamp this at some minimum like 1 second.&lt;/p&gt;
+&lt;p&gt;To avoid punishing good connections when they have short periods of bad behavior, for each 10 seconds the connection is in good mode, halve the time &amp;rsquo;t&#39; before bad mode goes back to good. Clamp this at some minimum like 1 second.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;With this algorithm you will rapidly respond to bad conditions and drop your send rate to 10 packets per-second, avoiding flooding of the connection. You&amp;rsquo;ll also &lt;em&gt;conservatively&lt;/em&gt; try out good mode, and persist sending packets at a higher rate of 30 packets per-second, while network conditions are good.&lt;/p&gt;
