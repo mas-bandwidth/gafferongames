@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="generator" content="Source Themes Academia 4.3.1">
-  <meta name="generator" content="Hugo 0.85.0" />
+  <meta name="generator" content="Hugo 0.101.0" />
 
   
 
@@ -81,7 +81,7 @@ Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please dra
   
   
   
-  <link rel="stylesheet" href="/css/academia.min.14ac857b31b62b740274a8d6faef62f3.css">
+  <link rel="stylesheet" href="/css/academia.min.88bfd34630258dde91b90e40ca4fc6a8.css">
 
   
 
@@ -339,7 +339,7 @@ Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please dra
 <p>Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r<sub>1</sub> and r<sub>2</sub>!&rdquo;, because modern 3D graphics cards work by drawing triangles. We have to take our mathematical definition of the go stone and turn it into a set of triangles that the graphics card can render.</p>
 <p>This is called tessellation and there are several different ways to do it.</p>
 <h2 id="longitude-and-lattitude">Longitude And Lattitude</h2>
-<p>The first way that I tried was to consider sphere rendering like a globe with longitude/latitude. I started with a ring around the &lsquo;equator&rsquo; of the go stone, stepping these rings up to the top of the sphere like the north pole on a globe.</p>
+<p>The first way that I tried was to consider sphere rendering like a globe with longitude/latitude. I started with a ring around the &rsquo;equator&rsquo; of the go stone, stepping these rings up to the top of the sphere like the north pole on a globe.</p>
 <img src="/img/virtualgo/naive-tesselation-side-view.gif" alt="naive tesselation side view" width="100%"/>
 <p>Unfortunately, just like longitude/latitude on a globe, tessellating this way leads to very distorted mapping around the pole and a lot of wasted triangles:</p>
 <img src="/img/virtualgo/inefficient-tesselation-at-pole.gif" alt="inefficient tesselation at pole" width="100%"/>
@@ -527,7 +527,7 @@ Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please dra
     
     
     
-    <script src="/js/academia.min.03abf8f1acc4873177d4b4fb31ca377e.js"></script>
+    <script src="/js/academia.min.b8df6754deca2dd84ba46243e6dcb3e3.js"></script>
 
     
 

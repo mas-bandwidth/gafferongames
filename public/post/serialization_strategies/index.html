@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="generator" content="Source Themes Academia 4.3.1">
-  <meta name="generator" content="Hugo 0.85.0" />
+  <meta name="generator" content="Hugo 0.101.0" />
 
   
 
@@ -81,7 +81,7 @@ In this article, we&rsquo;re going to transform the bitpacker into a system wher
   
   
   
-  <link rel="stylesheet" href="/css/academia.min.14ac857b31b62b740274a8d6faef62f3.css">
+  <link rel="stylesheet" href="/css/academia.min.88bfd34630258dde91b90e40ca4fc6a8.css">
 
   
 
@@ -403,7 +403,7 @@ struct RigidBody
 };
 </pre>
 <p>Notice how we&rsquo;re able to branch on Stream::IsWriting and Stream::IsReading to write code for each case. These branches are removed by the compiler when the specialized read and write serialize functions are generated.</p>
-<p>As you can see, serialize functions are flexible and expressive. They&rsquo;re also <em>safe</em>, with each <em><em>serialize</em>*</em>_ call performing checks and aborting read if anything is wrong (eg. a value out of range, going past the end of the buffer). Most importantly, this checking is automatic, _so you can&rsquo;t forget to do it!_</p>
+<p>As you can see, serialize functions are flexible and expressive. They&rsquo;re also <em>safe</em>, with each <em><em>serialize</em>*</em>_ call performing checks and aborting read if anything is wrong (eg. a value out of range, going past the end of the buffer). Most importantly, this checking is automatic, <em>so you can&rsquo;t forget to do it!</em></p>
 <h2 id="implementation-in-c">Implementation in C++</h2>
 <p>The trick to making this all work is to create two stream classes that share the same interface: <strong>ReadStream</strong> and <strong>WriteStream</strong>.</p>
 <p>The write stream implementation <em>writes values</em> using the bitpacker:</p>
@@ -510,7 +510,7 @@ FloatInt tmp;
 tmp.float_value = 10.0f;
 printf( "float value as an integer: %x\n", tmp.int_value );
 </pre>
-<p>You may prefer to do this with an aliased uint32_t* pointer, but this breaks with GCC -O2. Friends of mine point out that the only _truly standard way_ to get the float as an integer is to cast a pointer to the float value to char* and reconstruct the integer from the bytes values accessed through the char pointer.</p>
+<p>You may prefer to do this with an aliased uint32_t* pointer, but this breaks with GCC -O2. Friends of mine point out that the only <em>truly standard way</em> to get the float as an integer is to cast a pointer to the float value to char* and reconstruct the integer from the bytes values accessed through the char pointer.</p>
 <p>Meanwhile in the past 5 years I&rsquo;ve had no problems in the field with the union trick. Here&rsquo;s how I use it to serialize an uncompressed float value:</p>
 <pre>
 template &lt;typename Stream&gt; 
@@ -724,7 +724,7 @@ do                                                                   \
     }                                                                \
 } while (0)
 </pre>
-<p>This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for <strong>'\0'</strong> before giving up. This is important because otherwise protocol level attacks could be crafted to degrade your server&rsquo;s performance by making it do extra work.</p>
+<p>This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for <strong>&rsquo;\0&rsquo;</strong> before giving up. This is important because otherwise protocol level attacks could be crafted to degrade your server&rsquo;s performance by making it do extra work.</p>
 <h2 id="serializing-array-subsets">Serializing Array Subsets</h2>
 <p>When implemeting a game network protocol, sooner or later you need to serialize an array of objects over the network. Perhaps the server needs to send object state down to the client, or there is an array of messages to be sent.</p>
 <p>This is straightforward if you are sending <em>all</em> objects in the array - just iterate across the array and serialize each object in turn. But what if you want to send a subset of the array?</p>
@@ -1187,7 +1187,7 @@ bool serialize_scene_d( Stream &amp; stream, Scene &amp; scene )
     
     
     
-    <script src="/js/academia.min.03abf8f1acc4873177d4b4fb31ca377e.js"></script>
+    <script src="/js/academia.min.b8df6754deca2dd84ba46243e6dcb3e3.js"></script>
 
     
 

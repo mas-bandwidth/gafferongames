@@ -20,7 +20,7 @@
       <guid>https://gafferongames.com/post/networked_physics_in_virtual_reality/</guid>
       <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &amp;ldquo;Hey Glenn, there&amp;rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?&amp;rdquo;&lt;/p&gt;
-&lt;p&gt;I replied ~~&amp;ldquo;F*** yes!&amp;quot;~~ **cough** &amp;ldquo;Sure. This could be a lot of fun!&amp;rdquo;. But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good. Two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.&lt;/p&gt;
+&lt;p&gt;I replied &lt;del&gt;&amp;ldquo;F*** yes!&amp;quot;&lt;/del&gt; &lt;strong&gt;cough&lt;/strong&gt; &amp;ldquo;Sure. This could be a lot of fun!&amp;rdquo;. But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good. Two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.&lt;/p&gt;
 &lt;p&gt;Oculus agreed. Welcome to that article! Also, the source for the networked physics sample is &lt;a href=&#34;https://github.com/OculusVR/oculus-networked-physics-sample&#34;&gt;here&lt;/a&gt;, wherein the code that I wrote is released under a BSD licence. I hope the next generation of programmers can learn from my research into networked physics and create some really cool things. Good luck!&lt;/p&gt;
 &lt;h1 id=&#34;what-are-we-building&#34;&gt;What are we building?&lt;/h1&gt;
 &lt;p&gt;When I first started discussions with Oculus, we imagined creating something like a table where four players could sit around and interact with physically simulated cubes on the table. For example, throwing, catching and stacking cubes, maybe knocking each other&amp;rsquo;s stacks over with a swipe of their hand.&lt;/p&gt;
@@ -755,7 +755,7 @@ Your browser does not support the video tag.
 &lt;p&gt;We have a contact point and a contact normal for the collision.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s start by calculating a collision response impulse without rotation.&lt;/p&gt;
 &lt;p&gt;First, take the dot product of the linear momentum of the go stone with the contact normal. If this value is less than zero, it means the go stone is moving towards the go board, and we need to apply an impulse.&lt;/p&gt;
-&lt;p&gt;To calculate the impulse we need the concept of &amp;lsquo;elasticity&amp;rsquo;. If the collision is perfectly elastic, the go stone bounces off the board without losing any energy:&lt;/p&gt;
+&lt;p&gt;To calculate the impulse we need the concept of &amp;rsquo;elasticity&amp;rsquo;. If the collision is perfectly elastic, the go stone bounces off the board without losing any energy:&lt;/p&gt;
 &lt;img src=&#34;https://gafferongames.com/img/virtualgo/linear-collision-response-elastic.png&#34; alt=&#34;linear collision response elastic&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;If the collision is inelastic then the go stone loses all its vertical motion post-collision and slides along the surface of the board:&lt;/p&gt;
 &lt;img src=&#34;https://gafferongames.com/img/virtualgo/linear-collision-response-inelastic.png&#34; alt=&#34;linear collision response inelastic&#34; width=&#34;100%&#34;/&gt;
@@ -1282,7 +1282,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Unfortunately we can&amp;rsquo;t just tell the graphics card, &amp;ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r&lt;sub&gt;1&lt;/sub&gt; and r&lt;sub&gt;2&lt;/sub&gt;!&amp;rdquo;, because modern 3D graphics cards work by drawing triangles. We have to take our mathematical definition of the go stone and turn it into a set of triangles that the graphics card can render.&lt;/p&gt;
 &lt;p&gt;This is called tessellation and there are several different ways to do it.&lt;/p&gt;
 &lt;h2 id=&#34;longitude-and-lattitude&#34;&gt;Longitude And Lattitude&lt;/h2&gt;
-&lt;p&gt;The first way that I tried was to consider sphere rendering like a globe with longitude/latitude. I started with a ring around the &amp;lsquo;equator&amp;rsquo; of the go stone, stepping these rings up to the top of the sphere like the north pole on a globe.&lt;/p&gt;
+&lt;p&gt;The first way that I tried was to consider sphere rendering like a globe with longitude/latitude. I started with a ring around the &amp;rsquo;equator&amp;rsquo; of the go stone, stepping these rings up to the top of the sphere like the north pole on a globe.&lt;/p&gt;
 &lt;img src=&#34;https://gafferongames.com/img/virtualgo/naive-tesselation-side-view.gif&#34; alt=&#34;naive tesselation side view&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Unfortunately, just like longitude/latitude on a globe, tessellating this way leads to very distorted mapping around the pole and a lot of wasted triangles:&lt;/p&gt;
 &lt;img src=&#34;https://gafferongames.com/img/virtualgo/inefficient-tesselation-at-pole.gif&#34; alt=&#34;inefficient tesselation at pole&#34; width=&#34;100%&#34;/&gt;
@@ -1371,8 +1371,8 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Because P lies on the biconvex circle with center C and radius r we can use the equation of the circle to find x as a function of y:&lt;/p&gt;
 &lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]x^2 + y^2 = r^2[/latex]
 [latex size=&amp;ldquo;2&amp;rdquo;]x = \sqrt{ r^2 - y^2 }[/latex]&lt;/p&gt;
-&lt;p&gt;We need y relative to the circle center C, not in go stone coordinates, so we add d and substitute y&#39; for y:&lt;/p&gt;
-&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]y&#39; = b/2 + d[/latex]
+&lt;p&gt;We need y relative to the circle center C, not in go stone coordinates, so we add d and substitute y&amp;rsquo; for y:&lt;/p&gt;
+&lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]y&amp;rsquo; = b/2 + d[/latex]
 [latex size=&amp;ldquo;2&amp;rdquo;]P_x = \sqrt{ r^2 - ( b/2 + d )^2 }[/latex]&lt;/p&gt;
 &lt;p&gt;We can now find r&lt;sub&gt;1&lt;/sub&gt; by similar triangles:&lt;/p&gt;
 &lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]r_1/P_x = d / ( d + b/2 )[/latex]

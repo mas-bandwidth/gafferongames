@@ -990,7 +990,7 @@ struct RigidBody
 };
 &lt;/pre&gt;
 &lt;p&gt;Notice how we&amp;rsquo;re able to branch on Stream::IsWriting and Stream::IsReading to write code for each case. These branches are removed by the compiler when the specialized read and write serialize functions are generated.&lt;/p&gt;
-&lt;p&gt;As you can see, serialize functions are flexible and expressive. They&amp;rsquo;re also &lt;em&gt;safe&lt;/em&gt;, with each &lt;em&gt;&lt;em&gt;serialize&lt;/em&gt;*&lt;/em&gt;_ call performing checks and aborting read if anything is wrong (eg. a value out of range, going past the end of the buffer). Most importantly, this checking is automatic, _so you can&amp;rsquo;t forget to do it!_&lt;/p&gt;
+&lt;p&gt;As you can see, serialize functions are flexible and expressive. They&amp;rsquo;re also &lt;em&gt;safe&lt;/em&gt;, with each &lt;em&gt;&lt;em&gt;serialize&lt;/em&gt;*&lt;/em&gt;_ call performing checks and aborting read if anything is wrong (eg. a value out of range, going past the end of the buffer). Most importantly, this checking is automatic, &lt;em&gt;so you can&amp;rsquo;t forget to do it!&lt;/em&gt;&lt;/p&gt;
 &lt;h2 id=&#34;implementation-in-c&#34;&gt;Implementation in C++&lt;/h2&gt;
 &lt;p&gt;The trick to making this all work is to create two stream classes that share the same interface: &lt;strong&gt;ReadStream&lt;/strong&gt; and &lt;strong&gt;WriteStream&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;The write stream implementation &lt;em&gt;writes values&lt;/em&gt; using the bitpacker:&lt;/p&gt;
@@ -1097,7 +1097,7 @@ FloatInt tmp;
 tmp.float_value = 10.0f;
 printf( &#34;float value as an integer: %x\n&#34;, tmp.int_value );
 &lt;/pre&gt;
-&lt;p&gt;You may prefer to do this with an aliased uint32_t* pointer, but this breaks with GCC -O2. Friends of mine point out that the only _truly standard way_ to get the float as an integer is to cast a pointer to the float value to char* and reconstruct the integer from the bytes values accessed through the char pointer.&lt;/p&gt;
+&lt;p&gt;You may prefer to do this with an aliased uint32_t* pointer, but this breaks with GCC -O2. Friends of mine point out that the only &lt;em&gt;truly standard way&lt;/em&gt; to get the float as an integer is to cast a pointer to the float value to char* and reconstruct the integer from the bytes values accessed through the char pointer.&lt;/p&gt;
 &lt;p&gt;Meanwhile in the past 5 years I&amp;rsquo;ve had no problems in the field with the union trick. Here&amp;rsquo;s how I use it to serialize an uncompressed float value:&lt;/p&gt;
 &lt;pre&gt;
 template &amp;lt;typename Stream&amp;gt; 
@@ -1311,7 +1311,7 @@ do                                                                   \
     }                                                                \
 } while (0)
 &lt;/pre&gt;
-&lt;p&gt;This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for &lt;strong&gt;&#39;\0&#39;&lt;/strong&gt; before giving up. This is important because otherwise protocol level attacks could be crafted to degrade your server&amp;rsquo;s performance by making it do extra work.&lt;/p&gt;
+&lt;p&gt;This is an ideal string format because it lets us quickly reject malicious data, vs. having to scan through to the end of the packet searching for &lt;strong&gt;&amp;rsquo;\0&amp;rsquo;&lt;/strong&gt; before giving up. This is important because otherwise protocol level attacks could be crafted to degrade your server&amp;rsquo;s performance by making it do extra work.&lt;/p&gt;
 &lt;h2 id=&#34;serializing-array-subsets&#34;&gt;Serializing Array Subsets&lt;/h2&gt;
 &lt;p&gt;When implemeting a game network protocol, sooner or later you need to serialize an array of objects over the network. Perhaps the server needs to send object state down to the client, or there is an array of messages to be sent.&lt;/p&gt;
 &lt;p&gt;This is straightforward if you are sending &lt;em&gt;all&lt;/em&gt; objects in the array - just iterate across the array and serialize each object in turn. But what if you want to send a subset of the array?&lt;/p&gt;
@@ -1782,7 +1782,7 @@ bool serialize_scene_d( Stream &amp;amp; stream, Scene &amp;amp; scene )
 &lt;p&gt;In text, even the smallest numbers in &lt;strong&gt;0-9&lt;/strong&gt; range require at least one byte, but in binary, smaller values like &lt;strong&gt;0, 11, 31, 100&lt;/strong&gt; can be sent with fewer than 8 bits if we know their range ahead of time.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;If an integer value is negative, you have to spend a whole byte on &lt;strong&gt;&#39;-&#39;&lt;/strong&gt; to indicate that.&lt;/p&gt;
+&lt;p&gt;If an integer value is negative, you have to spend a whole byte on &lt;strong&gt;&amp;rsquo;-&amp;rsquo;&lt;/strong&gt; to indicate that.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
 &lt;p&gt;Floating point numbers waste one byte specifying the decimal point.&lt;/p&gt;
@@ -1791,7 +1791,7 @@ bool serialize_scene_d( Stream &amp;amp; stream, Scene &amp;amp; scene )
 &lt;p&gt;The text representation of numerical values are variable length: &lt;strong&gt;“5”&lt;/strong&gt;, &lt;strong&gt;“12345”&lt;/strong&gt;, &lt;strong&gt;“3.141593”. &lt;/strong&gt;Because of this we need to spend one byte on a separator after each value so we know when it ends.&lt;/p&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;Newlines &lt;strong&gt;&#39;\n&#39;&lt;/strong&gt; or some other separator are required to distinguish between the set of variables belonging to one object and the next. When you have thousands of objects, this really adds up.&lt;/p&gt;
+&lt;p&gt;Newlines &lt;strong&gt;&amp;rsquo;\n&amp;rsquo;&lt;/strong&gt; or some other separator are required to distinguish between the set of variables belonging to one object and the next. When you have thousands of objects, this really adds up.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;In short, if we wish to optimize any further, it&amp;rsquo;s necessary to switch to a binary format.&lt;/p&gt;

@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="generator" content="Source Themes Academia 4.3.1">
-  <meta name="generator" content="Hugo 0.85.0" />
+  <meta name="generator" content="Hugo 0.101.0" />
 
   
 
@@ -81,7 +81,7 @@ At the end of this article and the next, you should understand exactly how to im
   
   
   
-  <link rel="stylesheet" href="/css/academia.min.14ac857b31b62b740274a8d6faef62f3.css">
+  <link rel="stylesheet" href="/css/academia.min.88bfd34630258dde91b90e40ca4fc6a8.css">
 
   
 
@@ -495,7 +495,7 @@ At the end of this article and the next, you should understand exactly how to im
 <p>In text, even the smallest numbers in <strong>0-9</strong> range require at least one byte, but in binary, smaller values like <strong>0, 11, 31, 100</strong> can be sent with fewer than 8 bits if we know their range ahead of time.</p>
 </li>
 <li>
-<p>If an integer value is negative, you have to spend a whole byte on <strong>'-'</strong> to indicate that.</p>
+<p>If an integer value is negative, you have to spend a whole byte on <strong>&rsquo;-&rsquo;</strong> to indicate that.</p>
 </li>
 <li>
 <p>Floating point numbers waste one byte specifying the decimal point.</p>
@@ -504,7 +504,7 @@ At the end of this article and the next, you should understand exactly how to im
 <p>The text representation of numerical values are variable length: <strong>“5”</strong>, <strong>“12345”</strong>, <strong>“3.141593”. </strong>Because of this we need to spend one byte on a separator after each value so we know when it ends.</p>
 </li>
 <li>
-<p>Newlines <strong>'\n'</strong> or some other separator are required to distinguish between the set of variables belonging to one object and the next. When you have thousands of objects, this really adds up.</p>
+<p>Newlines <strong>&rsquo;\n&rsquo;</strong> or some other separator are required to distinguish between the set of variables belonging to one object and the next. When you have thousands of objects, this really adds up.</p>
 </li>
 </ul>
 <p>In short, if we wish to optimize any further, it&rsquo;s necessary to switch to a binary format.</p>
@@ -1006,7 +1006,7 @@ struct PacketB
     
     
     
-    <script src="/js/academia.min.03abf8f1acc4873177d4b4fb31ca377e.js"></script>
+    <script src="/js/academia.min.b8df6754deca2dd84ba46243e6dcb3e3.js"></script>
 
     
 
