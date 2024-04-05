@@ -17,9 +17,6 @@ description = "Glenn Fiedler's game development and networking articles"
 # Default image for social sharing and search engines. Place image in `static/img/` folder and specify image name here.
 sharing_image = ""
 
-# Twitter username (without @). Used when a vistor shares your site on Twitter.
-twitter = "gafferongames"
-
 # Diplay a logo in navigation bar rather than title (optional).
 #   To enable, place an image in `static/img/` and reference its filename below. To disable, set the value to "".
 logo = ""
@@ -48,9 +45,6 @@ time_format = "3:04 PM"
 ############################
 ## Contact Widget setup   ##
 ############################
-
-# Contact links
-contact_links = [ {icon = "twitter", icon_pack = "fab", name = "DM Me", link = "https://twitter.com/Twitter"} ]
 
 ############################
 ## Plugins                ##
