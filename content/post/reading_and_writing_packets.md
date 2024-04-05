@@ -7,6 +7,12 @@ description = "Best practices for reading and writing packets"
 draft = false
 +++
 
+----- 
+
+### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+
+-----
+
 ## Introduction
 
 Hi, I’m [Glenn Fiedler](https://gafferongames.com) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
@@ -630,4 +636,6 @@ __NEXT ARTICLE:__ [Serialization Strategies](/post/serialization_strategies/)
 
 ----- 
 
-**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>
+### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+
+-----

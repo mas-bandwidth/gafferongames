@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="generator" content="Source Themes Academia 4.3.1">
-  <meta name="generator" content="Hugo 0.101.0" />
+  <meta name="generator" content="Hugo 0.124.1">
 
   
 
@@ -289,10 +289,9 @@
     <h2><a href="/post/floating_point_determinism/">Floating Point Determinism</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 Lately I&rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.
 The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation implicitly by sending just the player inputs.
-This is a very attractive synchronization strategy because the amount of network traffic depends on the size of the player inputs instead of the amount of physics state in the world.
       
     </div>
   </div>
@@ -301,10 +300,10 @@ This is a very attractive synchronization strategy because the amount of network
     <h2><a href="/post/what_every_programmer_needs_to_know_about_game_networking/">What Every Programmer Needs To Know About Game Networking</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 Have you ever wondered how multiplayer games work?
 From the outside it seems magical: two or more players sharing a consistent experience across the network like they actually exist together in the same virtual world.
-But as programmers we know the truth of what is actually going on underneath is quite different from what you see. It turns out it&rsquo;s all an illusion.
+But as programmers we know the truth of what is actually going on underneath is quite different from what you see.
       
     </div>
   </div>
@@ -313,7 +312,7 @@ But as programmers we know the truth of what is actually going on underneath is 
     <h2><a href="/post/reliability_ordering_and_congestion_avoidance_over_udp/">Reliability and Congestion Avoidance over UDP</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 In the previous article, we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.
 The Problem with TCP Those of you familiar with TCP know that it already has its own concept of connection, reliability-ordering and congestion avoidance, so why are we rewriting our own mini version of TCP on top of UDP?
       
@@ -324,9 +323,8 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
     <h2><a href="/post/virtual_connection_over_udp/">Virtual Connection over UDP</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 In the previous article we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.
-As the first step towards a general connection system, we&rsquo;ll start with the simplest case possible: creating a virtual connection between two computers on top of UDP.
       
     </div>
   </div>
@@ -335,7 +333,7 @@ As the first step towards a general connection system, we&rsquo;ll start with th
     <h2><a href="/post/sending_and_receiving_packets/">Sending and Receiving Packets</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 In the previous article we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.
 In this article I am going to show you how to send and receive UDP packets.
 BSD sockets For most modern platforms you have some sort of basic socket layer available based on BSD sockets.
@@ -347,9 +345,8 @@ BSD sockets For most modern platforms you have some sort of basic socket layer a
     <h2><a href="/post/udp_vs_tcp/">UDP vs. TCP</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 In this article we start with the most basic aspect of network programming: sending and receiving data over the network. This is perhaps the simplest and most basic part of what network programmers do, but still it is quite intricate and non-obvious as to what the best course of action is.
-You have most likely heard of sockets, and are probably aware that there are two main types: TCP and UDP.
       
     </div>
   </div>
@@ -442,7 +439,7 @@ You have most likely heard of sockets, and are probably aware that there are two
     
     
     
-    <script src="/js/academia.min.b8df6754deca2dd84ba46243e6dcb3e3.js"></script>
+    <script src="/js/academia.min.6402f830cb6203c1b15935e7789e48da.js"></script>
 
     
 
@@ -460,7 +457,7 @@ You have most likely heard of sockets, and are probably aware that there are two
       <div class="col-md-6">
         
         <p>
-          Copyright © Glenn Fiedler, 2004 - 2020 
+          Copyright © Glenn Fiedler, 2004 - 2024 
         </p>
       </div>
       <div class="col-md-6">

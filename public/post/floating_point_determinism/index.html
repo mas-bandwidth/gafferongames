@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="generator" content="Source Themes Academia 4.3.1">
-  <meta name="generator" content="Hugo 0.101.0" />
+  <meta name="generator" content="Hugo 0.124.1">
 
   
 
@@ -25,10 +25,9 @@
   
     
   
-  <meta name="description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+  <meta name="description" content="I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 Lately I&rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.
-The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation implicitly by sending just the player inputs.
-This is a very attractive synchronization strategy because the amount of network traffic depends on the size of the player inputs instead of the amount of physics state in the world.">
+The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation implicitly by sending just the player inputs.">
 
   
   <link rel="alternate" hreflang="en-us" href="https://gafferongames.com/post/floating_point_determinism/">
@@ -113,10 +112,9 @@ This is a very attractive synchronization strategy because the amount of network
   <meta property="og:site_name" content="Gaffer On Games">
   <meta property="og:url" content="https://gafferongames.com/post/floating_point_determinism/">
   <meta property="og:title" content="Floating Point Determinism | Gaffer On Games">
-  <meta property="og:description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+  <meta property="og:description" content="I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 Lately I&rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.
-The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation implicitly by sending just the player inputs.
-This is a very attractive synchronization strategy because the amount of network traffic depends on the size of the player inputs instead of the amount of physics state in the world."><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
+The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation implicitly by sending just the player inputs."><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
   <meta property="twitter:image" content="https://gafferongames.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
   <meta property="article:published_time" content="2010-02-24T00:00:00&#43;00:00">
@@ -335,7 +333,10 @@ This is a very attractive synchronization strategy because the amount of network
   <div class="article-container">
 
     <div class="article-style" itemprop="articleBody">
-      <h2 id="introduction">Introduction</h2>
+      <hr>
+<h3 id="_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_"><em>I&rsquo;m no longer posting new content on <a href="https://gafferongames.com">gafferongames.com</a>. Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</em></h3>
+<hr>
+<h2 id="introduction">Introduction</h2>
 <p>Hi, I&rsquo;m <a href="https://gafferongames.com">Glenn Fiedler</a> and welcome to <a href="/categories/game-networking/"><strong>Networking for Game Programmers</strong></a>.</p>
 <p>Lately I&rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.</p>
 <p>The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation <em>implicitly</em> by sending just the player inputs.</p>
@@ -386,7 +387,7 @@ gpAssert( (_controlfp(0, 0) &amp;amp; _MCW_RC) == _RC_NEAR );
 <p>We have never had a problem with the IEEE standard across any PC cpu AMD and Intel with this approach. None of our SupCom or Demigod customers have had problems with their machines either, and we are talking over 1 million customers here (supcom1 + expansion pack). We would have heard if there was a problem with the fpu not having the same results as replays or multiplayer mode wouldn&rsquo;t work at all.</p>
 <p>We did however have problems when using some physics APIs because their code did not have determinism or reproducibility in mind. For example some physics APIS have solvers that take X number of iterations when solving where X can be lower with faster CPUs.</blockquote></p>
 <p><b>Elijah, Gas Powered Games</b><br>
-<a href="http://www.box2d.org/forum/viewtopic.php?f=3&amp;t=1800"><a href="http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;t=1800">http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;t=1800</a></a></p>
+<a href="http://www.box2d.org/forum/viewtopic.php?f=3&amp;t=1800"><a href="http://www.box2d.org/forum/viewtopic.php?f=3&amp;t=1800">http://www.box2d.org/forum/viewtopic.php?f=3&amp;t=1800</a></a></p>
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
 <blockquote>If you store replays as controller inputs, they cannot be played back on machines with different CPU architectures, compilers, or optimization settings. In MotoGP, this meant we could not share saved replays between Xbox and PC. It also meant that if we saved a replay from a debug build of the game, it would not work in release builds, or vice versa. This is not always a problem (we never shipped debug builds, after all), but if we ever released a patch, we had to build it using the exact same compiler as the original game. If the compiler had been updated since our original release, and we built a patch using the newer compiler, this could change things around enough that replays saved by the original game would no longer play back correctly.
@@ -397,7 +398,7 @@ gpAssert( (_controlfp(0, 0) &amp;amp; _MCW_RC) == _RC_NEAR );
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
 <blockquote>"Battlezone 2 used a lockstep networking model requiring absolutely identical results on every client, down to the least-significant bit of the mantissa, or the simulations would start to diverge. While this was difficult to achieve, it meant we only needed to send user input across the network; all other game state could be computed locally. During development, we discovered that AMD and Intel processors produced slightly different results for trancendental functions (sin, cos, tan, and their inverses), so we had to wrap them in non-optimized function calls to force the compiler to leave them at single-precision. That was enough to make AMD and Intel processors consistent, but it was definitely a learning experience.</blockquote>
 <p><b>Ken Miller, Pandemic Studios</b><br>
-<a href="http://www.box2d.org/forum/viewtopic.php?f=4&amp;t=175"><a href="http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;t=175">http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;t=175</a></a></p>
+<a href="http://www.box2d.org/forum/viewtopic.php?f=4&amp;t=175"><a href="http://www.box2d.org/forum/viewtopic.php?f=4&amp;t=175">http://www.box2d.org/forum/viewtopic.php?f=4&amp;t=175</a></a></p>
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
 <blockquote>... In FSW1 when desync is detected in player would be instantly killed by "magic sniper". :) All that stuff was fixed in FSW2. We just ran precise FP and used Havok FPU libs instead SIMD on PC. Also integer modulo is problem too because C++ standard says it's "implementation defined" (in case when multiple compilers/platforms are used). In general I liked tools for lockstep we developed, finding desyncs in code on FSW2 was trivial.</blockquote>
@@ -508,7 +509,8 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
+<h3 id="_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1"><em>I&rsquo;m no longer posting new content on <a href="https://gafferongames.com">gafferongames.com</a>. Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</em></h3>
+<hr>
 
     </div>
 
@@ -672,7 +674,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     
     
-    <script src="/js/academia.min.b8df6754deca2dd84ba46243e6dcb3e3.js"></script>
+    <script src="/js/academia.min.6402f830cb6203c1b15935e7789e48da.js"></script>
 
     
 
@@ -690,7 +692,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
       <div class="col-md-6">
         
         <p>
-          Copyright © Glenn Fiedler, 2004 - 2020 
+          Copyright © Glenn Fiedler, 2004 - 2024 
         </p>
       </div>
       <div class="col-md-6">

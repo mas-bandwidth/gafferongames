@@ -6,7 +6,7 @@
     <description>Recent content in Building a Game Network Protocol on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
-    <copyright>Copyright © Glenn Fiedler, 2004 - 2020</copyright>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2024</copyright>
     <lastBuildDate>Wed, 28 Sep 2016 00:00:00 +0000</lastBuildDate>
     
 	    <atom:link href="https://gafferongames.com/categories/building-a-game-network-protocol/index.xml" rel="self" type="application/rss+xml" />
@@ -18,12 +18,15 @@
       <pubDate>Wed, 28 Sep 2016 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/client_server_connection/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;So far in this article series we&amp;rsquo;ve discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP.&lt;/p&gt;
 &lt;p&gt;Now in this article we&amp;rsquo;re going to bring everything together and build a client/server connection on top of UDP.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
-&lt;p&gt;Developers from a web background often wonder why games go to such effort to build a client/server connection on top of UDP, when for many applications, TCP is good enough. &lt;a href=&#34;#quic_footnote&#34;&gt;*&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Developers from a web background often wonder why games go to such effort to build a client/server connection on top of UDP, when for many applications, TCP is good enough. &lt;a href=&#34;https://gafferongames.com/post/client_server_connection/#quic_footnote&#34;&gt;*&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;The reason is that games send &lt;strong&gt;time critical data&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Why don&amp;rsquo;t games use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP (which is unreliable, unordered) it holds more recent packets hostage in a queue while older packets are resent over the network.&lt;/p&gt;
 &lt;p&gt;This is known as &lt;strong&gt;head of line blocking&lt;/strong&gt; and it&amp;rsquo;s a &lt;em&gt;huuuuuge&lt;/em&gt; problem for games. To understand why, consider a game server broadcasting the state of the world to clients 10 times per-second. Each client advances time forward and wants to display the most recent state it receives from the server.&lt;/p&gt;
@@ -198,7 +201,8 @@ class Server
 &lt;p&gt;To solve this, we need to get serious with cryptography to encrypt and sign packets so they can&amp;rsquo;t be read or modified by a third party.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://patreon.com/gafferongames&#34;&gt;Securing Dedicated Servers&lt;/a&gt;.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -208,7 +212,10 @@ class Server
       <pubDate>Thu, 15 Sep 2016 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/reliable_ordered_messages/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Many people will tell you that implementing your own reliable message system on top of UDP is foolish. After all, why reimplement TCP?&lt;/p&gt;
 &lt;p&gt;But why limit ourselves to how TCP works? But there are so many different ways to implement reliable-messages and most of them work &lt;em&gt;nothing&lt;/em&gt; like TCP!&lt;/p&gt;
@@ -519,7 +526,8 @@ while ( true )
 &lt;p&gt;Which is flexible enough to implement whatever you like on top of it.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/client_server_connection/&#34;&gt;Client Server Connection&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -529,7 +537,10 @@ while ( true )
       <pubDate>Mon, 12 Sep 2016 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/sending_large_blocks_of_data/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/packet_fragmentation_and_reassembly/&#34;&gt;previous article&lt;/a&gt; we implemented packet fragmentation and reassembly so we can send packets larger than MTU.&lt;/p&gt;
 &lt;p&gt;This approach works great when the data block you&amp;rsquo;re sending is time critical and can be dropped, but in other cases you need to send large blocks of quickly and reliably over packet loss, and you need the data to get through.&lt;/p&gt;
@@ -681,7 +692,8 @@ struct SlicePacket : public protocol2::Packet
 &lt;p&gt;The chunk system is simple in concept, but the implementation is certainly not. I encourage you to take a close look at the &lt;a href=&#34;http://www.patreon.com/gafferongames&#34;&gt;source code&lt;/a&gt; for this article for further details.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/reliable_ordered_messages/&#34;&gt;Reliable Ordered Messages&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -691,7 +703,10 @@ struct SlicePacket : public protocol2::Packet
       <pubDate>Tue, 06 Sep 2016 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/packet_fragmentation_and_reassembly/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;previous article&lt;/a&gt; we discussed how to unify packet read and write into a single serialize function and added a bunch of safety features to packet read.&lt;/p&gt;
 &lt;p&gt;Now we are ready to start putting interesting things in our packets and sending them over the network, but immediately we run into an interesting question: &lt;em&gt;how big should our packets be?&lt;/em&gt;&lt;/p&gt;
@@ -910,7 +925,8 @@ const int index = sequence % MaxEntries;
 &lt;p&gt;In my experience, game neworking is hard enough without having suspicions that that your low-level network protocol has bugs that only show up under extreme network conditions. That&amp;rsquo;s exactly where you need to be able to trust your code works correctly. &lt;strong&gt;So test it!&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/sending_large_blocks_of_data/&#34;&gt;Sending Large Blocks of Data&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -920,7 +936,10 @@ const int index = sequence % MaxEntries;
       <pubDate>Sun, 04 Sep 2016 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/serialization_strategies/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/reading_and_writing_packets/&#34;&gt;previous article&lt;/a&gt;, we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.&lt;/p&gt;
 &lt;p&gt;In this article, we&amp;rsquo;re going to transform the bitpacker into a system where this checking is &lt;em&gt;automatic&lt;/em&gt;. We&amp;rsquo;re going to do this with minimal runtime overhead, and in such a way that we don&amp;rsquo;t have to code separate read and write functions, performing both read and write with a single function.&lt;/p&gt;
@@ -1608,9 +1627,10 @@ bool serialize_scene_d( Stream &amp;amp; stream, Scene &amp;amp; scene )
 &lt;/pre&gt;
 &lt;p&gt;This is great packet structure to use during development.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/packet_fragmentation_and_reassembly&#34;&gt;Packet Fragmentation and Reassembly&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/packet_fragmentation_and_reassembly/&#34;&gt;Packet Fragmentation and Reassembly&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -1620,7 +1640,10 @@ bool serialize_scene_d( Stream &amp;amp; stream, Scene &amp;amp; scene )
       <pubDate>Thu, 01 Sep 2016 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/reading_and_writing_packets/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In this article we&amp;rsquo;re going to explore how AAA multiplayer games like first person shooters read and write packets. We&amp;rsquo;ll start with text based formats then move into binary hand-coded binary formats and bitpacking.&lt;/p&gt;
 &lt;p&gt;At the end of this article and the next, you should understand exactly how to implement your own packet read and write the same way the pros do it.&lt;/p&gt;
@@ -2129,7 +2152,8 @@ struct PacketB
 &lt;p&gt;If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. &lt;em&gt;You want it to be automatic&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;Serialization Strategies&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     

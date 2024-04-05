@@ -7,6 +7,12 @@ description = "A solution for enabling UDP in the web"
 draft = false
 +++
 
+----- 
+
+### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+
+-----
+
 # Premise
 
 In 2017 the most popular web games like [agar.io](http://agar.io) are networked via WebSockets over TCP. If a UDP equivalent of WebSockets could be incorporated into browsers, it would greatly improve the networking of these games.
@@ -200,4 +206,6 @@ Alternatively, [netcode.io](http://netcode.io) provides a much simpler 'WebSocke
 
 ----- 
 
-**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>
+### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+
+-----

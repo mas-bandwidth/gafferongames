@@ -6,7 +6,7 @@
     <description>Recent content in Networked Physics on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
-    <copyright>Copyright © Glenn Fiedler, 2004 - 2020</copyright>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2024</copyright>
     <lastBuildDate>Thu, 22 Feb 2018 00:00:00 +0000</lastBuildDate>
     
 	    <atom:link href="https://gafferongames.com/categories/networked-physics/index.xml" rel="self" type="application/rss+xml" />
@@ -18,7 +18,10 @@
       <pubDate>Thu, 22 Feb 2018 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/networked_physics_in_virtual_reality/</guid>
-      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &amp;ldquo;Hey Glenn, there&amp;rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?&amp;rdquo;&lt;/p&gt;
 &lt;p&gt;I replied &lt;del&gt;&amp;ldquo;F*** yes!&amp;quot;&lt;/del&gt; &lt;strong&gt;cough&lt;/strong&gt; &amp;ldquo;Sure. This could be a lot of fun!&amp;rdquo;. But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good. Two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.&lt;/p&gt;
 &lt;p&gt;Oculus agreed. Welcome to that article! Also, the source for the networked physics sample is &lt;a href=&#34;https://github.com/OculusVR/oculus-networked-physics-sample&#34;&gt;here&lt;/a&gt;, wherein the code that I wrote is released under a BSD licence. I hope the next generation of programmers can learn from my research into networked physics and create some really cool things. Good luck!&lt;/p&gt;
@@ -215,7 +218,8 @@
 &lt;p&gt;Thanks to Oculus for sponsoring my work and making this research possible!&lt;/p&gt;
 &lt;p&gt;The source code for the networked physics sample can be downloaded &lt;a href=&#34;https://github.com/OculusVR/oculus-networked-physics-sample&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -225,7 +229,10 @@
       <pubDate>Mon, 05 Jan 2015 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/state_synchronization/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;previous article&lt;/a&gt; we discussed techniques for compressing snapshots.&lt;/p&gt;
 &lt;p&gt;In this article we round out our discussion of networked physics strategies with &lt;strong&gt;state synchronization&lt;/strong&gt;, the third and final strategy in this article series.&lt;/p&gt;
@@ -356,7 +363,8 @@ Your browser does not support the video tag.
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;And that&amp;rsquo;s really about it for this technique. Without anything fancy it&amp;rsquo;s already pretty good, and on top of that another order of magnitude improvement is available with delta compression, at the cost of significant complexity!&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -366,7 +374,10 @@ Your browser does not support the video tag.
       <pubDate>Sun, 04 Jan 2015 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/snapshot_compression/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;previous article&lt;/a&gt; we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.&lt;/p&gt;
 &lt;p&gt;The problem with a low snapshot rate like 10HZ is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms. If protection against one or two lost packets in a row is desired, this blows out to 250ms or 350ms delay.&lt;/p&gt;
@@ -497,7 +508,8 @@ Your browser does not support the video tag.
 &lt;p&gt;It&amp;rsquo;s also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/state_synchronization/&#34;&gt;State Synchronization&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -507,7 +519,10 @@ Your browser does not support the video tag.
       <pubDate>Sun, 30 Nov 2014 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/snapshot_interpolation/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;previous article&lt;/a&gt; we networked a physics simulation using deterministic lockstep. Now, in this article we&amp;rsquo;re going to network the same simulation with a completely different technique: &lt;strong&gt;snapshot interpolation&lt;/strong&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
@@ -578,7 +593,8 @@ Your browser does not support the video tag.
 &lt;p&gt;In order to increase the send rate we&amp;rsquo;re going to need some pretty good bandwidth optimizations. But don&amp;rsquo;t worry, there&amp;rsquo;s a &lt;em&gt;lot&lt;/em&gt; we can do to optimize bandwidth. So much so that there was too much stuff to fit in this article and I had to insert an extra unplanned article just to cover all of it!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;Snapshot Compression&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -588,7 +604,10 @@ Your browser does not support the video tag.
       <pubDate>Sat, 29 Nov 2014 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/deterministic_lockstep/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/introduction_to_networked_physics/&#34;&gt;previous article&lt;/a&gt; we explored the physics simulation we&amp;rsquo;re going to network in this article series. In this article specifically, we&amp;rsquo;re going to network this physics simulation using &lt;strong&gt;deterministic lockstep&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Deterministic lockstep is a method of networking a system from one computer to another by sending only the &lt;em&gt;inputs&lt;/em&gt; that control that system, rather than the &lt;em&gt;state&lt;/em&gt; of that system. In the context of networking a physics simulation, this means we send across a small amount of input, while avoiding sending state like position, orientation, linear velocity and angular velocity per-object.&lt;/p&gt;
@@ -682,7 +701,8 @@ Your browser does not support the video tag.
 &lt;p&gt;So in conclusion, even where TCP should have the most advantage, in the only networking model that relies on reliable-ordered data, we can still easily whip its ass with a simple protocol built on top of UDP.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;Snapshot Interpolation&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -692,7 +712,10 @@ Your browser does not support the video tag.
       <pubDate>Fri, 28 Nov 2014 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/introduction_to_networked_physics/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to the first article in &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In this article series we&amp;rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.&lt;/p&gt;
 &lt;p&gt;But before we get to this, let&amp;rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:&lt;/p&gt;
@@ -731,7 +754,8 @@ Your browser does not support the video tag.
 &lt;p&gt;This is a very difficult situation for networked physics!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;Deterministic Lockstep&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     

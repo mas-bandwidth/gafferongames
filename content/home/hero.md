@@ -20,6 +20,6 @@ title = "Gaffer On Games"
 +++
 ## My name is **Glenn Fiedler** and I'm the founder and CEO of **Network Next**
 
-I spent a career writing netcode for games. Now I'm making the internet better for games at [Network Next](https://networknext.com).
+I spent a career writing netcode for games. Now I'm making the internet better for games at [Network Next](https://networknext.com). Check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
 
 {{< youtube fFP7c59ezjo >}}

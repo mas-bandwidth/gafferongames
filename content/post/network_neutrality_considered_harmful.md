@@ -11,6 +11,12 @@ image:
   preview_only: true
 ---
 
+----- 
+
+### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+
+-----
+
 Hi, I'm [Glenn Fiedler](https://www.linkedin.com/in/glennfiedler/) and I'm the founder and CEO of [Network Next](https://networknext.com).
 
 Before starting Network Next, I worked in the game industry for 20 years as a software engineer. I was fortunate enough to have a good career and got to work on some games you've might have played: **Freedom Force**, **Mercenaries 2**, **God of War**, **Journey** and **Titanfall 1 and 2**. Some of my netcode is still active in **Apex Legends** even though I left Respawn Entertainment before it started development.
@@ -78,3 +84,9 @@ I hope you agree with me, but if even if you don't, we've created this marketpla
 Best wishes,
 
 Glenn Fiedler, CEO, Network Next [networknext.com](https://networknext.com)
+
+----- 
+
+### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+
+-----

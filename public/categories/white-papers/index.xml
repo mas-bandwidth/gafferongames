@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>White papers on Gaffer On Games</title>
+    <title>White Papers on Gaffer On Games</title>
     <link>https://gafferongames.com/categories/white-papers/</link>
-    <description>Recent content in White papers on Gaffer On Games</description>
+    <description>Recent content in White Papers on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
-    <copyright>Copyright © Glenn Fiedler, 2004 - 2020</copyright>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2024</copyright>
     <lastBuildDate>Sun, 26 Feb 2017 00:00:00 +0000</lastBuildDate>
     
 	    <atom:link href="https://gafferongames.com/categories/white-papers/index.xml" rel="self" type="application/rss+xml" />
@@ -18,7 +18,10 @@
       <pubDate>Sun, 26 Feb 2017 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/why_cant_i_send_udp_packets_from_a_browser/</guid>
-      <description>&lt;h1 id=&#34;premise&#34;&gt;Premise&lt;/h1&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h1 id=&#34;premise&#34;&gt;Premise&lt;/h1&gt;
 &lt;p&gt;In 2017 the most popular web games like &lt;a href=&#34;http://agar.io&#34;&gt;agar.io&lt;/a&gt; are networked via WebSockets over TCP. If a UDP equivalent of WebSockets could be incorporated into browsers, it would greatly improve the networking of these games.&lt;/p&gt;
 &lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;
 &lt;p&gt;Web browsers are built on top of HTTP, which is a stateless request/response protocol initially designed for serving static web pages. HTTP is built on top of TCP, a low-level protocol which guarantees data sent over the internet arrives reliably, and in the same order it was sent.&lt;/p&gt;
@@ -147,7 +150,8 @@ Matheus Valadares, creator of agar.io&lt;/p&gt;
 &lt;p&gt;Alternatively, &lt;a href=&#34;http://netcode.io&#34;&gt;netcode.io&lt;/a&gt; provides a much simpler &amp;lsquo;WebSockets for UDP&amp;rsquo;-like approach, which would also solve the problem, if it were standardized and incorporated into browsers.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;UPDATE:&lt;/strong&gt; netcode.io is now &lt;a href=&#34;https://github.com/RedpointGames/netcode.io-browser&#34;&gt;available in browsers&lt;/a&gt;!&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     

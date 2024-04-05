@@ -7,6 +7,12 @@ description = "Is it possible to make floating point calculations completely det
 draft = false
 +++
 
+----- 
+
+### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+
+-----
+
 ## Introduction
 
 Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
@@ -280,4 +286,6 @@ Many programmers may not realize that even a program that uses only the numeric 
 
 ----- 
 
-**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>
+### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+
+-----

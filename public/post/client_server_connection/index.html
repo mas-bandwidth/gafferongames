@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="generator" content="Source Themes Academia 4.3.1">
-  <meta name="generator" content="Hugo 0.101.0" />
+  <meta name="generator" content="Hugo 0.124.1">
 
   
 
@@ -25,9 +25,8 @@
   
     
   
-  <meta name="description" content="Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
-So far in this article series we&rsquo;ve discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP.
-Now in this article we&rsquo;re going to bring everything together and build a client/server connection on top of UDP.">
+  <meta name="description" content="I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+So far in this article series we&rsquo;ve discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP.">
 
   
   <link rel="alternate" hreflang="en-us" href="https://gafferongames.com/post/client_server_connection/">
@@ -112,9 +111,8 @@ Now in this article we&rsquo;re going to bring everything together and build a c
   <meta property="og:site_name" content="Gaffer On Games">
   <meta property="og:url" content="https://gafferongames.com/post/client_server_connection/">
   <meta property="og:title" content="Client Server Connection | Gaffer On Games">
-  <meta property="og:description" content="Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
-So far in this article series we&rsquo;ve discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP.
-Now in this article we&rsquo;re going to bring everything together and build a client/server connection on top of UDP."><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
+  <meta property="og:description" content="I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+So far in this article series we&rsquo;ve discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP."><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
   <meta property="twitter:image" content="https://gafferongames.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
   <meta property="article:published_time" content="2016-09-28T00:00:00&#43;00:00">
@@ -333,12 +331,15 @@ Now in this article we&rsquo;re going to bring everything together and build a c
   <div class="article-container">
 
     <div class="article-style" itemprop="articleBody">
-      <h2 id="introduction">Introduction</h2>
+      <hr>
+<h3 id="_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_"><em>I&rsquo;m no longer posting new content on <a href="https://gafferongames.com">gafferongames.com</a>. Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</em></h3>
+<hr>
+<h2 id="introduction">Introduction</h2>
 <p>Hi, I’m <a href="https://gafferongames.com">Glenn Fiedler</a> and welcome to <strong><a href="/categories/building-a-game-network-protocol/">Building a Game Network Protocol</a></strong>.</p>
 <p>So far in this article series we&rsquo;ve discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP.</p>
 <p>Now in this article we&rsquo;re going to bring everything together and build a client/server connection on top of UDP.</p>
 <h2 id="background">Background</h2>
-<p>Developers from a web background often wonder why games go to such effort to build a client/server connection on top of UDP, when for many applications, TCP is good enough. <a href="#quic_footnote">*</a></p>
+<p>Developers from a web background often wonder why games go to such effort to build a client/server connection on top of UDP, when for many applications, TCP is good enough. <a href="/post/client_server_connection/#quic_footnote">*</a></p>
 <p>The reason is that games send <strong>time critical data</strong>.</p>
 <p>Why don&rsquo;t games use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP (which is unreliable, unordered) it holds more recent packets hostage in a queue while older packets are resent over the network.</p>
 <p>This is known as <strong>head of line blocking</strong> and it&rsquo;s a <em>huuuuuge</em> problem for games. To understand why, consider a game server broadcasting the state of the world to clients 10 times per-second. Each client advances time forward and wants to display the most recent state it receives from the server.</p>
@@ -513,7 +514,8 @@ class Server
 <p>To solve this, we need to get serious with cryptography to encrypt and sign packets so they can&rsquo;t be read or modified by a third party.</p>
 <p><strong>NEXT ARTICLE</strong>: <a href="http://patreon.com/gafferongames">Securing Dedicated Servers</a>.</p>
 <hr>
-<p><strong>Glenn Fiedler</strong> is the founder and CEO of <strong><a href="https://networknext.com">Network Next</a></strong>.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i></p>
+<h3 id="_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1"><em>I&rsquo;m no longer posting new content on <a href="https://gafferongames.com">gafferongames.com</a>. Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</em></h3>
+<hr>
 
     </div>
 
@@ -677,7 +679,7 @@ class Server
     
     
     
-    <script src="/js/academia.min.b8df6754deca2dd84ba46243e6dcb3e3.js"></script>
+    <script src="/js/academia.min.6402f830cb6203c1b15935e7789e48da.js"></script>
 
     
 
@@ -695,7 +697,7 @@ class Server
       <div class="col-md-6">
         
         <p>
-          Copyright © Glenn Fiedler, 2004 - 2020 
+          Copyright © Glenn Fiedler, 2004 - 2024 
         </p>
       </div>
       <div class="col-md-6">

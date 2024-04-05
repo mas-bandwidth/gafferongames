@@ -11,6 +11,12 @@ image:
   preview_only: true
 ---
 
+----- 
+
+### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+
+-----
+
 Hi, I'm [Glenn Fiedler](https://gafferongames.com) and this is my GDC 2019 talk called “Fixing the Internet for Games”.
 
 <img src="/img/fixing-the-internet/001.png" width="100%" class="image_border"/>
@@ -290,4 +296,6 @@ If you'd like to learn more, please visit us at [networknext.com](https://networ
 
 ----- 
 
-**Glenn Fiedler** is the founder and CEO of **[Network Next](https://networknext.com)**.<br><i>Network Next is fixing the internet for games by creating a marketplace for premium network transit.</i>
+### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+
+-----

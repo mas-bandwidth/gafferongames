@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="generator" content="Source Themes Academia 4.3.1">
-  <meta name="generator" content="Hugo 0.101.0" />
+  <meta name="generator" content="Hugo 0.124.1">
 
   
 
@@ -112,23 +112,23 @@
   
   <meta property="og:site_name" content="Gaffer On Games">
   <meta property="og:url" content="https://gafferongames.com/tags/go/baduk/weiqi/">
-  <meta property="og:title" content="go/baduk/weiqi | Gaffer On Games">
+  <meta property="og:title" content="Go/Baduk/Weiqi | Gaffer On Games">
   <meta property="og:description" content="Glenn Fiedler&#39;s game development and networking articles"><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
   <meta property="twitter:image" content="https://gafferongames.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
+  <meta property="og:updated_time" content="2013-02-24T00:00:00&#43;00:00">
   
-  
-
-  
-
 
   
 
 
+  
 
 
 
-  <title>go/baduk/weiqi | Gaffer On Games</title>
+
+
+  <title>Go/Baduk/Weiqi | Gaffer On Games</title>
 
 </head>
 
@@ -252,7 +252,7 @@
     
     
     <div class="universal-wrapper py-3">
-      <h1 itemprop="name">go/baduk/weiqi</h1>
+      <h1 itemprop="name">Go/Baduk/Weiqi</h1>
 
       
 
@@ -271,10 +271,8 @@
     <h2><a href="/post/collision_response_and_coulomb_friction/">Collision Response and Coulomb Friction</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 So far in this series, we have mathematically defined the go stone, rendered it, determined how it moves and rotates, and discussed how its shape affects how it responds to collisions.
-Now in this article we reach our first milestone:
-A go stone bouncing and coming to rest on the go board.
       
     </div>
   </div>
@@ -283,9 +281,8 @@ A go stone bouncing and coming to rest on the go board.
     <h2><a href="/post/rotation_and_inertia_tensors/">Rotation &amp; Inertia Tensors</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 In the previous article we detected collision between the go stone and the go board. Now we&rsquo;re working up to calculating collision response so the stone bounces and wobbles before coming to rest on the board.
-But in order to reach this goal we first need to lay some groundwork.
       
     </div>
   </div>
@@ -294,10 +291,9 @@ But in order to reach this goal we first need to lay some groundwork.
     <h2><a href="/post/go_stone_vs_go_board/">Go Stone vs. Go Board</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 In this series so far we&rsquo;ve defined the shape of a go stone, rendered it using 3D graphics hardware and simulated how it moves in three dimensions.
 Our next goal is for the go stone to bounce and come to rest on the go board.
-Understandably, this is quite complicated, so in this article we&rsquo;ll focus on the first step: detecting collisions between a go stone and the go board.
       
     </div>
   </div>
@@ -306,9 +302,9 @@ Understandably, this is quite complicated, so in this article we&rsquo;ll focus 
     <h2><a href="/post/how_the_go_stone_moves/">How The Go Stone Moves</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 In previous articles we mathematically defined the shape of a go stone and tessellated its shape so it can be drawn with 3D graphics hardware.
-Now we want to make the go stone move, obeying Newton&rsquo;s laws of motion so the simulation is physically accurate. The stone should be accelerated by gravity and fall downwards.
+Now we want to make the go stone move, obeying Newton&rsquo;s laws of motion so the simulation is physically accurate.
       
     </div>
   </div>
@@ -317,9 +313,9 @@ Now we want to make the go stone move, obeying Newton&rsquo;s laws of motion so 
     <h2><a href="/post/tessellating_the_go_stone/">Tessellating The Go Stone</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 In this article we want to draw the go stone using OpenGL.
-Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r1 and r2!&rdquo;, because modern 3D graphics cards work by drawing triangles.
+Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r1 and r2!
       
     </div>
   </div>
@@ -328,9 +324,8 @@ Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please dra
     <h2><a href="/post/shape_of_the_go_stone/">Shape of The Go Stone</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 If you play Go, you know that a biconvex go stone has an interesting wobble when it&rsquo;s placed on the board. This wobble is a direct consequence of its unique shape.
-I&rsquo;d like to reproduce this wobble in Virtual Go, so let&rsquo;s to spend some time studying go stone&rsquo;s shape, so we can capture this wobble and simulate it on a computer :)
       
     </div>
   </div>
@@ -339,8 +334,8 @@ I&rsquo;d like to reproduce this wobble in Virtual Go, so let&rsquo;s to spend s
     <h2><a href="/post/introduction_to_virtual_go/">Introduction to Virtual Go</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
-I&rsquo;m a professional game programmer with 15 years experience in the game industry. Over the years I&rsquo;ve worked for Irrational Games, Team Bondi, Pandemic Studios, Sony Santa Monica and most recently Respawn Entertainment. During my career I&rsquo;m extremely proud to have worked on such games as &lsquo;Freedom Force&rsquo;, &lsquo;L.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+I&rsquo;m a professional game programmer with 15 years experience in the game industry. Over the years I&rsquo;ve worked for Irrational Games, Team Bondi, Pandemic Studios, Sony Santa Monica and most recently Respawn Entertainment.
       
     </div>
   </div>
@@ -433,7 +428,7 @@ I&rsquo;m a professional game programmer with 15 years experience in the game in
     
     
     
-    <script src="/js/academia.min.b8df6754deca2dd84ba46243e6dcb3e3.js"></script>
+    <script src="/js/academia.min.6402f830cb6203c1b15935e7789e48da.js"></script>
 
     
 
@@ -451,7 +446,7 @@ I&rsquo;m a professional game programmer with 15 years experience in the game in
       <div class="col-md-6">
         
         <p>
-          Copyright © Glenn Fiedler, 2004 - 2020 
+          Copyright © Glenn Fiedler, 2004 - 2024 
         </p>
       </div>
       <div class="col-md-6">

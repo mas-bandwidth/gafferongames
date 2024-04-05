@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="generator" content="Source Themes Academia 4.3.1">
-  <meta name="generator" content="Hugo 0.101.0" />
+  <meta name="generator" content="Hugo 0.124.1">
 
   
 
@@ -271,9 +271,8 @@
     <h2><a href="/post/client_server_connection/">Client Server Connection</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
 So far in this article series we&rsquo;ve discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP.
-Now in this article we&rsquo;re going to bring everything together and build a client/server connection on top of UDP.
       
     </div>
   </div>
@@ -282,10 +281,9 @@ Now in this article we&rsquo;re going to bring everything together and build a c
     <h2><a href="/post/reliable_ordered_messages/">Reliable Ordered Messages</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
 Many people will tell you that implementing your own reliable message system on top of UDP is foolish. After all, why reimplement TCP?
 But why limit ourselves to how TCP works? But there are so many different ways to implement reliable-messages and most of them work nothing like TCP!
-So let&rsquo;s get creative and work out how we can implement a reliable message system that&rsquo;s better and more flexible than TCP for real-time games.
       
     </div>
   </div>
@@ -294,7 +292,7 @@ So let&rsquo;s get creative and work out how we can implement a reliable message
     <h2><a href="/post/sending_large_blocks_of_data/">Sending Large Blocks of Data</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
 In the previous article we implemented packet fragmentation and reassembly so we can send packets larger than MTU.
 This approach works great when the data block you&rsquo;re sending is time critical and can be dropped, but in other cases you need to send large blocks of quickly and reliably over packet loss, and you need the data to get through.
       
@@ -305,7 +303,7 @@ This approach works great when the data block you&rsquo;re sending is time criti
     <h2><a href="/post/packet_fragmentation_and_reassembly/">Packet Fragmentation and Reassembly</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
 In the previous article we discussed how to unify packet read and write into a single serialize function and added a bunch of safety features to packet read.
 Now we are ready to start putting interesting things in our packets and sending them over the network, but immediately we run into an interesting question: how big should our packets be?
       
@@ -316,9 +314,8 @@ Now we are ready to start putting interesting things in our packets and sending 
     <h2><a href="/post/serialization_strategies/">Serialization Strategies</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
 In the previous article, we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.
-In this article, we&rsquo;re going to transform the bitpacker into a system where this checking is automatic.
       
     </div>
   </div>
@@ -327,7 +324,7 @@ In this article, we&rsquo;re going to transform the bitpacker into a system wher
     <h2><a href="/post/reading_and_writing_packets/">Reading and Writing Packets</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I’m Glenn Fiedler and welcome to Building a Game Network Protocol.
 In this article we&rsquo;re going to explore how AAA multiplayer games like first person shooters read and write packets. We&rsquo;ll start with text based formats then move into binary hand-coded binary formats and bitpacking.
 At the end of this article and the next, you should understand exactly how to implement your own packet read and write the same way the pros do it.
       
@@ -422,7 +419,7 @@ At the end of this article and the next, you should understand exactly how to im
     
     
     
-    <script src="/js/academia.min.b8df6754deca2dd84ba46243e6dcb3e3.js"></script>
+    <script src="/js/academia.min.6402f830cb6203c1b15935e7789e48da.js"></script>
 
     
 
@@ -440,7 +437,7 @@ At the end of this article and the next, you should understand exactly how to im
       <div class="col-md-6">
         
         <p>
-          Copyright © Glenn Fiedler, 2004 - 2020 
+          Copyright © Glenn Fiedler, 2004 - 2024 
         </p>
       </div>
       <div class="col-md-6">

@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes" ?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>networking on Gaffer On Games</title>
+    <title>Networking on Gaffer On Games</title>
     <link>https://gafferongames.com/tags/networking/</link>
-    <description>Recent content in networking on Gaffer On Games</description>
+    <description>Recent content in Networking on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
-    <copyright>Copyright © Glenn Fiedler, 2004 - 2020</copyright>
+    <copyright>Copyright © Glenn Fiedler, 2004 - 2024</copyright>
     <lastBuildDate>Mon, 24 Aug 2020 00:00:00 +0000</lastBuildDate>
     
 	    <atom:link href="https://gafferongames.com/tags/networking/index.xml" rel="self" type="application/rss+xml" />
@@ -18,7 +18,10 @@
       <pubDate>Mon, 24 Aug 2020 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/network_neutrality_considered_harmful/</guid>
-      <description>&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://www.linkedin.com/in/glennfiedler/&#34;&gt;Glenn Fiedler&lt;/a&gt; and I&amp;rsquo;m the founder and CEO of &lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;.&lt;/p&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://www.linkedin.com/in/glennfiedler/&#34;&gt;Glenn Fiedler&lt;/a&gt; and I&amp;rsquo;m the founder and CEO of &lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Before starting Network Next, I worked in the game industry for 20 years as a software engineer. I was fortunate enough to have a good career and got to work on some games you&amp;rsquo;ve might have played: &lt;strong&gt;Freedom Force&lt;/strong&gt;, &lt;strong&gt;Mercenaries 2&lt;/strong&gt;, &lt;strong&gt;God of War&lt;/strong&gt;, &lt;strong&gt;Journey&lt;/strong&gt; and &lt;strong&gt;Titanfall 1 and 2&lt;/strong&gt;. Some of my netcode is still active in &lt;strong&gt;Apex Legends&lt;/strong&gt; even though I left Respawn Entertainment before it started development.&lt;/p&gt;
 &lt;p&gt;Ever since &lt;a href=&#34;https://quake.fandom.com/wiki/Qtest&#34;&gt;QTest&lt;/a&gt; I&amp;rsquo;ve found the idea that people in different physical locations could inhabit the same virtual space utterly fascinating. I wanted to understand how that worked and be part of it. So, after a few false starts in graphics programming and physics, I specialized in UDP protocol design for latency sensitive games.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;m writing this article to tell you something that you might find shocking.&lt;/p&gt;
@@ -34,12 +37,12 @@
 &lt;p&gt;And despite all this effort, a significant portion of players would play my game and get bad network performance and there was &lt;em&gt;literally nothing I could do about it&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Just how bad does it get? Let&amp;rsquo;s take a look at the data&amp;hellip;&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s a screenshot from Thursday August 20th, 2020:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-001.png&#34; alt=&#34;Screenshot of https://portal.networknext.com&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Screenshot of https://portal.networknext.com&#34; src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-001.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;1000+ players with 100ms or greater added latency courtesy of best effort delivery, one player with a whooping 730ms extra. &lt;em&gt;Clearly, this is not a speed of light problem&amp;hellip;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Later the same day we saw a packet loss event:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-002.png&#34; alt=&#34;Graph showing AB test result for packet loss&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Graph showing AB test result for packet loss&#34; src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-002.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Now you may look at this and think, oh, it&amp;rsquo;s just 0.8% packet loss at peak, it&amp;rsquo;s not that bad&amp;hellip; but this is an average across all players, and only some portion of players were affected. For these players, the effect was much more severe:&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-003.png&#34; alt=&#34;Graph showing absolute point reduction in packet loss percent for players on network next&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Graph showing absolute point reduction in packet loss percent for players on network next&#34; src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-003.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;During the mitigation the average packet loss reduction was an absolute reduction of 12 points of packet loss. No, not a reduction of 12%, &lt;strong&gt;a reduction of 12 points&lt;/strong&gt;. In other words, a conversion from totally unplayable to playable.&lt;/p&gt;
 &lt;p&gt;This is not an isolated incident. These things literally happen all the time. Take a look for yourself, our portal is live and updated in real-time: &lt;a href=&#34;https://portal.networknext.com&#34;&gt;https://portal.networknext.com&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;From this point on it should be clear: &lt;strong&gt;the internet really doesn&amp;rsquo;t care about your game.&lt;/strong&gt;&lt;/p&gt;
@@ -56,6 +59,9 @@
 &lt;p&gt;I hope you agree with me, but if even if you don&amp;rsquo;t, we&amp;rsquo;ve created this marketplace over the past three years and it&amp;rsquo;s now live. Chances are pretty good over the next 3 months when you play a game, you&amp;rsquo;re playing it over Network Next and I look forward to improving the quality of your connection.&lt;/p&gt;
 &lt;p&gt;Best wishes,&lt;/p&gt;
 &lt;p&gt;Glenn Fiedler, CEO, Network Next &lt;a href=&#34;https://networknext.com&#34;&gt;networknext.com&lt;/a&gt;&lt;/p&gt;
+&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -65,7 +71,10 @@
       <pubDate>Sun, 24 Mar 2019 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/fixing_the_internet_for_games/</guid>
-      <description>&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and this is my GDC 2019 talk called “Fixing the Internet for Games”.&lt;/p&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and this is my GDC 2019 talk called “Fixing the Internet for Games”.&lt;/p&gt;
 &lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/001.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;It&amp;rsquo;s about what we are doing at my new startup &lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;.&lt;/p&gt;
 &lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/002.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
@@ -218,7 +227,8 @@
 &lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/040.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;If you&amp;rsquo;d like to learn more, please visit us at &lt;a href=&#34;https://networknext.com&#34;&gt;networknext.com&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -228,7 +238,10 @@
       <pubDate>Thu, 22 Feb 2018 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/networked_physics_in_virtual_reality/</guid>
-      <description>&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &amp;ldquo;Hey Glenn, there&amp;rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?&amp;rdquo;&lt;/p&gt;
 &lt;p&gt;I replied &lt;del&gt;&amp;ldquo;F*** yes!&amp;quot;&lt;/del&gt; &lt;strong&gt;cough&lt;/strong&gt; &amp;ldquo;Sure. This could be a lot of fun!&amp;rdquo;. But to keep it real, I insisted on two conditions. One: the source code I developed would be published under a permissive open source licence (for example, BSD) so it would create the most good. Two: when I was finished, I would be able to write an article describing the steps I took to develop the sample.&lt;/p&gt;
 &lt;p&gt;Oculus agreed. Welcome to that article! Also, the source for the networked physics sample is &lt;a href=&#34;https://github.com/OculusVR/oculus-networked-physics-sample&#34;&gt;here&lt;/a&gt;, wherein the code that I wrote is released under a BSD licence. I hope the next generation of programmers can learn from my research into networked physics and create some really cool things. Good luck!&lt;/p&gt;
@@ -425,7 +438,8 @@
 &lt;p&gt;Thanks to Oculus for sponsoring my work and making this research possible!&lt;/p&gt;
 &lt;p&gt;The source code for the networked physics sample can be downloaded &lt;a href=&#34;https://github.com/OculusVR/oculus-networked-physics-sample&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -435,7 +449,10 @@
       <pubDate>Sun, 26 Feb 2017 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/why_cant_i_send_udp_packets_from_a_browser/</guid>
-      <description>&lt;h1 id=&#34;premise&#34;&gt;Premise&lt;/h1&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h1 id=&#34;premise&#34;&gt;Premise&lt;/h1&gt;
 &lt;p&gt;In 2017 the most popular web games like &lt;a href=&#34;http://agar.io&#34;&gt;agar.io&lt;/a&gt; are networked via WebSockets over TCP. If a UDP equivalent of WebSockets could be incorporated into browsers, it would greatly improve the networking of these games.&lt;/p&gt;
 &lt;h1 id=&#34;background&#34;&gt;Background&lt;/h1&gt;
 &lt;p&gt;Web browsers are built on top of HTTP, which is a stateless request/response protocol initially designed for serving static web pages. HTTP is built on top of TCP, a low-level protocol which guarantees data sent over the internet arrives reliably, and in the same order it was sent.&lt;/p&gt;
@@ -564,7 +581,8 @@ Matheus Valadares, creator of agar.io&lt;/p&gt;
 &lt;p&gt;Alternatively, &lt;a href=&#34;http://netcode.io&#34;&gt;netcode.io&lt;/a&gt; provides a much simpler &amp;lsquo;WebSockets for UDP&amp;rsquo;-like approach, which would also solve the problem, if it were standardized and incorporated into browsers.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;UPDATE:&lt;/strong&gt; netcode.io is now &lt;a href=&#34;https://github.com/RedpointGames/netcode.io-browser&#34;&gt;available in browsers&lt;/a&gt;!&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -574,12 +592,15 @@ Matheus Valadares, creator of agar.io&lt;/p&gt;
       <pubDate>Wed, 28 Sep 2016 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/client_server_connection/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;So far in this article series we&amp;rsquo;ve discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP.&lt;/p&gt;
 &lt;p&gt;Now in this article we&amp;rsquo;re going to bring everything together and build a client/server connection on top of UDP.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
-&lt;p&gt;Developers from a web background often wonder why games go to such effort to build a client/server connection on top of UDP, when for many applications, TCP is good enough. &lt;a href=&#34;#quic_footnote&#34;&gt;*&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Developers from a web background often wonder why games go to such effort to build a client/server connection on top of UDP, when for many applications, TCP is good enough. &lt;a href=&#34;https://gafferongames.com/post/client_server_connection/#quic_footnote&#34;&gt;*&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;The reason is that games send &lt;strong&gt;time critical data&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Why don&amp;rsquo;t games use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP (which is unreliable, unordered) it holds more recent packets hostage in a queue while older packets are resent over the network.&lt;/p&gt;
 &lt;p&gt;This is known as &lt;strong&gt;head of line blocking&lt;/strong&gt; and it&amp;rsquo;s a &lt;em&gt;huuuuuge&lt;/em&gt; problem for games. To understand why, consider a game server broadcasting the state of the world to clients 10 times per-second. Each client advances time forward and wants to display the most recent state it receives from the server.&lt;/p&gt;
@@ -754,7 +775,8 @@ class Server
 &lt;p&gt;To solve this, we need to get serious with cryptography to encrypt and sign packets so they can&amp;rsquo;t be read or modified by a third party.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://patreon.com/gafferongames&#34;&gt;Securing Dedicated Servers&lt;/a&gt;.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -764,7 +786,10 @@ class Server
       <pubDate>Thu, 15 Sep 2016 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/reliable_ordered_messages/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Many people will tell you that implementing your own reliable message system on top of UDP is foolish. After all, why reimplement TCP?&lt;/p&gt;
 &lt;p&gt;But why limit ourselves to how TCP works? But there are so many different ways to implement reliable-messages and most of them work &lt;em&gt;nothing&lt;/em&gt; like TCP!&lt;/p&gt;
@@ -1075,7 +1100,8 @@ while ( true )
 &lt;p&gt;Which is flexible enough to implement whatever you like on top of it.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/client_server_connection/&#34;&gt;Client Server Connection&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -1085,7 +1111,10 @@ while ( true )
       <pubDate>Mon, 12 Sep 2016 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/sending_large_blocks_of_data/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/packet_fragmentation_and_reassembly/&#34;&gt;previous article&lt;/a&gt; we implemented packet fragmentation and reassembly so we can send packets larger than MTU.&lt;/p&gt;
 &lt;p&gt;This approach works great when the data block you&amp;rsquo;re sending is time critical and can be dropped, but in other cases you need to send large blocks of quickly and reliably over packet loss, and you need the data to get through.&lt;/p&gt;
@@ -1237,7 +1266,8 @@ struct SlicePacket : public protocol2::Packet
 &lt;p&gt;The chunk system is simple in concept, but the implementation is certainly not. I encourage you to take a close look at the &lt;a href=&#34;http://www.patreon.com/gafferongames&#34;&gt;source code&lt;/a&gt; for this article for further details.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/reliable_ordered_messages/&#34;&gt;Reliable Ordered Messages&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -1247,7 +1277,10 @@ struct SlicePacket : public protocol2::Packet
       <pubDate>Tue, 06 Sep 2016 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/packet_fragmentation_and_reassembly/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;previous article&lt;/a&gt; we discussed how to unify packet read and write into a single serialize function and added a bunch of safety features to packet read.&lt;/p&gt;
 &lt;p&gt;Now we are ready to start putting interesting things in our packets and sending them over the network, but immediately we run into an interesting question: &lt;em&gt;how big should our packets be?&lt;/em&gt;&lt;/p&gt;
@@ -1466,7 +1499,8 @@ const int index = sequence % MaxEntries;
 &lt;p&gt;In my experience, game neworking is hard enough without having suspicions that that your low-level network protocol has bugs that only show up under extreme network conditions. That&amp;rsquo;s exactly where you need to be able to trust your code works correctly. &lt;strong&gt;So test it!&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/sending_large_blocks_of_data/&#34;&gt;Sending Large Blocks of Data&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -1476,7 +1510,10 @@ const int index = sequence % MaxEntries;
       <pubDate>Sun, 04 Sep 2016 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/serialization_strategies/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/reading_and_writing_packets/&#34;&gt;previous article&lt;/a&gt;, we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.&lt;/p&gt;
 &lt;p&gt;In this article, we&amp;rsquo;re going to transform the bitpacker into a system where this checking is &lt;em&gt;automatic&lt;/em&gt;. We&amp;rsquo;re going to do this with minimal runtime overhead, and in such a way that we don&amp;rsquo;t have to code separate read and write functions, performing both read and write with a single function.&lt;/p&gt;
@@ -2164,9 +2201,10 @@ bool serialize_scene_d( Stream &amp;amp; stream, Scene &amp;amp; scene )
 &lt;/pre&gt;
 &lt;p&gt;This is great packet structure to use during development.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/packet_fragmentation_and_reassembly&#34;&gt;Packet Fragmentation and Reassembly&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/packet_fragmentation_and_reassembly/&#34;&gt;Packet Fragmentation and Reassembly&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -2176,7 +2214,10 @@ bool serialize_scene_d( Stream &amp;amp; stream, Scene &amp;amp; scene )
       <pubDate>Thu, 01 Sep 2016 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/reading_and_writing_packets/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In this article we&amp;rsquo;re going to explore how AAA multiplayer games like first person shooters read and write packets. We&amp;rsquo;ll start with text based formats then move into binary hand-coded binary formats and bitpacking.&lt;/p&gt;
 &lt;p&gt;At the end of this article and the next, you should understand exactly how to implement your own packet read and write the same way the pros do it.&lt;/p&gt;
@@ -2685,7 +2726,8 @@ struct PacketB
 &lt;p&gt;If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. &lt;em&gt;You want it to be automatic&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;Serialization Strategies&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -2695,7 +2737,10 @@ struct PacketB
       <pubDate>Mon, 05 Jan 2015 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/state_synchronization/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;previous article&lt;/a&gt; we discussed techniques for compressing snapshots.&lt;/p&gt;
 &lt;p&gt;In this article we round out our discussion of networked physics strategies with &lt;strong&gt;state synchronization&lt;/strong&gt;, the third and final strategy in this article series.&lt;/p&gt;
@@ -2826,7 +2871,8 @@ Your browser does not support the video tag.
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;And that&amp;rsquo;s really about it for this technique. Without anything fancy it&amp;rsquo;s already pretty good, and on top of that another order of magnitude improvement is available with delta compression, at the cost of significant complexity!&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -2836,7 +2882,10 @@ Your browser does not support the video tag.
       <pubDate>Sun, 04 Jan 2015 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/snapshot_compression/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;previous article&lt;/a&gt; we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.&lt;/p&gt;
 &lt;p&gt;The problem with a low snapshot rate like 10HZ is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms. If protection against one or two lost packets in a row is desired, this blows out to 250ms or 350ms delay.&lt;/p&gt;
@@ -2967,7 +3016,8 @@ Your browser does not support the video tag.
 &lt;p&gt;It&amp;rsquo;s also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/state_synchronization/&#34;&gt;State Synchronization&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -2977,7 +3027,10 @@ Your browser does not support the video tag.
       <pubDate>Sun, 30 Nov 2014 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/snapshot_interpolation/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;previous article&lt;/a&gt; we networked a physics simulation using deterministic lockstep. Now, in this article we&amp;rsquo;re going to network the same simulation with a completely different technique: &lt;strong&gt;snapshot interpolation&lt;/strong&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
@@ -3048,7 +3101,8 @@ Your browser does not support the video tag.
 &lt;p&gt;In order to increase the send rate we&amp;rsquo;re going to need some pretty good bandwidth optimizations. But don&amp;rsquo;t worry, there&amp;rsquo;s a &lt;em&gt;lot&lt;/em&gt; we can do to optimize bandwidth. So much so that there was too much stuff to fit in this article and I had to insert an extra unplanned article just to cover all of it!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;Snapshot Compression&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -3058,7 +3112,10 @@ Your browser does not support the video tag.
       <pubDate>Sat, 29 Nov 2014 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/deterministic_lockstep/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/introduction_to_networked_physics/&#34;&gt;previous article&lt;/a&gt; we explored the physics simulation we&amp;rsquo;re going to network in this article series. In this article specifically, we&amp;rsquo;re going to network this physics simulation using &lt;strong&gt;deterministic lockstep&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Deterministic lockstep is a method of networking a system from one computer to another by sending only the &lt;em&gt;inputs&lt;/em&gt; that control that system, rather than the &lt;em&gt;state&lt;/em&gt; of that system. In the context of networking a physics simulation, this means we send across a small amount of input, while avoiding sending state like position, orientation, linear velocity and angular velocity per-object.&lt;/p&gt;
@@ -3152,7 +3209,8 @@ Your browser does not support the video tag.
 &lt;p&gt;So in conclusion, even where TCP should have the most advantage, in the only networking model that relies on reliable-ordered data, we can still easily whip its ass with a simple protocol built on top of UDP.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;Snapshot Interpolation&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -3162,7 +3220,10 @@ Your browser does not support the video tag.
       <pubDate>Fri, 28 Nov 2014 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/introduction_to_networked_physics/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to the first article in &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In this article series we&amp;rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.&lt;/p&gt;
 &lt;p&gt;But before we get to this, let&amp;rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:&lt;/p&gt;
@@ -3201,7 +3262,8 @@ Your browser does not support the video tag.
 &lt;p&gt;This is a very difficult situation for networked physics!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;Deterministic Lockstep&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -3211,7 +3273,10 @@ Your browser does not support the video tag.
       <pubDate>Wed, 24 Feb 2010 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/floating_point_determinism/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Lately I&amp;rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.&lt;/p&gt;
 &lt;p&gt;The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation &lt;em&gt;implicitly&lt;/em&gt; by sending just the player inputs.&lt;/p&gt;
@@ -3262,7 +3327,7 @@ gpAssert( (_controlfp(0, 0) &amp;amp;amp; _MCW_RC) == _RC_NEAR );
 &lt;p&gt;We have never had a problem with the IEEE standard across any PC cpu AMD and Intel with this approach. None of our SupCom or Demigod customers have had problems with their machines either, and we are talking over 1 million customers here (supcom1 + expansion pack). We would have heard if there was a problem with the fpu not having the same results as replays or multiplayer mode wouldn&amp;rsquo;t work at all.&lt;/p&gt;
 &lt;p&gt;We did however have problems when using some physics APIs because their code did not have determinism or reproducibility in mind. For example some physics APIS have solvers that take X number of iterations when solving where X can be lower with faster CPUs.&lt;/blockquote&gt;&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Elijah, Gas Powered Games&lt;/b&gt;&lt;br&gt;
-&lt;a href=&#34;http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;t=1800&#34;&gt;&lt;a href=&#34;http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;amp;t=1800&#34;&gt;http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;amp;t=1800&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&#34;http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;t=1800&#34;&gt;&lt;a href=&#34;http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;t=1800&#34;&gt;http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;t=1800&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;If you store replays as controller inputs, they cannot be played back on machines with different CPU architectures, compilers, or optimization settings. In MotoGP, this meant we could not share saved replays between Xbox and PC. It also meant that if we saved a replay from a debug build of the game, it would not work in release builds, or vice versa. This is not always a problem (we never shipped debug builds, after all), but if we ever released a patch, we had to build it using the exact same compiler as the original game. If the compiler had been updated since our original release, and we built a patch using the newer compiler, this could change things around enough that replays saved by the original game would no longer play back correctly.
@@ -3273,7 +3338,7 @@ gpAssert( (_controlfp(0, 0) &amp;amp;amp; _MCW_RC) == _RC_NEAR );
 &lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;&#34;Battlezone 2 used a lockstep networking model requiring absolutely identical results on every client, down to the least-significant bit of the mantissa, or the simulations would start to diverge. While this was difficult to achieve, it meant we only needed to send user input across the network; all other game state could be computed locally. During development, we discovered that AMD and Intel processors produced slightly different results for trancendental functions (sin, cos, tan, and their inverses), so we had to wrap them in non-optimized function calls to force the compiler to leave them at single-precision. That was enough to make AMD and Intel processors consistent, but it was definitely a learning experience.&lt;/blockquote&gt;
 &lt;p&gt;&lt;b&gt;Ken Miller, Pandemic Studios&lt;/b&gt;&lt;br&gt;
-&lt;a href=&#34;http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;t=175&#34;&gt;&lt;a href=&#34;http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;amp;t=175&#34;&gt;http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;amp;t=175&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;a href=&#34;http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;t=175&#34;&gt;&lt;a href=&#34;http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;t=175&#34;&gt;http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;t=175&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;... In FSW1 when desync is detected in player would be instantly killed by &#34;magic sniper&#34;. :) All that stuff was fixed in FSW2. We just ran precise FP and used Havok FPU libs instead SIMD on PC. Also integer modulo is problem too because C++ standard says it&#39;s &#34;implementation defined&#34; (in case when multiple compilers/platforms are used). In general I liked tools for lockstep we developed, finding desyncs in code on FSW2 was trivial.&lt;/blockquote&gt;
@@ -3384,7 +3449,8 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -3394,7 +3460,10 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
       <pubDate>Wed, 24 Feb 2010 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Have you ever wondered how multiplayer games work?&lt;/p&gt;
 &lt;p&gt;From the outside it seems magical: two or more players sharing a consistent experience across the network like they actually exist together in the same virtual world.&lt;/p&gt;
@@ -3440,7 +3509,8 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;blockquote&gt;... the best of both worlds: In all cases, the server remains completely authoritative. Nearly all the time, the client movement simulation exactly mirrors the client movement carried out by the server, so the client&#39;s position is seldom corrected. Only in the rare case, such as a player getting hit by a rocket, or bumping into an enemy, will the client&#39;s location need to be corrected.&lt;/blockquote&gt;
 &lt;p&gt;In other words, only when the player&amp;rsquo;s character is affected by something external to the local player&amp;rsquo;s input, which cannot possibly be predicted on the client, will the player&amp;rsquo;s position need to be corrected. That and of course, if the player is attempting to cheat :)&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -3450,7 +3520,10 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
       <pubDate>Mon, 20 Oct 2008 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/virtual_connection_over_udp/&#34;&gt;previous article&lt;/a&gt;, we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.&lt;/p&gt;
 &lt;h2 id=&#34;the-problem-with-tcp&#34;&gt;The Problem with TCP&lt;/h2&gt;
@@ -3609,7 +3682,8 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;Our new reliability system let&amp;rsquo;s us send a steady stream of packets and notifies us which packets are received. From this we can infer lost packets, and resend data that didn&amp;rsquo;t get through if necessary. We also have a simple congestion avoidance system that drops from 30 packets per-second to 10 times a second so we don&amp;rsquo;t flood the connection.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/&#34;&gt;What Every Programmer Needs to Know About Game Networking&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -3619,9 +3693,12 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
       <pubDate>Wed, 08 Oct 2008 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/virtual_connection_over_udp/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/sending_and_receiving_packets&#34;&gt;previous article&lt;/a&gt; we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/sending_and_receiving_packets/&#34;&gt;previous article&lt;/a&gt; we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.&lt;/p&gt;
 &lt;p&gt;As the first step towards a general connection system, we&amp;rsquo;ll start with the simplest case possible: creating a virtual connection between two computers on top of UDP.&lt;/p&gt;
 &lt;p&gt;But first, we&amp;rsquo;re going to dig in a bit deeper about how the Internet really works!&lt;/p&gt;
 &lt;h2 id=&#34;the-internet-unotu-a-series-of-tubes&#34;&gt;The Internet &lt;u&gt;NOT&lt;/u&gt; a series of tubes&lt;/h2&gt;
@@ -3697,7 +3774,8 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;Now that you have your virtual connection over UDP, you can easily setup a client/server relationship for a two player multiplayer game without TCP.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/&#34;&gt;Reliability and Congestion Avoidance over UDP&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -3707,7 +3785,10 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
       <pubDate>Fri, 03 Oct 2008 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/sending_and_receiving_packets/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/udp_vs_tcp/&#34;&gt;previous article&lt;/a&gt; we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.&lt;/p&gt;
 &lt;p&gt;In this article I am going to show you how to send and receive UDP packets.&lt;/p&gt;
@@ -4031,7 +4112,8 @@ closesocket( socket );
 &lt;p&gt;You now have a platform independent way to send and receive packets. &lt;em&gt;Enjoy&lt;/em&gt; :)&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/virtual_connection_over_udp/&#34;&gt;Virtual Connection over UDP&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -4041,7 +4123,10 @@ closesocket( socket );
       <pubDate>Wed, 01 Oct 2008 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/udp_vs_tcp/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In this article we start with the most basic aspect of network programming: sending and receiving data over the network. This is perhaps the simplest and most basic part of what network programmers do, but still it is quite intricate and non-obvious as to what the best course of action is.&lt;/p&gt;
 &lt;p&gt;You have most likely heard of sockets, and are probably aware that there are two main types: TCP and UDP. When writing a network game, we first need to choose what type of socket to use. Do we use TCP sockets, UDP sockets or a mixture of both? Take care because if you get this wrong it will have terrible effects on your multiplayer game!&lt;/p&gt;
@@ -4127,7 +4212,8 @@ closesocket( socket );
 &lt;p&gt;The rest of this article series show you how to do this, from creating your own virtual connection on top of UDP, to creating your own reliability, flow control and congestion avoidance.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/sending_and_receiving_packets/&#34;&gt;Sending and Receiving Packets&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     
@@ -4137,9 +4223,12 @@ closesocket( socket );
       <pubDate>Sat, 04 Sep 2004 00:00:00 +0000</pubDate>
       
       <guid>https://gafferongames.com/post/networked_physics_2004/</guid>
-      <description>&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
+      <description>&lt;hr&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
+&lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/spring_physics&#34;&gt;previous article&lt;/a&gt; we discussed how to use spring-like forces to model basic collision response, joints and motors.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/spring_physics/&#34;&gt;previous article&lt;/a&gt; we discussed how to use spring-like forces to model basic collision response, joints and motors.&lt;/p&gt;
 &lt;p&gt;In this article we&amp;rsquo;re going to discuss how to network a physics simulation.&lt;/p&gt;
 &lt;h2 id=&#34;first-person-shooters&#34;&gt;First Person Shooters&lt;/h2&gt;
 &lt;p&gt;First person shooter physics are usually very simple. The world is static and players are limited to running around and jumping and shooting.&lt;/p&gt;
@@ -4254,7 +4343,8 @@ closesocket( socket );
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;We can easily apply the client side prediction techniques used in first person shooters to network a physics simulation, but only if there is a clear ownership of objects by clients and these object interact mostly with a static world.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;Glenn Fiedler&lt;/strong&gt; is the founder and CEO of &lt;strong&gt;&lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;&lt;/strong&gt;.&lt;br&gt;&lt;i&gt;Network Next is fixing the internet for games by creating a marketplace for premium network transit.&lt;/i&gt;&lt;/p&gt;
+&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;hr&gt;
 </description>
     </item>
     

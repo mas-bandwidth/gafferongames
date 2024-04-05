@@ -7,7 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="generator" content="Source Themes Academia 4.3.1">
-  <meta name="generator" content="Hugo 0.101.0" />
+  <meta name="generator" content="Hugo 0.124.1">
 
   
 
@@ -271,8 +271,7 @@
     <h2><a href="/post/networked_physics_in_virtual_reality/">Networked Physics in Virtual Reality</a></h2>
     <div class="article-style">
       
-      Introduction About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &ldquo;Hey Glenn, there&rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?&rdquo;
-I replied &ldquo;F*** yes!&quot; cough &ldquo;Sure. This could be a lot of fun!
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &ldquo;Hey Glenn, there&rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs?
       
     </div>
   </div>
@@ -281,7 +280,7 @@ I replied &ldquo;F*** yes!&quot; cough &ldquo;Sure. This could be a lot of fun!
     <h2><a href="/post/state_synchronization/">State Synchronization</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we discussed techniques for compressing snapshots.
 In this article we round out our discussion of networked physics strategies with state synchronization, the third and final strategy in this article series.
 State Synchronization What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, unlike deterministic lockstep, we don&rsquo;t just send input, we send both input and state.
@@ -293,9 +292,9 @@ State Synchronization What is state synchronization? The basic idea is that, som
     <h2><a href="/post/snapshot_compression/">Snapshot Compression</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.
-The problem with a low snapshot rate like 10HZ is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms.
+The problem with a low snapshot rate like 10HZ is that interpolation between snapshots adds interpolation delay on top of network latency.
       
     </div>
   </div>
@@ -304,10 +303,9 @@ The problem with a low snapshot rate like 10HZ is that interpolation between sna
     <h2><a href="/post/snapshot_interpolation/">Snapshot Interpolation</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we networked a physics simulation using deterministic lockstep. Now, in this article we&rsquo;re going to network the same simulation with a completely different technique: snapshot interpolation.
-Background While deterministic lockstep is very efficient in terms of bandwidth, it&rsquo;s not always possible to make your simulation deterministic. Floating point determinism across platforms is hard.
-Also, as the player counts increase, deterministic lockstep becomes problematic: you can&rsquo;t simulate frame n until you receive input from all players for that frame, so players end up waiting for the most lagged player.
+Background While deterministic lockstep is very efficient in terms of bandwidth, it&rsquo;s not always possible to make your simulation deterministic.
       
     </div>
   </div>
@@ -316,7 +314,7 @@ Also, as the player counts increase, deterministic lockstep becomes problematic:
     <h2><a href="/post/deterministic_lockstep/">Deterministic Lockstep</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we explored the physics simulation we&rsquo;re going to network in this article series. In this article specifically, we&rsquo;re going to network this physics simulation using deterministic lockstep.
 Deterministic lockstep is a method of networking a system from one computer to another by sending only the inputs that control that system, rather than the state of that system.
       
@@ -327,10 +325,9 @@ Deterministic lockstep is a method of networking a system from one computer to a
     <h2><a href="/post/introduction_to_networked_physics/">Introduction to Networked Physics</a></h2>
     <div class="article-style">
       
-      Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to the first article in Networked Physics.
+      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to the first article in Networked Physics.
 In this article series we&rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.
 But before we get to this, let&rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:
-Your browser does not support the video tag. Here I’ve setup a simple simulation of a cube in the open source physics engine ODE.
       
     </div>
   </div>
@@ -423,7 +420,7 @@ Your browser does not support the video tag. Here I’ve setup a simple simulati
     
     
     
-    <script src="/js/academia.min.b8df6754deca2dd84ba46243e6dcb3e3.js"></script>
+    <script src="/js/academia.min.6402f830cb6203c1b15935e7789e48da.js"></script>
 
     
 
@@ -441,7 +438,7 @@ Your browser does not support the video tag. Here I’ve setup a simple simulati
       <div class="col-md-6">
         
         <p>
-          Copyright © Glenn Fiedler, 2004 - 2020 
+          Copyright © Glenn Fiedler, 2004 - 2024 
         </p>
       </div>
       <div class="col-md-6">
