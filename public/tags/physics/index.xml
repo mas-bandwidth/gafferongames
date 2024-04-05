@@ -2,24 +2,25 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Physics on Gaffer On Games</title>
-    <link>http://localhost:1313/tags/physics/</link>
+    <link>https://gafferongames.com/tags/physics/</link>
     <description>Recent content in Physics on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
     <copyright>Copyright © Glenn Fiedler, 2004 - 2024</copyright>
     <lastBuildDate>Thu, 22 Feb 2018 00:00:00 +0000</lastBuildDate>
     
-	    <atom:link href="http://localhost:1313/tags/physics/index.xml" rel="self" type="application/rss+xml" />
+	    <atom:link href="https://gafferongames.com/tags/physics/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Networked Physics in Virtual Reality</title>
-      <link>http://localhost:1313/post/networked_physics_in_virtual_reality/</link>
+      <link>https://gafferongames.com/post/networked_physics_in_virtual_reality/</link>
       <pubDate>Thu, 22 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/networked_physics_in_virtual_reality/</guid>
+      <guid>https://gafferongames.com/post/networked_physics_in_virtual_reality/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h1 id=&#34;introduction&#34;&gt;Introduction&lt;/h1&gt;
 &lt;p&gt;About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &amp;ldquo;Hey Glenn, there&amp;rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?&amp;rdquo;&lt;/p&gt;
@@ -29,7 +30,7 @@
 &lt;p&gt;When I first started discussions with Oculus, we imagined creating something like a table where four players could sit around and interact with physically simulated cubes on the table. For example, throwing, catching and stacking cubes, maybe knocking each other&amp;rsquo;s stacks over with a swipe of their hand.&lt;/p&gt;
 &lt;p&gt;But after a few days spent learning Unity and C#, I found myself actually &lt;em&gt;inside&lt;/em&gt; the Rift. In VR, scale is &lt;em&gt;so important&lt;/em&gt;. When the cubes were small, everything felt much less interesting, but when the cubes were scaled up to around a meter cubed, everything had this really cool sense of scale. You could make these &lt;em&gt;huge&lt;/em&gt; stacks of cubes, up to 20 or 30 meters high. This felt really cool!&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s impossible to communicate visually what this feels like outside of VR, but it looks something like this&amp;hellip;&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/networked-physics-in-vr/stack-of-cubes.jpg&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/networked-physics-in-vr/stack-of-cubes.jpg&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;&amp;hellip; where you can select, grab and throw cubes using the touch controller, and any cubes you release from your hand interact with the other cubes in the simulation. You can throw a cube at a stack of cubes and knock them over. You can pick up a cube in each hand and juggle them. You can build a stack of cubes and see how high you can make it go.&lt;/p&gt;
 &lt;p&gt;Even though this was a lot of fun, it&amp;rsquo;s not all rainbows and unicorns. Working with Oculus as a client, I had to define tasks and deliverables before I could actually start the work.&lt;/p&gt;
 &lt;p&gt;I suggested the following criteria we would use to define success:&lt;/p&gt;
@@ -74,11 +75,11 @@
 &lt;h1 id=&#34;state-synchronization&#34;&gt;State Synchronization&lt;/h1&gt;
 &lt;p&gt;Trusting I could implement the authority rules described above, my first task was to prove that synchronizing physics in one direction of flow could actually work with Unity and PhysX. In previous work I had networked simulations built with ODE, so really, I had no idea if it was really possible.&lt;/p&gt;
 &lt;p&gt;To find out, I setup a loopback scene in Unity where cubes fall into a pile in front of the player. There are two sets of cubes. The cubes on the left represent the authority side. The cubes on the right represent the non-authority side, which we want to be in sync with the cubes on the left.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/networked-physics-in-vr/authority-and-non-authority-cubes.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/networked-physics-in-vr/authority-and-non-authority-cubes.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;At the start, without anything in place to keep the cubes in sync, even though both sets of cubes start from the same initial state, they give slightly different end results. You can see this most easily from top-down:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/networked-physics-in-vr/out-of-sync.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/networked-physics-in-vr/out-of-sync.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;This happens because PhysX is non-deterministic. Rather than tilting at non-determinstic windmills, I &lt;em&gt;fight&lt;/em&gt; non-determinism by grabbing state from the left side (authority) and applying it to the right side (non-authority) 10 times per-second:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/networked-physics-in-vr/left-to-right.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/networked-physics-in-vr/left-to-right.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;The state I grab from each cube looks like this:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;struct CubeState
 {
@@ -90,7 +91,7 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;And when I apply this state to the simulation on the right side, I simply &lt;em&gt;snap&lt;/em&gt; the position, rotation, linear and angular velocity of each cube to the state captured from the left side.&lt;/p&gt;
 &lt;p&gt;This simple change is enough to keep the left and right simulations in sync. PhysX doesn&amp;rsquo;t even diverge enough in the 1/10th of a second between updates to show any noticeable pops.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/networked-physics-in-vr/in-sync.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/networked-physics-in-vr/in-sync.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;This &lt;strong&gt;proves&lt;/strong&gt; that a state synchronization based approach for networking can work with PhysX. &lt;em&gt;(Sigh of relief)&lt;/em&gt;. The only problem of course, is that sending uncompressed physics state uses way too much bandwidth&amp;hellip;&lt;/p&gt;
 &lt;h1 id=&#34;bandwidth-optimization&#34;&gt;Bandwidth Optimization&lt;/h1&gt;
 &lt;p&gt;To make sure the networked physics sample is playable over the internet, I needed to get bandwidth under control.&lt;/p&gt;
@@ -218,23 +219,25 @@
 &lt;p&gt;Thanks to Oculus for sponsoring my work and making this research possible!&lt;/p&gt;
 &lt;p&gt;The source code for the networked physics sample can be downloaded &lt;a href=&#34;https://github.com/OculusVR/oculus-networked-physics-sample&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>State Synchronization</title>
-      <link>http://localhost:1313/post/state_synchronization/</link>
+      <link>https://gafferongames.com/post/state_synchronization/</link>
       <pubDate>Mon, 05 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/state_synchronization/</guid>
+      <guid>https://gafferongames.com/post/state_synchronization/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/snapshot_compression/&#34;&gt;previous article&lt;/a&gt; we discussed techniques for compressing snapshots.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;previous article&lt;/a&gt; we discussed techniques for compressing snapshots.&lt;/p&gt;
 &lt;p&gt;In this article we round out our discussion of networked physics strategies with &lt;strong&gt;state synchronization&lt;/strong&gt;, the third and final strategy in this article series.&lt;/p&gt;
 &lt;h2 id=&#34;state-synchronization&#34;&gt;State Synchronization&lt;/h2&gt;
 &lt;p&gt;What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, &lt;em&gt;unlike&lt;/em&gt; deterministic lockstep, we don&amp;rsquo;t just send input, we send both input &lt;u&gt;and&lt;/u&gt; state.&lt;/p&gt;
@@ -276,7 +279,7 @@
     }
 }
 &lt;/pre&gt;
-&lt;p&gt;What you see above is a &lt;em&gt;serialize function&lt;/em&gt;. It&amp;rsquo;s a trick I like to use to unify packet read and write. I like it because it&amp;rsquo;s expressive while at the same time it&amp;rsquo;s difficult to desync read and write. You can read more about them &lt;a href=&#34;http://localhost:1313/post/serialization_strategies/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;What you see above is a &lt;em&gt;serialize function&lt;/em&gt;. It&amp;rsquo;s a trick I like to use to unify packet read and write. I like it because it&amp;rsquo;s expressive while at the same time it&amp;rsquo;s difficult to desync read and write. You can read more about them &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;packet-structure&#34;&gt;Packet Structure&lt;/h2&gt;
 &lt;p&gt;Now let&amp;rsquo;s look at the overall structure of packets being sent:&lt;/p&gt;
 &lt;pre&gt;const int MaxInputsPerPacket = 32;
@@ -314,7 +317,7 @@ struct Packet
 Your browser does not support the video tag.
 &lt;/video&gt;
 &lt;p&gt;As you can see it&amp;rsquo;s already looking quite good and barely any bandwidth optimization has been performed. Contrast this with the first video for snapshot interpolation which was at 18mbit/sec and you can see that using the simulation to extrapolate between state updates is a great way to use less bandwidth.&lt;/p&gt;
-&lt;p&gt;Of course we can do a lot better than this and each optimization we do lets us squeeze more state updates in the same amount of bandwidth. The next obvious thing we can do is to apply all the standard quantization compression techniques such as bounding and quantizing position, linear and angular velocity value and using the smallest three compression as described in &lt;a href=&#34;http://localhost:1313/post/snapshot_compression/&#34;&gt;snapshot compression&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Of course we can do a lot better than this and each optimization we do lets us squeeze more state updates in the same amount of bandwidth. The next obvious thing we can do is to apply all the standard quantization compression techniques such as bounding and quantizing position, linear and angular velocity value and using the smallest three compression as described in &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;snapshot compression&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;But here it gets a bit more complex. We are extrapolating from those state updates so if we quantize these values over the network then the state that arrives on the right side is slightly different from the left side, leading to a slightly different extrapolation and a pop when the next state update arrives for that object.&lt;/p&gt;
 &lt;video preload=&#34;auto&#34; controls=&#34;controls&#34; width=&#34;100%&#34;&gt;
 &lt;source src=&#34;http://gafferongames.com/videos/state_synchronization_compressed.mp4&#34; type=&#34;video/mp4&#34; /&gt;
@@ -354,7 +357,7 @@ Your browser does not support the video tag.
 &lt;p&gt;Even though I would argue the result above is probably good enough already it is possible to improve the synchronization considerably from this point. For example to support a world with larger objects or more objects being interacted with. So lets work through some of those techniques and push this technique as far as it can go.&lt;/p&gt;
 &lt;p&gt;There is an easy compression that can be performed. Instead of encoding absolute position, if it is within a range of the player cube center, encode position as a relative offset to the player center position. In the common cases where bandwidth is high and state updates need to be more frequent (katamari ball) this provides a large win.&lt;/p&gt;
 &lt;p&gt;Next, what if we do want to perform some sort of delta encoding for state synchronization? We can but it&amp;rsquo;s quite different in this case than it is with snapshots because we&amp;rsquo;re not including every cube in every packet, so we can&amp;rsquo;t just track the most recent packet received and say, OK all these state updates in this packet are relative to packet X.&lt;/p&gt;
-&lt;p&gt;What you actually have to do is per-object update keep track of the packet that includes the base for that update. You also need to keep track of exactly the set of packets received so that the sender knows which packets are valid bases to encode relative to. This is reasonably complicated and requires a bidirectional ack system over UDP. Such a system is designed for exactly this sort of situation where you need to know exactly which packets definitely got through. You can find a tutorial on how to implement this in &lt;a href=&#34;http://localhost:1313/post/reliability_and_flow_control/&#34;&gt;this article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;What you actually have to do is per-object update keep track of the packet that includes the base for that update. You also need to keep track of exactly the set of packets received so that the sender knows which packets are valid bases to encode relative to. This is reasonably complicated and requires a bidirectional ack system over UDP. Such a system is designed for exactly this sort of situation where you need to know exactly which packets definitely got through. You can find a tutorial on how to implement this in &lt;a href=&#34;https://gafferongames.com/post/reliability_and_flow_control/&#34;&gt;this article&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;So assuming that you have an ack system you know with packet sequence numbers get through. What you do then is per-state update write one bit if the update is relative or absolute, if absolute then encode with no base as before, otherwise if relative send the 16 bit sequence number per-state update of the base and then encode relative to the state update data sent in that packet. This adds 1 bit overhead per-update as well as 16 bits to identify the sequence number of the base per-object update. Can we do better?&lt;/p&gt;
 &lt;p&gt;Yes. In turns out that of course you&amp;rsquo;re going to have to buffer on the send and receive side to implement this relative encoding and you can&amp;rsquo;t buffer forever. In fact, if you think about it you can only buffer up a couple of seconds before it becomes impractical and in the common case of moving objects you&amp;rsquo;re going to be sending the updates for same object frequently (katamari ball) so practically speaking the base sequence will only be from a short time ago.&lt;/p&gt;
 &lt;p&gt;So instead of sending the 16 bit sequence base per-object, send in the header of the packet the most recent acked packet (from the reliability ack system) and per-object encode the offset of the base sequence relative to that value using 5 bits. This way at 60 packets per-second you can identify an state update with a base half a second ago. Any base older than this is unlikely to provide a good delta encoding anyway because it&amp;rsquo;s old, so in that case just drop back to absolute encoding for that update.&lt;/p&gt;
@@ -363,23 +366,25 @@ Your browser does not support the video tag.
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;And that&amp;rsquo;s really about it for this technique. Without anything fancy it&amp;rsquo;s already pretty good, and on top of that another order of magnitude improvement is available with delta compression, at the cost of significant complexity!&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Snapshot Compression</title>
-      <link>http://localhost:1313/post/snapshot_compression/</link>
+      <link>https://gafferongames.com/post/snapshot_compression/</link>
       <pubDate>Sun, 04 Jan 2015 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/snapshot_compression/</guid>
+      <guid>https://gafferongames.com/post/snapshot_compression/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/snapshot_interpolation/&#34;&gt;previous article&lt;/a&gt; we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;previous article&lt;/a&gt; we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.&lt;/p&gt;
 &lt;p&gt;The problem with a low snapshot rate like 10HZ is that interpolation between snapshots adds interpolation delay on top of network latency. At 10 snapshots per-second, the minimum interpolation delay is 100ms, and a more practical minimum considering network jitter is 150ms. If protection against one or two lost packets in a row is desired, this blows out to 250ms or 350ms delay.&lt;/p&gt;
 &lt;p&gt;This is not an acceptable amount of delay for most games, but when the physics simulation is as unpredictable as ours, the only way to reduce it is to increase the packet send rate. Unfortunately, increasing the send rate also increases bandwidth. So what we&amp;rsquo;re going to do in this article is work through every possible bandwidth optimization &lt;em&gt;(that I can think of at least)&lt;/em&gt; until we get bandwidth under control.&lt;/p&gt;
 &lt;p&gt;Our target bandwidth is &lt;strong&gt;256 kilobits per-second&lt;/strong&gt;.&lt;/p&gt;
@@ -506,27 +511,29 @@ Your browser does not support the video tag.
 &lt;p&gt;And that&amp;rsquo;s about as far as I can take it using traditional hand-rolled bit-packing techniques. You can find source code for my implementation of all compression techniques mentioned in this article &lt;a href=&#34;https://gist.github.com/gafferongames/bb7e593ba1b05da35ab6&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s possible to get even better compression using a different approach. Bit-packing is inefficient because not all bit values have equal probability of 0 vs 1. No matter how hard you tune your bit-packer a context aware arithmetic encoding can beat your result by more accurately modeling the probability of values that occur in your data set. This &lt;a href=&#34;https://github.com/rygorous/gaffer_net/blob/master/main.cpp&#34;&gt;implementation&lt;/a&gt; by Fabian Giesen beat my best bit-packed result by 25%.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/state_synchronization/&#34;&gt;State Synchronization&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/state_synchronization/&#34;&gt;State Synchronization&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Snapshot Interpolation</title>
-      <link>http://localhost:1313/post/snapshot_interpolation/</link>
+      <link>https://gafferongames.com/post/snapshot_interpolation/</link>
       <pubDate>Sun, 30 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/snapshot_interpolation/</guid>
+      <guid>https://gafferongames.com/post/snapshot_interpolation/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/deterministic_lockstep/&#34;&gt;previous article&lt;/a&gt; we networked a physics simulation using deterministic lockstep. Now, in this article we&amp;rsquo;re going to network the same simulation with a completely different technique: &lt;strong&gt;snapshot interpolation&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;previous article&lt;/a&gt; we networked a physics simulation using deterministic lockstep. Now, in this article we&amp;rsquo;re going to network the same simulation with a completely different technique: &lt;strong&gt;snapshot interpolation&lt;/strong&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
-&lt;p&gt;While deterministic lockstep is very efficient in terms of bandwidth, it&amp;rsquo;s not always possible to make your simulation deterministic. Floating point determinism across platforms is &lt;a href=&#34;http://localhost:1313/post/floating_point_determinism/&#34;&gt;hard&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;While deterministic lockstep is very efficient in terms of bandwidth, it&amp;rsquo;s not always possible to make your simulation deterministic. Floating point determinism across platforms is &lt;a href=&#34;https://gafferongames.com/post/floating_point_determinism/&#34;&gt;hard&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Also, as the player counts increase, deterministic lockstep becomes problematic: you can&amp;rsquo;t simulate frame n until you receive input from &lt;em&gt;all&lt;/em&gt; players for that frame, so players end up waiting for the most lagged player. Because of this, I recommend deterministic lockstep for 2-4 players at most.&lt;/p&gt;
 &lt;p&gt;So if your simulation is not deterministic or you want higher player counts then you need a different technique. Snapshot interpolation fits the bill nicely. It is in many ways the polar opposite of deterministic lockstep: instead of running two simulations, one on the left and one on the right, and using perfect determinism and synchronized inputs keep them in sync, snapshot interpolation doesn&amp;rsquo;t run any simulation on the right side at all!&lt;/p&gt;
 &lt;h2 id=&#34;snapshots&#34;&gt;Snapshots&lt;/h2&gt;
@@ -591,25 +598,27 @@ Your browser does not support the video tag.
 &lt;p&gt;But even if you do all this there will still be misprediction because you simply can&amp;rsquo;t accurately match a physics simulation with an approximation. If your simulation is mostly linear motion, eg. fast moving planes, boats, space ships &amp;ndash; you may find that a simple extrapolation works well for short time periods (50-250ms or so), but in my experience as soon as objects start colliding with other non-stationary objects, extrapolation starts to break down.&lt;/p&gt;
 &lt;p&gt;How can we reduce the amount of delay added for interpolation? 350ms still seems unacceptable and we can&amp;rsquo;t use extrapolation to reduce this delay without adding a lot of inaccuracy. The solution is simple: &lt;em&gt;increase the send rate!&lt;/em&gt; If we send 30 snapshots per-second we can get the same amount of packet loss protection with a delay of 150ms. 60 packets per-second needs only 85ms.&lt;/p&gt;
 &lt;p&gt;In order to increase the send rate we&amp;rsquo;re going to need some pretty good bandwidth optimizations. But don&amp;rsquo;t worry, there&amp;rsquo;s a &lt;em&gt;lot&lt;/em&gt; we can do to optimize bandwidth. So much so that there was too much stuff to fit in this article and I had to insert an extra unplanned article just to cover all of it!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://localhost:1313/post/snapshot_compression/&#34;&gt;Snapshot Compression&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;Snapshot Compression&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Deterministic Lockstep</title>
-      <link>http://localhost:1313/post/deterministic_lockstep/</link>
+      <link>https://gafferongames.com/post/deterministic_lockstep/</link>
       <pubDate>Sat, 29 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/deterministic_lockstep/</guid>
+      <guid>https://gafferongames.com/post/deterministic_lockstep/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/introduction_to_networked_physics/&#34;&gt;previous article&lt;/a&gt; we explored the physics simulation we&amp;rsquo;re going to network in this article series. In this article specifically, we&amp;rsquo;re going to network this physics simulation using &lt;strong&gt;deterministic lockstep&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/introduction_to_networked_physics/&#34;&gt;previous article&lt;/a&gt; we explored the physics simulation we&amp;rsquo;re going to network in this article series. In this article specifically, we&amp;rsquo;re going to network this physics simulation using &lt;strong&gt;deterministic lockstep&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Deterministic lockstep is a method of networking a system from one computer to another by sending only the &lt;em&gt;inputs&lt;/em&gt; that control that system, rather than the &lt;em&gt;state&lt;/em&gt; of that system. In the context of networking a physics simulation, this means we send across a small amount of input, while avoiding sending state like position, orientation, linear velocity and angular velocity per-object.&lt;/p&gt;
 &lt;p&gt;The benefit is that bandwidth is proportional to the size of the input, not the number of objects in the simulation. Yes, with deterministic lockstep you can network a physics simulation of one million objects with the same bandwidth as just one.&lt;/p&gt;
 &lt;p&gt;While this sounds great in theory, in practice it&amp;rsquo;s difficult to implement deterministic lockstep because most physics simulations are not deterministic. Differences in floating point behavior between compilers, OS&amp;rsquo;s and even instruction sets make it almost impossible to guarantee determinism for floating point calculations.&lt;/p&gt;
@@ -629,7 +638,7 @@ Your browser does not support the video tag.
 &lt;/video&gt;
 &lt;p&gt;And now a word of warning. Even though the simulation above is deterministic on the same machine, that does &lt;em&gt;not&lt;/em&gt; necessarily mean it would also be deterministic across different compilers, a different OS or different machine architectures (eg. PowerPC vs. Intel). In fact, it&amp;rsquo;s probably not even deterministic between debug and release builds due to floating point optimizations.&lt;/p&gt;
 &lt;p&gt;Floating point determinism is a complicated subject and there&amp;rsquo;s no silver bullet.&lt;/p&gt;
-&lt;p&gt;For more information please refer to this &lt;a href=&#34;http://localhost:1313/post/floating_point_determinism/&#34;&gt;article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For more information please refer to this &lt;a href=&#34;https://gafferongames.com/post/floating_point_determinism/&#34;&gt;article&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;networking-inputs&#34;&gt;Networking Inputs&lt;/h2&gt;
 &lt;p&gt;Now let&amp;rsquo;s get down to implementation.&lt;/p&gt;
 &lt;p&gt;Our example physics simulation is driven by keyboard input: arrow keys apply forces to make the player cube move, holding space lifts the cube up and blows other cubes around, and holding &amp;lsquo;z&amp;rsquo; enables katamari mode.&lt;/p&gt;
@@ -699,24 +708,26 @@ Your browser does not support the video tag.
 &lt;/video&gt;
 &lt;p&gt;The video above shows deterministic lockstep synchronized over UDP using this technique with &lt;strong&gt;2 seconds&lt;/strong&gt; of latency and &lt;strong&gt;25% packet loss&lt;/strong&gt;. Imagine how awful TCP would look under these conditions.&lt;/p&gt;
 &lt;p&gt;So in conclusion, even where TCP should have the most advantage, in the only networking model that relies on reliable-ordered data, we can still easily whip its ass with a simple protocol built on top of UDP.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/snapshot_interpolation/&#34;&gt;Snapshot Interpolation&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;Snapshot Interpolation&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Introduction to Networked Physics</title>
-      <link>http://localhost:1313/post/introduction_to_networked_physics/</link>
+      <link>https://gafferongames.com/post/introduction_to_networked_physics/</link>
       <pubDate>Fri, 28 Nov 2014 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/introduction_to_networked_physics/</guid>
+      <guid>https://gafferongames.com/post/introduction_to_networked_physics/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to the first article in &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to the first article in &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/networked-physics/&#34;&gt;Networked Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In this article series we&amp;rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.&lt;/p&gt;
 &lt;p&gt;But before we get to this, let&amp;rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:&lt;/p&gt;
 &lt;video preload=&#34;auto&#34; autoplay=&#34;autoplay&#34; loop=&#34;loop&#34; width=&#34;100%&#34;&gt;
@@ -752,42 +763,44 @@ Your browser does not support the video tag.
 &lt;/video&gt;
 &lt;p&gt;Cubes within a certain distance of the player have a force applied towards the center of the cube. These cubes remain physically simulated while in the katamari ball, they are not just “stuck” to the player like in the original game.&lt;/p&gt;
 &lt;p&gt;This is a very difficult situation for networked physics!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/deterministic_lockstep/&#34;&gt;Deterministic Lockstep&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;Deterministic Lockstep&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Collision Response and Coulomb Friction</title>
-      <link>http://localhost:1313/post/collision_response_and_coulomb_friction/</link>
+      <link>https://gafferongames.com/post/collision_response_and_coulomb_friction/</link>
       <pubDate>Sun, 24 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/collision_response_and_coulomb_friction/</guid>
+      <guid>https://gafferongames.com/post/collision_response_and_coulomb_friction/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://localhost:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;So far in this series, we have mathematically defined the go stone, rendered it, determined how it moves and rotates, and discussed how its shape affects how it responds to collisions.&lt;/p&gt;
 &lt;p&gt;Now in this article we reach our first milestone:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;A go stone bouncing and coming to rest on the go board&lt;/strong&gt;.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/board-side-on-swirling-wood-grain.jpg&#34; alt=&#34;stones at rest on board&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/board-side-on-swirling-wood-grain.jpg&#34; alt=&#34;stones at rest on board&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;We&amp;rsquo;re going do this using a technique called &lt;a href=&#34;https://en.wikipedia.org/wiki/Collision_response#Impulse-Based_Contact_Model&#34;&gt;impulse-based collision response&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The concept is simple. To handle a collision we apply an impulse, an instantaneous change in momentum, at the point of impact to make the go stone bounce.&lt;/p&gt;
 &lt;h2 id=&#34;linear-collision-response&#34;&gt;Linear Collision Response&lt;/h2&gt;
-&lt;p&gt;We now pick up where we left off at the end of the &lt;a href=&#34;http://localhost:1313/post/go_stone_vs_go_board/&#34;&gt;collision detection article&lt;/a&gt;.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/contact-point-linear.png&#34; alt=&#34;contact point linear&#34; width=&#34;100%&#34;/&gt;
+&lt;p&gt;We now pick up where we left off at the end of the &lt;a href=&#34;https://gafferongames.com/post/go_stone_vs_go_board/&#34;&gt;collision detection article&lt;/a&gt;.&lt;/p&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/contact-point-linear.png&#34; alt=&#34;contact point linear&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;We have a contact point and a contact normal for the collision.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s start by calculating a collision response impulse without rotation.&lt;/p&gt;
 &lt;p&gt;First, take the dot product of the linear momentum of the go stone with the contact normal. If this value is less than zero, it means the go stone is moving towards the go board, and we need to apply an impulse.&lt;/p&gt;
 &lt;p&gt;To calculate the impulse we need the concept of &amp;rsquo;elasticity&amp;rsquo;. If the collision is perfectly elastic, the go stone bounces off the board without losing any energy:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/linear-collision-response-elastic.png&#34; alt=&#34;linear collision response elastic&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/linear-collision-response-elastic.png&#34; alt=&#34;linear collision response elastic&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;If the collision is inelastic then the go stone loses all its vertical motion post-collision and slides along the surface of the board:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/linear-collision-response-inelastic.png&#34; alt=&#34;linear collision response inelastic&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/linear-collision-response-inelastic.png&#34; alt=&#34;linear collision response inelastic&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;What we really want is something in between:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/linear-collision-response-coefficient-of-restitution.png&#34; alt=&#34;linear collision response coefficient of restitution&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/linear-collision-response-coefficient-of-restitution.png&#34; alt=&#34;linear collision response coefficient of restitution&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;To support this we introduce a new concept called the &amp;lsquo;coefficient of restitution&amp;rsquo;. When this value is 1 the collision is perfectly elastic, when it is 0 the collision is inelastic. At 0.5, it&amp;rsquo;s halfway between.&lt;/p&gt;
 &lt;p&gt;This gives the following formula:&lt;/p&gt;
 &lt;p&gt;[latex]j = -( 1 + e ) \boldsymbol{p} \cdot \boldsymbol{n}[/latex]&lt;/p&gt;
@@ -816,12 +829,12 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Now the stone is definitely bouncing, but in the real world stones don&amp;rsquo;t usually hit the board perfectly flat like this. In the common case, they hit at an angle and the collision makes the stone rotate.&lt;/p&gt;
 &lt;h2 id=&#34;collision-response-with-rotation&#34;&gt;Collision Response With Rotation&lt;/h2&gt;
 &lt;p&gt;To capture this effect we need to calculate collision response with rotation.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/collision-response-rotation.png&#34; alt=&#34;collision response rotation&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/collision-response-rotation.png&#34; alt=&#34;collision response rotation&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Above you can see the effect that we want. If a stone were to collide with the board like this, we know from experience that it would rotate in response.&lt;/p&gt;
 &lt;p&gt;We start by calculating the velocity of the stone at the contact point, and take the dot product of this vs. the contact normal to check if the stone is moving towards the board. This is necessary because when the stone is rotating, different points on the stone have different velocities.&lt;/p&gt;
 &lt;p&gt;Next, we apply a collision impulse along the contact normal with magnitude j except this impulse is applied at the contact point instead of the center of mass of the stone. This gives the collision response its rotational effect.&lt;/p&gt;
 &lt;p&gt;Here is the general equation for the magnitude of this collision impulse.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/impulse-j-general-case.png&#34; alt=&#34;impulse j general case&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/impulse-j-general-case.png&#34; alt=&#34;impulse j general case&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;You can find a derivation of this result on &lt;a href=&#34;https://en.wikipedia.org/wiki/Collision_response#Impulse-Based_Reaction_Model&#34;&gt;wikipedia&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Understandably this is quite complex, but in our case the go board never moves, so we can simplify the equation by assigning zero velocity and infinite mass to the second body. This leads to the following, simpler equation:&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;todo: need a solution to convert across all the latex equations&amp;hellip;&lt;/em&gt;&lt;/p&gt;
@@ -846,7 +859,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;We don&amp;rsquo;t often get to see friction-less collisions in the real world so the video above looks a bit strange. To get realistic behavior out of the go stone, we need to add friction.&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;ll model sliding friction using the Coulomb friction model.&lt;/p&gt;
 &lt;p&gt;In this model, the friction impulse is proportional the magnitude of the normal impulse j and is limited by a friction cone defined by the coefficient of friction u:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/coulomb-friction-model.png&#34; alt=&#34;coulomb friction model&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/coulomb-friction-model.png&#34; alt=&#34;coulomb friction model&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Lower friction coefficient values mean less friction, higher values mean more friction. Typical values for the coefficient of friction are in the range [0,1].&lt;/p&gt;
 &lt;p&gt;Calculation of the Coulomb friction impulse is performed much like the calculation of the normal impulse except this time the impulse is in the tangent direction against the direction of sliding.&lt;/p&gt;
 &lt;p&gt;Here is the formula for calculating the magnitude of the friction impulse:&lt;/p&gt;
@@ -886,34 +899,36 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;/div&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Rotation &amp; Inertia Tensors</title>
-      <link>http://localhost:1313/post/rotation_and_inertia_tensors/</link>
+      <link>https://gafferongames.com/post/rotation_and_inertia_tensors/</link>
       <pubDate>Sat, 23 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/rotation_and_inertia_tensors/</guid>
+      <guid>https://gafferongames.com/post/rotation_and_inertia_tensors/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://localhost:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/go_stone_vs_go_board/&#34;&gt;previous article&lt;/a&gt; we detected collision between the go stone and the go board. Now we&amp;rsquo;re working up to calculating collision response so the stone bounces and wobbles before coming to rest on the board.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/go_stone_vs_go_board/&#34;&gt;previous article&lt;/a&gt; we detected collision between the go stone and the go board. Now we&amp;rsquo;re working up to calculating collision response so the stone bounces and wobbles before coming to rest on the board.&lt;/p&gt;
 &lt;p&gt;But in order to reach this goal we first need to lay some groundwork. It turns out that irregularly shaped objects, like go stones, are easier to rotate about some axes than others and this has a large effect on how they react to collisions.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/placing-a-stone-on-the-board.jpg&#34; alt=&#34;placing a stone on the board&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/placing-a-stone-on-the-board.jpg&#34; alt=&#34;placing a stone on the board&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;This is the reason go stones wobble in such an interesting way when placed on the go board, and why thick go stones wobble differently to thin ones.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s study this effect so we can reproduce it in Virtual Go.&lt;/p&gt;
 &lt;h2 id=&#34;rotation-in-3d&#34;&gt;Rotation in 3D&lt;/h2&gt;
 &lt;p&gt;Consider the following case in two dimensions:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/rotation-in-2d.png&#34; alt=&#34;rotation in 2d&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/rotation-in-2d.png&#34; alt=&#34;rotation in 2d&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;It&amp;rsquo;s easy because there is only one possible axis for rotation around the center of mass: clockwise or counter-clockwise.&lt;/p&gt;
 &lt;p&gt;It follows that we can represent the orientation of an object in 2D around its center of mass with a single theta value, angular velocity with a scalar radians per-second, and a scalar &amp;lsquo;moment of inertia&amp;rsquo; that works just like an angular equivalent of mass: how hard it is to rotate that object.&lt;/p&gt;
 &lt;p&gt;But when we move to three dimensions suddenly rotation can occur about any axis. Orientation becomes a quaternion, angular velocity a vector, and now for irregular shaped objects like go stones, we need a way to indicate that certain axes of rotation are easier to rotate about than others.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/rotation-in-3d.png&#34; alt=&#34;rotation in 3d&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/rotation-in-3d.png&#34; alt=&#34;rotation in 3d&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;But how can we represent an angular mass that depends on the shape of the object and the axis of rotation?&lt;/p&gt;
 &lt;h2&gt;Inertia Tensor&lt;/h2&gt;
 &lt;p&gt;The solution is to use an &lt;a href=&#34;https://en.wikipedia.org/wiki/Moment_of_inertia#Moment_of_inertia_tensor&#34;&gt;inertia tensor&lt;/a&gt;.&lt;/p&gt;
@@ -930,9 +945,9 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;[latex]I = \begin{bmatrix} I_{x} &amp;amp; 0 &amp;amp; 0 \ 0 &amp;amp; I_{y} &amp;amp; 0 \ 0 &amp;amp; 0 &amp;amp; I_{z} \end{bmatrix}[/latex]&lt;/p&gt;
 &lt;p&gt;All we need to do in our case is to determine the I&lt;sub&gt;x&lt;/sub&gt;, I&lt;sub&gt;y&lt;/sub&gt; and I&lt;sub&gt;z&lt;/sub&gt; values.&lt;/p&gt;
 &lt;p&gt;They represent how difficult it is to rotate the go stone about the x,y and z axes.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/inertia-tensor-ix.png&#34; alt=&#34;inertia tensor x&#34; width=&#34;100%&#34;/&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/inertia-tensor-iy.png&#34; alt=&#34;inertia tensor y&#34; width=&#34;100%&#34;/&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/inertia-tensor-iz.png&#34; alt=&#34;inertia tensor z&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/inertia-tensor-ix.png&#34; alt=&#34;inertia tensor x&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/inertia-tensor-iy.png&#34; alt=&#34;inertia tensor y&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/inertia-tensor-iz.png&#34; alt=&#34;inertia tensor z&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Interestingly, due to symmetry of the go stone, all axes on the xz plane are identical. So really, we only need to calculate I&lt;sub&gt;x&lt;/sub&gt; and I&lt;sub&gt;y&lt;/sub&gt; because I&lt;sub&gt;z&lt;/sub&gt; = I&lt;sub&gt;x&lt;/sub&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;numerical-integration&#34;&gt;Numerical Integration&lt;/h2&gt;
 &lt;p&gt;Let&amp;rsquo;s first calculate the inertia tensor via numerical integration.&lt;/p&gt;
@@ -944,16 +959,16 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Now integration is just a triple for loop summing up the moments of inertia for points that are inside the go stone. This gives us an approximation of the inertia tensor for the go stone that becomes more accurate the more points we use.&lt;/p&gt;
 &lt;h2 id=&#34;interpreting-the-inertia-tensor&#34;&gt;Interpreting The Inertia Tensor&lt;/h2&gt;
 &lt;p&gt;A size 33 japanese go stone has width 22mm and height 9.2mm:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/clam-shell-stone-size-33.jpg&#34; alt=&#34;size 33 go stone&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/clam-shell-stone-size-33.jpg&#34; alt=&#34;size 33 go stone&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Using our point-based approximation to calculate its inertia tensor gives the following result:&lt;/p&gt;
 &lt;p&gt;[latex]I = \begin{bmatrix} 0.177721 &amp;amp; 0 &amp;amp; 0 \ 0 &amp;amp; 0.304776 &amp;amp; 0 \ 0 &amp;amp; 0 &amp;amp; 0.177721 \end{bmatrix}[/latex]&lt;/p&gt;
 &lt;p&gt;As expected, I&lt;sub&gt;x&lt;/sub&gt; = I&lt;sub&gt;z&lt;/sub&gt; due to the symmetry of the go stone.&lt;/p&gt;
 &lt;p&gt;The inertia tensor indicates that its much harder to rotate the go stone about the y axis than axes on the xz plane.&lt;/p&gt;
 &lt;p&gt;Why is this?&lt;/p&gt;
 &lt;p&gt;You can see looking top-down at the go stone when rotating about the y axis a ring of mass around the edge of the stone is multiplied by a large r&lt;sup&gt;2&lt;/sup&gt; and is therefore difficult to rotate.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/top-down-y-rotation.png&#34; alt=&#34;top down y rotation&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/top-down-y-rotation.png&#34; alt=&#34;top down y rotation&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Contrast this with the rotation about the z axis, which has a much smaller portion of mass far away from the axis:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/top-down-z-rotation.png&#34; alt=&#34;top down z rotation&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/top-down-z-rotation.png&#34; alt=&#34;top down z rotation&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;As you can see the distribution of mass around the axis tends to dominate the inertia tensor due to the r&lt;sup&gt;2&lt;/sup&gt; term. The same mass, twice the distance from the axis, is four times more difficult to rotate!&lt;/p&gt;
 &lt;h2&gt;Closed Form Solution&lt;/h2&gt;
 &lt;p&gt;Exact equations are known for the moments of inertia of many &lt;a href=&#34;http://www.livephysics.com/physical-constants/mechanics-pc/moment-inertia-uniform-objects/&#34;&gt;common objects&lt;/a&gt;.&lt;/p&gt;
@@ -983,38 +998,40 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Plugging in the values for a size 33 stone, we get 0.303588 which is close to the approximate solution 0.304776.&lt;/p&gt;
 &lt;p&gt;Verifying exact solutions against numeric ones is a fantastic way to check your calculations.&lt;/p&gt;
 &lt;p&gt;Can &lt;u&gt;you&lt;/u&gt; derive the equation for I&lt;sub&gt;x&lt;/sub&gt;?&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/collision_response_and_coulomb_friction/&#34;&gt;Collision Response and Coulomb Friction&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/collision_response_and_coulomb_friction/&#34;&gt;Collision Response and Coulomb Friction&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Go Stone vs. Go Board</title>
-      <link>http://localhost:1313/post/go_stone_vs_go_board/</link>
+      <link>https://gafferongames.com/post/go_stone_vs_go_board/</link>
       <pubDate>Fri, 22 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/go_stone_vs_go_board/</guid>
+      <guid>https://gafferongames.com/post/go_stone_vs_go_board/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://localhost:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;In this series so far we&amp;rsquo;ve defined the shape of a go stone, rendered it using 3D graphics hardware and simulated how it moves in three dimensions.&lt;/p&gt;
 &lt;p&gt;Our next goal is for the go stone to bounce and come to rest on the go board.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/corner-with-slate-and-shell-stones.jpg&#34; alt=&#34;slate and shell go stones&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/corner-with-slate-and-shell-stones.jpg&#34; alt=&#34;slate and shell go stones&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Understandably, this is quite complicated, so in this article we&amp;rsquo;ll focus on the first step: detecting collisions between a go stone and the go board.&lt;/p&gt;
 &lt;h2 id=&#34;voronoi-regions-and-the-minkowski-difference&#34;&gt;Voronoi Regions and The Minkowski Difference&lt;/h2&gt;
 &lt;p&gt;First, lets assume that the go board is axis aligned and does not move.&lt;/p&gt;
 &lt;p&gt;Next, because go stones are small relative to the go board, we can break down collision detection into regions which are treated differently.&lt;/p&gt;
 &lt;p&gt;The common case is with the primary surface, the actual playing surface of the go board, so lets start by looking top-down at the go board and breaking it up into 2D voronoi regions.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/voronoi-regions.png&#34; alt=&#34;voronoi regions&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/voronoi-regions.png&#34; alt=&#34;voronoi regions&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Each voronoi region corresponds to a subspace where all points (x,z) in that region map to the same nearest feature on the go board. This gives us one region that maps points to the top surface of the go board, four regions that map to the sides, and four corner regions.&lt;/p&gt;
 &lt;p&gt;If we were testing an infinitely small point against the go board, this would be enough, but we are colliding a go stone of a certain width and height.&lt;/p&gt;
 &lt;p&gt;One simple way to incorporate the dimensions of the go stone is to offset the regions from the edge of the go board by the the go stone&amp;rsquo;s bounding sphere radius.&lt;/p&gt;
 &lt;p&gt;This creates something like a poor man&amp;rsquo;s version of a minkowski difference:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/minkowski-difference.png&#34; alt=&#34;minkowski difference&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/minkowski-difference.png&#34; alt=&#34;minkowski difference&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;We can now test the center of the go stone against these regions to quickly to categorize the type of &lt;i&gt;&lt;u&gt;potential&lt;/u&gt;&lt;/i&gt; collision.&lt;/p&gt;
 &lt;h2 id=&#34;go-board-collision-cases&#34;&gt;Go Board Collision Cases&lt;/h2&gt;
 &lt;p&gt;Although the go board has nine different regions there only three unique types:&lt;/p&gt;
@@ -1024,21 +1041,21 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;li&gt;Corner&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Primary is the common case.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/board-primary-case.png&#34; alt=&#34;primary collision&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/board-primary-case.png&#34; alt=&#34;primary collision&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;It&amp;rsquo;s also the easiest to handle. The only possible collision is between the stone and the playing surface of the go board.&lt;/p&gt;
 &lt;p&gt;Since the go board rests on the floor and cannot move we do not need to worry about collisions with the bottom surface. This means that we can consider the go board to be infinitely thick. This is extremely useful because it removes the possibility of fast moving go stones tunneling vertically through the board.&lt;/p&gt;
 &lt;p&gt;Next is the edge case. This is more complicated because there is more than one way to collide in edge regions. Tests must be done between the go stone and the top plane, the side plane, and the side edge.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/board-side-case.png&#34; alt=&#34;side collision&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/board-side-case.png&#34; alt=&#34;side collision&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;The corner case is more complicated still. Potential collisions include the top plane, the two side planes, the side edges adjacent to the corner, the vertical corner edge, and the corner point.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/board-corner-case.png&#34; alt=&#34;corner collision&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/board-corner-case.png&#34; alt=&#34;corner collision&#34; width=&#34;100%&#34;/&gt;
 &lt;h2 id=&#34;go-stone-collision-cases&#34;&gt;Go Stone Collision Cases&lt;/h2&gt;
 &lt;p&gt;When a go stone collides with another object there are three collision cases.&lt;/p&gt;
 &lt;p&gt;The first is a collision on the top surface of the biconvex. This corresponds to a collision with a portion of the &lt;u&gt;bottom&lt;/u&gt; sphere that generated the go stone.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-collision-top.png&#34; alt=&#34;biconvex collision top&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-collision-top.png&#34; alt=&#34;biconvex collision top&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Next is the bottom surface of the biconvex. This corresponds to the &lt;u&gt;top&lt;/u&gt; sphere.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-collision-bottom.png&#34; alt=&#34;biconvex collision bottom&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-collision-bottom.png&#34; alt=&#34;biconvex collision bottom&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Finally, the collision point can be on the circle ring at the intersection of the two sphere surfaces.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-collision-side.png&#34; alt=&#34;biconvex collision side&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-collision-side.png&#34; alt=&#34;biconvex collision side&#34; width=&#34;100%&#34;/&gt;
 &lt;h2 id=&#34;separating-axis-test-sat&#34;&gt;Separating Axis Test (SAT)&lt;/h2&gt;
 &lt;p&gt;We have 3 ways a stone can collide with any convex object, and 9 different regions that must be treated differently when testing vs. the go board. Within each region we have up to 7 different features on the go board that must be tested against 3 different features on the go stone.&lt;/p&gt;
 &lt;p&gt;This is all rather complicated. How can we simplify it?&lt;/p&gt;
@@ -1050,13 +1067,13 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Then what we are really asking is: given this plane normal, what two planes from either side tightly bound the object like book-ends on a shelf?&lt;/p&gt;
 &lt;p&gt;To calculate the support of a biconvex solid we must consider two cases.&lt;/p&gt;
 &lt;p&gt;The first is when the go stone is vertical relative to the axis. Here it is reasonably easy. To calculate the support you simply calculate the intersection of the supports of the spheres used to generate the go stone. This makes a nice sort of intuitive sense seeing as the go stone is itself the intersection of two spheres.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-support-1.png&#34; alt=&#34;biconvex support case 1&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-support-1.png&#34; alt=&#34;biconvex support case 1&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;Unfortunately, this technique breaks down when the stone is horizontal relative to the axis because it fails to exclude the portion of the spheres that don&amp;rsquo;t contribute to the biconvex solid.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-support-wrong.png&#34; alt=&#34;biconvex support wrong&#34; width=&#34;50%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-support-wrong.png&#34; alt=&#34;biconvex support wrong&#34; width=&#34;50%&#34;/&gt;
 &lt;p&gt;What you need to do instead is to calculate the support of the circle edge.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-support-correct.png&#34; alt=&#34;biconvex support correct&#34; width=&#34;50%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-support-correct.png&#34; alt=&#34;biconvex support correct&#34; width=&#34;50%&#34;/&gt;
 &lt;p&gt;The tricky part is detecting when the transition between these two cases occur. Here&amp;rsquo;s a diagram I created a while back when I first tried to work this out. If you look closely you can see the exact point where my head exploded:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-support-head-explode.jpg&#34; alt=&#34;head explode&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-support-head-explode.jpg&#34; alt=&#34;head explode&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;And here&amp;rsquo;s a visualization of the end result:&lt;/p&gt;
 &lt;div class=&#34;video_container&#34;&gt;
 &lt;iframe src=&#34;//www.youtube.com/embed/_fkLcJPJ6Wg&#34; 
@@ -1082,7 +1099,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;After I push the stone out, I recalculate the nearest point between the stone and board and use this as the contact point.&lt;/p&gt;
 &lt;h2 id=&#34;edge-and-corner-cases&#34;&gt;Edge and Corner Cases&lt;/h2&gt;
 &lt;p&gt;The primary surface case is easy because only one axis needs to be tested, but in corner and edge regions multiple axes must be tested for collision.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/multiple-axes-SAT.png&#34; alt=&#34;multiple axis SAT&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/multiple-axes-SAT.png&#34; alt=&#34;multiple axis SAT&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;This is where the SAT really starts to shine. Now instead of combinatorial explosion testing each of the features of the go stone vs. each of the features on the go board, we flatten both the go stone and the go board into support and test for collision one axis at a time.&lt;/p&gt;
 &lt;p&gt;The separating axis test as applied as follows:&lt;/p&gt;
 &lt;ul&gt;
@@ -1092,43 +1109,45 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;/ul&gt;
 &lt;p&gt;If the stone is colliding we must now work out what direction to push the stone out. I thought about this for a while and tried to come up with a simple pattern that worked.&lt;/p&gt;
 &lt;p&gt;First, I tried pushing the stone out along the axis with the greatest amount of penetration, but this breaks down pretty severely in the case where a go stone approaches the go board from the side:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/multiple-axes-push-out-most-penetration.png&#34; alt=&#34;push out most penetration&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/multiple-axes-push-out-most-penetration.png&#34; alt=&#34;push out most penetration&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Next, I thought that perhaps I could use the previous position of the go stone and try to determine the direction that the stone is approaching from. But then I thought about go stones that were rotating rapidly and how this wouldn&amp;rsquo;t always be correct. Then I started thinking about corner and edge cases, and the longer I thought the more this approach seemed too complicated, like I was trying to invent my own half-assed continuous collision detection method that would probably only work half the time and be almost impossible to test.&lt;/p&gt;
 &lt;p&gt;In the end I settled on the simplest solution I could come up with: push the go stone out along the axis with the &lt;u&gt;least&lt;/u&gt; amount of penetration.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/multiple-axes-push-out-least-penetration.png&#34; alt=&#34;push out least penetration&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/multiple-axes-push-out-least-penetration.png&#34; alt=&#34;push out least penetration&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;This seems counter-intuitive at first, but it has some nice parallels with other physical laws. Nature is lazy and always takes the shortest path. Nature does the &lt;em&gt;least amount of work&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;We should probably do the same :)&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/rotation_and_inertia_tensors/&#34;&gt;Rotation and Inertia Tensors&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/rotation_and_inertia_tensors/&#34;&gt;Rotation and Inertia Tensors&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>How The Go Stone Moves</title>
-      <link>http://localhost:1313/post/how_the_go_stone_moves/</link>
+      <link>https://gafferongames.com/post/how_the_go_stone_moves/</link>
       <pubDate>Thu, 21 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/how_the_go_stone_moves/</guid>
+      <guid>https://gafferongames.com/post/how_the_go_stone_moves/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://localhost:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;In previous articles we mathematically defined the shape of a go stone and tessellated its shape so it can be drawn with 3D graphics hardware.&lt;/p&gt;
 &lt;p&gt;Now we want to make the go stone move, obeying Newton&amp;rsquo;s laws of motion so the simulation is physically accurate. The stone should be accelerated by gravity and fall downwards. I also want the stone to rotate so it tumbles as it falls through the air.&lt;/p&gt;
 &lt;h2 id=&#34;the-rigid-body-assumption&#34;&gt;The Rigid Body Assumption&lt;/h2&gt;
 &lt;p&gt;Try biting down on a go stone and you&amp;rsquo;ll agree: go stones are very, very hard.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/slate-and-shell-corner-up-close.jpg&#34; alt=&#34;slate and shell go stones&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/slate-and-shell-corner-up-close.jpg&#34; alt=&#34;slate and shell go stones&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Golf balls are pretty hard too, but if you look at a golf ball being hit by a club in super-slow motion, you&amp;rsquo;ll see that it deforms considerably during impact.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/golf-ball-compression-during-impact.jpg&#34; alt=&#34;golf ball compression during impact&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/golf-ball-compression-during-impact.jpg&#34; alt=&#34;golf ball compression during impact&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;The same thing happens to all objects in the real world to some degree. Nothing is truly rigid. No real material is so hard that it never deforms.&lt;/p&gt;
 &lt;p&gt;But this is not the real world. This is Virtual Go :) It&amp;rsquo;s a simulation and here we are free to make whatever assumptions we want. And the smartest simplification we can make at this point is to assume that the go stone is perfectly rigid and does not deform under any circumstance.&lt;/p&gt;
 &lt;p&gt;This is known as the &lt;a href=&#34;https://en.wikipedia.org/wiki/Rigid_body&#34;&gt;rigid body&lt;/a&gt; assumption.&lt;/p&gt;
 &lt;h2 id=&#34;working-in-three-dimensions&#34;&gt;Working in Three Dimensions&lt;/h2&gt;
 &lt;p&gt;Because the go stones are rigid, all we need to represent their current position is the position of the center. As the center moves, so does the rest of the stone.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-rigid-body-center-P.png&#34; alt=&#34;biconvex go stone rigid body center&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-rigid-body-center-P.png&#34; alt=&#34;biconvex go stone rigid body center&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;We&amp;rsquo;ll represent this position using a three dimensional vector &lt;b&gt;P&lt;/b&gt;.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s define the axes so we know what the x,y,z components of P mean:&lt;/p&gt;
 &lt;ul&gt;
@@ -1137,7 +1156,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;li&gt;Positive z is into the screen&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;This is what is known as a left-handed coordinate system. So called because I can use the fingers on my left hand to point out each positive axis direction without breaking them.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/coordinate-systems-left-and-right-handed.png&#34; alt=&#34;left and right handed coordinate systems&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/coordinate-systems-left-and-right-handed.png&#34; alt=&#34;left and right handed coordinate systems&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;I&amp;rsquo;ve chosen a left-handed coordinate system purely on personal preference. Also, I&amp;rsquo;m left-handed and I like my fingers :)&lt;/p&gt;
 &lt;h2 id=&#34;linear-motion&#34;&gt;Linear Motion&lt;/h2&gt;
 &lt;p&gt;Now we want to make the stone move.&lt;/p&gt;
@@ -1193,7 +1212,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;First we have to define how we represent the orientation of the stone. For this we&amp;rsquo;ll use a &lt;a href=&#34;https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation&#34;&gt;quaternion&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Next we need the angular equivalent of velocity known as&amp;hellip; wait for it&amp;hellip; angular velocity. This too is a vector aka a direction and a length. It&amp;rsquo;s direction is the axis of rotation and the length is the rate of rotation in radians per-second. One full rotation is 2&lt;em&gt;pi radians or 360 degrees so if the length of the angular velocity vector is 2&lt;/em&gt;pi the object rotates around the axis once per-second.&lt;/p&gt;
 &lt;p&gt;Because we&amp;rsquo;re using a left handed coordinate system the direction of rotation is clockwise about the positive axis. You can remember this by sticking your thumb of your left hand in the direction of the axis of rotation and curling your fingers. The direction your fingers curl is the direction of rotation. Notice if you do the same thing with your right hand the rotation is the other way.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/rotation-direction-hand-thumb.png&#34; alt=&#34;rotation direction left and right hands&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/rotation-direction-hand-thumb.png&#34; alt=&#34;rotation direction left and right hands&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;How do we integrate orientation from angular velocity? Orientation is a quaternion and angular velocity is a vector. We can&amp;rsquo;t just add them together.&lt;/p&gt;
 &lt;p&gt;The solution requires a reasonably solid understanding of quaternion math and how it relates to complex numbers. Long story short, we need to convert our angular velocity into a quaternion form and then we can integrate that just like we integrate any other vector. For a full derivation of this result please refer to &lt;a href=&#34;https://fgiesen.wordpress.com/2012/08/24/quaternion-differentiation/&#34;&gt;this excellent article&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Here is the code I use to convert angular velocity into quaternion form:&lt;/p&gt;
@@ -1303,82 +1322,86 @@ while ( !quit )
 frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;/div&gt;
 &lt;p&gt;I think this is fairly convincing. The go stone is moving quite realistically!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/go_stone_vs_go_board/&#34;&gt;Go Stone vs. Go Board&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/go_stone_vs_go_board/&#34;&gt;Go Stone vs. Go Board&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Tessellating The Go Stone</title>
-      <link>http://localhost:1313/post/tessellating_the_go_stone/</link>
+      <link>https://gafferongames.com/post/tessellating_the_go_stone/</link>
       <pubDate>Wed, 20 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/tessellating_the_go_stone/</guid>
+      <guid>https://gafferongames.com/post/tessellating_the_go_stone/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://localhost:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;In this article we want to draw the go stone using &lt;a href=&#34;http://www.opengl.org&#34;&gt;OpenGL&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Unfortunately we can&amp;rsquo;t just tell the graphics card, &amp;ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r&lt;sub&gt;1&lt;/sub&gt; and r&lt;sub&gt;2&lt;/sub&gt;!&amp;rdquo;, because modern 3D graphics cards work by drawing triangles. We have to take our mathematical definition of the go stone and turn it into a set of triangles that the graphics card can render.&lt;/p&gt;
 &lt;p&gt;This is called tessellation and there are several different ways to do it.&lt;/p&gt;
 &lt;h2 id=&#34;longitude-and-lattitude&#34;&gt;Longitude And Lattitude&lt;/h2&gt;
 &lt;p&gt;The first way that I tried was to consider sphere rendering like a globe with longitude/latitude. I started with a ring around the &amp;rsquo;equator&amp;rsquo; of the go stone, stepping these rings up to the top of the sphere like the north pole on a globe.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/naive-tesselation-side-view.gif&#34; alt=&#34;naive tesselation side view&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/naive-tesselation-side-view.gif&#34; alt=&#34;naive tesselation side view&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Unfortunately, just like longitude/latitude on a globe, tessellating this way leads to very distorted mapping around the pole and a lot of wasted triangles:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/inefficient-tesselation-at-pole.gif&#34; alt=&#34;inefficient tesselation at pole&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/inefficient-tesselation-at-pole.gif&#34; alt=&#34;inefficient tesselation at pole&#34; width=&#34;100%&#34;/&gt;
 &lt;h2 id=&#34;triangle-subdivision&#34;&gt;Triangle Subdivision&lt;/h2&gt;
 &lt;p&gt;The next method is triangle subdivision. You start with an approximate shape then subdivide each triangle into four smaller triangles recursively like this:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/sphere-tessellation.gif&#34; alt=&#34;sphere tessellation&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/sphere-tessellation.gif&#34; alt=&#34;sphere tessellation&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Since the go stone only needs the top 1/3 or 1/4 of a sphere, I didn&amp;rsquo;t want to subdivide a whole sphere only to throw most of it away. So I designed my own subdivision algorithm to generate only the top section of a sphere.&lt;/p&gt;
 &lt;p&gt;After some trial and error I found that a pentagon plus a center vertex at the pole of the sphere was a good initial generator that minimized the distortion that occurs during subdivision. The only tricky part is that when subdividing you need to keep track of whether the edge is a sphere edge or a circle edge, as the subdivided vertex must be projected differently.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/generating-shape.gif&#34; alt=&#34;generating shape&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/generating-shape.gif&#34; alt=&#34;generating shape&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;With this technique I was able to generate a much more efficient tessellation:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/regular-tessellation.gif&#34; alt=&#34;regular tessellation&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/regular-tessellation.gif&#34; alt=&#34;regular tessellation&#34; width=&#34;100%&#34;/&gt;
 &lt;h2 id=&#34;tessellating-the-bevel&#34;&gt;Tessellating The Bevel&lt;/h2&gt;
 &lt;p&gt;Now we need to tesselate the bevel. To do this I take the vertices which form the circle edge at the bottom of the top sphere surface and calculate the angle of each vertex about the y axis. I then use these angles to sweep around the torus ensuring that the torus vertices weld perfectly with the top and bottom sphere sections.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/go-stone-with-bevel.gif&#34; alt=&#34;go stone with bevel&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/go-stone-with-bevel.gif&#34; alt=&#34;go stone with bevel&#34; width=&#34;100%&#34;/&gt;
 &lt;h2 id=&#34;vertex-welding&#34;&gt;Vertex Welding&lt;/h2&gt;
 &lt;p&gt;Due to how recursive subdivision works a lot of duplicate vertices are generated.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;d rather not have the graphics card waste time transforming the same vertex over and over, so as I add vertices to the mesh I hash vertex positions into a 3D grid (~1mm cells) and reuse an existing vertex if the position and normals match within some small epsilon value.&lt;/p&gt;
 &lt;p&gt;With vertex welding the reduction in vertices is dramatic: 53000 to just 6500.&lt;/p&gt;
 &lt;p&gt;For more information on vertex welding please refer to the discussion in &lt;a href=&#34;http://www.amazon.com/Real-Time-Collision-Detection-Interactive-Technology/dp/1558607323/ref=sr_1_1?ie=UTF8&amp;qid=1363029675&amp;sr=8-1&amp;keywords=real+time+collision+detection&#34;&gt;Real-Time Collision Detection&lt;/a&gt; by &lt;a href=&#34;http://realtimecollisiondetection.net/blog/&#34;&gt;Christer Ericson&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/how_the_go_stone_moves/&#34;&gt;How The Go Stone Moves&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/how_the_go_stone_moves/&#34;&gt;How The Go Stone Moves&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Shape of The Go Stone</title>
-      <link>http://localhost:1313/post/shape_of_the_go_stone/</link>
+      <link>https://gafferongames.com/post/shape_of_the_go_stone/</link>
       <pubDate>Tue, 19 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/shape_of_the_go_stone/</guid>
+      <guid>https://gafferongames.com/post/shape_of_the_go_stone/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://localhost:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;If you play Go, you know that a biconvex go stone has an interesting wobble when it&amp;rsquo;s placed on the board. This wobble is a direct consequence of its unique shape.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;d like to reproduce this wobble in Virtual Go, so let&amp;rsquo;s to spend some time studying go stone&amp;rsquo;s shape, so we can capture this wobble and simulate it on a computer :)&lt;/p&gt;
 &lt;h2 id=&#34;slate-and-shell&#34;&gt;Slate And Shell&lt;/h2&gt;
 &lt;p&gt;In Japan, Go stones are traditionally made out of slate and clam shell.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/slate-and-shell-in-ko.jpg&#34; alt=&#34;slate and shell in ko&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/slate-and-shell-in-ko.jpg&#34; alt=&#34;slate and shell in ko&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Clam shell stones come in several grades of quality. The highest being yuki or &amp;ldquo;snow&amp;rdquo; grade with fine, regularly spaced lines.&lt;/p&gt;
 &lt;p&gt;Go stones also come in different sizes. In general, the thicker the stone, the more expensive it is, as only a small portion of the clam shell is suitable for making them.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/go-stone-side-profile-sizes.png&#34; alt=&#34;go stone side profile sizes&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/go-stone-side-profile-sizes.png&#34; alt=&#34;go stone side profile sizes&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;At first glance the go stone looks like an ellipse, but side-on you can see this is not the case. This shape is called a &lt;em&gt;biconvex solid&lt;/em&gt;. I find this shape interesting because it is the intersection of two spheres.&lt;/p&gt;
 &lt;p&gt;We can study this shape by looking at the intersection of two circles:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex.gif&#34; alt=&#34;biconvex&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex.gif&#34; alt=&#34;biconvex&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;I quickly noticed that by varying the radius of the circles and the distance between their centers, I could generate go stones of different sizes.&lt;/p&gt;
 &lt;p&gt;But when creating a go stone I don&amp;rsquo;t really want it to be parameterized this way.&lt;/p&gt;
 &lt;p&gt;Instead I&amp;rsquo;d like to say, &amp;ldquo;Hey, I would like a stone of this width and height&amp;rdquo; and have a function that calculates the radius of the circles and how far apart they should be to generate that stone.&lt;/p&gt;
 &lt;p&gt;To write this function we first need to do some math:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-unknowns.png&#34; alt=&#34;biconvex unknowns&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-unknowns.png&#34; alt=&#34;biconvex unknowns&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;First notice that the point Q lies on the generating circle, so the line CQ has length r:&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;todo: obviously I have a bunch of work to get the latex equations ported across to Hugo. I&amp;rsquo;m researching different options&amp;hellip;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]d + h/2 = r[/latex]
@@ -1403,14 +1426,14 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Now we can mathematically define a go stone parameterized by its width and height. There is just one problem: the edge is very sharp!&lt;/p&gt;
 &lt;p&gt;To make our stone aesthetically pleasing, lets round the edge with a bevel. Otherwise, you might cut yourself virtually when you play with it:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/go-stone-smooth-bevel.jpg&#34; alt=&#34;go stone smooth bevel&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/go-stone-smooth-bevel.jpg&#34; alt=&#34;go stone smooth bevel&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Let&amp;rsquo;s parameterize the bevel by its height b:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/bevel-b.gif&#34; alt=&#34;torus bevel height b&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/bevel-b.gif&#34; alt=&#34;torus bevel height b&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;In three dimensions the bevel is actually a torus (donut) around the edge of the go stone. We need to calculate the major and minor radii r&lt;sub&gt;1&lt;/sub&gt; and r&lt;sub&gt;2&lt;/sub&gt; of the torus as a function of b and the dimensions of the go stone:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/bevel-math-1.gif&#34; alt=&#34;bevel math part 1&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/bevel-math-1.gif&#34; alt=&#34;bevel math part 1&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;The key to solving this is to realize that if the go stone and the bevel are to match perfectly then the tangent of the two circles must be equal at the point P.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;&lt;em&gt;Update&lt;/em&gt;: A few years later and it occurs to me that it would be even more beautiful if the second derivative matched at this intersection as well. Is this possible in general, or must the generating spheres become to ellipses in order to make this happen? I suspect this is the case. Mathematicians who play Go, &lt;a href=&#34;http://localhost:1313/contact&#34;&gt;let me know your thoughts&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/virtualgo/bevel-math-2.gif&#34; alt=&#34;bevel math part 2&#34; width=&#34;100%&#34;/&gt;
+&lt;p&gt;&lt;em&gt;&lt;em&gt;Update&lt;/em&gt;: A few years later and it occurs to me that it would be even more beautiful if the second derivative matched at this intersection as well. Is this possible in general, or must the generating spheres become to ellipses in order to make this happen? I suspect this is the case. Mathematicians who play Go, &lt;a href=&#34;https://gafferongames.com/contact&#34;&gt;let me know your thoughts&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;img src=&#34;https://gafferongames.com/img/virtualgo/bevel-math-2.gif&#34; alt=&#34;bevel math part 2&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;If the tangent is equal then the normal must be equal as well. This means that the center of the bevel circle lies at the intersection of the line CP and the x axis.&lt;/p&gt;
 &lt;p&gt;We already know C so if we can find the point P then we can find this intersection point. Once we know the intersection point we can find r&lt;sub&gt;1&lt;/sub&gt; and r&lt;sub&gt;2&lt;/sub&gt;.&lt;/p&gt;
 &lt;p&gt;Since P is at the start of the bevel:&lt;/p&gt;
@@ -1442,71 +1465,75 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
     }
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Now we can calculate the bevel torus to round off any go stone we create as the intersection of two spheres.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/tessellating_the_go_stone/&#34;&gt;Tessellating The Go Stone&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/tessellating_the_go_stone/&#34;&gt;Tessellating The Go Stone&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Introduction to Virtual Go</title>
-      <link>http://localhost:1313/post/introduction_to_virtual_go/</link>
+      <link>https://gafferongames.com/post/introduction_to_virtual_go/</link>
       <pubDate>Mon, 18 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/introduction_to_virtual_go/</guid>
+      <guid>https://gafferongames.com/post/introduction_to_virtual_go/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://localhost:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;m a professional game programmer with 15 years experience in the game industry. Over the years I&amp;rsquo;ve worked for Irrational Games, Team Bondi, Pandemic Studios, Sony Santa Monica and most recently Respawn Entertainment. During my career I&amp;rsquo;m extremely proud to have worked on such games as &amp;lsquo;Freedom Force&amp;rsquo;, &amp;lsquo;L.A. Noire&amp;rsquo;, &amp;lsquo;Journey&amp;rsquo;, &amp;lsquo;God of War: Ascension&amp;rsquo; and &amp;lsquo;Titanfall&amp;rsquo;.&lt;/p&gt;
 &lt;p&gt;In my spare time I&amp;rsquo;m also an avid player of the board game &lt;a href=&#34;https://en.wikipedia.org/wiki/Go_(game)&#34;&gt;Go&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/virtualgo/go-board-outside-cafe.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/virtualgo/go-board-outside-cafe.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;A personal project I&amp;rsquo;ve always dreamed of combines the things I love: the game of Go, graphics programming, physics simulation and network programming.&lt;/p&gt;
 &lt;p&gt;The end result I hope to achieve is a beautiful real-time computer rendering of a go board and stones with photorealistic visuals and the laws of physics defining all interactions between the go stones and the board. To Go players reading this, yes, I do aim to reproduce that unique &amp;lsquo;wobble&amp;rsquo; and feel you are familiar with when placing a stone on the board.&lt;/p&gt;
 &lt;p&gt;During the course of this article series I&amp;rsquo;m going to build this project entirely from scratch and include &lt;u&gt;you&lt;/u&gt; in on all the details of building it as a tutorial. I believe in sharing knowledge and my hope is you can follow this project and understand the passion I bring to it and perhaps learn a few things along the way.&lt;/p&gt;
-&lt;p&gt;If you already play Go and want to get right in to the details of building the simulation, I would recommend skipping ahead to the next article in the series: &lt;a href=&#34;http://localhost:1313/post/shape_of_the_go_stone/&#34;&gt;Shape Of The Go Stone&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you already play Go and want to get right in to the details of building the simulation, I would recommend skipping ahead to the next article in the series: &lt;a href=&#34;https://gafferongames.com/post/shape_of_the_go_stone/&#34;&gt;Shape Of The Go Stone&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Otherwise, if you would like a quick introduction to Go, please read on!&lt;/p&gt;
 &lt;h2 id=&#34;the-game-of-go&#34;&gt;The Game of Go&lt;/h2&gt;
 &lt;p&gt;Go is a board game that originated in ancient China.&lt;/p&gt;
 &lt;p&gt;Today it is played worldwide but has a particularly strong following in China, Japan and Korea. It is not particularly well known in the West, although it has featured in popular culture in the movie &amp;ldquo;A Beautiful Mind&amp;rdquo;.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/virtualgo/old-men-playing-go.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/virtualgo/old-men-playing-go.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Go is played on a grid with black and white stones. It is played by two people, each taking turns to place a stone of their color at one of the intersection points on the grid. Once placed on the board, stones do not move.&lt;/p&gt;
 &lt;p&gt;Each stone on the board has a number of liberties equal to the number of lines radiating out from it on the grid. A stone in the middle of the board has four liberties, a stone on the side has three, a stone in the corner has just two.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/virtualgo/go-board-liberties-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/virtualgo/go-board-liberties-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;If the opponent is able to surround all the liberties with stones of the opposite color, the stone is removed from the board.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/virtualgo/capture-stones-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/virtualgo/capture-stones-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;When stones of the same color are placed horizontally or vertically next to each other they become logically connected and form a &amp;ldquo;group&amp;rdquo; with its own set of liberties. For example, a group of two stones in the center has 6 liberties, while the same group on the side has only 4.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/virtualgo/go-board-group-of-two-liberties-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/virtualgo/go-board-group-of-two-liberties-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;A group may be captured if all of its liberties are blocked with stones of the opposite color. When a group is captured it is removed from the board as a unit.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/virtualgo/capture-groups-of-two-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/virtualgo/capture-groups-of-two-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Of course it is not so easy to surround your opponents stones because they get to place stones too :)&lt;/p&gt;
 &lt;p&gt;For example, a single black stone in the center with just one liberty remaining is in a situation known as &amp;ldquo;Atari&amp;rdquo;, but black can escape by extending to form a group of two stones. Now the black group has three liberties and can extend to create more liberties faster than they can be taken away.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/virtualgo/atari-run-away-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/virtualgo/atari-run-away-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;It follows that it&amp;rsquo;s not really possible to capture all of your opponents stones or for them to capture all of yours. Instead, you must coexist on the board with stones of the other color and find a way to surround more points of territory than your opponent.&lt;/p&gt;
 &lt;p&gt;It sounds simple but as you play Go you&amp;rsquo;ll notice beautiful complexity emerging like a fractal: life and death - stones living even though surrounded, liberty races, seki or &amp;ldquo;dual life&amp;rdquo;, the ladder, ko, the snapback, playing under the stones, the monkey jump, the bamboo joint, the tiger mouth.&lt;/p&gt;
 &lt;p&gt;So many beautiful properties from such simple rules. Truly an amazing game!&lt;/p&gt;
 &lt;p&gt;Please visit &lt;a href=&#34;http://playgo.to/iwtg/en/&#34;&gt;The Interactive Way To Go&lt;/a&gt; if you would like to learn more.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/shape_of_the_go_stone/&#34;&gt;Shape of The Go Stone&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/shape_of_the_go_stone/&#34;&gt;Shape of The Go Stone&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Networked Physics (2004)</title>
-      <link>http://localhost:1313/post/networked_physics_2004/</link>
+      <link>https://gafferongames.com/post/networked_physics_2004/</link>
       <pubDate>Sat, 04 Sep 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/networked_physics_2004/</guid>
+      <guid>https://gafferongames.com/post/networked_physics_2004/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/spring_physics/&#34;&gt;previous article&lt;/a&gt; we discussed how to use spring-like forces to model basic collision response, joints and motors.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/spring_physics/&#34;&gt;previous article&lt;/a&gt; we discussed how to use spring-like forces to model basic collision response, joints and motors.&lt;/p&gt;
 &lt;p&gt;In this article we&amp;rsquo;re going to discuss how to network a physics simulation.&lt;/p&gt;
 &lt;h2 id=&#34;first-person-shooters&#34;&gt;First Person Shooters&lt;/h2&gt;
 &lt;p&gt;First person shooter physics are usually very simple. The world is static and players are limited to running around and jumping and shooting.&lt;/p&gt;
@@ -1621,23 +1648,25 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;We can easily apply the client side prediction techniques used in first person shooters to network a physics simulation, but only if there is a clear ownership of objects by clients and these object interact mostly with a static world.&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Spring Physics</title>
-      <link>http://localhost:1313/post/spring_physics/</link>
+      <link>https://gafferongames.com/post/spring_physics/</link>
       <pubDate>Fri, 03 Sep 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/spring_physics/</guid>
+      <guid>https://gafferongames.com/post/spring_physics/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/physics_in_3d/&#34;&gt;previous article&lt;/a&gt; we discussed how to simulate the motion of rigid bodies in 3D. Now we&amp;rsquo;re going to discuss how to implement spring physics.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/physics_in_3d/&#34;&gt;previous article&lt;/a&gt; we discussed how to simulate the motion of rigid bodies in 3D. Now we&amp;rsquo;re going to discuss how to implement spring physics.&lt;/p&gt;
 &lt;p&gt;The physics behind springs is simple but extremely versatile and useful. You can use springs to link points together to model rope and string, cloth, and even blobs of jelly. Springs can also be used to implement basic collision response, and to create joints that constrain the motion of rigid bodies.&lt;/p&gt;
 &lt;p&gt;The more physics programming you do, the more springs pop up. Many physical phenomenon boil down to spring-like forces being applied such as buoyancy in water. Springs are everywhere so lets discover how to simulate them!&lt;/p&gt;
 &lt;h2 id=&#34;spring-and-dampers&#34;&gt;Spring and Dampers&lt;/h2&gt;
@@ -1686,25 +1715,27 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;The first weakness is that its difficult to tune the spring constants to get exactly the effect you want. For example, if you are attempting to model the real world physics of an object, you will need to experiment to find the spring k and b values that match the simulation. These values are usually dependent on other values of your simulation, such as the gravity constant, meaning that if you adjust gravity you&amp;rsquo;ll need to retune your springs to get the same effect.&lt;/p&gt;
 &lt;p&gt;The next problem is that tighter the spring k you use, the more difficult it becomes to solve the differential equation. Using an RK4 integrator sure help with this, but even with RK4 there is a fundamental limit to how large you can make your spring k before your simulation will explode. At this point you need to either decrease your timestep or reduce your spring k.&lt;/p&gt;
 &lt;p&gt;The final, and major weakness is that springs are reactive not predictive. This is a subtle point but a very important one. A joint or constraint implemented using springs only works by correcting errors after they occur, and collision response using springs requires allowing some amount of penetration before it acts to correct it and so forth. More advanced techniques exist which can solve for the forces required to constrain the physics simulation without inducing error, such as LCP solvers or iterative methods, but they are out of scope of this simple article.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/networked_physics_2004/&#34;&gt;Networked Physics (2004)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/networked_physics_2004/&#34;&gt;Networked Physics (2004)&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Physics in 3D</title>
-      <link>http://localhost:1313/post/physics_in_3d/</link>
+      <link>https://gafferongames.com/post/physics_in_3d/</link>
       <pubDate>Thu, 02 Sep 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/physics_in_3d/</guid>
+      <guid>https://gafferongames.com/post/physics_in_3d/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/fix_your_timestep/&#34;&gt;previous article&lt;/a&gt; we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/fix_your_timestep/&#34;&gt;previous article&lt;/a&gt; we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.&lt;/p&gt;
 &lt;p&gt;In this article we are going to simulate motion in three dimensions.&lt;/p&gt;
 &lt;h2 id=&#34;rigid-bodies&#34;&gt;Rigid Bodies&lt;/h2&gt;
 &lt;p&gt;We will concentrate on a type of object called a &lt;strong&gt;rigid body&lt;/strong&gt;. Rigid bodies cannot bend, compress or deform in any way. This makes their motion much easier to calculate.&lt;/p&gt;
@@ -1747,7 +1778,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
          }
     };
 &lt;/pre&gt;
-&lt;p&gt;Now instead of maintaining completely seperate equations of motion and integrating seperately for x, y and z, we convert our position, velocity, acceleration and force to vector quantities, then integrate the vectors directly using the equations of motion from the &lt;a href=&#34;http://localhost:1313/post/integration_basics/&#34;&gt;first article&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;Now instead of maintaining completely seperate equations of motion and integrating seperately for x, y and z, we convert our position, velocity, acceleration and force to vector quantities, then integrate the vectors directly using the equations of motion from the &lt;a href=&#34;https://gafferongames.com/post/integration_basics/&#34;&gt;first article&lt;/a&gt;:&lt;/p&gt;
 &lt;pre&gt;
     &lt;b&gt;F&lt;/b&gt; = m&lt;b&gt;a&lt;/b&gt;
     d&lt;b&gt;v&lt;/b&gt;/dt = &lt;b&gt;a&lt;/b&gt;
@@ -1822,7 +1853,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;h2 id=&#34;orientation-in-3d&#34;&gt;Orientation in 3D&lt;/h2&gt;
 &lt;p&gt;This complexity is due to the difficulty of representing orientations in three dimensions.&lt;/p&gt;
 &lt;p&gt;In two dimensions orientations are easy, you just keep track of an angle in radians and you are done. In three dimensions it becomes much more complex. It turns out that you must either use 3x3 rotation matrices or quaternions to correctly represent the orientation of an object.&lt;/p&gt;
-&lt;p&gt;For reasons of simplicity and efficiency I&amp;rsquo;m going to use quaternions to represent the orientation instead of matrices. This also gives us an easy way to interpolate between the previous and current physics orientation to get smooth framerate independent animation as per the time stepping scheme outlined in the &lt;a href=&#34;http://localhost:1313/post/fix_your_timestep/&#34;&gt;previous article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For reasons of simplicity and efficiency I&amp;rsquo;m going to use quaternions to represent the orientation instead of matrices. This also gives us an easy way to interpolate between the previous and current physics orientation to get smooth framerate independent animation as per the time stepping scheme outlined in the &lt;a href=&#34;https://gafferongames.com/post/fix_your_timestep/&#34;&gt;previous article&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Now there are plenty of resources on the internet which explain what quaternions are and how unit length quaternions are used to represent rotations in three dimensions. Here is a particularly &lt;a href=&#34;http://www.sjbrown.co.uk/quaternions.html&#34;&gt;nice one&lt;/a&gt;. What you need to know however is that, effectively, unit quaternions represent an axis of rotation and an amount of rotation about that axis. This may seem similar to our angular velocity, but quaternions are four dimensional vectors instead of three, so mathematically they are actually quite different!&lt;/p&gt;
 &lt;p&gt;We will represent quaternions in code as another struct:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;    struct Quaternion
@@ -1913,25 +1944,27 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Where &lt;b&gt;p&lt;/b&gt; is the point on the rigid body and &lt;b&gt;x&lt;/b&gt; is the center of mass of the object.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;We have covered the techniques required to simulate linear and rotational movement of a rigid body in three dimensions. By combining the linear and rotational physics into a single physics state and integrating, we can simulate the motion of a rigid body in three dimensions.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/spring_physics/&#34;&gt;Spring Physics&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/spring_physics/&#34;&gt;Spring Physics&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Fix Your Timestep!</title>
-      <link>http://localhost:1313/post/fix_your_timestep/</link>
+      <link>https://gafferongames.com/post/fix_your_timestep/</link>
       <pubDate>Thu, 10 Jun 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/fix_your_timestep/</guid>
+      <guid>https://gafferongames.com/post/fix_your_timestep/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/integration_basics/&#34;&gt;previous article&lt;/a&gt; we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&amp;rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &amp;ldquo;delta time&amp;rdquo; (or dt for short).&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/integration_basics/&#34;&gt;previous article&lt;/a&gt; we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&amp;rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &amp;ldquo;delta time&amp;rdquo; (or dt for short).&lt;/p&gt;
 &lt;p&gt;But how to choose this delta time value? This may seem like a trivial subject but in fact there are many different ways to do it, each with their own strengths and weaknesses - so read on!&lt;/p&gt;
 &lt;h2 id=&#34;fixed-delta-time&#34;&gt;Fixed delta time&lt;/h2&gt;
 &lt;p&gt;The simplest way to step forward is with fixed delta time, like 1/60th of a second:&lt;/p&gt;
@@ -2072,24 +2105,26 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;This &lt;em&gt;looks&lt;/em&gt; complicated but here is a simple way to think about it. Any remainder in the accumulator is effectively a measure of just how much more time is required before another whole physics step can be taken. For example, a remainder of dt/2 means that we are currently halfway between the current physics step and the next. A remainder of dt*0.1 means that the update is 1/10th of the way between the current and the next state.&lt;/p&gt;
 &lt;p&gt;We can use this remainder value to get a blending factor between the previous and current physics state simply by dividing by dt. This gives an alpha value in the range [0,1] which is used to perform a linear interpolation between the two physics states to get the current state to render. This interpolation is easy to do for single values and for vector state values. You can even use it with full 3D rigid body dynamics if you store your orientation as a quaternion and use a spherical linear interpolation (slerp) to blend between the previous and current orientations.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/physics_in_3d/&#34;&gt;Physics in 3D&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/physics_in_3d/&#34;&gt;Physics in 3D&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Integration Basics</title>
-      <link>http://localhost:1313/post/integration_basics/</link>
+      <link>https://gafferongames.com/post/integration_basics/</link>
       <pubDate>Tue, 01 Jun 2004 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/integration_basics/</guid>
+      <guid>https://gafferongames.com/post/integration_basics/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.&lt;/p&gt;
 &lt;p&gt;A physics simulation works by making many small predictions based on the laws of physics. These predictions are actually quite simple, and basically boil down to something like &amp;ldquo;the object is here, and is traveling this fast in that direction, so in a short amount of time it should be over there&amp;rdquo;. We perform these predictions using a mathematical technique called integration.&lt;/p&gt;
 &lt;p&gt;Exactly how to implement this integration is the subject of this article.&lt;/p&gt;
@@ -2194,9 +2229,9 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;li&gt;Hooke&amp;rsquo;s law damping coefficient: b = 0.1&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;And here is a graph of the exact solution:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_damped_exact_solution.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_damped_exact_solution.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;When we apply explicit euler to integrate this system, we get the following result, which has been scaled down vertically to fit:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_damped_explicit_euler.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_damped_explicit_euler.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Instead of damping and converging on the origin, it gains energy over time!&lt;/p&gt;
 &lt;p&gt;This system is unstable when integrated with explicit euler and &lt;strong&gt;dt&lt;/strong&gt;=1/100.&lt;/p&gt;
 &lt;p&gt;Unfortunately, since we&amp;rsquo;re already integrating with a small timestep, we don&amp;rsquo;t have a lot of practical options to improve the accuracy. Even if you reduce the timestep, there&amp;rsquo;s always a spring tightness k above which you&amp;rsquo;ll see this behavior.&lt;/p&gt;
@@ -2212,7 +2247,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
     position += velocity * dt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Applying the semi-implicit euler integrator with &lt;strong&gt;dt&lt;/strong&gt; = 1/100 to the spring damper system gives a stable result that is very close to the exact solution:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_damped_semi_implicit_euler.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_damped_semi_implicit_euler.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Even though semi-implicit euler has the same order of accuracy as explicit euler (order 1), we get a much better result when integrating the equations of motion because it is &lt;a href=&#34;https://en.wikipedia.org/wiki/Symplectic_integrator&#34;&gt;symplectic&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;many-different-integration-methods-exist&#34;&gt;Many different integration methods exist&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&#34;http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html&#34;&gt;Implicit euler&lt;/a&gt; is an integration technique that is well suited for simulating stiff equations that become unstable with other methods. The drawback is that it requires solving a system of equations per-timestep.&lt;/p&gt;
@@ -2290,22 +2325,22 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;h2 id=&#34;semi-implicit-euler-vs-rk4&#34;&gt;Semi-implicit euler vs. RK4&lt;/h2&gt;
 &lt;p&gt;Now let&amp;rsquo;s put the RK4 integrator to the test.&lt;/p&gt;
 &lt;p&gt;Since it is a higher order integrator (4th order vs. 1st order) it will be visibly more accurate than semi-implicit euler, right?&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;&lt;strong&gt;Wrong&lt;/strong&gt;. Both integrators are so close to the exact result that it&amp;rsquo;s impossible to make out any difference at this scale. Both integrators are stable and track the exact solution very well with &lt;strong&gt;dt&lt;/strong&gt;=1/100.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler_zoomed_in.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler_zoomed_in.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Zooming in confirms that RK4 &lt;em&gt;is&lt;/em&gt; more accurate than semi-implicit euler, but is it really worth the complexity and extra runtime cost of RK4? It&amp;rsquo;s hard to say.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s push a bit harder and see if we can find a significant difference between the two integrators. Unfortunately, we can&amp;rsquo;t look at this system for long periods of time because it quickly damps down to zero, so let&amp;rsquo;s switch to a &lt;a href=&#34;https://en.wikipedia.org/wiki/Harmonic_oscillator#Simple_harmonic_oscillator&#34;&gt;simple harmonic oscillator&lt;/a&gt; which oscillates forever without any damping.&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s the exact result we&amp;rsquo;re aiming for:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_undamped_exact_solution.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_undamped_exact_solution.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;To make it harder on the integrators, let&amp;rsquo;s increase delta time to 0.1 seconds.&lt;/p&gt;
 &lt;p&gt;Next, we let the integrators run for 90 seconds and zoom in:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_undamped_rk4_vs_semi_implicit_euler.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_undamped_rk4_vs_semi_implicit_euler.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;After 90 seconds the semi-implicit euler solution (orange) has drifted out of phase with the exact solution because it has a slightly different frequency, while the green line of RK4 matches the frequency, but is losing energy!&lt;/p&gt;
 &lt;p&gt;We can see this more clearly by increasing the time step to 0.25 seconds.&lt;/p&gt;
 &lt;p&gt;RK4 maintains the correct frequency but loses energy:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_undamped_rk4_5fps.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_undamped_rk4_5fps.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;While semi-implicit euler does a better job at conserving energy, on average:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_undamped_semi_implicit_euler_5fps.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_undamped_semi_implicit_euler_5fps.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;But drifts out of phase. What an interesting result! As you can see it&amp;rsquo;s not simply the case that RK4 has a higher order of accuracy and is &amp;ldquo;better&amp;rdquo;. It&amp;rsquo;s much, much more nuanced than this.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;Which integrator should you use in your game?&lt;/p&gt;
@@ -2320,9 +2355,10 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
     position += velocity * dt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;You&amp;rsquo;ll be glad you did :)&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/fix_your_timestep/&#34;&gt;Fix Your Timestep!&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/fix_your_timestep/&#34;&gt;Fix Your Timestep!&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>

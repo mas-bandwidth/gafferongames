@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,7 +28,7 @@
   <meta name="description" content="Glenn Fiedler&#39;s game development and networking articles">
 
   
-  <link rel="alternate" hreflang="en-us" href="http://localhost:1313/tags/physics/">
+  <link rel="alternate" hreflang="en-us" href="https://gafferongames.com/tags/physics/">
 
   
 
@@ -84,6 +84,8 @@
   
 
   
+  
+  
 
   
   <link rel="alternate" href="/tags/physics/index.xml" type="application/rss+xml" title="Gaffer On Games">
@@ -94,7 +96,7 @@
   <link rel="icon" type="image/png" href="/img/icon.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="http://localhost:1313/tags/physics/">
+  <link rel="canonical" href="https://gafferongames.com/tags/physics/">
 
   
   
@@ -106,10 +108,10 @@
   <meta property="twitter:card" content="summary">
   
   <meta property="og:site_name" content="Gaffer On Games">
-  <meta property="og:url" content="http://localhost:1313/tags/physics/">
+  <meta property="og:url" content="https://gafferongames.com/tags/physics/">
   <meta property="og:title" content="Physics | Gaffer On Games">
-  <meta property="og:description" content="Glenn Fiedler&#39;s game development and networking articles"><meta property="og:image" content="http://localhost:1313/img/icon-192.png">
-  <meta property="twitter:image" content="http://localhost:1313/img/icon-192.png"><meta property="og:locale" content="en-us">
+  <meta property="og:description" content="Glenn Fiedler&#39;s game development and networking articles"><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
+  <meta property="twitter:image" content="https://gafferongames.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
   <meta property="og:updated_time" content="2018-02-22T00:00:00&#43;00:00">
   
@@ -266,7 +268,8 @@
     <h2><a href="/post/networked_physics_in_virtual_reality/">Networked Physics in Virtual Reality</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &ldquo;Hey Glenn, there&rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs?
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &ldquo;Hey Glenn, there&rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs?
       
     </div>
   </div>
@@ -275,7 +278,8 @@
     <h2><a href="/post/state_synchronization/">State Synchronization</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we discussed techniques for compressing snapshots.
 In this article we round out our discussion of networked physics strategies with state synchronization, the third and final strategy in this article series.
 State Synchronization What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, unlike deterministic lockstep, we don&rsquo;t just send input, we send both input and state.
@@ -287,7 +291,8 @@ State Synchronization What is state synchronization? The basic idea is that, som
     <h2><a href="/post/snapshot_compression/">Snapshot Compression</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.
 The problem with a low snapshot rate like 10HZ is that interpolation between snapshots adds interpolation delay on top of network latency.
       
@@ -298,7 +303,8 @@ The problem with a low snapshot rate like 10HZ is that interpolation between sna
     <h2><a href="/post/snapshot_interpolation/">Snapshot Interpolation</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we networked a physics simulation using deterministic lockstep. Now, in this article we&rsquo;re going to network the same simulation with a completely different technique: snapshot interpolation.
 Background While deterministic lockstep is very efficient in terms of bandwidth, it&rsquo;s not always possible to make your simulation deterministic.
       
@@ -309,7 +315,8 @@ Background While deterministic lockstep is very efficient in terms of bandwidth,
     <h2><a href="/post/deterministic_lockstep/">Deterministic Lockstep</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we explored the physics simulation we&rsquo;re going to network in this article series. In this article specifically, we&rsquo;re going to network this physics simulation using deterministic lockstep.
 Deterministic lockstep is a method of networking a system from one computer to another by sending only the inputs that control that system, rather than the state of that system.
       
@@ -320,7 +327,8 @@ Deterministic lockstep is a method of networking a system from one computer to a
     <h2><a href="/post/introduction_to_networked_physics/">Introduction to Networked Physics</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to the first article in Networked Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to the first article in Networked Physics.
 In this article series we&rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.
 But before we get to this, let&rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:
       
@@ -331,7 +339,8 @@ But before we get to this, let&rsquo;s spend some time exploring the physics sim
     <h2><a href="/post/collision_response_and_coulomb_friction/">Collision Response and Coulomb Friction</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 So far in this series, we have mathematically defined the go stone, rendered it, determined how it moves and rotates, and discussed how its shape affects how it responds to collisions.
       
     </div>
@@ -341,7 +350,8 @@ So far in this series, we have mathematically defined the go stone, rendered it,
     <h2><a href="/post/rotation_and_inertia_tensors/">Rotation &amp; Inertia Tensors</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 In the previous article we detected collision between the go stone and the go board. Now we&rsquo;re working up to calculating collision response so the stone bounces and wobbles before coming to rest on the board.
       
     </div>
@@ -351,9 +361,9 @@ In the previous article we detected collision between the go stone and the go bo
     <h2><a href="/post/go_stone_vs_go_board/">Go Stone vs. Go Board</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 In this series so far we&rsquo;ve defined the shape of a go stone, rendered it using 3D graphics hardware and simulated how it moves in three dimensions.
-Our next goal is for the go stone to bounce and come to rest on the go board.
       
     </div>
   </div>
@@ -362,7 +372,8 @@ Our next goal is for the go stone to bounce and come to rest on the go board.
     <h2><a href="/post/how_the_go_stone_moves/">How The Go Stone Moves</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 In previous articles we mathematically defined the shape of a go stone and tessellated its shape so it can be drawn with 3D graphics hardware.
 Now we want to make the go stone move, obeying Newton&rsquo;s laws of motion so the simulation is physically accurate.
       
@@ -373,7 +384,8 @@ Now we want to make the go stone move, obeying Newton&rsquo;s laws of motion so 
     <h2><a href="/post/tessellating_the_go_stone/">Tessellating The Go Stone</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 In this article we want to draw the go stone using OpenGL.
 Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r1 and r2!
       
@@ -384,7 +396,8 @@ Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please dra
     <h2><a href="/post/shape_of_the_go_stone/">Shape of The Go Stone</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 If you play Go, you know that a biconvex go stone has an interesting wobble when it&rsquo;s placed on the board. This wobble is a direct consequence of its unique shape.
       
     </div>
@@ -394,7 +407,8 @@ If you play Go, you know that a biconvex go stone has an interesting wobble when
     <h2><a href="/post/introduction_to_virtual_go/">Introduction to Virtual Go</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 I&rsquo;m a professional game programmer with 15 years experience in the game industry. Over the years I&rsquo;ve worked for Irrational Games, Team Bondi, Pandemic Studios, Sony Santa Monica and most recently Respawn Entertainment.
       
     </div>
@@ -404,10 +418,11 @@ I&rsquo;m a professional game programmer with 15 years experience in the game in
     <h2><a href="/post/networked_physics_2004/">Networked Physics (2004)</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
 In the previous article we discussed how to use spring-like forces to model basic collision response, joints and motors.
 In this article we&rsquo;re going to discuss how to network a physics simulation.
-First Person Shooters First person shooter physics are usually very simple. The world is static and players are limited to running around and jumping and shooting.
+First Person Shooters First person shooter physics are usually very simple.
       
     </div>
   </div>
@@ -416,7 +431,8 @@ First Person Shooters First person shooter physics are usually very simple. The 
     <h2><a href="/post/spring_physics/">Spring Physics</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
 In the previous article we discussed how to simulate the motion of rigid bodies in 3D. Now we&rsquo;re going to discuss how to implement spring physics.
 The physics behind springs is simple but extremely versatile and useful. You can use springs to link points together to model rope and string, cloth, and even blobs of jelly.
       
@@ -427,7 +443,8 @@ The physics behind springs is simple but extremely versatile and useful. You can
     <h2><a href="/post/physics_in_3d/">Physics in 3D</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
 In the previous article we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.
 In this article we are going to simulate motion in three dimensions.
 Rigid Bodies We will concentrate on a type of object called a rigid body.
@@ -439,7 +456,8 @@ Rigid Bodies We will concentrate on a type of object called a rigid body.
     <h2><a href="/post/fix_your_timestep/">Fix Your Timestep!</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
 In the previous article we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &ldquo;delta time&rdquo; (or dt for short).
       
     </div>
@@ -449,7 +467,8 @@ In the previous article we discussed how to integrate the equations of motion us
     <h2><a href="/post/integration_basics/">Integration Basics</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
 If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.
       
     </div>

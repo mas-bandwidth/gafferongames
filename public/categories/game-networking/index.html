@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,7 +28,7 @@
   <meta name="description" content="Glenn Fiedler&#39;s game development and networking articles">
 
   
-  <link rel="alternate" hreflang="en-us" href="http://localhost:1313/categories/game-networking/">
+  <link rel="alternate" hreflang="en-us" href="https://gafferongames.com/categories/game-networking/">
 
   
 
@@ -84,6 +84,8 @@
   
 
   
+  
+  
 
   
   <link rel="alternate" href="/categories/game-networking/index.xml" type="application/rss+xml" title="Gaffer On Games">
@@ -94,7 +96,7 @@
   <link rel="icon" type="image/png" href="/img/icon.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="http://localhost:1313/categories/game-networking/">
+  <link rel="canonical" href="https://gafferongames.com/categories/game-networking/">
 
   
   
@@ -106,10 +108,10 @@
   <meta property="twitter:card" content="summary">
   
   <meta property="og:site_name" content="Gaffer On Games">
-  <meta property="og:url" content="http://localhost:1313/categories/game-networking/">
+  <meta property="og:url" content="https://gafferongames.com/categories/game-networking/">
   <meta property="og:title" content="Game Networking | Gaffer On Games">
-  <meta property="og:description" content="Glenn Fiedler&#39;s game development and networking articles"><meta property="og:image" content="http://localhost:1313/img/icon-192.png">
-  <meta property="twitter:image" content="http://localhost:1313/img/icon-192.png"><meta property="og:locale" content="en-us">
+  <meta property="og:description" content="Glenn Fiedler&#39;s game development and networking articles"><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
+  <meta property="twitter:image" content="https://gafferongames.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
   <meta property="og:updated_time" content="2020-08-24T00:00:00&#43;00:00">
   
@@ -284,7 +286,8 @@
     <h2><a href="/post/floating_point_determinism/">Floating Point Determinism</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 Lately I&rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.
 The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation implicitly by sending just the player inputs.
       
@@ -295,7 +298,8 @@ The basic idea is that instead of synchronizing the state of physics objects dir
     <h2><a href="/post/what_every_programmer_needs_to_know_about_game_networking/">What Every Programmer Needs To Know About Game Networking</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 Have you ever wondered how multiplayer games work?
 From the outside it seems magical: two or more players sharing a consistent experience across the network like they actually exist together in the same virtual world.
 But as programmers we know the truth of what is actually going on underneath is quite different from what you see.
@@ -307,7 +311,8 @@ But as programmers we know the truth of what is actually going on underneath is 
     <h2><a href="/post/reliability_ordering_and_congestion_avoidance_over_udp/">Reliability and Congestion Avoidance over UDP</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 In the previous article, we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.
 The Problem with TCP Those of you familiar with TCP know that it already has its own concept of connection, reliability-ordering and congestion avoidance, so why are we rewriting our own mini version of TCP on top of UDP?
       
@@ -318,7 +323,8 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
     <h2><a href="/post/virtual_connection_over_udp/">Virtual Connection over UDP</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 In the previous article we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.
       
     </div>
@@ -328,10 +334,10 @@ In the previous article we sent and received packets over UDP. Since UDP is conn
     <h2><a href="/post/sending_and_receiving_packets/">Sending and Receiving Packets</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 In the previous article we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.
 In this article I am going to show you how to send and receive UDP packets.
-BSD sockets For most modern platforms you have some sort of basic socket layer available based on BSD sockets.
       
     </div>
   </div>
@@ -340,7 +346,8 @@ BSD sockets For most modern platforms you have some sort of basic socket layer a
     <h2><a href="/post/udp_vs_tcp/">UDP vs. TCP</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 In this article we start with the most basic aspect of network programming: sending and receiving data over the network. This is perhaps the simplest and most basic part of what network programmers do, but still it is quite intricate and non-obvious as to what the best course of action is.
       
     </div>

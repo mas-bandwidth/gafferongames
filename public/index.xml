@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Gaffer On Games</title>
-    <link>http://localhost:1313/</link>
+    <link>https://gafferongames.com/</link>
     <description>Recent content on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
     <copyright>Copyright © Glenn Fiedler, 2004 - 2024</copyright>
     <lastBuildDate>Mon, 24 Aug 2020 00:00:00 +0000</lastBuildDate>
     
-	    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
+	    <atom:link href="https://gafferongames.com/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Posts</title>
-      <link>http://localhost:1313/post/</link>
+      <link>https://gafferongames.com/post/</link>
       <pubDate>Mon, 24 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/</guid>
+      <guid>https://gafferongames.com/post/</guid>
       <description></description>
     </item>
     

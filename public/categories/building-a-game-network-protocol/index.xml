@@ -2,35 +2,36 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Building a Game Network Protocol on Gaffer On Games</title>
-    <link>http://localhost:1313/categories/building-a-game-network-protocol/</link>
+    <link>https://gafferongames.com/categories/building-a-game-network-protocol/</link>
     <description>Recent content in Building a Game Network Protocol on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
     <copyright>Copyright © Glenn Fiedler, 2004 - 2024</copyright>
     <lastBuildDate>Wed, 28 Sep 2016 00:00:00 +0000</lastBuildDate>
     
-	    <atom:link href="http://localhost:1313/categories/building-a-game-network-protocol/index.xml" rel="self" type="application/rss+xml" />
+	    <atom:link href="https://gafferongames.com/categories/building-a-game-network-protocol/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Client Server Connection</title>
-      <link>http://localhost:1313/post/client_server_connection/</link>
+      <link>https://gafferongames.com/post/client_server_connection/</link>
       <pubDate>Wed, 28 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/client_server_connection/</guid>
+      <guid>https://gafferongames.com/post/client_server_connection/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;So far in this article series we&amp;rsquo;ve discussed how games read and write packets, how to unify packet read and write into a single function, how to fragment and re-assemble packets, and how to send large blocks of data over UDP.&lt;/p&gt;
 &lt;p&gt;Now in this article we&amp;rsquo;re going to bring everything together and build a client/server connection on top of UDP.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
-&lt;p&gt;Developers from a web background often wonder why games go to such effort to build a client/server connection on top of UDP, when for many applications, TCP is good enough. &lt;a href=&#34;http://localhost:1313/post/client_server_connection/#quic_footnote&#34;&gt;*&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Developers from a web background often wonder why games go to such effort to build a client/server connection on top of UDP, when for many applications, TCP is good enough. &lt;a href=&#34;https://gafferongames.com/post/client_server_connection/#quic_footnote&#34;&gt;*&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;The reason is that games send &lt;strong&gt;time critical data&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Why don&amp;rsquo;t games use TCP for time critical data? The answer is that TCP delivers data reliably and in-order, and to do this on top of IP (which is unreliable, unordered) it holds more recent packets hostage in a queue while older packets are resent over the network.&lt;/p&gt;
 &lt;p&gt;This is known as &lt;strong&gt;head of line blocking&lt;/strong&gt; and it&amp;rsquo;s a &lt;em&gt;huuuuuge&lt;/em&gt; problem for games. To understand why, consider a game server broadcasting the state of the world to clients 10 times per-second. Each client advances time forward and wants to display the most recent state it receives from the server.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/network-protocol/client-time.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/network-protocol/client-time.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;But if the packet containing state for time t = 10.0 is lost, under TCP we must wait for it to be resent before we can access t = 10.1 and 10.2, even though those packets have already arrived and contain the state the client wants to display.&lt;/p&gt;
 &lt;p&gt;Worse still, by the time the resent packet arrives, it&amp;rsquo;s far too late for the client to actually do anything useful with it. The client has already advanced past 10.0 and wants to display something around 10.3 or 10.4!&lt;/p&gt;
 &lt;p&gt;So why resend dropped packets at all? &lt;strong&gt;BINGO!&lt;/strong&gt; What we&amp;rsquo;d really like is an option to tell TCP: &amp;ldquo;Hey, I don&amp;rsquo;t care about old packets being resent, by they time they arrive I can&amp;rsquo;t use them anyway, so just let me skip over them and access the most recent data&amp;rdquo;.&lt;/p&gt;
@@ -45,13 +46,13 @@
 &lt;p&gt;&lt;a name=&#34;quic_footnote&#34;&gt;&lt;/a&gt; &lt;em&gt;* These days even web servers are transitioning to UDP via &lt;a href=&#34;https://ma.ttias.be/googles-quic-protocol-moving-web-tcp-udp/&#34;&gt;Google&amp;rsquo;s QUIC&lt;/a&gt;. If you still think TCP is good enough for time critical data in 2016, I encourage you to put that in your pipe and smoke it :)&lt;/em&gt;&lt;/p&gt;
 &lt;h2 id=&#34;clientserver-abstraction&#34;&gt;Client/Server Abstraction&lt;/h2&gt;
 &lt;p&gt;The goal is to create an abstraction on top of a UDP socket where our server presents a number of &lt;em&gt;virtual slots&lt;/em&gt; for clients to connect to:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/network-protocol/connection-request.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/network-protocol/connection-request.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;When a client requests a connection, it gets assigned to one of these slots:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/network-protocol/connection-accepted.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/network-protocol/connection-accepted.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;If a client requests connection, but no slots are available, the server is full and the connection request is denied:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/network-protocol/server-is-full.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/network-protocol/server-is-full.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Once a client is connected, packets are exchanged in both directions. These packets form the basis for the custom protocol between the client and server which is game specific.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/network-protocol/client-server-packets.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/network-protocol/client-server-packets.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;In a first person shooter, packets are sent continuously in both directions. Clients send input to the server as quickly as possible, often 30 or 60 times per-second, and the server broadcasts the state of the world to clients 10, 20 or even 60 times per-second.&lt;/p&gt;
 &lt;p&gt;Because of this steady flow of packets in both directions there is no need for keep-alive packets. If at any point packets stop being received from the other side, the connection simply times out. No packets for 5 seconds is a good timeout value in my opinion, but you can be more aggressive if you want.&lt;/p&gt;
 &lt;p&gt;When a client slot times out on the server, it becomes available for other clients to connect. When the client times out, it transitions to an error state.&lt;/p&gt;
@@ -66,7 +67,7 @@
 &lt;/ul&gt;
 &lt;p&gt;Initially the client starts in &lt;em&gt;disconnected&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;When a client connects to a server, it transitions to the &lt;em&gt;connecting&lt;/em&gt; state and sends &lt;strong&gt;connection request&lt;/strong&gt; packets to the server:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/network-protocol/connection-request-packet.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/network-protocol/connection-request-packet.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;The CRC32 and implicit protocol id in the packet header allow the server to trivially reject UDP packets not belonging to this protocol or from a different version of it.&lt;/p&gt;
 &lt;p&gt;Since connection request packets are sent over UDP, they may be lost, received out of order or in duplicate.&lt;/p&gt;
 &lt;p&gt;Because of this we do two things: 1) we keep sending packets for the client state until we get a response from the server or the client times out, and 2) on both client and server we ignore any packets that don&amp;rsquo;t correspond to what we are expecting, since a lot of redundant packets are flying over the network.&lt;/p&gt;
@@ -128,7 +129,7 @@ class Server
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;The connection accepted packet tells the client which client index it was assigned, which the client needs to know which player it is in the game:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/network-protocol/connection-accepted-packet.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/network-protocol/connection-accepted-packet.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Once the server sends a connection accepted packet, from its point of view it considers that client connected. As the server ticks forward, it watches connected client slots, and if no packets have been received from a client for 5 seconds, the slot times out and is reset, ready for another client to connect.&lt;/p&gt;
 &lt;p&gt;Back to the client. While the client is in the &lt;em&gt;connecting&lt;/em&gt; state the client listens for &lt;strong&gt;connection denied&lt;/strong&gt; and &lt;strong&gt;connection accepted&lt;/strong&gt; packets from the server. Any other packets are ignored.&lt;/p&gt;
 &lt;p&gt;If the client receives &lt;strong&gt;connection accepted&lt;/strong&gt;, it transitions to connected. If it receives &lt;strong&gt;connection denied&lt;/strong&gt;, or after 5 seconds hasn&amp;rsquo;t received any response from the server, it transitions to disconnected.&lt;/p&gt;
@@ -166,23 +167,23 @@ class Server
 &lt;p&gt;The first thing we want to do is only allow clients to connect if they can prove they are actually at the IP address and port they say they are.&lt;/p&gt;
 &lt;p&gt;To do this, we no longer accept client connections immediately on connection request, instead we send back a challenge packet, and only complete connection when a client replies with information that can only be obtained by receiving the challenge packet.&lt;/p&gt;
 &lt;p&gt;The sequence of operations in a typical connect now looks like this:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/network-protocol/challenge-response.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/network-protocol/challenge-response.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;To implement this we need an additional data structure on the server. Somewhere to store the challenge data for pending connections, so when a challenge response comes in from a client we can check against the corresponding entry in the data structure and make sure it&amp;rsquo;s a valid response to the challenge sent to that address.&lt;/p&gt;
 &lt;p&gt;While the pending connect data structure can be made larger than the maximum number of connected clients, it&amp;rsquo;s still ultimately finite and is therefore subject to attack. We&amp;rsquo;ll cover some defenses against this in the next article. But for the moment, be happy at least that attackers can&amp;rsquo;t progress to the &lt;strong&gt;connected&lt;/strong&gt; state with spoofed packet source addresses.&lt;/p&gt;
 &lt;p&gt;Next, to guard against our protocol being used in a DDoS amplification attack, we&amp;rsquo;ll inflate client to server packets so they&amp;rsquo;re large relative to the response packet sent from the server. This means we add padding to both &lt;strong&gt;connection request&lt;/strong&gt; and &lt;strong&gt;challenge response&lt;/strong&gt; packets and enforce this padding on the server, ignoring any packets without it. Now our protocol effectively has DDoS &lt;em&gt;minification&lt;/em&gt; for requests -&amp;gt; responses, making it highly unattractive for anyone thinking of launching this kind of attack.&lt;/p&gt;
 &lt;p&gt;Finally, we&amp;rsquo;ll do one last small thing to improve the robustness and security of the protocol. It&amp;rsquo;s not perfect, we need authentication and encryption for that, but it at least it ups the ante, requiring attackers to actually sniff traffic in order to impersonate the client or server. We&amp;rsquo;ll add some unique random identifiers, or &amp;lsquo;salts&amp;rsquo;, to make each client connection unique from previous ones coming from the same IP address and port.&lt;/p&gt;
 &lt;p&gt;The connection request packet now looks like this:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/network-protocol/connection-request-packet-2.0.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/network-protocol/connection-request-packet-2.0.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;The client salt in the packet is a random 64 bit integer rolled each time the client starts a new connect. Connection requests are now uniquely identified by the IP address and port combined with this client salt value. This distinguishes packets from the current connection from any packets belonging to a previous connection, which makes connection and reconnection to the server much more robust.&lt;/p&gt;
 &lt;p&gt;Now when a connection request arrives and a pending connection entry can&amp;rsquo;t be found in the data structure (according to IP, port and client salt) the server rolls a server salt and stores it with the rest of the data for the pending connection before sending a challange packet back to the client. If a pending connection is found, the salt value stored in the data structure is used for the challenge. This way there is always a consistent pair of client and server salt values corresponding to each client session.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/network-protocol/challenge-packet.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/network-protocol/challenge-packet.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;The client state machine has been expanded so &lt;em&gt;connecting&lt;/em&gt; is replaced with two new states: &lt;em&gt;sending connection request&lt;/em&gt; and &lt;em&gt;sending challenge response&lt;/em&gt;, but it&amp;rsquo;s the same idea as before. Client states repeatedly send the packet corresponding to that state to the server while listening for the response that moves it forward to the next state, or back to an error state. If no response is received, the client times out and transitions to &lt;em&gt;disconnected&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;The challenge response sent from the client to the server looks like this:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/network-protocol/challenge-response-packet.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/network-protocol/challenge-response-packet.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;The utility of this being that once the client and server have established connection, we prefix all payload packets with the xor of the client and server salt values and discard any packets with the incorrect salt values. This neatly filters out packets from previous sessions and requires an attacker to sniff packets in order to impersonate a client or server.&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/network-protocol/connection-payload-packet.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/network-protocol/connection-payload-packet.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Now that we have at least a &lt;em&gt;basic&lt;/em&gt; level of security, it&amp;rsquo;s not much, but at least it&amp;rsquo;s &lt;em&gt;something&lt;/em&gt;, we can implement a disconnect packet:&lt;/p&gt;
-&lt;img src=&#34;http://localhost:1313/img/network-protocol/disconnect-packet.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;https://gafferongames.com/img/network-protocol/disconnect-packet.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;And when the client or server want to disconnect clean, they simply fire 10 of these over the network to the other side, in the hope that some of them get through, and the other side disconnects cleanly instead of waiting for timeout.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;We now have a much more robust protocol. It&amp;rsquo;s secure against spoofed IP packet headers. It&amp;rsquo;s no longer able to be used as port of DDoS amplification attacks, and with a trivial xor based authentication, we are protected against &lt;em&gt;casual&lt;/em&gt; attackers while client reconnects are much more robust.&lt;/p&gt;
@@ -201,22 +202,24 @@ class Server
 &lt;p&gt;To solve this, we need to get serious with cryptography to encrypt and sign packets so they can&amp;rsquo;t be read or modified by a third party.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://patreon.com/gafferongames&#34;&gt;Securing Dedicated Servers&lt;/a&gt;.&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Reliable Ordered Messages</title>
-      <link>http://localhost:1313/post/reliable_ordered_messages/</link>
+      <link>https://gafferongames.com/post/reliable_ordered_messages/</link>
       <pubDate>Thu, 15 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/reliable_ordered_messages/</guid>
+      <guid>https://gafferongames.com/post/reliable_ordered_messages/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;Many people will tell you that implementing your own reliable message system on top of UDP is foolish. After all, why reimplement TCP?&lt;/p&gt;
 &lt;p&gt;But why limit ourselves to how TCP works? But there are so many different ways to implement reliable-messages and most of them work &lt;em&gt;nothing&lt;/em&gt; like TCP!&lt;/p&gt;
 &lt;p&gt;So let&amp;rsquo;s get creative and work out how we can implement a reliable message system that&amp;rsquo;s &lt;em&gt;better&lt;/em&gt; and &lt;em&gt;more flexible&lt;/em&gt; than TCP for real-time games.&lt;/p&gt;
@@ -524,25 +527,27 @@ while ( true )
 }
 &lt;/pre&gt;
 &lt;p&gt;Which is flexible enough to implement whatever you like on top of it.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://localhost:1313/post/client_server_connection/&#34;&gt;Client Server Connection&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/client_server_connection/&#34;&gt;Client Server Connection&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Sending Large Blocks of Data</title>
-      <link>http://localhost:1313/post/sending_large_blocks_of_data/</link>
+      <link>https://gafferongames.com/post/sending_large_blocks_of_data/</link>
       <pubDate>Mon, 12 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/sending_large_blocks_of_data/</guid>
+      <guid>https://gafferongames.com/post/sending_large_blocks_of_data/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/packet_fragmentation_and_reassembly/&#34;&gt;previous article&lt;/a&gt; we implemented packet fragmentation and reassembly so we can send packets larger than MTU.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/packet_fragmentation_and_reassembly/&#34;&gt;previous article&lt;/a&gt; we implemented packet fragmentation and reassembly so we can send packets larger than MTU.&lt;/p&gt;
 &lt;p&gt;This approach works great when the data block you&amp;rsquo;re sending is time critical and can be dropped, but in other cases you need to send large blocks of quickly and reliably over packet loss, and you need the data to get through.&lt;/p&gt;
 &lt;p&gt;In this situation, a different technique gives much better results.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
@@ -690,25 +695,27 @@ struct SlicePacket : public protocol2::Packet
 &lt;p&gt;This process continues until all slices of the chunk are received, at which point the receiver sets receiving to &amp;lsquo;false&amp;rsquo; and &amp;lsquo;readyToRead&amp;rsquo; to true. While &amp;lsquo;readyToRead&amp;rsquo; is true, incoming slice packets are discarded. At this point, the chunk receive packet processing is performed, typically on the same frame. The caller checks &amp;lsquo;do I have a chunk to read?&amp;rsquo; and processes the chunk data. All chunk receive data is cleared back to defaults, except chunk id which is incremented from 0 -&amp;gt; 1, and we are ready to receive the next chunk.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;The chunk system is simple in concept, but the implementation is certainly not. I encourage you to take a close look at the &lt;a href=&#34;http://www.patreon.com/gafferongames&#34;&gt;source code&lt;/a&gt; for this article for further details.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/reliable_ordered_messages/&#34;&gt;Reliable Ordered Messages&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/reliable_ordered_messages/&#34;&gt;Reliable Ordered Messages&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Packet Fragmentation and Reassembly</title>
-      <link>http://localhost:1313/post/packet_fragmentation_and_reassembly/</link>
+      <link>https://gafferongames.com/post/packet_fragmentation_and_reassembly/</link>
       <pubDate>Tue, 06 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/packet_fragmentation_and_reassembly/</guid>
+      <guid>https://gafferongames.com/post/packet_fragmentation_and_reassembly/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/serialization_strategies/&#34;&gt;previous article&lt;/a&gt; we discussed how to unify packet read and write into a single serialize function and added a bunch of safety features to packet read.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;previous article&lt;/a&gt; we discussed how to unify packet read and write into a single serialize function and added a bunch of safety features to packet read.&lt;/p&gt;
 &lt;p&gt;Now we are ready to start putting interesting things in our packets and sending them over the network, but immediately we run into an interesting question: &lt;em&gt;how big should our packets be?&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;To answer this question properly we need a bit of background about how packets are actually sent over the Internet.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
@@ -835,7 +842,7 @@ enum TestPacketTypes
 &lt;/ul&gt;
 &lt;p&gt;So I recommend you take it easy with the number of fragments. It&amp;rsquo;s best to use this strategy only for packets in the 2-4 fragment range, and only for time critical data that doesn&amp;rsquo;t matter too much if it gets dropped. It&amp;rsquo;s &lt;em&gt;definitely not&lt;/em&gt; a good idea to fire down a bunch of reliable-ordered events in a huge packet and rely on packet fragmentation and reassembly to save your ass.&lt;/p&gt;
 &lt;p&gt;Another typical use case for large packets is when a client initially joins a game. Here you usually want to send a large block of data down reliably to that client, for example, representing the initial state of the world for late join. Whatever you do, don&amp;rsquo;t send that block of data down using the fragmentation and re-assembly technique in this article.&lt;/p&gt;
-&lt;p&gt;Instead, check out the technique in &lt;a href=&#34;http://localhost:1313/post/sending-large-blocks-of-data.html&#34;&gt;next article&lt;/a&gt; which handles packet loss by resending fragments until they are all received.&lt;/p&gt;
+&lt;p&gt;Instead, check out the technique in &lt;a href=&#34;https://gafferongames.com/post/sending-large-blocks-of-data.html&#34;&gt;next article&lt;/a&gt; which handles packet loss by resending fragments until they are all received.&lt;/p&gt;
 &lt;h2 id=&#34;receiving-packet-fragments&#34;&gt;Receiving Packet Fragments&lt;/h2&gt;
 &lt;p&gt;It&amp;rsquo;s time to implement the code that receives and processed packet fragments. This is a bit tricky because we have to be particularly careful of somebody trying to attack us with malicious packets.&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s a list of all the ways I can think of to attack the protocol:&lt;/p&gt;
@@ -923,25 +930,27 @@ const int index = sequence % MaxEntries;
 &lt;/ul&gt;
 &lt;p&gt;This is my process and it seems to work pretty well. If you are writing a low-level network protocol, the rest of your game depends on this code working correctly. You need to be absolutely sure it works before you build on it, otherwise it&amp;rsquo;s basically a stack of cards.&lt;/p&gt;
 &lt;p&gt;In my experience, game neworking is hard enough without having suspicions that that your low-level network protocol has bugs that only show up under extreme network conditions. That&amp;rsquo;s exactly where you need to be able to trust your code works correctly. &lt;strong&gt;So test it!&lt;/strong&gt;&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://localhost:1313/post/sending_large_blocks_of_data/&#34;&gt;Sending Large Blocks of Data&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/sending_large_blocks_of_data/&#34;&gt;Sending Large Blocks of Data&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Serialization Strategies</title>
-      <link>http://localhost:1313/post/serialization_strategies/</link>
+      <link>https://gafferongames.com/post/serialization_strategies/</link>
       <pubDate>Sun, 04 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/serialization_strategies/</guid>
+      <guid>https://gafferongames.com/post/serialization_strategies/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/reading_and_writing_packets/&#34;&gt;previous article&lt;/a&gt;, we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/reading_and_writing_packets/&#34;&gt;previous article&lt;/a&gt;, we created a bitpacker but it required manual checking to make sure reading a packet from the network is safe. This is a real problem because the stakes are particularly high - a single missed check creates a vulnerability that an attacker can use to crash your server.&lt;/p&gt;
 &lt;p&gt;In this article, we&amp;rsquo;re going to transform the bitpacker into a system where this checking is &lt;em&gt;automatic&lt;/em&gt;. We&amp;rsquo;re going to do this with minimal runtime overhead, and in such a way that we don&amp;rsquo;t have to code separate read and write functions, performing both read and write with a single function.&lt;/p&gt;
 &lt;p&gt;This is called a &lt;em&gt;serialize function&lt;/em&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;serializing-bits&#34;&gt;Serializing Bits&lt;/h2&gt;
@@ -1627,24 +1636,26 @@ bool serialize_scene_d( Stream &amp;amp; stream, Scene &amp;amp; scene )
 &lt;/pre&gt;
 &lt;p&gt;This is great packet structure to use during development.&lt;/p&gt;
 &lt;hr&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://localhost:1313/post/packet_fragmentation_and_reassembly/&#34;&gt;Packet Fragmentation and Reassembly&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/packet_fragmentation_and_reassembly/&#34;&gt;Packet Fragmentation and Reassembly&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>
     
     <item>
       <title>Reading and Writing Packets</title>
-      <link>http://localhost:1313/post/reading_and_writing_packets/</link>
+      <link>https://gafferongames.com/post/reading_and_writing_packets/</link>
       <pubDate>Thu, 01 Sep 2016 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/post/reading_and_writing_packets/</guid>
+      <guid>https://gafferongames.com/post/reading_and_writing_packets/</guid>
       <description>&lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I’m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/building-a-game-network-protocol/&#34;&gt;Building a Game Network Protocol&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;In this article we&amp;rsquo;re going to explore how AAA multiplayer games like first person shooters read and write packets. We&amp;rsquo;ll start with text based formats then move into binary hand-coded binary formats and bitpacking.&lt;/p&gt;
 &lt;p&gt;At the end of this article and the next, you should understand exactly how to implement your own packet read and write the same way the pros do it.&lt;/p&gt;
 &lt;h2 id=&#34;background&#34;&gt;Background&lt;/h2&gt;
@@ -2150,9 +2161,10 @@ struct PacketB
 };
 &lt;/pre&gt;
 &lt;p&gt;If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. &lt;em&gt;You want it to be automatic&lt;/em&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/serialization_strategies/&#34;&gt;Serialization Strategies&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;Serialization Strategies&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
-&lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
+&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
+&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
 &lt;hr&gt;
 </description>
     </item>

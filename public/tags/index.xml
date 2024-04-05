@@ -2,49 +2,49 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Tags on Gaffer On Games</title>
-    <link>http://localhost:1313/tags/</link>
+    <link>https://gafferongames.com/tags/</link>
     <description>Recent content in Tags on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
     <copyright>Copyright © Glenn Fiedler, 2004 - 2024</copyright>
     <lastBuildDate>Mon, 24 Aug 2020 00:00:00 +0000</lastBuildDate>
     
-	    <atom:link href="http://localhost:1313/tags/index.xml" rel="self" type="application/rss+xml" />
+	    <atom:link href="https://gafferongames.com/tags/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Networking</title>
-      <link>http://localhost:1313/tags/networking/</link>
+      <link>https://gafferongames.com/tags/networking/</link>
       <pubDate>Mon, 24 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/networking/</guid>
+      <guid>https://gafferongames.com/tags/networking/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Physics</title>
-      <link>http://localhost:1313/tags/physics/</link>
+      <link>https://gafferongames.com/tags/physics/</link>
       <pubDate>Thu, 22 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/physics/</guid>
+      <guid>https://gafferongames.com/tags/physics/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Vr</title>
-      <link>http://localhost:1313/tags/vr/</link>
+      <link>https://gafferongames.com/tags/vr/</link>
       <pubDate>Thu, 22 Feb 2018 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/vr/</guid>
+      <guid>https://gafferongames.com/tags/vr/</guid>
       <description></description>
     </item>
     
     <item>
       <title>Go/Baduk/Weiqi</title>
-      <link>http://localhost:1313/tags/go/baduk/weiqi/</link>
+      <link>https://gafferongames.com/tags/go/baduk/weiqi/</link>
       <pubDate>Sun, 24 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>http://localhost:1313/tags/go/baduk/weiqi/</guid>
+      <guid>https://gafferongames.com/tags/go/baduk/weiqi/</guid>
       <description></description>
     </item>
     

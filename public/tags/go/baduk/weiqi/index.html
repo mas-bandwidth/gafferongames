@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,7 +28,7 @@
   <meta name="description" content="Glenn Fiedler&#39;s game development and networking articles">
 
   
-  <link rel="alternate" hreflang="en-us" href="http://localhost:1313/tags/go/baduk/weiqi/">
+  <link rel="alternate" hreflang="en-us" href="https://gafferongames.com/tags/go/baduk/weiqi/">
 
   
 
@@ -84,6 +84,8 @@
   
 
   
+  
+  
 
   
   <link rel="alternate" href="/tags/go/baduk/weiqi/index.xml" type="application/rss+xml" title="Gaffer On Games">
@@ -94,7 +96,7 @@
   <link rel="icon" type="image/png" href="/img/icon.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="http://localhost:1313/tags/go/baduk/weiqi/">
+  <link rel="canonical" href="https://gafferongames.com/tags/go/baduk/weiqi/">
 
   
   
@@ -106,10 +108,10 @@
   <meta property="twitter:card" content="summary">
   
   <meta property="og:site_name" content="Gaffer On Games">
-  <meta property="og:url" content="http://localhost:1313/tags/go/baduk/weiqi/">
+  <meta property="og:url" content="https://gafferongames.com/tags/go/baduk/weiqi/">
   <meta property="og:title" content="Go/Baduk/Weiqi | Gaffer On Games">
-  <meta property="og:description" content="Glenn Fiedler&#39;s game development and networking articles"><meta property="og:image" content="http://localhost:1313/img/icon-192.png">
-  <meta property="twitter:image" content="http://localhost:1313/img/icon-192.png"><meta property="og:locale" content="en-us">
+  <meta property="og:description" content="Glenn Fiedler&#39;s game development and networking articles"><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
+  <meta property="twitter:image" content="https://gafferongames.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
   <meta property="og:updated_time" content="2013-02-24T00:00:00&#43;00:00">
   
@@ -266,7 +268,8 @@
     <h2><a href="/post/collision_response_and_coulomb_friction/">Collision Response and Coulomb Friction</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 So far in this series, we have mathematically defined the go stone, rendered it, determined how it moves and rotates, and discussed how its shape affects how it responds to collisions.
       
     </div>
@@ -276,7 +279,8 @@ So far in this series, we have mathematically defined the go stone, rendered it,
     <h2><a href="/post/rotation_and_inertia_tensors/">Rotation &amp; Inertia Tensors</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 In the previous article we detected collision between the go stone and the go board. Now we&rsquo;re working up to calculating collision response so the stone bounces and wobbles before coming to rest on the board.
       
     </div>
@@ -286,9 +290,9 @@ In the previous article we detected collision between the go stone and the go bo
     <h2><a href="/post/go_stone_vs_go_board/">Go Stone vs. Go Board</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 In this series so far we&rsquo;ve defined the shape of a go stone, rendered it using 3D graphics hardware and simulated how it moves in three dimensions.
-Our next goal is for the go stone to bounce and come to rest on the go board.
       
     </div>
   </div>
@@ -297,7 +301,8 @@ Our next goal is for the go stone to bounce and come to rest on the go board.
     <h2><a href="/post/how_the_go_stone_moves/">How The Go Stone Moves</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 In previous articles we mathematically defined the shape of a go stone and tessellated its shape so it can be drawn with 3D graphics hardware.
 Now we want to make the go stone move, obeying Newton&rsquo;s laws of motion so the simulation is physically accurate.
       
@@ -308,7 +313,8 @@ Now we want to make the go stone move, obeying Newton&rsquo;s laws of motion so 
     <h2><a href="/post/tessellating_the_go_stone/">Tessellating The Go Stone</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 In this article we want to draw the go stone using OpenGL.
 Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r1 and r2!
       
@@ -319,7 +325,8 @@ Unfortunately we can&rsquo;t just tell the graphics card, &ldquo;Hey! Please dra
     <h2><a href="/post/shape_of_the_go_stone/">Shape of The Go Stone</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 If you play Go, you know that a biconvex go stone has an interesting wobble when it&rsquo;s placed on the board. This wobble is a direct consequence of its unique shape.
       
     </div>
@@ -329,7 +336,8 @@ If you play Go, you know that a biconvex go stone has an interesting wobble when
     <h2><a href="/post/introduction_to_virtual_go/">Introduction to Virtual Go</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler. Welcome to Virtual Go, my project to create a physically accurate computer simulation of a Go board and stones.
 I&rsquo;m a professional game programmer with 15 years experience in the game industry. Over the years I&rsquo;ve worked for Irrational Games, Team Bondi, Pandemic Studios, Sony Santa Monica and most recently Respawn Entertainment.
       
     </div>

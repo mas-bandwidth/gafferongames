@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 
-<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
+<head>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,7 +28,7 @@
   <meta name="description" content="Glenn Fiedler&#39;s game development and networking articles">
 
   
-  <link rel="alternate" hreflang="en-us" href="http://localhost:1313/categories/networked-physics/">
+  <link rel="alternate" hreflang="en-us" href="https://gafferongames.com/categories/networked-physics/">
 
   
 
@@ -84,6 +84,8 @@
   
 
   
+  
+  
 
   
   <link rel="alternate" href="/categories/networked-physics/index.xml" type="application/rss+xml" title="Gaffer On Games">
@@ -94,7 +96,7 @@
   <link rel="icon" type="image/png" href="/img/icon.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="http://localhost:1313/categories/networked-physics/">
+  <link rel="canonical" href="https://gafferongames.com/categories/networked-physics/">
 
   
   
@@ -106,10 +108,10 @@
   <meta property="twitter:card" content="summary">
   
   <meta property="og:site_name" content="Gaffer On Games">
-  <meta property="og:url" content="http://localhost:1313/categories/networked-physics/">
+  <meta property="og:url" content="https://gafferongames.com/categories/networked-physics/">
   <meta property="og:title" content="Networked Physics | Gaffer On Games">
-  <meta property="og:description" content="Glenn Fiedler&#39;s game development and networking articles"><meta property="og:image" content="http://localhost:1313/img/icon-192.png">
-  <meta property="twitter:image" content="http://localhost:1313/img/icon-192.png"><meta property="og:locale" content="en-us">
+  <meta property="og:description" content="Glenn Fiedler&#39;s game development and networking articles"><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
+  <meta property="twitter:image" content="https://gafferongames.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
   <meta property="og:updated_time" content="2018-02-22T00:00:00&#43;00:00">
   
@@ -266,7 +268,8 @@
     <h2><a href="/post/networked_physics_in_virtual_reality/">Networked Physics in Virtual Reality</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &ldquo;Hey Glenn, there&rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs?
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: &ldquo;Hey Glenn, there&rsquo;s a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs?
       
     </div>
   </div>
@@ -275,7 +278,8 @@
     <h2><a href="/post/state_synchronization/">State Synchronization</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we discussed techniques for compressing snapshots.
 In this article we round out our discussion of networked physics strategies with state synchronization, the third and final strategy in this article series.
 State Synchronization What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, unlike deterministic lockstep, we don&rsquo;t just send input, we send both input and state.
@@ -287,7 +291,8 @@ State Synchronization What is state synchronization? The basic idea is that, som
     <h2><a href="/post/snapshot_compression/">Snapshot Compression</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we sent snapshots of the entire simulation 10 times per-second over the network and interpolated between them to reconstruct a view of the simulation on the other side.
 The problem with a low snapshot rate like 10HZ is that interpolation between snapshots adds interpolation delay on top of network latency.
       
@@ -298,7 +303,8 @@ The problem with a low snapshot rate like 10HZ is that interpolation between sna
     <h2><a href="/post/snapshot_interpolation/">Snapshot Interpolation</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we networked a physics simulation using deterministic lockstep. Now, in this article we&rsquo;re going to network the same simulation with a completely different technique: snapshot interpolation.
 Background While deterministic lockstep is very efficient in terms of bandwidth, it&rsquo;s not always possible to make your simulation deterministic.
       
@@ -309,7 +315,8 @@ Background While deterministic lockstep is very efficient in terms of bandwidth,
     <h2><a href="/post/deterministic_lockstep/">Deterministic Lockstep</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we explored the physics simulation we&rsquo;re going to network in this article series. In this article specifically, we&rsquo;re going to network this physics simulation using deterministic lockstep.
 Deterministic lockstep is a method of networking a system from one computer to another by sending only the inputs that control that system, rather than the state of that system.
       
@@ -320,7 +327,8 @@ Deterministic lockstep is a method of networking a system from one computer to a
     <h2><a href="/post/introduction_to_networked_physics/">Introduction to Networked Physics</a></h2>
     <div class="article-style">
       
-      I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to the first article in Networked Physics.
+      Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to the first article in Networked Physics.
 In this article series we&rsquo;re going to network a physics simulation three different ways: deterministic lockstep, snapshot interpolation and state synchronization.
 But before we get to this, let&rsquo;s spend some time exploring the physics simulation we’re going to network in this article series:
       
