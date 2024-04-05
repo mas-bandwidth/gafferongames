@@ -9,7 +9,9 @@ draft = false
 
 ----- 
 
-### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+Hello readers, I'm no longer posting new content on gafferongames.com
+
+### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
 
 -----
 
@@ -266,6 +268,8 @@ __NEXT ARTICLE:__ [Go Stone vs. Go Board](/post/go_stone_vs_go_board/)
 
 ----- 
 
-### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+Hello readers, I'm no longer posting new content on gafferongames.com
+
+### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
 
 -----

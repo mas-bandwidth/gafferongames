@@ -2,28 +2,28 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Game Physics on Gaffer On Games</title>
-    <link>https://gafferongames.com/categories/game-physics/</link>
+    <link>http://localhost:1313/categories/game-physics/</link>
     <description>Recent content in Game Physics on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
     <copyright>Copyright © Glenn Fiedler, 2004 - 2024</copyright>
     <lastBuildDate>Sat, 04 Sep 2004 00:00:00 +0000</lastBuildDate>
     
-	    <atom:link href="https://gafferongames.com/categories/game-physics/index.xml" rel="self" type="application/rss+xml" />
+	    <atom:link href="http://localhost:1313/categories/game-physics/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Networked Physics (2004)</title>
-      <link>https://gafferongames.com/post/networked_physics_2004/</link>
+      <link>http://localhost:1313/post/networked_physics_2004/</link>
       <pubDate>Sat, 04 Sep 2004 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/networked_physics_2004/</guid>
+      <guid>http://localhost:1313/post/networked_physics_2004/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/spring_physics/&#34;&gt;previous article&lt;/a&gt; we discussed how to use spring-like forces to model basic collision response, joints and motors.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/spring_physics/&#34;&gt;previous article&lt;/a&gt; we discussed how to use spring-like forces to model basic collision response, joints and motors.&lt;/p&gt;
 &lt;p&gt;In this article we&amp;rsquo;re going to discuss how to network a physics simulation.&lt;/p&gt;
 &lt;h2 id=&#34;first-person-shooters&#34;&gt;First Person Shooters&lt;/h2&gt;
 &lt;p&gt;First person shooter physics are usually very simple. The world is static and players are limited to running around and jumping and shooting.&lt;/p&gt;
@@ -145,16 +145,16 @@
     
     <item>
       <title>Spring Physics</title>
-      <link>https://gafferongames.com/post/spring_physics/</link>
+      <link>http://localhost:1313/post/spring_physics/</link>
       <pubDate>Fri, 03 Sep 2004 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/spring_physics/</guid>
+      <guid>http://localhost:1313/post/spring_physics/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/physics_in_3d/&#34;&gt;previous article&lt;/a&gt; we discussed how to simulate the motion of rigid bodies in 3D. Now we&amp;rsquo;re going to discuss how to implement spring physics.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/physics_in_3d/&#34;&gt;previous article&lt;/a&gt; we discussed how to simulate the motion of rigid bodies in 3D. Now we&amp;rsquo;re going to discuss how to implement spring physics.&lt;/p&gt;
 &lt;p&gt;The physics behind springs is simple but extremely versatile and useful. You can use springs to link points together to model rope and string, cloth, and even blobs of jelly. Springs can also be used to implement basic collision response, and to create joints that constrain the motion of rigid bodies.&lt;/p&gt;
 &lt;p&gt;The more physics programming you do, the more springs pop up. Many physical phenomenon boil down to spring-like forces being applied such as buoyancy in water. Springs are everywhere so lets discover how to simulate them!&lt;/p&gt;
 &lt;h2 id=&#34;spring-and-dampers&#34;&gt;Spring and Dampers&lt;/h2&gt;
@@ -203,7 +203,7 @@
 &lt;p&gt;The first weakness is that its difficult to tune the spring constants to get exactly the effect you want. For example, if you are attempting to model the real world physics of an object, you will need to experiment to find the spring k and b values that match the simulation. These values are usually dependent on other values of your simulation, such as the gravity constant, meaning that if you adjust gravity you&amp;rsquo;ll need to retune your springs to get the same effect.&lt;/p&gt;
 &lt;p&gt;The next problem is that tighter the spring k you use, the more difficult it becomes to solve the differential equation. Using an RK4 integrator sure help with this, but even with RK4 there is a fundamental limit to how large you can make your spring k before your simulation will explode. At this point you need to either decrease your timestep or reduce your spring k.&lt;/p&gt;
 &lt;p&gt;The final, and major weakness is that springs are reactive not predictive. This is a subtle point but a very important one. A joint or constraint implemented using springs only works by correcting errors after they occur, and collision response using springs requires allowing some amount of penetration before it acts to correct it and so forth. More advanced techniques exist which can solve for the forces required to constrain the physics simulation without inducing error, such as LCP solvers or iterative methods, but they are out of scope of this simple article.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/networked_physics_2004/&#34;&gt;Networked Physics (2004)&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/networked_physics_2004/&#34;&gt;Networked Physics (2004)&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
@@ -212,16 +212,16 @@
     
     <item>
       <title>Physics in 3D</title>
-      <link>https://gafferongames.com/post/physics_in_3d/</link>
+      <link>http://localhost:1313/post/physics_in_3d/</link>
       <pubDate>Thu, 02 Sep 2004 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/physics_in_3d/</guid>
+      <guid>http://localhost:1313/post/physics_in_3d/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/fix_your_timestep/&#34;&gt;previous article&lt;/a&gt; we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/fix_your_timestep/&#34;&gt;previous article&lt;/a&gt; we discussed how to integrate our physics simulation forward at fixed delta time increments, regardless of display framerate.&lt;/p&gt;
 &lt;p&gt;In this article we are going to simulate motion in three dimensions.&lt;/p&gt;
 &lt;h2 id=&#34;rigid-bodies&#34;&gt;Rigid Bodies&lt;/h2&gt;
 &lt;p&gt;We will concentrate on a type of object called a &lt;strong&gt;rigid body&lt;/strong&gt;. Rigid bodies cannot bend, compress or deform in any way. This makes their motion much easier to calculate.&lt;/p&gt;
@@ -264,7 +264,7 @@
          }
     };
 &lt;/pre&gt;
-&lt;p&gt;Now instead of maintaining completely seperate equations of motion and integrating seperately for x, y and z, we convert our position, velocity, acceleration and force to vector quantities, then integrate the vectors directly using the equations of motion from the &lt;a href=&#34;https://gafferongames.com/post/integration_basics/&#34;&gt;first article&lt;/a&gt;:&lt;/p&gt;
+&lt;p&gt;Now instead of maintaining completely seperate equations of motion and integrating seperately for x, y and z, we convert our position, velocity, acceleration and force to vector quantities, then integrate the vectors directly using the equations of motion from the &lt;a href=&#34;http://localhost:1313/post/integration_basics/&#34;&gt;first article&lt;/a&gt;:&lt;/p&gt;
 &lt;pre&gt;
     &lt;b&gt;F&lt;/b&gt; = m&lt;b&gt;a&lt;/b&gt;
     d&lt;b&gt;v&lt;/b&gt;/dt = &lt;b&gt;a&lt;/b&gt;
@@ -339,7 +339,7 @@
 &lt;h2 id=&#34;orientation-in-3d&#34;&gt;Orientation in 3D&lt;/h2&gt;
 &lt;p&gt;This complexity is due to the difficulty of representing orientations in three dimensions.&lt;/p&gt;
 &lt;p&gt;In two dimensions orientations are easy, you just keep track of an angle in radians and you are done. In three dimensions it becomes much more complex. It turns out that you must either use 3x3 rotation matrices or quaternions to correctly represent the orientation of an object.&lt;/p&gt;
-&lt;p&gt;For reasons of simplicity and efficiency I&amp;rsquo;m going to use quaternions to represent the orientation instead of matrices. This also gives us an easy way to interpolate between the previous and current physics orientation to get smooth framerate independent animation as per the time stepping scheme outlined in the &lt;a href=&#34;https://gafferongames.com/post/fix_your_timestep/&#34;&gt;previous article&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;For reasons of simplicity and efficiency I&amp;rsquo;m going to use quaternions to represent the orientation instead of matrices. This also gives us an easy way to interpolate between the previous and current physics orientation to get smooth framerate independent animation as per the time stepping scheme outlined in the &lt;a href=&#34;http://localhost:1313/post/fix_your_timestep/&#34;&gt;previous article&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Now there are plenty of resources on the internet which explain what quaternions are and how unit length quaternions are used to represent rotations in three dimensions. Here is a particularly &lt;a href=&#34;http://www.sjbrown.co.uk/quaternions.html&#34;&gt;nice one&lt;/a&gt;. What you need to know however is that, effectively, unit quaternions represent an axis of rotation and an amount of rotation about that axis. This may seem similar to our angular velocity, but quaternions are four dimensional vectors instead of three, so mathematically they are actually quite different!&lt;/p&gt;
 &lt;p&gt;We will represent quaternions in code as another struct:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;    struct Quaternion
@@ -430,7 +430,7 @@
 &lt;p&gt;Where &lt;b&gt;p&lt;/b&gt; is the point on the rigid body and &lt;b&gt;x&lt;/b&gt; is the center of mass of the object.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;We have covered the techniques required to simulate linear and rotational movement of a rigid body in three dimensions. By combining the linear and rotational physics into a single physics state and integrating, we can simulate the motion of a rigid body in three dimensions.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/spring_physics/&#34;&gt;Spring Physics&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/spring_physics/&#34;&gt;Spring Physics&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
@@ -439,16 +439,16 @@
     
     <item>
       <title>Fix Your Timestep!</title>
-      <link>https://gafferongames.com/post/fix_your_timestep/</link>
+      <link>http://localhost:1313/post/fix_your_timestep/</link>
       <pubDate>Thu, 10 Jun 2004 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/fix_your_timestep/</guid>
+      <guid>http://localhost:1313/post/fix_your_timestep/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/integration_basics/&#34;&gt;previous article&lt;/a&gt; we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&amp;rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &amp;ldquo;delta time&amp;rdquo; (or dt for short).&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/integration_basics/&#34;&gt;previous article&lt;/a&gt; we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&amp;rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &amp;ldquo;delta time&amp;rdquo; (or dt for short).&lt;/p&gt;
 &lt;p&gt;But how to choose this delta time value? This may seem like a trivial subject but in fact there are many different ways to do it, each with their own strengths and weaknesses - so read on!&lt;/p&gt;
 &lt;h2 id=&#34;fixed-delta-time&#34;&gt;Fixed delta time&lt;/h2&gt;
 &lt;p&gt;The simplest way to step forward is with fixed delta time, like 1/60th of a second:&lt;/p&gt;
@@ -589,7 +589,7 @@
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;This &lt;em&gt;looks&lt;/em&gt; complicated but here is a simple way to think about it. Any remainder in the accumulator is effectively a measure of just how much more time is required before another whole physics step can be taken. For example, a remainder of dt/2 means that we are currently halfway between the current physics step and the next. A remainder of dt*0.1 means that the update is 1/10th of the way between the current and the next state.&lt;/p&gt;
 &lt;p&gt;We can use this remainder value to get a blending factor between the previous and current physics state simply by dividing by dt. This gives an alpha value in the range [0,1] which is used to perform a linear interpolation between the two physics states to get the current state to render. This interpolation is easy to do for single values and for vector state values. You can even use it with full 3D rigid body dynamics if you store your orientation as a quaternion and use a spherical linear interpolation (slerp) to blend between the previous and current orientations.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/physics_in_3d/&#34;&gt;Physics in 3D&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/physics_in_3d/&#34;&gt;Physics in 3D&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
@@ -598,15 +598,15 @@
     
     <item>
       <title>Integration Basics</title>
-      <link>https://gafferongames.com/post/integration_basics/</link>
+      <link>http://localhost:1313/post/integration_basics/</link>
       <pubDate>Tue, 01 Jun 2004 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/integration_basics/</guid>
+      <guid>http://localhost:1313/post/integration_basics/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;https://gafferongames.com/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;strong&gt;&lt;a href=&#34;http://localhost:1313/categories/game-physics/&#34;&gt;Game Physics&lt;/a&gt;&lt;/strong&gt;.&lt;/p&gt;
 &lt;p&gt;If you have ever wondered how the physics simulation in a computer game works then this series of articles will explain it for you. I assume you are proficient with C++ and have a basic grasp of physics and mathematics. Nothing else will be required if you pay attention and study the example source code.&lt;/p&gt;
 &lt;p&gt;A physics simulation works by making many small predictions based on the laws of physics. These predictions are actually quite simple, and basically boil down to something like &amp;ldquo;the object is here, and is traveling this fast in that direction, so in a short amount of time it should be over there&amp;rdquo;. We perform these predictions using a mathematical technique called integration.&lt;/p&gt;
 &lt;p&gt;Exactly how to implement this integration is the subject of this article.&lt;/p&gt;
@@ -711,9 +711,9 @@
 &lt;li&gt;Hooke&amp;rsquo;s law damping coefficient: b = 0.1&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;And here is a graph of the exact solution:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_damped_exact_solution.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_damped_exact_solution.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;When we apply explicit euler to integrate this system, we get the following result, which has been scaled down vertically to fit:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_damped_explicit_euler.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_damped_explicit_euler.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Instead of damping and converging on the origin, it gains energy over time!&lt;/p&gt;
 &lt;p&gt;This system is unstable when integrated with explicit euler and &lt;strong&gt;dt&lt;/strong&gt;=1/100.&lt;/p&gt;
 &lt;p&gt;Unfortunately, since we&amp;rsquo;re already integrating with a small timestep, we don&amp;rsquo;t have a lot of practical options to improve the accuracy. Even if you reduce the timestep, there&amp;rsquo;s always a spring tightness k above which you&amp;rsquo;ll see this behavior.&lt;/p&gt;
@@ -729,7 +729,7 @@
     position += velocity * dt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Applying the semi-implicit euler integrator with &lt;strong&gt;dt&lt;/strong&gt; = 1/100 to the spring damper system gives a stable result that is very close to the exact solution:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_damped_semi_implicit_euler.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_damped_semi_implicit_euler.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Even though semi-implicit euler has the same order of accuracy as explicit euler (order 1), we get a much better result when integrating the equations of motion because it is &lt;a href=&#34;https://en.wikipedia.org/wiki/Symplectic_integrator&#34;&gt;symplectic&lt;/a&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;many-different-integration-methods-exist&#34;&gt;Many different integration methods exist&lt;/h2&gt;
 &lt;p&gt;&lt;a href=&#34;http://web.mit.edu/10.001/Web/Course_Notes/Differential_Equations_Notes/node3.html&#34;&gt;Implicit euler&lt;/a&gt; is an integration technique that is well suited for simulating stiff equations that become unstable with other methods. The drawback is that it requires solving a system of equations per-timestep.&lt;/p&gt;
@@ -807,22 +807,22 @@
 &lt;h2 id=&#34;semi-implicit-euler-vs-rk4&#34;&gt;Semi-implicit euler vs. RK4&lt;/h2&gt;
 &lt;p&gt;Now let&amp;rsquo;s put the RK4 integrator to the test.&lt;/p&gt;
 &lt;p&gt;Since it is a higher order integrator (4th order vs. 1st order) it will be visibly more accurate than semi-implicit euler, right?&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;&lt;strong&gt;Wrong&lt;/strong&gt;. Both integrators are so close to the exact result that it&amp;rsquo;s impossible to make out any difference at this scale. Both integrators are stable and track the exact solution very well with &lt;strong&gt;dt&lt;/strong&gt;=1/100.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler_zoomed_in.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_damped_rk4_vs_semi_implicit_euler_zoomed_in.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Zooming in confirms that RK4 &lt;em&gt;is&lt;/em&gt; more accurate than semi-implicit euler, but is it really worth the complexity and extra runtime cost of RK4? It&amp;rsquo;s hard to say.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s push a bit harder and see if we can find a significant difference between the two integrators. Unfortunately, we can&amp;rsquo;t look at this system for long periods of time because it quickly damps down to zero, so let&amp;rsquo;s switch to a &lt;a href=&#34;https://en.wikipedia.org/wiki/Harmonic_oscillator#Simple_harmonic_oscillator&#34;&gt;simple harmonic oscillator&lt;/a&gt; which oscillates forever without any damping.&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s the exact result we&amp;rsquo;re aiming for:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_undamped_exact_solution.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_undamped_exact_solution.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;To make it harder on the integrators, let&amp;rsquo;s increase delta time to 0.1 seconds.&lt;/p&gt;
 &lt;p&gt;Next, we let the integrators run for 90 seconds and zoom in:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_undamped_rk4_vs_semi_implicit_euler.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_undamped_rk4_vs_semi_implicit_euler.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;After 90 seconds the semi-implicit euler solution (orange) has drifted out of phase with the exact solution because it has a slightly different frequency, while the green line of RK4 matches the frequency, but is losing energy!&lt;/p&gt;
 &lt;p&gt;We can see this more clearly by increasing the time step to 0.25 seconds.&lt;/p&gt;
 &lt;p&gt;RK4 maintains the correct frequency but loses energy:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_undamped_rk4_5fps.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_undamped_rk4_5fps.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;While semi-implicit euler does a better job at conserving energy, on average:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/game-physics/integration_basics_undamped_semi_implicit_euler_5fps.png&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/game-physics/integration_basics_undamped_semi_implicit_euler_5fps.png&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;But drifts out of phase. What an interesting result! As you can see it&amp;rsquo;s not simply the case that RK4 has a higher order of accuracy and is &amp;ldquo;better&amp;rdquo;. It&amp;rsquo;s much, much more nuanced than this.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;Which integrator should you use in your game?&lt;/p&gt;
@@ -837,7 +837,7 @@
     position += velocity * dt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;You&amp;rsquo;ll be glad you did :)&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/fix_your_timestep/&#34;&gt;Fix Your Timestep!&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/fix_your_timestep/&#34;&gt;Fix Your Timestep!&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;

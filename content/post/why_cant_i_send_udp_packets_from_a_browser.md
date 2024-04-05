@@ -9,7 +9,9 @@ draft = false
 
 ----- 
 
-### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+Hello readers, I'm no longer posting new content on gafferongames.com
+
+### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
 
 -----
 
@@ -206,6 +208,8 @@ Alternatively, [netcode.io](http://netcode.io) provides a much simpler 'WebSocke
 
 ----- 
 
-### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+Hello readers, I'm no longer posting new content on gafferongames.com
+
+### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
 
 -----

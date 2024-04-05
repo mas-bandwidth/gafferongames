@@ -9,7 +9,9 @@ draft = false
 
 ----- 
 
-### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+Hello readers, I'm no longer posting new content on gafferongames.com
+
+### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
 
 -----
 
@@ -148,6 +150,8 @@ __NEXT ARTICLE:__ [Tessellating The Go Stone](/post/tessellating_the_go_stone)
 
 ----- 
 
-### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+Hello readers, I'm no longer posting new content on gafferongames.com
+
+### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
 
 -----

@@ -9,7 +9,9 @@ draft = false
 
 ----- 
 
-### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+Hello readers, I'm no longer posting new content on gafferongames.com
+
+### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
 
 -----
 
@@ -286,6 +288,8 @@ Many programmers may not realize that even a program that uses only the numeric 
 
 ----- 
 
-### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+Hello readers, I'm no longer posting new content on gafferongames.com
+
+### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
 
 -----

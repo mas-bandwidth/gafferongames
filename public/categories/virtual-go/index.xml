@@ -2,45 +2,45 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Virtual Go on Gaffer On Games</title>
-    <link>https://gafferongames.com/categories/virtual-go/</link>
+    <link>http://localhost:1313/categories/virtual-go/</link>
     <description>Recent content in Virtual Go on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
     <copyright>Copyright © Glenn Fiedler, 2004 - 2024</copyright>
     <lastBuildDate>Sun, 24 Feb 2013 00:00:00 +0000</lastBuildDate>
     
-	    <atom:link href="https://gafferongames.com/categories/virtual-go/index.xml" rel="self" type="application/rss+xml" />
+	    <atom:link href="http://localhost:1313/categories/virtual-go/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Collision Response and Coulomb Friction</title>
-      <link>https://gafferongames.com/post/collision_response_and_coulomb_friction/</link>
+      <link>http://localhost:1313/post/collision_response_and_coulomb_friction/</link>
       <pubDate>Sun, 24 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/collision_response_and_coulomb_friction/</guid>
+      <guid>http://localhost:1313/post/collision_response_and_coulomb_friction/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://localhost:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;So far in this series, we have mathematically defined the go stone, rendered it, determined how it moves and rotates, and discussed how its shape affects how it responds to collisions.&lt;/p&gt;
 &lt;p&gt;Now in this article we reach our first milestone:&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;A go stone bouncing and coming to rest on the go board&lt;/strong&gt;.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/board-side-on-swirling-wood-grain.jpg&#34; alt=&#34;stones at rest on board&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/board-side-on-swirling-wood-grain.jpg&#34; alt=&#34;stones at rest on board&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;We&amp;rsquo;re going do this using a technique called &lt;a href=&#34;https://en.wikipedia.org/wiki/Collision_response#Impulse-Based_Contact_Model&#34;&gt;impulse-based collision response&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;The concept is simple. To handle a collision we apply an impulse, an instantaneous change in momentum, at the point of impact to make the go stone bounce.&lt;/p&gt;
 &lt;h2 id=&#34;linear-collision-response&#34;&gt;Linear Collision Response&lt;/h2&gt;
-&lt;p&gt;We now pick up where we left off at the end of the &lt;a href=&#34;https://gafferongames.com/post/go_stone_vs_go_board/&#34;&gt;collision detection article&lt;/a&gt;.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/contact-point-linear.png&#34; alt=&#34;contact point linear&#34; width=&#34;100%&#34;/&gt;
+&lt;p&gt;We now pick up where we left off at the end of the &lt;a href=&#34;http://localhost:1313/post/go_stone_vs_go_board/&#34;&gt;collision detection article&lt;/a&gt;.&lt;/p&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/contact-point-linear.png&#34; alt=&#34;contact point linear&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;We have a contact point and a contact normal for the collision.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s start by calculating a collision response impulse without rotation.&lt;/p&gt;
 &lt;p&gt;First, take the dot product of the linear momentum of the go stone with the contact normal. If this value is less than zero, it means the go stone is moving towards the go board, and we need to apply an impulse.&lt;/p&gt;
 &lt;p&gt;To calculate the impulse we need the concept of &amp;rsquo;elasticity&amp;rsquo;. If the collision is perfectly elastic, the go stone bounces off the board without losing any energy:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/linear-collision-response-elastic.png&#34; alt=&#34;linear collision response elastic&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/linear-collision-response-elastic.png&#34; alt=&#34;linear collision response elastic&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;If the collision is inelastic then the go stone loses all its vertical motion post-collision and slides along the surface of the board:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/linear-collision-response-inelastic.png&#34; alt=&#34;linear collision response inelastic&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/linear-collision-response-inelastic.png&#34; alt=&#34;linear collision response inelastic&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;What we really want is something in between:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/linear-collision-response-coefficient-of-restitution.png&#34; alt=&#34;linear collision response coefficient of restitution&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/linear-collision-response-coefficient-of-restitution.png&#34; alt=&#34;linear collision response coefficient of restitution&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;To support this we introduce a new concept called the &amp;lsquo;coefficient of restitution&amp;rsquo;. When this value is 1 the collision is perfectly elastic, when it is 0 the collision is inelastic. At 0.5, it&amp;rsquo;s halfway between.&lt;/p&gt;
 &lt;p&gt;This gives the following formula:&lt;/p&gt;
 &lt;p&gt;[latex]j = -( 1 + e ) \boldsymbol{p} \cdot \boldsymbol{n}[/latex]&lt;/p&gt;
@@ -69,12 +69,12 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Now the stone is definitely bouncing, but in the real world stones don&amp;rsquo;t usually hit the board perfectly flat like this. In the common case, they hit at an angle and the collision makes the stone rotate.&lt;/p&gt;
 &lt;h2 id=&#34;collision-response-with-rotation&#34;&gt;Collision Response With Rotation&lt;/h2&gt;
 &lt;p&gt;To capture this effect we need to calculate collision response with rotation.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/collision-response-rotation.png&#34; alt=&#34;collision response rotation&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/collision-response-rotation.png&#34; alt=&#34;collision response rotation&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Above you can see the effect that we want. If a stone were to collide with the board like this, we know from experience that it would rotate in response.&lt;/p&gt;
 &lt;p&gt;We start by calculating the velocity of the stone at the contact point, and take the dot product of this vs. the contact normal to check if the stone is moving towards the board. This is necessary because when the stone is rotating, different points on the stone have different velocities.&lt;/p&gt;
 &lt;p&gt;Next, we apply a collision impulse along the contact normal with magnitude j except this impulse is applied at the contact point instead of the center of mass of the stone. This gives the collision response its rotational effect.&lt;/p&gt;
 &lt;p&gt;Here is the general equation for the magnitude of this collision impulse.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/impulse-j-general-case.png&#34; alt=&#34;impulse j general case&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/impulse-j-general-case.png&#34; alt=&#34;impulse j general case&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;You can find a derivation of this result on &lt;a href=&#34;https://en.wikipedia.org/wiki/Collision_response#Impulse-Based_Reaction_Model&#34;&gt;wikipedia&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Understandably this is quite complex, but in our case the go board never moves, so we can simplify the equation by assigning zero velocity and infinite mass to the second body. This leads to the following, simpler equation:&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;todo: need a solution to convert across all the latex equations&amp;hellip;&lt;/em&gt;&lt;/p&gt;
@@ -99,7 +99,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;We don&amp;rsquo;t often get to see friction-less collisions in the real world so the video above looks a bit strange. To get realistic behavior out of the go stone, we need to add friction.&lt;/p&gt;
 &lt;p&gt;We&amp;rsquo;ll model sliding friction using the Coulomb friction model.&lt;/p&gt;
 &lt;p&gt;In this model, the friction impulse is proportional the magnitude of the normal impulse j and is limited by a friction cone defined by the coefficient of friction u:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/coulomb-friction-model.png&#34; alt=&#34;coulomb friction model&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/coulomb-friction-model.png&#34; alt=&#34;coulomb friction model&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Lower friction coefficient values mean less friction, higher values mean more friction. Typical values for the coefficient of friction are in the range [0,1].&lt;/p&gt;
 &lt;p&gt;Calculation of the Coulomb friction impulse is performed much like the calculation of the normal impulse except this time the impulse is in the tangent direction against the direction of sliding.&lt;/p&gt;
 &lt;p&gt;Here is the formula for calculating the magnitude of the friction impulse:&lt;/p&gt;
@@ -146,27 +146,27 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
     
     <item>
       <title>Rotation &amp; Inertia Tensors</title>
-      <link>https://gafferongames.com/post/rotation_and_inertia_tensors/</link>
+      <link>http://localhost:1313/post/rotation_and_inertia_tensors/</link>
       <pubDate>Sat, 23 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/rotation_and_inertia_tensors/</guid>
+      <guid>http://localhost:1313/post/rotation_and_inertia_tensors/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/go_stone_vs_go_board/&#34;&gt;previous article&lt;/a&gt; we detected collision between the go stone and the go board. Now we&amp;rsquo;re working up to calculating collision response so the stone bounces and wobbles before coming to rest on the board.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://localhost:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/go_stone_vs_go_board/&#34;&gt;previous article&lt;/a&gt; we detected collision between the go stone and the go board. Now we&amp;rsquo;re working up to calculating collision response so the stone bounces and wobbles before coming to rest on the board.&lt;/p&gt;
 &lt;p&gt;But in order to reach this goal we first need to lay some groundwork. It turns out that irregularly shaped objects, like go stones, are easier to rotate about some axes than others and this has a large effect on how they react to collisions.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/placing-a-stone-on-the-board.jpg&#34; alt=&#34;placing a stone on the board&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/placing-a-stone-on-the-board.jpg&#34; alt=&#34;placing a stone on the board&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;This is the reason go stones wobble in such an interesting way when placed on the go board, and why thick go stones wobble differently to thin ones.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s study this effect so we can reproduce it in Virtual Go.&lt;/p&gt;
 &lt;h2 id=&#34;rotation-in-3d&#34;&gt;Rotation in 3D&lt;/h2&gt;
 &lt;p&gt;Consider the following case in two dimensions:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/rotation-in-2d.png&#34; alt=&#34;rotation in 2d&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/rotation-in-2d.png&#34; alt=&#34;rotation in 2d&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;It&amp;rsquo;s easy because there is only one possible axis for rotation around the center of mass: clockwise or counter-clockwise.&lt;/p&gt;
 &lt;p&gt;It follows that we can represent the orientation of an object in 2D around its center of mass with a single theta value, angular velocity with a scalar radians per-second, and a scalar &amp;lsquo;moment of inertia&amp;rsquo; that works just like an angular equivalent of mass: how hard it is to rotate that object.&lt;/p&gt;
 &lt;p&gt;But when we move to three dimensions suddenly rotation can occur about any axis. Orientation becomes a quaternion, angular velocity a vector, and now for irregular shaped objects like go stones, we need a way to indicate that certain axes of rotation are easier to rotate about than others.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/rotation-in-3d.png&#34; alt=&#34;rotation in 3d&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/rotation-in-3d.png&#34; alt=&#34;rotation in 3d&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;But how can we represent an angular mass that depends on the shape of the object and the axis of rotation?&lt;/p&gt;
 &lt;h2&gt;Inertia Tensor&lt;/h2&gt;
 &lt;p&gt;The solution is to use an &lt;a href=&#34;https://en.wikipedia.org/wiki/Moment_of_inertia#Moment_of_inertia_tensor&#34;&gt;inertia tensor&lt;/a&gt;.&lt;/p&gt;
@@ -183,9 +183,9 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;[latex]I = \begin{bmatrix} I_{x} &amp;amp; 0 &amp;amp; 0 \ 0 &amp;amp; I_{y} &amp;amp; 0 \ 0 &amp;amp; 0 &amp;amp; I_{z} \end{bmatrix}[/latex]&lt;/p&gt;
 &lt;p&gt;All we need to do in our case is to determine the I&lt;sub&gt;x&lt;/sub&gt;, I&lt;sub&gt;y&lt;/sub&gt; and I&lt;sub&gt;z&lt;/sub&gt; values.&lt;/p&gt;
 &lt;p&gt;They represent how difficult it is to rotate the go stone about the x,y and z axes.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/inertia-tensor-ix.png&#34; alt=&#34;inertia tensor x&#34; width=&#34;100%&#34;/&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/inertia-tensor-iy.png&#34; alt=&#34;inertia tensor y&#34; width=&#34;100%&#34;/&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/inertia-tensor-iz.png&#34; alt=&#34;inertia tensor z&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/inertia-tensor-ix.png&#34; alt=&#34;inertia tensor x&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/inertia-tensor-iy.png&#34; alt=&#34;inertia tensor y&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/inertia-tensor-iz.png&#34; alt=&#34;inertia tensor z&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Interestingly, due to symmetry of the go stone, all axes on the xz plane are identical. So really, we only need to calculate I&lt;sub&gt;x&lt;/sub&gt; and I&lt;sub&gt;y&lt;/sub&gt; because I&lt;sub&gt;z&lt;/sub&gt; = I&lt;sub&gt;x&lt;/sub&gt;.&lt;/p&gt;
 &lt;h2 id=&#34;numerical-integration&#34;&gt;Numerical Integration&lt;/h2&gt;
 &lt;p&gt;Let&amp;rsquo;s first calculate the inertia tensor via numerical integration.&lt;/p&gt;
@@ -197,16 +197,16 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Now integration is just a triple for loop summing up the moments of inertia for points that are inside the go stone. This gives us an approximation of the inertia tensor for the go stone that becomes more accurate the more points we use.&lt;/p&gt;
 &lt;h2 id=&#34;interpreting-the-inertia-tensor&#34;&gt;Interpreting The Inertia Tensor&lt;/h2&gt;
 &lt;p&gt;A size 33 japanese go stone has width 22mm and height 9.2mm:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/clam-shell-stone-size-33.jpg&#34; alt=&#34;size 33 go stone&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/clam-shell-stone-size-33.jpg&#34; alt=&#34;size 33 go stone&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Using our point-based approximation to calculate its inertia tensor gives the following result:&lt;/p&gt;
 &lt;p&gt;[latex]I = \begin{bmatrix} 0.177721 &amp;amp; 0 &amp;amp; 0 \ 0 &amp;amp; 0.304776 &amp;amp; 0 \ 0 &amp;amp; 0 &amp;amp; 0.177721 \end{bmatrix}[/latex]&lt;/p&gt;
 &lt;p&gt;As expected, I&lt;sub&gt;x&lt;/sub&gt; = I&lt;sub&gt;z&lt;/sub&gt; due to the symmetry of the go stone.&lt;/p&gt;
 &lt;p&gt;The inertia tensor indicates that its much harder to rotate the go stone about the y axis than axes on the xz plane.&lt;/p&gt;
 &lt;p&gt;Why is this?&lt;/p&gt;
 &lt;p&gt;You can see looking top-down at the go stone when rotating about the y axis a ring of mass around the edge of the stone is multiplied by a large r&lt;sup&gt;2&lt;/sup&gt; and is therefore difficult to rotate.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/top-down-y-rotation.png&#34; alt=&#34;top down y rotation&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/top-down-y-rotation.png&#34; alt=&#34;top down y rotation&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Contrast this with the rotation about the z axis, which has a much smaller portion of mass far away from the axis:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/top-down-z-rotation.png&#34; alt=&#34;top down z rotation&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/top-down-z-rotation.png&#34; alt=&#34;top down z rotation&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;As you can see the distribution of mass around the axis tends to dominate the inertia tensor due to the r&lt;sup&gt;2&lt;/sup&gt; term. The same mass, twice the distance from the axis, is four times more difficult to rotate!&lt;/p&gt;
 &lt;h2&gt;Closed Form Solution&lt;/h2&gt;
 &lt;p&gt;Exact equations are known for the moments of inertia of many &lt;a href=&#34;http://www.livephysics.com/physical-constants/mechanics-pc/moment-inertia-uniform-objects/&#34;&gt;common objects&lt;/a&gt;.&lt;/p&gt;
@@ -236,7 +236,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Plugging in the values for a size 33 stone, we get 0.303588 which is close to the approximate solution 0.304776.&lt;/p&gt;
 &lt;p&gt;Verifying exact solutions against numeric ones is a fantastic way to check your calculations.&lt;/p&gt;
 &lt;p&gt;Can &lt;u&gt;you&lt;/u&gt; derive the equation for I&lt;sub&gt;x&lt;/sub&gt;?&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/collision_response_and_coulomb_friction/&#34;&gt;Collision Response and Coulomb Friction&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/collision_response_and_coulomb_friction/&#34;&gt;Collision Response and Coulomb Friction&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
@@ -245,29 +245,29 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
     
     <item>
       <title>Go Stone vs. Go Board</title>
-      <link>https://gafferongames.com/post/go_stone_vs_go_board/</link>
+      <link>http://localhost:1313/post/go_stone_vs_go_board/</link>
       <pubDate>Fri, 22 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/go_stone_vs_go_board/</guid>
+      <guid>http://localhost:1313/post/go_stone_vs_go_board/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://localhost:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;In this series so far we&amp;rsquo;ve defined the shape of a go stone, rendered it using 3D graphics hardware and simulated how it moves in three dimensions.&lt;/p&gt;
 &lt;p&gt;Our next goal is for the go stone to bounce and come to rest on the go board.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/corner-with-slate-and-shell-stones.jpg&#34; alt=&#34;slate and shell go stones&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/corner-with-slate-and-shell-stones.jpg&#34; alt=&#34;slate and shell go stones&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Understandably, this is quite complicated, so in this article we&amp;rsquo;ll focus on the first step: detecting collisions between a go stone and the go board.&lt;/p&gt;
 &lt;h2 id=&#34;voronoi-regions-and-the-minkowski-difference&#34;&gt;Voronoi Regions and The Minkowski Difference&lt;/h2&gt;
 &lt;p&gt;First, lets assume that the go board is axis aligned and does not move.&lt;/p&gt;
 &lt;p&gt;Next, because go stones are small relative to the go board, we can break down collision detection into regions which are treated differently.&lt;/p&gt;
 &lt;p&gt;The common case is with the primary surface, the actual playing surface of the go board, so lets start by looking top-down at the go board and breaking it up into 2D voronoi regions.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/voronoi-regions.png&#34; alt=&#34;voronoi regions&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/voronoi-regions.png&#34; alt=&#34;voronoi regions&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Each voronoi region corresponds to a subspace where all points (x,z) in that region map to the same nearest feature on the go board. This gives us one region that maps points to the top surface of the go board, four regions that map to the sides, and four corner regions.&lt;/p&gt;
 &lt;p&gt;If we were testing an infinitely small point against the go board, this would be enough, but we are colliding a go stone of a certain width and height.&lt;/p&gt;
 &lt;p&gt;One simple way to incorporate the dimensions of the go stone is to offset the regions from the edge of the go board by the the go stone&amp;rsquo;s bounding sphere radius.&lt;/p&gt;
 &lt;p&gt;This creates something like a poor man&amp;rsquo;s version of a minkowski difference:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/minkowski-difference.png&#34; alt=&#34;minkowski difference&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/minkowski-difference.png&#34; alt=&#34;minkowski difference&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;We can now test the center of the go stone against these regions to quickly to categorize the type of &lt;i&gt;&lt;u&gt;potential&lt;/u&gt;&lt;/i&gt; collision.&lt;/p&gt;
 &lt;h2 id=&#34;go-board-collision-cases&#34;&gt;Go Board Collision Cases&lt;/h2&gt;
 &lt;p&gt;Although the go board has nine different regions there only three unique types:&lt;/p&gt;
@@ -277,21 +277,21 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;li&gt;Corner&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Primary is the common case.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/board-primary-case.png&#34; alt=&#34;primary collision&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/board-primary-case.png&#34; alt=&#34;primary collision&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;It&amp;rsquo;s also the easiest to handle. The only possible collision is between the stone and the playing surface of the go board.&lt;/p&gt;
 &lt;p&gt;Since the go board rests on the floor and cannot move we do not need to worry about collisions with the bottom surface. This means that we can consider the go board to be infinitely thick. This is extremely useful because it removes the possibility of fast moving go stones tunneling vertically through the board.&lt;/p&gt;
 &lt;p&gt;Next is the edge case. This is more complicated because there is more than one way to collide in edge regions. Tests must be done between the go stone and the top plane, the side plane, and the side edge.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/board-side-case.png&#34; alt=&#34;side collision&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/board-side-case.png&#34; alt=&#34;side collision&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;The corner case is more complicated still. Potential collisions include the top plane, the two side planes, the side edges adjacent to the corner, the vertical corner edge, and the corner point.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/board-corner-case.png&#34; alt=&#34;corner collision&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/board-corner-case.png&#34; alt=&#34;corner collision&#34; width=&#34;100%&#34;/&gt;
 &lt;h2 id=&#34;go-stone-collision-cases&#34;&gt;Go Stone Collision Cases&lt;/h2&gt;
 &lt;p&gt;When a go stone collides with another object there are three collision cases.&lt;/p&gt;
 &lt;p&gt;The first is a collision on the top surface of the biconvex. This corresponds to a collision with a portion of the &lt;u&gt;bottom&lt;/u&gt; sphere that generated the go stone.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-collision-top.png&#34; alt=&#34;biconvex collision top&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-collision-top.png&#34; alt=&#34;biconvex collision top&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Next is the bottom surface of the biconvex. This corresponds to the &lt;u&gt;top&lt;/u&gt; sphere.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-collision-bottom.png&#34; alt=&#34;biconvex collision bottom&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-collision-bottom.png&#34; alt=&#34;biconvex collision bottom&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Finally, the collision point can be on the circle ring at the intersection of the two sphere surfaces.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-collision-side.png&#34; alt=&#34;biconvex collision side&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-collision-side.png&#34; alt=&#34;biconvex collision side&#34; width=&#34;100%&#34;/&gt;
 &lt;h2 id=&#34;separating-axis-test-sat&#34;&gt;Separating Axis Test (SAT)&lt;/h2&gt;
 &lt;p&gt;We have 3 ways a stone can collide with any convex object, and 9 different regions that must be treated differently when testing vs. the go board. Within each region we have up to 7 different features on the go board that must be tested against 3 different features on the go stone.&lt;/p&gt;
 &lt;p&gt;This is all rather complicated. How can we simplify it?&lt;/p&gt;
@@ -303,13 +303,13 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Then what we are really asking is: given this plane normal, what two planes from either side tightly bound the object like book-ends on a shelf?&lt;/p&gt;
 &lt;p&gt;To calculate the support of a biconvex solid we must consider two cases.&lt;/p&gt;
 &lt;p&gt;The first is when the go stone is vertical relative to the axis. Here it is reasonably easy. To calculate the support you simply calculate the intersection of the supports of the spheres used to generate the go stone. This makes a nice sort of intuitive sense seeing as the go stone is itself the intersection of two spheres.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-support-1.png&#34; alt=&#34;biconvex support case 1&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-support-1.png&#34; alt=&#34;biconvex support case 1&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;Unfortunately, this technique breaks down when the stone is horizontal relative to the axis because it fails to exclude the portion of the spheres that don&amp;rsquo;t contribute to the biconvex solid.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-support-wrong.png&#34; alt=&#34;biconvex support wrong&#34; width=&#34;50%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-support-wrong.png&#34; alt=&#34;biconvex support wrong&#34; width=&#34;50%&#34;/&gt;
 &lt;p&gt;What you need to do instead is to calculate the support of the circle edge.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-support-correct.png&#34; alt=&#34;biconvex support correct&#34; width=&#34;50%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-support-correct.png&#34; alt=&#34;biconvex support correct&#34; width=&#34;50%&#34;/&gt;
 &lt;p&gt;The tricky part is detecting when the transition between these two cases occur. Here&amp;rsquo;s a diagram I created a while back when I first tried to work this out. If you look closely you can see the exact point where my head exploded:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-support-head-explode.jpg&#34; alt=&#34;head explode&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-support-head-explode.jpg&#34; alt=&#34;head explode&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;And here&amp;rsquo;s a visualization of the end result:&lt;/p&gt;
 &lt;div class=&#34;video_container&#34;&gt;
 &lt;iframe src=&#34;//www.youtube.com/embed/_fkLcJPJ6Wg&#34; 
@@ -335,7 +335,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;After I push the stone out, I recalculate the nearest point between the stone and board and use this as the contact point.&lt;/p&gt;
 &lt;h2 id=&#34;edge-and-corner-cases&#34;&gt;Edge and Corner Cases&lt;/h2&gt;
 &lt;p&gt;The primary surface case is easy because only one axis needs to be tested, but in corner and edge regions multiple axes must be tested for collision.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/multiple-axes-SAT.png&#34; alt=&#34;multiple axis SAT&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/multiple-axes-SAT.png&#34; alt=&#34;multiple axis SAT&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;This is where the SAT really starts to shine. Now instead of combinatorial explosion testing each of the features of the go stone vs. each of the features on the go board, we flatten both the go stone and the go board into support and test for collision one axis at a time.&lt;/p&gt;
 &lt;p&gt;The separating axis test as applied as follows:&lt;/p&gt;
 &lt;ul&gt;
@@ -345,13 +345,13 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;/ul&gt;
 &lt;p&gt;If the stone is colliding we must now work out what direction to push the stone out. I thought about this for a while and tried to come up with a simple pattern that worked.&lt;/p&gt;
 &lt;p&gt;First, I tried pushing the stone out along the axis with the greatest amount of penetration, but this breaks down pretty severely in the case where a go stone approaches the go board from the side:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/multiple-axes-push-out-most-penetration.png&#34; alt=&#34;push out most penetration&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/multiple-axes-push-out-most-penetration.png&#34; alt=&#34;push out most penetration&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Next, I thought that perhaps I could use the previous position of the go stone and try to determine the direction that the stone is approaching from. But then I thought about go stones that were rotating rapidly and how this wouldn&amp;rsquo;t always be correct. Then I started thinking about corner and edge cases, and the longer I thought the more this approach seemed too complicated, like I was trying to invent my own half-assed continuous collision detection method that would probably only work half the time and be almost impossible to test.&lt;/p&gt;
 &lt;p&gt;In the end I settled on the simplest solution I could come up with: push the go stone out along the axis with the &lt;u&gt;least&lt;/u&gt; amount of penetration.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/multiple-axes-push-out-least-penetration.png&#34; alt=&#34;push out least penetration&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/multiple-axes-push-out-least-penetration.png&#34; alt=&#34;push out least penetration&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;This seems counter-intuitive at first, but it has some nice parallels with other physical laws. Nature is lazy and always takes the shortest path. Nature does the &lt;em&gt;least amount of work&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;We should probably do the same :)&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/rotation_and_inertia_tensors/&#34;&gt;Rotation and Inertia Tensors&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/rotation_and_inertia_tensors/&#34;&gt;Rotation and Inertia Tensors&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
@@ -360,28 +360,28 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
     
     <item>
       <title>How The Go Stone Moves</title>
-      <link>https://gafferongames.com/post/how_the_go_stone_moves/</link>
+      <link>http://localhost:1313/post/how_the_go_stone_moves/</link>
       <pubDate>Thu, 21 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/how_the_go_stone_moves/</guid>
+      <guid>http://localhost:1313/post/how_the_go_stone_moves/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://localhost:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;In previous articles we mathematically defined the shape of a go stone and tessellated its shape so it can be drawn with 3D graphics hardware.&lt;/p&gt;
 &lt;p&gt;Now we want to make the go stone move, obeying Newton&amp;rsquo;s laws of motion so the simulation is physically accurate. The stone should be accelerated by gravity and fall downwards. I also want the stone to rotate so it tumbles as it falls through the air.&lt;/p&gt;
 &lt;h2 id=&#34;the-rigid-body-assumption&#34;&gt;The Rigid Body Assumption&lt;/h2&gt;
 &lt;p&gt;Try biting down on a go stone and you&amp;rsquo;ll agree: go stones are very, very hard.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/slate-and-shell-corner-up-close.jpg&#34; alt=&#34;slate and shell go stones&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/slate-and-shell-corner-up-close.jpg&#34; alt=&#34;slate and shell go stones&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Golf balls are pretty hard too, but if you look at a golf ball being hit by a club in super-slow motion, you&amp;rsquo;ll see that it deforms considerably during impact.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/golf-ball-compression-during-impact.jpg&#34; alt=&#34;golf ball compression during impact&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/golf-ball-compression-during-impact.jpg&#34; alt=&#34;golf ball compression during impact&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;The same thing happens to all objects in the real world to some degree. Nothing is truly rigid. No real material is so hard that it never deforms.&lt;/p&gt;
 &lt;p&gt;But this is not the real world. This is Virtual Go :) It&amp;rsquo;s a simulation and here we are free to make whatever assumptions we want. And the smartest simplification we can make at this point is to assume that the go stone is perfectly rigid and does not deform under any circumstance.&lt;/p&gt;
 &lt;p&gt;This is known as the &lt;a href=&#34;https://en.wikipedia.org/wiki/Rigid_body&#34;&gt;rigid body&lt;/a&gt; assumption.&lt;/p&gt;
 &lt;h2 id=&#34;working-in-three-dimensions&#34;&gt;Working in Three Dimensions&lt;/h2&gt;
 &lt;p&gt;Because the go stones are rigid, all we need to represent their current position is the position of the center. As the center moves, so does the rest of the stone.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-rigid-body-center-P.png&#34; alt=&#34;biconvex go stone rigid body center&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-rigid-body-center-P.png&#34; alt=&#34;biconvex go stone rigid body center&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;We&amp;rsquo;ll represent this position using a three dimensional vector &lt;b&gt;P&lt;/b&gt;.&lt;/p&gt;
 &lt;p&gt;Let&amp;rsquo;s define the axes so we know what the x,y,z components of P mean:&lt;/p&gt;
 &lt;ul&gt;
@@ -390,7 +390,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;li&gt;Positive z is into the screen&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;This is what is known as a left-handed coordinate system. So called because I can use the fingers on my left hand to point out each positive axis direction without breaking them.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/coordinate-systems-left-and-right-handed.png&#34; alt=&#34;left and right handed coordinate systems&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/coordinate-systems-left-and-right-handed.png&#34; alt=&#34;left and right handed coordinate systems&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;I&amp;rsquo;ve chosen a left-handed coordinate system purely on personal preference. Also, I&amp;rsquo;m left-handed and I like my fingers :)&lt;/p&gt;
 &lt;h2 id=&#34;linear-motion&#34;&gt;Linear Motion&lt;/h2&gt;
 &lt;p&gt;Now we want to make the stone move.&lt;/p&gt;
@@ -446,7 +446,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;First we have to define how we represent the orientation of the stone. For this we&amp;rsquo;ll use a &lt;a href=&#34;https://en.wikipedia.org/wiki/Quaternions_and_spatial_rotation&#34;&gt;quaternion&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Next we need the angular equivalent of velocity known as&amp;hellip; wait for it&amp;hellip; angular velocity. This too is a vector aka a direction and a length. It&amp;rsquo;s direction is the axis of rotation and the length is the rate of rotation in radians per-second. One full rotation is 2&lt;em&gt;pi radians or 360 degrees so if the length of the angular velocity vector is 2&lt;/em&gt;pi the object rotates around the axis once per-second.&lt;/p&gt;
 &lt;p&gt;Because we&amp;rsquo;re using a left handed coordinate system the direction of rotation is clockwise about the positive axis. You can remember this by sticking your thumb of your left hand in the direction of the axis of rotation and curling your fingers. The direction your fingers curl is the direction of rotation. Notice if you do the same thing with your right hand the rotation is the other way.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/rotation-direction-hand-thumb.png&#34; alt=&#34;rotation direction left and right hands&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/rotation-direction-hand-thumb.png&#34; alt=&#34;rotation direction left and right hands&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;How do we integrate orientation from angular velocity? Orientation is a quaternion and angular velocity is a vector. We can&amp;rsquo;t just add them together.&lt;/p&gt;
 &lt;p&gt;The solution requires a reasonably solid understanding of quaternion math and how it relates to complex numbers. Long story short, we need to convert our angular velocity into a quaternion form and then we can integrate that just like we integrate any other vector. For a full derivation of this result please refer to &lt;a href=&#34;https://fgiesen.wordpress.com/2012/08/24/quaternion-differentiation/&#34;&gt;this excellent article&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Here is the code I use to convert angular velocity into quaternion form:&lt;/p&gt;
@@ -556,7 +556,7 @@ while ( !quit )
 frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;/div&gt;
 &lt;p&gt;I think this is fairly convincing. The go stone is moving quite realistically!&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/go_stone_vs_go_board/&#34;&gt;Go Stone vs. Go Board&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/go_stone_vs_go_board/&#34;&gt;Go Stone vs. Go Board&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
@@ -565,40 +565,40 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
     
     <item>
       <title>Tessellating The Go Stone</title>
-      <link>https://gafferongames.com/post/tessellating_the_go_stone/</link>
+      <link>http://localhost:1313/post/tessellating_the_go_stone/</link>
       <pubDate>Wed, 20 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/tessellating_the_go_stone/</guid>
+      <guid>http://localhost:1313/post/tessellating_the_go_stone/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://localhost:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;In this article we want to draw the go stone using &lt;a href=&#34;http://www.opengl.org&#34;&gt;OpenGL&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Unfortunately we can&amp;rsquo;t just tell the graphics card, &amp;ldquo;Hey! Please draw the intersection of two spheres with radius r and d apart with a bevel torus r&lt;sub&gt;1&lt;/sub&gt; and r&lt;sub&gt;2&lt;/sub&gt;!&amp;rdquo;, because modern 3D graphics cards work by drawing triangles. We have to take our mathematical definition of the go stone and turn it into a set of triangles that the graphics card can render.&lt;/p&gt;
 &lt;p&gt;This is called tessellation and there are several different ways to do it.&lt;/p&gt;
 &lt;h2 id=&#34;longitude-and-lattitude&#34;&gt;Longitude And Lattitude&lt;/h2&gt;
 &lt;p&gt;The first way that I tried was to consider sphere rendering like a globe with longitude/latitude. I started with a ring around the &amp;rsquo;equator&amp;rsquo; of the go stone, stepping these rings up to the top of the sphere like the north pole on a globe.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/naive-tesselation-side-view.gif&#34; alt=&#34;naive tesselation side view&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/naive-tesselation-side-view.gif&#34; alt=&#34;naive tesselation side view&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Unfortunately, just like longitude/latitude on a globe, tessellating this way leads to very distorted mapping around the pole and a lot of wasted triangles:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/inefficient-tesselation-at-pole.gif&#34; alt=&#34;inefficient tesselation at pole&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/inefficient-tesselation-at-pole.gif&#34; alt=&#34;inefficient tesselation at pole&#34; width=&#34;100%&#34;/&gt;
 &lt;h2 id=&#34;triangle-subdivision&#34;&gt;Triangle Subdivision&lt;/h2&gt;
 &lt;p&gt;The next method is triangle subdivision. You start with an approximate shape then subdivide each triangle into four smaller triangles recursively like this:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/sphere-tessellation.gif&#34; alt=&#34;sphere tessellation&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/sphere-tessellation.gif&#34; alt=&#34;sphere tessellation&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Since the go stone only needs the top 1/3 or 1/4 of a sphere, I didn&amp;rsquo;t want to subdivide a whole sphere only to throw most of it away. So I designed my own subdivision algorithm to generate only the top section of a sphere.&lt;/p&gt;
 &lt;p&gt;After some trial and error I found that a pentagon plus a center vertex at the pole of the sphere was a good initial generator that minimized the distortion that occurs during subdivision. The only tricky part is that when subdividing you need to keep track of whether the edge is a sphere edge or a circle edge, as the subdivided vertex must be projected differently.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/generating-shape.gif&#34; alt=&#34;generating shape&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/generating-shape.gif&#34; alt=&#34;generating shape&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;With this technique I was able to generate a much more efficient tessellation:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/regular-tessellation.gif&#34; alt=&#34;regular tessellation&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/regular-tessellation.gif&#34; alt=&#34;regular tessellation&#34; width=&#34;100%&#34;/&gt;
 &lt;h2 id=&#34;tessellating-the-bevel&#34;&gt;Tessellating The Bevel&lt;/h2&gt;
 &lt;p&gt;Now we need to tesselate the bevel. To do this I take the vertices which form the circle edge at the bottom of the top sphere surface and calculate the angle of each vertex about the y axis. I then use these angles to sweep around the torus ensuring that the torus vertices weld perfectly with the top and bottom sphere sections.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/go-stone-with-bevel.gif&#34; alt=&#34;go stone with bevel&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/go-stone-with-bevel.gif&#34; alt=&#34;go stone with bevel&#34; width=&#34;100%&#34;/&gt;
 &lt;h2 id=&#34;vertex-welding&#34;&gt;Vertex Welding&lt;/h2&gt;
 &lt;p&gt;Due to how recursive subdivision works a lot of duplicate vertices are generated.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;d rather not have the graphics card waste time transforming the same vertex over and over, so as I add vertices to the mesh I hash vertex positions into a 3D grid (~1mm cells) and reuse an existing vertex if the position and normals match within some small epsilon value.&lt;/p&gt;
 &lt;p&gt;With vertex welding the reduction in vertices is dramatic: 53000 to just 6500.&lt;/p&gt;
 &lt;p&gt;For more information on vertex welding please refer to the discussion in &lt;a href=&#34;http://www.amazon.com/Real-Time-Collision-Detection-Interactive-Technology/dp/1558607323/ref=sr_1_1?ie=UTF8&amp;qid=1363029675&amp;sr=8-1&amp;keywords=real+time+collision+detection&#34;&gt;Real-Time Collision Detection&lt;/a&gt; by &lt;a href=&#34;http://realtimecollisiondetection.net/blog/&#34;&gt;Christer Ericson&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/how_the_go_stone_moves/&#34;&gt;How The Go Stone Moves&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/how_the_go_stone_moves/&#34;&gt;How The Go Stone Moves&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
@@ -607,31 +607,31 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
     
     <item>
       <title>Shape of The Go Stone</title>
-      <link>https://gafferongames.com/post/shape_of_the_go_stone/</link>
+      <link>http://localhost:1313/post/shape_of_the_go_stone/</link>
       <pubDate>Tue, 19 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/shape_of_the_go_stone/</guid>
+      <guid>http://localhost:1313/post/shape_of_the_go_stone/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://localhost:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;If you play Go, you know that a biconvex go stone has an interesting wobble when it&amp;rsquo;s placed on the board. This wobble is a direct consequence of its unique shape.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;d like to reproduce this wobble in Virtual Go, so let&amp;rsquo;s to spend some time studying go stone&amp;rsquo;s shape, so we can capture this wobble and simulate it on a computer :)&lt;/p&gt;
 &lt;h2 id=&#34;slate-and-shell&#34;&gt;Slate And Shell&lt;/h2&gt;
 &lt;p&gt;In Japan, Go stones are traditionally made out of slate and clam shell.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/slate-and-shell-in-ko.jpg&#34; alt=&#34;slate and shell in ko&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/slate-and-shell-in-ko.jpg&#34; alt=&#34;slate and shell in ko&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Clam shell stones come in several grades of quality. The highest being yuki or &amp;ldquo;snow&amp;rdquo; grade with fine, regularly spaced lines.&lt;/p&gt;
 &lt;p&gt;Go stones also come in different sizes. In general, the thicker the stone, the more expensive it is, as only a small portion of the clam shell is suitable for making them.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/go-stone-side-profile-sizes.png&#34; alt=&#34;go stone side profile sizes&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/go-stone-side-profile-sizes.png&#34; alt=&#34;go stone side profile sizes&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;At first glance the go stone looks like an ellipse, but side-on you can see this is not the case. This shape is called a &lt;em&gt;biconvex solid&lt;/em&gt;. I find this shape interesting because it is the intersection of two spheres.&lt;/p&gt;
 &lt;p&gt;We can study this shape by looking at the intersection of two circles:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex.gif&#34; alt=&#34;biconvex&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex.gif&#34; alt=&#34;biconvex&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;I quickly noticed that by varying the radius of the circles and the distance between their centers, I could generate go stones of different sizes.&lt;/p&gt;
 &lt;p&gt;But when creating a go stone I don&amp;rsquo;t really want it to be parameterized this way.&lt;/p&gt;
 &lt;p&gt;Instead I&amp;rsquo;d like to say, &amp;ldquo;Hey, I would like a stone of this width and height&amp;rdquo; and have a function that calculates the radius of the circles and how far apart they should be to generate that stone.&lt;/p&gt;
 &lt;p&gt;To write this function we first need to do some math:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/biconvex-unknowns.png&#34; alt=&#34;biconvex unknowns&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/biconvex-unknowns.png&#34; alt=&#34;biconvex unknowns&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;First notice that the point Q lies on the generating circle, so the line CQ has length r:&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;todo: obviously I have a bunch of work to get the latex equations ported across to Hugo. I&amp;rsquo;m researching different options&amp;hellip;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;[latex size=&amp;ldquo;2&amp;rdquo;]d + h/2 = r[/latex]
@@ -656,14 +656,14 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Now we can mathematically define a go stone parameterized by its width and height. There is just one problem: the edge is very sharp!&lt;/p&gt;
 &lt;p&gt;To make our stone aesthetically pleasing, lets round the edge with a bevel. Otherwise, you might cut yourself virtually when you play with it:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/go-stone-smooth-bevel.jpg&#34; alt=&#34;go stone smooth bevel&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/go-stone-smooth-bevel.jpg&#34; alt=&#34;go stone smooth bevel&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Let&amp;rsquo;s parameterize the bevel by its height b:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/bevel-b.gif&#34; alt=&#34;torus bevel height b&#34; width=&#34;75%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/bevel-b.gif&#34; alt=&#34;torus bevel height b&#34; width=&#34;75%&#34;/&gt;
 &lt;p&gt;In three dimensions the bevel is actually a torus (donut) around the edge of the go stone. We need to calculate the major and minor radii r&lt;sub&gt;1&lt;/sub&gt; and r&lt;sub&gt;2&lt;/sub&gt; of the torus as a function of b and the dimensions of the go stone:&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/bevel-math-1.gif&#34; alt=&#34;bevel math part 1&#34; width=&#34;100%&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/bevel-math-1.gif&#34; alt=&#34;bevel math part 1&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;The key to solving this is to realize that if the go stone and the bevel are to match perfectly then the tangent of the two circles must be equal at the point P.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;&lt;em&gt;Update&lt;/em&gt;: A few years later and it occurs to me that it would be even more beautiful if the second derivative matched at this intersection as well. Is this possible in general, or must the generating spheres become to ellipses in order to make this happen? I suspect this is the case. Mathematicians who play Go, &lt;a href=&#34;https://gafferongames.com/contact&#34;&gt;let me know your thoughts&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/virtualgo/bevel-math-2.gif&#34; alt=&#34;bevel math part 2&#34; width=&#34;100%&#34;/&gt;
+&lt;p&gt;&lt;em&gt;&lt;em&gt;Update&lt;/em&gt;: A few years later and it occurs to me that it would be even more beautiful if the second derivative matched at this intersection as well. Is this possible in general, or must the generating spheres become to ellipses in order to make this happen? I suspect this is the case. Mathematicians who play Go, &lt;a href=&#34;http://localhost:1313/contact&#34;&gt;let me know your thoughts&lt;/a&gt;.&lt;/em&gt;&lt;/p&gt;
+&lt;img src=&#34;http://localhost:1313/img/virtualgo/bevel-math-2.gif&#34; alt=&#34;bevel math part 2&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;If the tangent is equal then the normal must be equal as well. This means that the center of the bevel circle lies at the intersection of the line CP and the x axis.&lt;/p&gt;
 &lt;p&gt;We already know C so if we can find the point P then we can find this intersection point. Once we know the intersection point we can find r&lt;sub&gt;1&lt;/sub&gt; and r&lt;sub&gt;2&lt;/sub&gt;.&lt;/p&gt;
 &lt;p&gt;Since P is at the start of the bevel:&lt;/p&gt;
@@ -695,7 +695,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
     }
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Now we can calculate the bevel torus to round off any go stone we create as the intersection of two spheres.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/tessellating_the_go_stone/&#34;&gt;Tessellating The Go Stone&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/tessellating_the_go_stone/&#34;&gt;Tessellating The Go Stone&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
@@ -704,44 +704,44 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
     
     <item>
       <title>Introduction to Virtual Go</title>
-      <link>https://gafferongames.com/post/introduction_to_virtual_go/</link>
+      <link>http://localhost:1313/post/introduction_to_virtual_go/</link>
       <pubDate>Mon, 18 Feb 2013 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/introduction_to_virtual_go/</guid>
+      <guid>http://localhost:1313/post/introduction_to_virtual_go/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;https://gafferongames.com/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt;. Welcome to &lt;a href=&#34;http://localhost:1313/categories/virtual-go/&#34;&gt;&lt;strong&gt;Virtual Go&lt;/strong&gt;&lt;/a&gt;, my project to create a physically accurate computer simulation of a Go board and stones.&lt;/p&gt;
 &lt;p&gt;I&amp;rsquo;m a professional game programmer with 15 years experience in the game industry. Over the years I&amp;rsquo;ve worked for Irrational Games, Team Bondi, Pandemic Studios, Sony Santa Monica and most recently Respawn Entertainment. During my career I&amp;rsquo;m extremely proud to have worked on such games as &amp;lsquo;Freedom Force&amp;rsquo;, &amp;lsquo;L.A. Noire&amp;rsquo;, &amp;lsquo;Journey&amp;rsquo;, &amp;lsquo;God of War: Ascension&amp;rsquo; and &amp;lsquo;Titanfall&amp;rsquo;.&lt;/p&gt;
 &lt;p&gt;In my spare time I&amp;rsquo;m also an avid player of the board game &lt;a href=&#34;https://en.wikipedia.org/wiki/Go_(game)&#34;&gt;Go&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/virtualgo/go-board-outside-cafe.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/virtualgo/go-board-outside-cafe.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;A personal project I&amp;rsquo;ve always dreamed of combines the things I love: the game of Go, graphics programming, physics simulation and network programming.&lt;/p&gt;
 &lt;p&gt;The end result I hope to achieve is a beautiful real-time computer rendering of a go board and stones with photorealistic visuals and the laws of physics defining all interactions between the go stones and the board. To Go players reading this, yes, I do aim to reproduce that unique &amp;lsquo;wobble&amp;rsquo; and feel you are familiar with when placing a stone on the board.&lt;/p&gt;
 &lt;p&gt;During the course of this article series I&amp;rsquo;m going to build this project entirely from scratch and include &lt;u&gt;you&lt;/u&gt; in on all the details of building it as a tutorial. I believe in sharing knowledge and my hope is you can follow this project and understand the passion I bring to it and perhaps learn a few things along the way.&lt;/p&gt;
-&lt;p&gt;If you already play Go and want to get right in to the details of building the simulation, I would recommend skipping ahead to the next article in the series: &lt;a href=&#34;https://gafferongames.com/post/shape_of_the_go_stone/&#34;&gt;Shape Of The Go Stone&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you already play Go and want to get right in to the details of building the simulation, I would recommend skipping ahead to the next article in the series: &lt;a href=&#34;http://localhost:1313/post/shape_of_the_go_stone/&#34;&gt;Shape Of The Go Stone&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Otherwise, if you would like a quick introduction to Go, please read on!&lt;/p&gt;
 &lt;h2 id=&#34;the-game-of-go&#34;&gt;The Game of Go&lt;/h2&gt;
 &lt;p&gt;Go is a board game that originated in ancient China.&lt;/p&gt;
 &lt;p&gt;Today it is played worldwide but has a particularly strong following in China, Japan and Korea. It is not particularly well known in the West, although it has featured in popular culture in the movie &amp;ldquo;A Beautiful Mind&amp;rdquo;.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/virtualgo/old-men-playing-go.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/virtualgo/old-men-playing-go.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Go is played on a grid with black and white stones. It is played by two people, each taking turns to place a stone of their color at one of the intersection points on the grid. Once placed on the board, stones do not move.&lt;/p&gt;
 &lt;p&gt;Each stone on the board has a number of liberties equal to the number of lines radiating out from it on the grid. A stone in the middle of the board has four liberties, a stone on the side has three, a stone in the corner has just two.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/virtualgo/go-board-liberties-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/virtualgo/go-board-liberties-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;If the opponent is able to surround all the liberties with stones of the opposite color, the stone is removed from the board.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/virtualgo/capture-stones-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/virtualgo/capture-stones-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;When stones of the same color are placed horizontally or vertically next to each other they become logically connected and form a &amp;ldquo;group&amp;rdquo; with its own set of liberties. For example, a group of two stones in the center has 6 liberties, while the same group on the side has only 4.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/virtualgo/go-board-group-of-two-liberties-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/virtualgo/go-board-group-of-two-liberties-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;A group may be captured if all of its liberties are blocked with stones of the opposite color. When a group is captured it is removed from the board as a unit.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/virtualgo/capture-groups-of-two-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/virtualgo/capture-groups-of-two-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Of course it is not so easy to surround your opponents stones because they get to place stones too :)&lt;/p&gt;
 &lt;p&gt;For example, a single black stone in the center with just one liberty remaining is in a situation known as &amp;ldquo;Atari&amp;rdquo;, but black can escape by extending to form a group of two stones. Now the black group has three liberties and can extend to create more liberties faster than they can be taken away.&lt;/p&gt;
-&lt;p&gt;&lt;img src=&#34;https://gafferongames.com/img/virtualgo/atari-run-away-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&#34;http://localhost:1313/img/virtualgo/atari-run-away-9x9.jpg&#34; width=&#34;100%&#34;/&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;It follows that it&amp;rsquo;s not really possible to capture all of your opponents stones or for them to capture all of yours. Instead, you must coexist on the board with stones of the other color and find a way to surround more points of territory than your opponent.&lt;/p&gt;
 &lt;p&gt;It sounds simple but as you play Go you&amp;rsquo;ll notice beautiful complexity emerging like a fractal: life and death - stones living even though surrounded, liberty races, seki or &amp;ldquo;dual life&amp;rdquo;, the ladder, ko, the snapback, playing under the stones, the monkey jump, the bamboo joint, the tiger mouth.&lt;/p&gt;
 &lt;p&gt;So many beautiful properties from such simple rules. Truly an amazing game!&lt;/p&gt;
 &lt;p&gt;Please visit &lt;a href=&#34;http://playgo.to/iwtg/en/&#34;&gt;The Interactive Way To Go&lt;/a&gt; if you would like to learn more.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/shape_of_the_go_stone/&#34;&gt;Shape of The Go Stone&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/shape_of_the_go_stone/&#34;&gt;Shape of The Go Stone&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;

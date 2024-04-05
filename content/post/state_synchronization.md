@@ -9,7 +9,9 @@ draft = false
 
 ----- 
 
-### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+Hello readers, I'm no longer posting new content on gafferongames.com
+
+### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
 
 -----
 
@@ -217,6 +219,8 @@ And that's really about it for this technique. Without anything fancy it's alrea
 
 ----- 
 
-### _I'm no longer posting new content on [gafferongames.com](https://gafferongames.com). Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!_
+Hello readers, I'm no longer posting new content on gafferongames.com
+
+### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
 
 -----

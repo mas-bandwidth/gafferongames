@@ -14,12 +14,13 @@ title = "Gaffer On Games"
 #   Display link(s) by specifying a URL and label below. Icon is optional for `[cta]`.
 #   Remove a link/note by deleting a cta/note block.
 [btn]
-  url = "https://networknext.com"
-  label = "Learn more"
+  url = "https://mas-bandwidth.com/xdp-for-game-programmers"
+  label = "Check out my new blog <b>mas-bandwidth.com!</b>"
   
 +++
+
 ## My name is **Glenn Fiedler** and I'm the founder and CEO of **Network Next**
 
-I spent a career writing netcode for games. Now I'm making the internet better for games at [Network Next](https://networknext.com). Check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
+I spent a career writing netcode for games. Now I'm making the internet better for games at [Network Next](https://networknext.com). 
 
 {{< youtube fFP7c59ezjo >}}

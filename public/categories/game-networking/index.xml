@@ -2,22 +2,22 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Game Networking on Gaffer On Games</title>
-    <link>https://gafferongames.com/categories/game-networking/</link>
+    <link>http://localhost:1313/categories/game-networking/</link>
     <description>Recent content in Game Networking on Gaffer On Games</description>
     <generator>Source Themes academia (https://sourcethemes.com/academic/)</generator>
     <language>en-us</language>
     <copyright>Copyright © Glenn Fiedler, 2004 - 2024</copyright>
     <lastBuildDate>Mon, 24 Aug 2020 00:00:00 +0000</lastBuildDate>
     
-	    <atom:link href="https://gafferongames.com/categories/game-networking/index.xml" rel="self" type="application/rss+xml" />
+	    <atom:link href="http://localhost:1313/categories/game-networking/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>Network Neutrality Considered Harmful</title>
-      <link>https://gafferongames.com/post/network_neutrality_considered_harmful/</link>
+      <link>http://localhost:1313/post/network_neutrality_considered_harmful/</link>
       <pubDate>Mon, 24 Aug 2020 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/network_neutrality_considered_harmful/</guid>
+      <guid>http://localhost:1313/post/network_neutrality_considered_harmful/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
@@ -37,12 +37,12 @@
 &lt;p&gt;And despite all this effort, a significant portion of players would play my game and get bad network performance and there was &lt;em&gt;literally nothing I could do about it&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;Just how bad does it get? Let&amp;rsquo;s take a look at the data&amp;hellip;&lt;/p&gt;
 &lt;p&gt;Here&amp;rsquo;s a screenshot from Thursday August 20th, 2020:&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;Screenshot of https://portal.networknext.com&#34; src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-001.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Screenshot of https://portal.networknext.com&#34; src=&#34;http://localhost:1313/img/network-neutrality-considered-harmful/portal-001.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;1000+ players with 100ms or greater added latency courtesy of best effort delivery, one player with a whooping 730ms extra. &lt;em&gt;Clearly, this is not a speed of light problem&amp;hellip;&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Later the same day we saw a packet loss event:&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;Graph showing AB test result for packet loss&#34; src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-002.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Graph showing AB test result for packet loss&#34; src=&#34;http://localhost:1313/img/network-neutrality-considered-harmful/portal-002.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;Now you may look at this and think, oh, it&amp;rsquo;s just 0.8% packet loss at peak, it&amp;rsquo;s not that bad&amp;hellip; but this is an average across all players, and only some portion of players were affected. For these players, the effect was much more severe:&lt;/p&gt;
-&lt;p&gt;&lt;img alt=&#34;Graph showing absolute point reduction in packet loss percent for players on network next&#34; src=&#34;https://gafferongames.com/img/network-neutrality-considered-harmful/portal-003.png&#34;&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt=&#34;Graph showing absolute point reduction in packet loss percent for players on network next&#34; src=&#34;http://localhost:1313/img/network-neutrality-considered-harmful/portal-003.png&#34;&gt;&lt;/p&gt;
 &lt;p&gt;During the mitigation the average packet loss reduction was an absolute reduction of 12 points of packet loss. No, not a reduction of 12%, &lt;strong&gt;a reduction of 12 points&lt;/strong&gt;. In other words, a conversion from totally unplayable to playable.&lt;/p&gt;
 &lt;p&gt;This is not an isolated incident. These things literally happen all the time. Take a look for yourself, our portal is live and updated in real-time: &lt;a href=&#34;https://portal.networknext.com&#34;&gt;https://portal.networknext.com&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;From this point on it should be clear: &lt;strong&gt;the internet really doesn&amp;rsquo;t care about your game.&lt;/strong&gt;&lt;/p&gt;
@@ -67,34 +67,34 @@
     
     <item>
       <title>Fixing the Internet for Games</title>
-      <link>https://gafferongames.com/post/fixing_the_internet_for_games/</link>
+      <link>http://localhost:1313/post/fixing_the_internet_for_games/</link>
       <pubDate>Sun, 24 Mar 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/fixing_the_internet_for_games/</guid>
+      <guid>http://localhost:1313/post/fixing_the_internet_for_games/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and this is my GDC 2019 talk called “Fixing the Internet for Games”.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/001.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/001.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;It&amp;rsquo;s about what we are doing at my new startup &lt;a href=&#34;https://networknext.com&#34;&gt;Network Next&lt;/a&gt;.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/002.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/002.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;When you launch a multiplayer game, some percentage of your player base will complain they are getting a bad experience.&lt;/p&gt;
 &lt;p&gt;You only need to check your forums to see this is true.&lt;/p&gt;
 &lt;p&gt;And as a player you’ve probably experienced it too.&lt;/p&gt;
 &lt;p&gt;What’s going on?&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/003.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/003.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Is it your netcode, or maybe your matchmaker or hosting provider?&lt;/p&gt;
 &lt;p&gt;Can you fix it by running more servers in additional locations, or by switching to another hosting company?&lt;/p&gt;
 &lt;p&gt;Or maybe you’ve done all this already and now you have too many data centers, causing fragmentation in your player base?&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/004.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/004.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;It turns out that you can do all these things perfectly yet some % of your player base will still complain.&lt;/p&gt;
 &lt;p&gt;The real problem is that you don’t control the route from your player to your game server, and sometimes this route is bad.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/005.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/005.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;This happens because the internet is not optimized for what we want (lowest latency, jitter and packet loss)&lt;/p&gt;
 &lt;p&gt;No amount of good netcode that you write can compensate for this.&lt;/p&gt;
 &lt;p&gt;The problem is the internet itself.&lt;/p&gt;
 &lt;p&gt;The internet doesn’t care about your game.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/006.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/006.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;The internet thinks game traffic is the same as checking emails, visiting a website or watching netflix.&lt;/p&gt;
 &lt;p&gt;But game traffic is real-time and latency sensitive. It’s not the same.&lt;/p&gt;
 &lt;p&gt;It’s interactive so it can’t be cached at the edge and buffered like streamed video.&lt;/p&gt;
@@ -102,9 +102,9 @@
 &lt;p&gt;Sometimes ISPs or transit providers make mistakes and packets are sent on ridiculous routes that can go to the other side of the country and back on their way to a game server just 5 miles away from the player… you can call up the ISP and ask them to fix this, but it can take days to resolve.&lt;/p&gt;
 &lt;p&gt;Even from day to day, performance is not consistent. You can get a good route one day, and a terrible one the next.&lt;/p&gt;
 &lt;p&gt;For all of these problems, players tend to blame you, the developer. But it’s not actually your fault.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/007.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/007.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;What can you, the game developer, do about this?&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/008.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/008.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;One common approach is to try running as many servers in as many locations as possible, with as many different providers as you can.&lt;/p&gt;
 &lt;p&gt;This seems like a good idea at first, but there is no one data center or hosting company that is perfectly peered with every player of your game, so ultimately, it does not solve the problem.&lt;/p&gt;
 &lt;p&gt;Flaws:&lt;/p&gt;
@@ -113,7 +113,7 @@
 &lt;li&gt;Logistics of so many suppliers&lt;/li&gt;
 &lt;li&gt;Really difficult to find one data center suitable for party or team that wants to play together&lt;/li&gt;
 &lt;/ol&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/009.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/009.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Another option is to host in public clouds. Google’s private network is pretty good, right?&lt;/p&gt;
 &lt;p&gt;Game developers tend to assume that AWS, Azure and Google peering is perfect. But this is not true.&lt;/p&gt;
 &lt;p&gt;Flaws:&lt;/p&gt;
@@ -122,7 +122,7 @@
 &lt;li&gt;Locked into one provider&lt;/li&gt;
 &lt;li&gt;Transit is not as good as you think&lt;/li&gt;
 &lt;/ol&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/010.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/010.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;You could also build your own internet for your game.&lt;/p&gt;
 &lt;p&gt;This is not a joke. It actually happened!&lt;/p&gt;
 &lt;p&gt;Riot built their own private internet for League of Legends. When you play league of legends, your game traffic goes directly from your ISP onto this private network.&lt;/p&gt;
@@ -137,94 +137,94 @@
 &lt;li&gt;Can you really afford this?&lt;/li&gt;
 &lt;li&gt;How many internets do we really need?! :)&lt;/li&gt;
 &lt;/ol&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/011.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/011.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Right now, if you are a game developer shipping a multiplayer game, you are competing against companies that have built their own private internet for their game.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/012.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/012.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;What’s the solution? Build your own too?&lt;/p&gt;
 &lt;p&gt;Does it really make sense to build an internet for each game? This is crazy&amp;hellip;&lt;/p&gt;
 &lt;p&gt;There has to be a way to do this without building your own infrastructure.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/013.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/013.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Network Next was created to solve this problem.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/014.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/014.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Network Next steers your game’s traffic across private networks that have already been built, so you don’t have to build your own private internet for your game.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/015.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/015.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;But hold on. Aren&amp;rsquo;t all the problems at the edge?&lt;/p&gt;
 &lt;p&gt;People seem to think that all the bad stuff on the internet occurs at the edge of the network, eg. shitty DSL connections, oversubscribed cable networks…&lt;/p&gt;
 &lt;p&gt;But this is not true.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/016.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/016.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;The backbone itself is not as good as you think it is.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/017.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/017.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;And I’m going to prove it.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/018.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/018.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Just two regular computers sitting in different data centers&amp;hellip; let’s send UDP ping and pong packets between them, so we can measure the quality of the network.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/019.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/019.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;We need some way to measure this quality as a scalar value.&lt;/p&gt;
 &lt;p&gt;Define cost as the sum of round trip time (rtt) in milliseconds, jitter (3rd standard deviation), and packet loss %.&lt;/p&gt;
 &lt;p&gt;Lower cost is good. Higher cost is bad.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/020.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/020.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Now let’s generalize to 4 nodes.&lt;/p&gt;
 &lt;p&gt;We measure cost between all nodes via pings, O(n^2).&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/021.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/021.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Now let’s go up to 10 nodes.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/022.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/022.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Store the cost between all nodes in a triangular matrix.&lt;/p&gt;
 &lt;p&gt;Each entry in the matrix is the cost between the node with index corresponding to the column, and node with index corresponding to the row.&lt;/p&gt;
 &lt;p&gt;The diagonal is -1, because nodes don’t ping themselves.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/023.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/023.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Now spin up instances in all the providers you can think of and all locations they support in North America.&lt;/p&gt;
 &lt;p&gt;For example: Google, AWS, Azure, Bluemix, vultr.com, multiplay, i3d, gameservers.com, servers.com and so on.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/024.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/024.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;If the internet backbone was perfectly efficient, A-B would be the lowest cost 100% of the time.&lt;/p&gt;
 &lt;p&gt;Instead, for the worst provider it is only 5-10% of the time.&lt;/p&gt;
 &lt;p&gt;And the best performing provider only 30% of the time&amp;hellip;&lt;/p&gt;
 &lt;p&gt;Of course, we are not outperforming each provider on their own internal network, those are efficient.&lt;/p&gt;
 &lt;p&gt;Instead we reveal that each node on the internet is not perfectly peered with every other node. There is some slack, and going through an intermediary node in the majority cases can fix this.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/025.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/025.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Machines on the backbone are not talking to each other as efficiently as they can.&lt;/p&gt;
 &lt;p&gt;Talking through an intermediary is often better, in terms of our cost function.&lt;/p&gt;
 &lt;p&gt;Why? Many reasons&amp;hellip; but overall, the public internet is optimized for throughput at lowest cost, not lowest latency and jitter.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/026.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/026.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;What other option is there, aside from the public internet?&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/027.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/027.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Many private networks have been built.&lt;/p&gt;
 &lt;p&gt;These include CDNs and any corporate entity that has realized the public internet is broken, and have built their own private networks (backhaul) and interconnections to compensate.&lt;/p&gt;
 &lt;p&gt;(Not many people know this, but this “shadow” private internet is actually growing at a faster rate than the public internet&amp;hellip;)&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/028.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/028.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;This private internet is currently closed. Your game packets do not traverse it.&lt;/p&gt;
 &lt;p&gt;How can we open it up?&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/029.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/029.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;With a marketplace. Network Next is a marketplace where private networks resell excess capacity to applications that want better transit than the public internet.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/030.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/030.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Every 10 seconds, per-player we run a &amp;ldquo;route shader&amp;rdquo; as a bid on our marketplace, and find the best route across multiple suppliers that satisfies this request.&lt;/p&gt;
 &lt;p&gt;Suppliers cannot identify buyers, and can only compete on performance and price.&lt;/p&gt;
 &lt;p&gt;Thus, Network Next discovers the market price for premium transit, while remaining neutral.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/031.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/031.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Now let’s see how it works in practice, with real players.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/032.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/032.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Here is a small sample of connections active at a specific time one night last week&amp;hellip;&lt;/p&gt;
 &lt;p&gt;Each dot is a player. Green dots are taking Network Next, blue dots are taking the public internet, because Network Next does not provide any improvement for them (yet).&lt;/p&gt;
 &lt;p&gt;Around 60% of player sessions are improved, fluctuating between 50% and 60% depending on the time of day. We believe that as we ramp up more suppliers, we can get the percentage of players improved up to 90%.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/033.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/033.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Of the 60% that are currently improved, the improvement breaks down into the following buckets:&lt;/p&gt;
 &lt;p&gt;49% of sessions had 0-5 cost unit improvement (cost being latency+jitter+packet loss).
 25% had 5-10cu improvement.
 12% had 10-15cu improvement.
 6% had 15-20cu improvement.
 7% had greater than 20cu improvement&amp;hellip;&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/034.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/034.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Here is a look at live sessions at a random time that night. Look at the rightmost column. Some players are getting an incredible improvement&amp;hellip; there are always some players getting improvements like this at all times of the day&amp;hellip;&lt;/p&gt;
 &lt;p&gt;(My apologies for the black censoring, it is necessary for GDPR compliance).&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/035.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/035.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Drilling into the session getting the most improvement, we can see that they are not in the middle of nowhere, they are in Monterey, California&amp;hellip;&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/036.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/036.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Here we can see that the improvement is in both latency and jitter. Notice how flat the blue latency line is (Network Next), vs. the red line (public internet) that is going all over the place.&lt;/p&gt;
 &lt;p&gt;Network Next not only has lower latency, it is also more consistent.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/037.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/037.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;Here is a look at different data centers where our customers run game servers.&lt;/p&gt;
 &lt;p&gt;On the right is the % of players taking Network Next (getting improvement) to servers in that data center (green), and those not getting improvement and going direct over the public internet (blue).&lt;/p&gt;
 &lt;p&gt;On the left is the distribution of cost unit improvements for players that are getting improvement on Network Next to servers in that data center. The improvement depends on the peering arrangements of that data center, and on internet weather. It fluctuates somewhat from day to day.&lt;/p&gt;
 &lt;p&gt;We are able to fix this fluctuation due to internet weather and get the best result at all times.&lt;/p&gt;
-&lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/040.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
+&lt;img src=&#34;http://localhost:1313/img/fixing-the-internet/040.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;If you&amp;rsquo;d like to learn more, please visit us at &lt;a href=&#34;https://networknext.com&#34;&gt;networknext.com&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
@@ -234,15 +234,15 @@
     
     <item>
       <title>Floating Point Determinism</title>
-      <link>https://gafferongames.com/post/floating_point_determinism/</link>
+      <link>http://localhost:1313/post/floating_point_determinism/</link>
       <pubDate>Wed, 24 Feb 2010 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/floating_point_determinism/</guid>
+      <guid>http://localhost:1313/post/floating_point_determinism/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://localhost:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Lately I&amp;rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.&lt;/p&gt;
 &lt;p&gt;The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation &lt;em&gt;implicitly&lt;/em&gt; by sending just the player inputs.&lt;/p&gt;
 &lt;p&gt;This is a very attractive synchronization strategy because the amount of network traffic depends on the size of the player inputs instead of the amount of physics state in the world. In fact, this strategy has been used for many years in RTS games for precisely this reason; with thousands and thousands of units on the map, they simply have too much state to send over the network.&lt;/p&gt;
@@ -264,11 +264,11 @@
 &lt;p&gt;However with a good deal of work you &lt;u&gt;may&lt;/u&gt; be able to &lt;a href=&#34;http://www.yosefk.com/blog/consistency-how-to-defeat-the-purpose-of-ieee-floating-point.html&#34;&gt;coax&lt;/a&gt; exactly the same floating point results out of different compilers or different machine architectures by using your compilers &amp;ldquo;strict&amp;rdquo; IEEE 754 compliant mode and restricting the set of floating point operations you use. This typically results in significantly lower floating point performance.&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ul&gt;
-&lt;p&gt;If you would like to debate these points or add your own nuance, please &lt;a href=&#34;https://gafferongames.com/contact&#34;&gt;contact&lt;/a&gt; me! I consider this question by no means settled and am very interested in other peoples experiences with deterministic floating point simulations and exactly reproducible floating point calculations. Please contact me especially if you have managed to get binary exact results across different architectures and compilers in real world situations.&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;p&gt;If you would like to debate these points or add your own nuance, please &lt;a href=&#34;http://localhost:1313/contact&#34;&gt;contact&lt;/a&gt; me! I consider this question by no means settled and am very interested in other peoples experiences with deterministic floating point simulations and exactly reproducible floating point calculations. Please contact me especially if you have managed to get binary exact results across different architectures and compilers in real world situations.&lt;/p&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;p&gt;&lt;u&gt;Here are the resources I have discovered in my search so far&amp;hellip;&lt;/u&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;The technology we license to various customers is based on determinism of floating point (in 64-bit mode, even) and has worked that way since the year 2000.
 &lt;p&gt;As long as you stick to a single compiler, and a single CPU instruction set, it is possible to make floating point fully deterministic. The specifics vary by platform (i e, different between x86, x64 and PPC).&lt;/p&gt;
 &lt;p&gt;You have to make sure that the internal precision is set to 64 bits (not 80, because only Intel implements that), and that the rounding mode is consistent. Furthermore, you have to check this after calls to external DLLs, because many DLLs (Direct3D, printer drivers, sound libraries, etc) will change the precision or rounding mode without setting it back.&lt;/p&gt;
@@ -276,8 +276,8 @@
 &lt;p&gt;Also, you can&amp;rsquo;t use SSE or SSE2 for floating point, because it&amp;rsquo;s too under-specified to be deterministic.&lt;/blockquote&gt;&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Jon Watte, GameDev.net forums&lt;/b&gt;
 &lt;a href=&#34;http://www.gamedev.net/community/forums/topic.asp?topic_id=499435&#34;&gt;&lt;a href=&#34;http://www.gamedev.net/community/forums/topic.asp?topic_id=499435&#34;&gt;http://www.gamedev.net/community/forums/topic.asp?topic_id=499435&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;I work at Gas Powered Games and i can tell you first hand that floating point math is deterministic. You just need the same instruction set and compiler and of course the user&#39;s processor adheres to the IEEE754 standard, which includes all of our PC and 360 customers. The engine that runs DemiGod, Supreme Commander 1 and 2 rely upon the IEEE754 standard. Not to mention probably all other RTS peer to peer games in the market. As soon as you have a peer to peer network game where each client broadcasts what command they are doing on what &#39;tick&#39; number and rely on the client computer to figure out the simulation/physical details your going to rely on the determinism of the floating point processor.
 &lt;p&gt;At app startup time we call:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;_controlfp(_PC_24, _MCW_PC)
@@ -293,24 +293,24 @@ gpAssert( (_controlfp(0, 0) &amp;amp;amp; _MCW_RC) == _RC_NEAR );
 &lt;p&gt;We did however have problems when using some physics APIs because their code did not have determinism or reproducibility in mind. For example some physics APIS have solvers that take X number of iterations when solving where X can be lower with faster CPUs.&lt;/blockquote&gt;&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Elijah, Gas Powered Games&lt;/b&gt;&lt;br&gt;
 &lt;a href=&#34;http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;t=1800&#34;&gt;&lt;a href=&#34;http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;t=1800&#34;&gt;http://www.box2d.org/forum/viewtopic.php?f=3&amp;amp;t=1800&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;If you store replays as controller inputs, they cannot be played back on machines with different CPU architectures, compilers, or optimization settings. In MotoGP, this meant we could not share saved replays between Xbox and PC. It also meant that if we saved a replay from a debug build of the game, it would not work in release builds, or vice versa. This is not always a problem (we never shipped debug builds, after all), but if we ever released a patch, we had to build it using the exact same compiler as the original game. If the compiler had been updated since our original release, and we built a patch using the newer compiler, this could change things around enough that replays saved by the original game would no longer play back correctly.
 &lt;p&gt;This is madness! Why don&amp;rsquo;t we make all hardware work the same? Well, we could, if we didn&amp;rsquo;t care about performance. We could say &amp;ldquo;hey Mr. Hardware Guy, forget about your crazy fused multiply-add instructions and just give us a basic IEEE implementation&amp;rdquo;, and &amp;ldquo;hey Compiler Dude, please don&amp;rsquo;t bother trying to optimize our code&amp;rdquo;. That way our programs would run consistently slowly everywhere :-)&lt;/blockquote&gt;&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Shawn Hargreaves, MSDN Blog&lt;/b&gt;
 &lt;a href=&#34;http://blogs.msdn.com/shawnhar/archive/2009/03/25/is-floating-point-math-deterministic.aspx&#34;&gt;&lt;a href=&#34;http://blogs.msdn.com/shawnhar/archive/2009/03/25/is-floating-point-math-deterministic.aspx&#34;&gt;http://blogs.msdn.com/shawnhar/archive/2009/03/25/is-floating-point-math-deterministic.aspx&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;&#34;Battlezone 2 used a lockstep networking model requiring absolutely identical results on every client, down to the least-significant bit of the mantissa, or the simulations would start to diverge. While this was difficult to achieve, it meant we only needed to send user input across the network; all other game state could be computed locally. During development, we discovered that AMD and Intel processors produced slightly different results for trancendental functions (sin, cos, tan, and their inverses), so we had to wrap them in non-optimized function calls to force the compiler to leave them at single-precision. That was enough to make AMD and Intel processors consistent, but it was definitely a learning experience.&lt;/blockquote&gt;
 &lt;p&gt;&lt;b&gt;Ken Miller, Pandemic Studios&lt;/b&gt;&lt;br&gt;
 &lt;a href=&#34;http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;t=175&#34;&gt;&lt;a href=&#34;http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;t=175&#34;&gt;http://www.box2d.org/forum/viewtopic.php?f=4&amp;amp;t=175&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;... In FSW1 when desync is detected in player would be instantly killed by &#34;magic sniper&#34;. :) All that stuff was fixed in FSW2. We just ran precise FP and used Havok FPU libs instead SIMD on PC. Also integer modulo is problem too because C++ standard says it&#39;s &#34;implementation defined&#34; (in case when multiple compilers/platforms are used). In general I liked tools for lockstep we developed, finding desyncs in code on FSW2 was trivial.&lt;/blockquote&gt;
 &lt;p&gt;&lt;b&gt;Branimir Karadžić, Pandemic Studios&lt;/b&gt;
 &lt;a href=&#34;http://www.google.com/buzz/100111796601236342885/8hDZ655S6x3/Floating-Point-Determinism-Gaffer-on-Games&#34;&gt;http://www.google.com/buzz/100111796601236342885/8hDZ655S6x3/Floating-Point-Determinism-Gaffer-on-Games&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt; I know three main sources of floating point inconsistency pain:
 &lt;p&gt;Algebraic compiler optimizations
 “Complex” instructions like multiply-accumulate or sine
@@ -319,26 +319,26 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;Summary: use SSE2 or SSE, and if you can’t, configure the FP CSR to use 64b intermediates and avoid 32b floats. Even the latter solution works passably in practice, as long as everybody is aware of it.&lt;/blockquote&gt;&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Yossi Kreinin, Personal Blog&lt;/b&gt;&lt;br&gt;
 &lt;a href=&#34;http://www.yosefk.com/blog/consistency-how-to-defeat-the-purpose-of-ieee-floating-point.html&#34;&gt;&lt;a href=&#34;http://www.yosefk.com/blog/consistency-how-to-defeat-the-purpose-of-ieee-floating-point.html&#34;&gt;http://www.yosefk.com/blog/consistency-how-to-defeat-the-purpose-of-ieee-floating-point.html&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;The short answer is that FP calculations are entirely deterministic, as per the IEEE Floating Point Standard, but that doesn&#39;t mean they&#39;re entirely reproducible across machines, compilers, OS&#39;s, etc.
 &lt;p&gt;The long answer to these questions and more can be found in what is probably the best reference on floating point, David Goldberg&amp;rsquo;s What Every Computer Scientist Should Know About Floating Point Arithmetic. Skip to the section on the IEEE standard for the key details.&lt;/p&gt;
 &lt;p&gt;Finally, if you are doing the same sequence of floating point calculations on the same initial inputs, then things should be replayable exactly just fine. The exact sequence can change depending on your compiler/os/standard library, so you might get some small errors this way.&lt;/p&gt;
 &lt;p&gt;Where you usually run into problems in floating point is if you have a numerically unstable method and you start with FP inputs that are approximately the same but not quite. If your method&amp;rsquo;s stable, you should be able to guarantee reproducibility within some tolerance. If you want more detail than this, then take a look at Goldberg&amp;rsquo;s FP article linked above or pick up an intro text on numerical analysis.&lt;/blockquote&gt;&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Todd Gamblin, Stack Overflow&lt;/b&gt;
 &lt;a href=&#34;http://stackoverflow.com/questions/968435/what-could-cause-a-deterministic-process-to-generate-floating-point-errors&#34;&gt;&lt;a href=&#34;http://stackoverflow.com/questions/968435/what-could-cause-a-deterministic-process-to-generate-floating-point-errors&#34;&gt;http://stackoverflow.com/questions/968435/what-could-cause-a-deterministic-process-to-generate-floating-point-errors&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;The C++ standard does not specify a binary representation for the floating-point types float, double and long double. Although not required by the standard, the implementation of floating point arithmetic used by most C++ compilers conforms to a standard, IEEE 754-1985, at least for types float and double. This is directly related to the fact that the floating point units of modern CPUs also support this standard. The IEEE 754 standard specifies the binary format for floating point numbers, as well as the semantics for floating point operations. Nevertheless, the degree to which the various compilers implement all the features of IEEE 754 varies. This creates various pitfalls for anyone writing portable floating-point code in C++.&lt;/blockquote&gt;
 &lt;p&gt;&lt;b&gt;Günter Obiltschnig, Cross-Platform Issues with Floating-Point arithmetics in C++&lt;/b&gt;
 &lt;a href=&#34;http://www.appinf.com/download/FPIssues.pdf&#34;&gt;&lt;a href=&#34;http://www.appinf.com/download/FPIssues.pdf&#34;&gt;http://www.appinf.com/download/FPIssues.pdf&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;Floating-point computations are strongly dependent on the FPU hardware implementation, the compiler and its optimizations, and the system mathematical library (libm). Experiments are usually reproducible only on the same machine with the same system library and the same compiler using the same options.&lt;/blockquote&gt;
 &lt;p&gt;&lt;b&gt;STREFLOP Library&lt;/b&gt;
 &lt;a href=&#34;http://nicolas.brodu.numerimoire.net/en/programmation/streflop/index.html&#34;&gt;&lt;a href=&#34;http://nicolas.brodu.numerimoire.net/en/programmation/streflop/index.html&#34;&gt;http://nicolas.brodu.numerimoire.net/en/programmation/streflop/index.html&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;Floating Point (FP) Programming Objectives:
 &lt;p&gt;• &lt;b&gt;Accuracy&lt;/b&gt; - Produce results that are “close” to the correct value&lt;/p&gt;
 &lt;p&gt;• &lt;b&gt;Reproducibility&lt;/b&gt; - Produce consistent results from one run to the next. From one set of build options to another. From one compiler to another. From one platform to another.&lt;/p&gt;
@@ -346,73 +346,73 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;These options usually conflict! Judicious use of compiler options lets you control the tradeoffs.&lt;/blockquote&gt;&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Intel C++ Compiler: Floating Point Consistency&lt;/b&gt;
 &lt;a href=&#34;http://www.nccs.nasa.gov/images/FloatingPoint%5Fconsistency.pdf&#34;&gt;&lt;a href=&#34;http://www.nccs.nasa.gov/images/FloatingPoint%5Fconsistency.pdf&#34;&gt;http://www.nccs.nasa.gov/images/FloatingPoint%5Fconsistency.pdf&lt;/a&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;If strict reproducibility and consistency are important do not change the floating point environment without also using either fp-model strict (Linux or Mac OS*) or /fp:strict (Windows*) option or pragma fenv_access.&lt;/blockquote&gt;
 &lt;p&gt;&lt;b&gt;Intel C++ Compiler Manual&lt;/b&gt;
 &lt;a href=&#34;http://cache-www.intel.com/cd/00/00/34/76/347605_347605.pdf&#34;&gt;http://cache-www.intel.com/cd/00/00/34/76/347605_347605.pdf&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;Under the fp:strict mode, the compiler never performs any optimizations that perturb the accuracy of floating-point computations. The compiler will always round correctly at assignments, typecasts and function calls, and intermediate rounding will be consistently performed at the same precision as the FPU registers. Floating-point exception semantics and FPU environment sensitivity are enabled by default. Certain optimizations, such as contractions, are disabled because the compiler cannot guarantee correctness in every case.&lt;/blockquote&gt;
 &lt;p&gt;&lt;b&gt;Microsoft Visual C++ Floating-Point Optimization&lt;/b&gt;
 &lt;a href=&#34;http://msdn.microsoft.com/en-us/library/aa289157(VS.71).aspx#floapoint_topic4&#34;&gt;&lt;a href=&#34;http://msdn.microsoft.com/en-us/library/aa289157(VS.71).aspx#floapoint_topic4&#34;&gt;http://msdn.microsoft.com/en-us/library/aa289157(VS.71).aspx#floapoint_topic4&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;Please note that the results of floating point calculations will likely not be exactly the same between PowerPC and Intel, because the PowerPC scalar and vector FPU cores are designed around a fused multiply add operation. The Intel chips have separate multiplier and adder, meaning that those operations must be done separately. This means that for some steps in a calculation, the Intel CPU may incur an extra rounding step, which may introduce 1/2 ulp errors at the multiplication stage in the calculation.&lt;/blockquote&gt;
 &lt;p&gt;&lt;b&gt;Apple Developer Support&lt;/b&gt;
 &lt;a href=&#34;http://developer.apple.com/hardwaredrivers/ve/sse.html&#34;&gt;&lt;a href=&#34;http://developer.apple.com/hardwaredrivers/ve/sse.html&#34;&gt;http://developer.apple.com/hardwaredrivers/ve/sse.html&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;For all of the instructions that are IEEE operations (*,+,-,/,sqrt, compares, regardless of whether they are SSE or x87), they will produce the same results across platforms with the same control settings (same precision control and rounding modes, flush to zero, etc.) and inputs.  This is true for both 32-bit and 64-bit processors... On the x87 side, the transcendental instructions like, fsin, fcos, etc. could produce slightly different answers across implementations. They are specified with a relative error that is guaranteed, but not bit-for-bit accuracy.&lt;/blockquote&gt;
 &lt;p&gt;&lt;b&gt;Intel Software Network Support&lt;/b&gt;
 &lt;a href=&#34;http://software.intel.com/en-us/forums/showthread.php?t=48339&#34;&gt;&lt;a href=&#34;http://software.intel.com/en-us/forums/showthread.php?t=48339&#34;&gt;http://software.intel.com/en-us/forums/showthread.php?t=48339&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;I&#39;m concerned about the possible differences between hardware implementations of IEEE-754. I already know about the problem of programming languages introducing subtle differences between what is written in the source code and what is actually executed at the assembly level. [Mon08] Now, I&#39;m interested in differences between, say, Intel/SSE and PowerPC at the level of individual instructions.&lt;/blockquote&gt;
 &lt;p&gt;&lt;b&gt;D. Monniaux on IEEE 754 mailing list&lt;/b&gt;
 &lt;a href=&#34;http://grouper.ieee.org/groups/754/email/msg03864.html&#34;&gt;&lt;a href=&#34;http://grouper.ieee.org/groups/754/email/msg03864.html&#34;&gt;http://grouper.ieee.org/groups/754/email/msg03864.html&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;One must ... avoid the non-754 instructions that are becoming more prevalent for inverse and inverse sqrt that don&#39;t round correctly or even consistently from one implementation to another, as well as the x87 transcendental operations which are necessarily implemented differently by AMD and Intel.&lt;/blockquote&gt;
 &lt;p&gt;&lt;b&gt;David Hough on 754 IEEE mailing list&lt;/b&gt;
 &lt;a href=&#34;http://grouper.ieee.org/groups/754/email/msg03867.html&#34;&gt;&lt;a href=&#34;http://grouper.ieee.org/groups/754/email/msg03867.html&#34;&gt;http://grouper.ieee.org/groups/754/email/msg03867.html&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;Yes, getting reproducible results IS possible.  But you CAN&#39;T do it without defining a programming methodology intended to deliver that property.  And that has FAR more drastic consequences than any of its proponents admit - in particular, it is effectively incompatible with most forms of parallelism.&lt;/blockquote&gt;
 &lt;p&gt;&lt;b&gt;Nick Maclaren on 754 IEEE mailing list&lt;/b&gt;
 &lt;a href=&#34;http://grouper.ieee.org/groups/754/email/msg03872.html&#34;&gt;&lt;a href=&#34;http://grouper.ieee.org/groups/754/email/msg03872.html&#34;&gt;http://grouper.ieee.org/groups/754/email/msg03872.html&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;If we are talking practicabilities, then things are very different, and expecting repeatable results in real programs is crying for the moon. But we have been there before, and let&#39;s not go there again.&lt;/blockquote&gt;
 &lt;p&gt;&lt;b&gt;Nick Maclaren on 754 IEEE mailing list&lt;/b&gt;
 &lt;a href=&#34;http://grouper.ieee.org/groups/754/email/msg03862.html&#34;&gt;&lt;a href=&#34;http://grouper.ieee.org/groups/754/email/msg03862.html&#34;&gt;http://grouper.ieee.org/groups/754/email/msg03862.html&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;The IEEE 754-1985 allowed many variations in implementations (such as the encoding of some values and the detection of certain exceptions). IEEE 754-2008 has tightened up many of these, but a few variations still remain (especially for binary formats). The reproducibility clause recommends that language standards should provide a means to write reproducible programs (i.e., programs that will produce the same result in all implementations of a language), and describes what needs to be done to achieve reproducible results.&lt;/blockquote&gt;
 &lt;p&gt;&lt;b&gt;Wikipedia Page on IEEE 754-2008 standard&lt;/b&gt;
 &lt;a&gt;&lt;a href=&#34;http://en.wikipedia.org/wiki/IEEE_754-2008#Reproducibility&#34;&gt;http://en.wikipedia.org/wiki/IEEE_754-2008#Reproducibility&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;If one wants semantics almost exactly faithful to strict IEEE-754 single or double precision computations in round-to-nearest mode, including with respect to overflow and underflow conditions, one can use, at the same time, limitation of precision and options and programming style that force operands to be systematically written to memory between floating-point operations. This incurs some performance loss; furthermore, there will still be slight discrepancy due to double rounding on underflow.
 &lt;p&gt;A simpler solution for current personal computers is simply to force the compiler to use the SSE unit for computations on IEEE-754 types; however, most embedded systems using IA32 microprocessors or microcontrollers do not use processors equipped with this unit.&lt;/blockquote&gt;&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;David Monniaux, The pitfalls of verifying floating-point computations&lt;/b&gt;
 &lt;a href=&#34;http://hal.archives-ouvertes.fr/docs/00/28/14/29/PDF/floating-point-article.pdf&#34;&gt;&lt;a href=&#34;http://hal.archives-ouvertes.fr/docs/00/28/14/29/PDF/floating-point-article.pdf&#34;&gt;http://hal.archives-ouvertes.fr/docs/00/28/14/29/PDF/floating-point-article.pdf&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;6. REPRODUCIBILITY
 &lt;p&gt;Even under the 1985 version of IEEE-754, if two implementations of the standard executed an operation on the same data, under the same rounding mode and default exception handling, the result of the operation would be identical. The new standard tries to go further to describe when a program will produce identical floating point results on different implementations. The operations described in the standard are all reproducible operations.&lt;/p&gt;
 &lt;p&gt;The recommended operations, such as library functions or reduction operators are not reproducible, because they are not required in all implementations. Likewise dependence on the underflow and inexact flags is not reproducible because two different methods of treating underflow are allowed to preserve conformance between IEEE-754(1985) and IEEE-754(2008). The rounding modes are reproducible attributes. Optional attributes are not reproducible.&lt;/p&gt;
 &lt;p&gt;The use of value-changing optimizations is to be avoided for reproducibility. This includes use of the associative and disributative laws, and automatic generation of fused multiply-add operations when the programmer did not explicitly use that operator.&lt;/blockquote&gt;&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Peter Markstein, The New IEEE Standard for Floating Point Arithmetic&lt;/b&gt;
 &lt;a href=&#34;http://drops.dagstuhl.de/opus/volltexte/2008/1448/pdf/08021.MarksteinPeter.ExtAbstract.1448.pdf&#34;&gt;&lt;a href=&#34;http://drops.dagstuhl.de/opus/volltexte/2008/1448/pdf/08021.MarksteinPeter.ExtAbstract.1448.pdf&#34;&gt;http://drops.dagstuhl.de/opus/volltexte/2008/1448/pdf/08021.MarksteinPeter.ExtAbstract.1448.pdf&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;blockquote&gt;Unfortunately, the IEEE standard does not guarantee that the same program will deliver identical results on all conforming systems. Most programs will actually produce different results on different systems for a variety of reasons. For one, most programs involve the conversion of numbers between decimal and binary formats, and the IEEE standard does not completely specify the accuracy with which such conversions must be performed. For another, many programs use elementary functions supplied by a system library, and the standard doesn&#39;t specify these functions at all. Of course, most programmers know that these features lie beyond the scope of the IEEE standard.
 &lt;p&gt;Many programmers may not realize that even a program that uses only the numeric formats and operations prescribed by the IEEE standard can compute different results on different systems. In fact, the authors of the standard intended to allow different implementations to obtain different results. Their intent is evident in the definition of the term destination in the IEEE 754 standard: &amp;ldquo;A destination may be either explicitly designated by the user or implicitly supplied by the system (for example, intermediate results in subexpressions or arguments for procedures). Some languages place the results of intermediate calculations in destinations beyond the user&amp;rsquo;s control. Nonetheless, this standard defines the result of an operation in terms of that destination&amp;rsquo;s format and the operands&amp;rsquo; values.&amp;rdquo; (IEEE 754-1985, p. 7) In other words, the IEEE standard requires that each result be rounded correctly to the precision of the destination into which it will be placed, but the standard does not require that the precision of that destination be determined by a user&amp;rsquo;s program. Thus, different systems may deliver their results to destinations with different precisions, causing the same program to produce different results (sometimes dramatically so), even though those systems all conform to the standard.&lt;/blockquote&gt;&lt;/p&gt;
 &lt;p&gt;&lt;b&gt;Differences Among IEEE 754 Implementations&lt;/b&gt;
 &lt;a href=&#34;http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098&#34;&gt;&lt;a href=&#34;http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098&#34;&gt;http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
+&lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;http://localhost:1313/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
@@ -421,15 +421,15 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>What Every Programmer Needs To Know About Game Networking</title>
-      <link>https://gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/</link>
+      <link>http://localhost:1313/post/what_every_programmer_needs_to_know_about_game_networking/</link>
       <pubDate>Wed, 24 Feb 2010 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/</guid>
+      <guid>http://localhost:1313/post/what_every_programmer_needs_to_know_about_game_networking/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://localhost:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Have you ever wondered how multiplayer games work?&lt;/p&gt;
 &lt;p&gt;From the outside it seems magical: two or more players sharing a consistent experience across the network like they actually exist together in the same virtual world.&lt;/p&gt;
 &lt;p&gt;But as programmers we know the truth of what is actually going on underneath is quite different from what you see. It turns out it&amp;rsquo;s all an illusion. A massive sleight-of-hand. What you perceive as a shared reality is only an approximation unique to your own point of view and place in time.&lt;/p&gt;
@@ -481,16 +481,16 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>Reliability and Congestion Avoidance over UDP</title>
-      <link>https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/</link>
+      <link>http://localhost:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/</link>
       <pubDate>Mon, 20 Oct 2008 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/</guid>
+      <guid>http://localhost:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/virtual_connection_over_udp/&#34;&gt;previous article&lt;/a&gt;, we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://localhost:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/virtual_connection_over_udp/&#34;&gt;previous article&lt;/a&gt;, we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.&lt;/p&gt;
 &lt;h2 id=&#34;the-problem-with-tcp&#34;&gt;The Problem with TCP&lt;/h2&gt;
 &lt;p&gt;Those of you familiar with TCP know that it already has its own concept of connection, reliability-ordering and congestion avoidance, so why are we rewriting our own mini version of TCP on top of UDP?&lt;/p&gt;
 &lt;p&gt;The issue is that multiplayer action games rely on a steady stream of packets sent at rates of 10 to 30 packets per second, and for the most part, the data contained is these packets is so time sensitive that only the most recent data is useful. This includes data such as player inputs, the position, orientation and velocity of each player character, and the state of physics objects in the world.&lt;/p&gt;
@@ -645,7 +645,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;You can also get much more &lt;em&gt;greedy&lt;/em&gt; with congestion avoidance, and attempt to discover when you can send data at a much higher bandwidth (eg. LAN), but you have to be very careful! With increased greediness comes more risk that you&amp;rsquo;ll flood the connection.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;Our new reliability system let&amp;rsquo;s us send a steady stream of packets and notifies us which packets are received. From this we can infer lost packets, and resend data that didn&amp;rsquo;t get through if necessary. We also have a simple congestion avoidance system that drops from 30 packets per-second to 10 times a second so we don&amp;rsquo;t flood the connection.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/&#34;&gt;What Every Programmer Needs to Know About Game Networking&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/what_every_programmer_needs_to_know_about_game_networking/&#34;&gt;What Every Programmer Needs to Know About Game Networking&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
@@ -654,16 +654,16 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>Virtual Connection over UDP</title>
-      <link>https://gafferongames.com/post/virtual_connection_over_udp/</link>
+      <link>http://localhost:1313/post/virtual_connection_over_udp/</link>
       <pubDate>Wed, 08 Oct 2008 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/virtual_connection_over_udp/</guid>
+      <guid>http://localhost:1313/post/virtual_connection_over_udp/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/sending_and_receiving_packets/&#34;&gt;previous article&lt;/a&gt; we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://localhost:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/sending_and_receiving_packets/&#34;&gt;previous article&lt;/a&gt; we sent and received packets over UDP. Since UDP is connectionless, one UDP socket can be used to exchange packets with any number of different computers. In multiplayer games however, we usually only want to exchange packets between a small set of connected computers.&lt;/p&gt;
 &lt;p&gt;As the first step towards a general connection system, we&amp;rsquo;ll start with the simplest case possible: creating a virtual connection between two computers on top of UDP.&lt;/p&gt;
 &lt;p&gt;But first, we&amp;rsquo;re going to dig in a bit deeper about how the Internet really works!&lt;/p&gt;
 &lt;h2 id=&#34;the-internet-unotu-a-series-of-tubes&#34;&gt;The Internet &lt;u&gt;NOT&lt;/u&gt; a series of tubes&lt;/h2&gt;
@@ -688,7 +688,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;/pre&gt;
 &lt;p&gt;Take a look and you should be able to convince yourself pretty quickly that there is no direct connection.&lt;/p&gt;
 &lt;h2 id=&#34;how-packets-get-delivered&#34;&gt;How Packets Get Delivered&lt;/h2&gt;
-&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/udp_vs_tcp/&#34;&gt;first article&lt;/a&gt;, I presented a simple analogy for packet delivery, describing it as somewhat like a note being passed from person to person across a crowded room.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/udp_vs_tcp/&#34;&gt;first article&lt;/a&gt;, I presented a simple analogy for packet delivery, describing it as somewhat like a note being passed from person to person across a crowded room.&lt;/p&gt;
 &lt;p&gt;While this analogy gets the basic idea across, it is much too simple. The Internet is &lt;u&gt;not&lt;/u&gt; a flat network of computers, it is a network of networks. And of course, we don&amp;rsquo;t just need to pass letters around a small room, we need to be able to send them anywhere in the world.&lt;/p&gt;
 &lt;p&gt;It should be pretty clear then that the best analogy is the postal service!&lt;/p&gt;
 &lt;p&gt;When you want to send a letter to somebody you put your letter in the mailbox and you trust that it will be delivered correctly. It&amp;rsquo;s not really relevant to you &lt;i&gt;how&lt;/i&gt; it gets there, as long as it does. Somebody has to physically deliver your letter to its destination of course, so how is this done?&lt;/p&gt;
@@ -737,7 +737,7 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;And that&amp;rsquo;s all it takes to setup a virtual connection: some way to establish connection, filtering for packets not involved in the connection, and timeouts to detect disconnection.&lt;/p&gt;
 &lt;p&gt;Our connection is as real as any TCP connection, and the steady stream of UDP packets it provides is a suitable starting point for a multiplayer action game.&lt;/p&gt;
 &lt;p&gt;Now that you have your virtual connection over UDP, you can easily setup a client/server relationship for a two player multiplayer game without TCP.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/&#34;&gt;Reliability and Congestion Avoidance over UDP&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/&#34;&gt;Reliability and Congestion Avoidance over UDP&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
@@ -746,16 +746,16 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
     
     <item>
       <title>Sending and Receiving Packets</title>
-      <link>https://gafferongames.com/post/sending_and_receiving_packets/</link>
+      <link>http://localhost:1313/post/sending_and_receiving_packets/</link>
       <pubDate>Fri, 03 Oct 2008 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/sending_and_receiving_packets/</guid>
+      <guid>http://localhost:1313/post/sending_and_receiving_packets/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;In the &lt;a href=&#34;https://gafferongames.com/post/udp_vs_tcp/&#34;&gt;previous article&lt;/a&gt; we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://localhost:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;In the &lt;a href=&#34;http://localhost:1313/post/udp_vs_tcp/&#34;&gt;previous article&lt;/a&gt; we discussed options for sending data between computers and decided to use UDP instead of TCP for time critical data.&lt;/p&gt;
 &lt;p&gt;In this article I am going to show you how to send and receive UDP packets.&lt;/p&gt;
 &lt;h2 id=&#34;bsd-sockets&#34;&gt;BSD sockets&lt;/h2&gt;
 &lt;p&gt;For most modern platforms you have some sort of basic socket layer available based on BSD sockets.&lt;/p&gt;
@@ -1075,7 +1075,7 @@ closesocket( socket );
 &lt;p&gt;As an added bonus the code is the same on all platforms because everything platform specific is handled inside the socket and address classes.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;You now have a platform independent way to send and receive packets. &lt;em&gt;Enjoy&lt;/em&gt; :)&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/virtual_connection_over_udp/&#34;&gt;Virtual Connection over UDP&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/virtual_connection_over_udp/&#34;&gt;Virtual Connection over UDP&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
@@ -1084,15 +1084,15 @@ closesocket( socket );
     
     <item>
       <title>UDP vs. TCP</title>
-      <link>https://gafferongames.com/post/udp_vs_tcp/</link>
+      <link>http://localhost:1313/post/udp_vs_tcp/</link>
       <pubDate>Wed, 01 Oct 2008 00:00:00 +0000</pubDate>
       
-      <guid>https://gafferongames.com/post/udp_vs_tcp/</guid>
+      <guid>http://localhost:1313/post/udp_vs_tcp/</guid>
       <description>&lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;
 &lt;h2 id=&#34;introduction&#34;&gt;Introduction&lt;/h2&gt;
-&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;https://gafferongames.com/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;Hi, I&amp;rsquo;m &lt;a href=&#34;https://gafferongames.com&#34;&gt;Glenn Fiedler&lt;/a&gt; and welcome to &lt;a href=&#34;http://localhost:1313/categories/game-networking/&#34;&gt;&lt;strong&gt;Networking for Game Programmers&lt;/strong&gt;&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;In this article we start with the most basic aspect of network programming: sending and receiving data over the network. This is perhaps the simplest and most basic part of what network programmers do, but still it is quite intricate and non-obvious as to what the best course of action is.&lt;/p&gt;
 &lt;p&gt;You have most likely heard of sockets, and are probably aware that there are two main types: TCP and UDP. When writing a network game, we first need to choose what type of socket to use. Do we use TCP sockets, UDP sockets or a mixture of both? Take care because if you get this wrong it will have terrible effects on your multiplayer game!&lt;/p&gt;
 &lt;p&gt;The choice you make depends entirely on what sort of game you want to network. So from this point on and for the rest of this article series, I assume you want to network an action game. You know, games like Halo, Battlefield 1942, Quake, Unreal, CounterStrike and Team Fortress.&lt;/p&gt;
@@ -1175,7 +1175,7 @@ closesocket( socket );
 &lt;p&gt;My recommendation is not only that you use UDP, but that you &lt;em&gt;only&lt;/em&gt; use UDP for your game protocol. Don&amp;rsquo;t mix TCP and UDP! Instead, learn how to implement the specific features of TCP that you need &lt;em&gt;inside&lt;/em&gt; your own custom UDP based protocol.&lt;/p&gt;
 &lt;p&gt;Of course, it is no problem to use HTTP to talk to some RESTful services while your game is running. I&amp;rsquo;m not saying you can&amp;rsquo;t do that. A few TCP connections running while your game is running isn&amp;rsquo;t going to bring everything down. The point is, don&amp;rsquo;t split your &lt;em&gt;game protocol&lt;/em&gt; across UDP and TCP. Keep your game protocol running over UDP so you are fully in control of the data you send and receive and how reliability, ordering and congestion avoidance are implemented.&lt;/p&gt;
 &lt;p&gt;The rest of this article series show you how to do this, from creating your own virtual connection on top of UDP, to creating your own reliability, flow control and congestion avoidance.&lt;/p&gt;
-&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/sending_and_receiving_packets/&#34;&gt;Sending and Receiving Packets&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;http://localhost:1313/post/sending_and_receiving_packets/&#34;&gt;Sending and Receiving Packets&lt;/a&gt;&lt;/p&gt;
 &lt;hr&gt;
 &lt;h3 id=&#34;_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1&#34;&gt;&lt;em&gt;I&amp;rsquo;m no longer posting new content on &lt;a href=&#34;https://gafferongames.com&#34;&gt;gafferongames.com&lt;/a&gt;. Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/em&gt;&lt;/h3&gt;
 &lt;hr&gt;

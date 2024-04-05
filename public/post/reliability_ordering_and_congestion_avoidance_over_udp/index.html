@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-us">
 
-<head>
+<head><script src="/livereload.js?mindelay=10&amp;v=2&amp;port=1313&amp;path=livereload" data-no-instant defer></script>
 
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -25,12 +25,13 @@
   
     
   
-  <meta name="description" content="I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+  <meta name="description" content="Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 In the previous article, we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.
 The Problem with TCP Those of you familiar with TCP know that it already has its own concept of connection, reliability-ordering and congestion avoidance, so why are we rewriting our own mini version of TCP on top of UDP?">
 
   
-  <link rel="alternate" hreflang="en-us" href="https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/">
+  <link rel="alternate" hreflang="en-us" href="http://localhost:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/">
 
   
 
@@ -86,8 +87,6 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
   
 
   
-  
-  
 
   
 
@@ -95,7 +94,7 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
   <link rel="icon" type="image/png" href="/img/icon.png">
   <link rel="apple-touch-icon" type="image/png" href="/img/icon-192.png">
 
-  <link rel="canonical" href="https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/">
+  <link rel="canonical" href="http://localhost:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/">
 
   
   
@@ -107,12 +106,13 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
   <meta property="twitter:card" content="summary">
   
   <meta property="og:site_name" content="Gaffer On Games">
-  <meta property="og:url" content="https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/">
+  <meta property="og:url" content="http://localhost:1313/post/reliability_ordering_and_congestion_avoidance_over_udp/">
   <meta property="og:title" content="Reliability and Congestion Avoidance over UDP | Gaffer On Games">
-  <meta property="og:description" content="I&rsquo;m no longer posting new content on gafferongames.com. Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+  <meta property="og:description" content="Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
+Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 In the previous article, we added our own concept of virtual connection on top of UDP. In this article we’re going to add reliability, ordering and congestion avoidance to our virtual UDP connection.
-The Problem with TCP Those of you familiar with TCP know that it already has its own concept of connection, reliability-ordering and congestion avoidance, so why are we rewriting our own mini version of TCP on top of UDP?"><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
-  <meta property="twitter:image" content="https://gafferongames.com/img/icon-192.png"><meta property="og:locale" content="en-us">
+The Problem with TCP Those of you familiar with TCP know that it already has its own concept of connection, reliability-ordering and congestion avoidance, so why are we rewriting our own mini version of TCP on top of UDP?"><meta property="og:image" content="http://localhost:1313/img/icon-192.png">
+  <meta property="twitter:image" content="http://localhost:1313/img/icon-192.png"><meta property="og:locale" content="en-us">
   
   <meta property="article:published_time" content="2008-10-20T00:00:00&#43;00:00">
   
@@ -331,7 +331,8 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
 
     <div class="article-style" itemprop="articleBody">
       <hr>
-<h3 id="_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_"><em>I&rsquo;m no longer posting new content on <a href="https://gafferongames.com">gafferongames.com</a>. Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</em></h3>
+<p>Hello readers, I&rsquo;m no longer posting new content on gafferongames.com</p>
+<h3 id="please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers">Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</h3>
 <hr>
 <h2 id="introduction">Introduction</h2>
 <p>Hi, I&rsquo;m <a href="https://gafferongames.com">Glenn Fiedler</a> and welcome to <a href="/categories/game-networking/"><strong>Networking for Game Programmers</strong></a>.</p>
@@ -492,7 +493,8 @@ The Problem with TCP Those of you familiar with TCP know that it already has its
 <p>Our new reliability system let&rsquo;s us send a steady stream of packets and notifies us which packets are received. From this we can infer lost packets, and resend data that didn&rsquo;t get through if necessary. We also have a simple congestion avoidance system that drops from 30 packets per-second to 10 times a second so we don&rsquo;t flood the connection.</p>
 <p><strong>NEXT:</strong> <a href="/post/what_every_programmer_needs_to_know_about_game_networking/">What Every Programmer Needs to Know About Game Networking</a></p>
 <hr>
-<h3 id="_im-no-longer-posting-new-content-on-gafferongamescomhttpsgafferongamescom-please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers_-1"><em>I&rsquo;m no longer posting new content on <a href="https://gafferongames.com">gafferongames.com</a>. Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</em></h3>
+<p>Hello readers, I&rsquo;m no longer posting new content on gafferongames.com</p>
+<h3 id="please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1">Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</h3>
 <hr>
 
     </div>
