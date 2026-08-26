@@ -7,14 +7,6 @@ description = "How to implement reliable-ordered messages on top of UDP"
 draft = false
 +++
 
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------
-
 ## Introduction
 
 Hi, I’m [Glenn Fiedler](https://gafferongames.com) and welcome to **[Building a Game Network Protocol](/categories/building-a-game-network-protocol/)**. 
@@ -351,11 +343,3 @@ while ( true )
 Which is flexible enough to implement whatever you like on top of it.
 
 __NEXT ARTICLE__: [Client Server Connection](/post/client_server_connection/)
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

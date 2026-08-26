@@ -7,14 +7,6 @@ description = "My project to simulate a go board and stones"
 draft = false
 +++
 
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------
-
 ## Introduction
 
 Hi, I'm [Glenn Fiedler](https://gafferongames.com). Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
@@ -76,11 +68,3 @@ So many beautiful properties from such simple rules. Truly an amazing game!
 Please visit [The Interactive Way To Go](http://playgo.to/iwtg/en/) if you would like to learn more.
 
 __NEXT ARTICLE:__ [Shape of The Go Stone](/post/shape_of_the_go_stone/)
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

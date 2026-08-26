@@ -25,8 +25,7 @@
   
     
   
-  <meta name="description" content="Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
-Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+  <meta name="description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we discussed techniques for compressing snapshots.
 In this article we round out our discussion of networked physics strategies with state synchronization, the third and final strategy in this article series.
 State Synchronization What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, unlike deterministic lockstep, we don&rsquo;t just send input, we send both input and state.">
@@ -111,8 +110,7 @@ State Synchronization What is state synchronization? The basic idea is that, som
   <meta property="og:site_name" content="Gaffer On Games">
   <meta property="og:url" content="https://gafferongames.com/post/state_synchronization/">
   <meta property="og:title" content="State Synchronization | Gaffer On Games">
-  <meta property="og:description" content="Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
-Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
+  <meta property="og:description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networked Physics.
 In the previous article we discussed techniques for compressing snapshots.
 In this article we round out our discussion of networked physics strategies with state synchronization, the third and final strategy in this article series.
 State Synchronization What is state synchronization? The basic idea is that, somewhat like deterministic lockstep, we run the simulation on both sides but, unlike deterministic lockstep, we don&rsquo;t just send input, we send both input and state."><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
@@ -334,11 +332,7 @@ State Synchronization What is state synchronization? The basic idea is that, som
   <div class="article-container">
 
     <div class="article-style" itemprop="articleBody">
-      <hr>
-<p>Hello readers, I&rsquo;m no longer posting new content on gafferongames.com</p>
-<h3 id="please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers">Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</h3>
-<hr>
-<h2 id="introduction">Introduction</h2>
+      <h2 id="introduction">Introduction</h2>
 <p>Hi, I&rsquo;m <a href="https://gafferongames.com">Glenn Fiedler</a> and welcome to <strong><a href="/categories/networked-physics/">Networked Physics</a></strong>.</p>
 <p>In the <a href="/post/snapshot_compression/">previous article</a> we discussed techniques for compressing snapshots.</p>
 <p>In this article we round out our discussion of networked physics strategies with <strong>state synchronization</strong>, the third and final strategy in this article series.</p>
@@ -468,12 +462,15 @@ Your browser does not support the video tag.
 <p>We can fix this by tracking objects which have recently come to rest and bumping their priority until an ack comes back for a packet they were sent in. Thus they are sent at an elevated priority compared with normal grey cubes (which are at rest and have not moved) and keep resending at that elevated rate until we know that update has been received, thus &ldquo;committing&rdquo; that grey cube to be at rest at the correct position.</p>
 <h2 id="conclusion">Conclusion</h2>
 <p>And that&rsquo;s really about it for this technique. Without anything fancy it&rsquo;s already pretty good, and on top of that another order of magnitude improvement is available with delta compression, at the cost of significant complexity!</p>
-<hr>
-<p>Hello readers, I&rsquo;m no longer posting new content on gafferongames.com</p>
-<h3 id="please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1">Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</h3>
-<hr>
 
     </div>
+
+    
+<div class="mb-patreon-cta" style="max-width:640px;margin:3rem auto 2.5rem;padding:2rem 1.25rem 0;border-top:1px solid rgba(0,0,0,.12);text-align:center;font-size:1.4rem;line-height:1.5;font-weight:600">
+Enjoying my articles and open source code?<br>
+<a href="https://www.patreon.com/MasBandwidth/membership" style="display:inline-block;margin-top:1.25rem;padding:1.6rem 4rem;border-radius:12px;background:#ff8800;color:#fff;font-size:2.3rem;font-weight:800;text-decoration:none">Support my work!</a>
+</div>
+    
 
     
 

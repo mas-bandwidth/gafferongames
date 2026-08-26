@@ -25,9 +25,9 @@
   
     
   
-  <meta name="description" content="Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
-Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
-In the previous article we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &ldquo;delta time&rdquo; (or dt for short).">
+  <meta name="description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &ldquo;delta time&rdquo; (or dt for short).
+But how to choose this delta time value? This may seem like a trivial subject but in fact there are many different ways to do it, each with their own strengths and weaknesses - so read on!">
 
   
   <link rel="alternate" hreflang="en-us" href="https://gafferongames.com/post/fix_your_timestep/">
@@ -109,9 +109,9 @@ In the previous article we discussed how to integrate the equations of motion us
   <meta property="og:site_name" content="Gaffer On Games">
   <meta property="og:url" content="https://gafferongames.com/post/fix_your_timestep/">
   <meta property="og:title" content="Fix Your Timestep! | Gaffer On Games">
-  <meta property="og:description" content="Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
-Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
-In the previous article we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &ldquo;delta time&rdquo; (or dt for short)."><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
+  <meta property="og:description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Game Physics.
+In the previous article we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &ldquo;delta time&rdquo; (or dt for short).
+But how to choose this delta time value? This may seem like a trivial subject but in fact there are many different ways to do it, each with their own strengths and weaknesses - so read on!"><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
   <meta property="twitter:image" content="https://gafferongames.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
   <meta property="article:published_time" content="2004-06-10T00:00:00&#43;00:00">
@@ -284,7 +284,7 @@ In the previous article we discussed how to integrate the equations of motion us
   
   <span class="middot-divider"></span>
   <span class="article-reading-time">
-    10 min read
+    9 min read
   </span>
   
 
@@ -330,11 +330,7 @@ In the previous article we discussed how to integrate the equations of motion us
   <div class="article-container">
 
     <div class="article-style" itemprop="articleBody">
-      <hr>
-<p>Hello readers, I&rsquo;m no longer posting new content on gafferongames.com</p>
-<h3 id="please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers">Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</h3>
-<hr>
-<h2 id="introduction">Introduction</h2>
+      <h2 id="introduction">Introduction</h2>
 <p>Hi, I&rsquo;m <a href="https://gafferongames.com">Glenn Fiedler</a> and welcome to <strong><a href="/categories/game-physics/">Game Physics</a></strong>.</p>
 <p>In the <a href="/post/integration_basics/">previous article</a> we discussed how to integrate the equations of motion using a numerical integrator. Integration sounds complicated, but it&rsquo;s just a way to advance the your physics simulation forward by some small amount of time called &ldquo;delta time&rdquo; (or dt for short).</p>
 <p>But how to choose this delta time value? This may seem like a trivial subject but in fact there are many different ways to do it, each with their own strengths and weaknesses - so read on!</p>
@@ -478,12 +474,15 @@ In the previous article we discussed how to integrate the equations of motion us
 <p>This <em>looks</em> complicated but here is a simple way to think about it. Any remainder in the accumulator is effectively a measure of just how much more time is required before another whole physics step can be taken. For example, a remainder of dt/2 means that we are currently halfway between the current physics step and the next. A remainder of dt*0.1 means that the update is 1/10th of the way between the current and the next state.</p>
 <p>We can use this remainder value to get a blending factor between the previous and current physics state simply by dividing by dt. This gives an alpha value in the range [0,1] which is used to perform a linear interpolation between the two physics states to get the current state to render. This interpolation is easy to do for single values and for vector state values. You can even use it with full 3D rigid body dynamics if you store your orientation as a quaternion and use a spherical linear interpolation (slerp) to blend between the previous and current orientations.</p>
 <p><strong>NEXT ARTICLE:</strong> <a href="/post/physics_in_3d/">Physics in 3D</a></p>
-<hr>
-<p>Hello readers, I&rsquo;m no longer posting new content on gafferongames.com</p>
-<h3 id="please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1">Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</h3>
-<hr>
 
     </div>
+
+    
+<div class="mb-patreon-cta" style="max-width:640px;margin:3rem auto 2.5rem;padding:2rem 1.25rem 0;border-top:1px solid rgba(0,0,0,.12);text-align:center;font-size:1.4rem;line-height:1.5;font-weight:600">
+Enjoying my articles and open source code?<br>
+<a href="https://www.patreon.com/MasBandwidth/membership" style="display:inline-block;margin-top:1.25rem;padding:1.6rem 4rem;border-radius:12px;background:#ff8800;color:#fff;font-size:2.3rem;font-weight:800;text-decoration:none">Support my work!</a>
+</div>
+    
 
     
 

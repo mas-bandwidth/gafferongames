@@ -7,14 +7,6 @@ description = "Accurately modelling the wobble of a go stone"
 draft = false
 +++
 
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------
-
 ## Introduction
 
 Hi, I'm [Glenn Fiedler](https://gafferongames.com). Welcome to [**Virtual Go**](/categories/virtual-go/), my project to create a physically accurate computer simulation of a Go board and stones.
@@ -166,11 +158,3 @@ Verifying exact solutions against numeric ones is a fantastic way to check your 
 Can <u>you</u> derive the equation for I<sub>x</sub>?
 
 __NEXT ARTICLE:__ [Collision Response and Coulomb Friction](/post/collision_response_and_coulomb_friction/)
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

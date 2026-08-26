@@ -11,14 +11,6 @@ image:
   preview_only: true
 ---
 
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------
-
 Hi, I'm [Glenn Fiedler](https://gafferongames.com) and this is my GDC 2019 talk called “Fixing the Internet for Games”.
 
 <img src="/img/fixing-the-internet/001.png" width="100%" class="image_border"/>
@@ -295,11 +287,3 @@ We are able to fix this fluctuation due to internet weather and get the best res
 <img src="/img/fixing-the-internet/040.png" width="100%" class="image_border"/>
 
 If you'd like to learn more, please visit us at [networknext.com](https://networknext.com)
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

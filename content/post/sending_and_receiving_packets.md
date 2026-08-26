@@ -7,14 +7,6 @@ description = "How to send and receive packets over UDP with BSD sockets"
 draft = false
 +++
 
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------
-
 ## Introduction
 
 Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
@@ -401,11 +393,3 @@ As an added bonus the code is the same on all platforms because everything platf
 You now have a platform independent way to send and receive packets. _Enjoy_ :)
 
 __NEXT ARTICLE:__ [Virtual Connection over UDP](/post/virtual_connection_over_udp/)
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

@@ -7,14 +7,6 @@ description = "Three ways to network a physics simulation"
 draft = false
 +++
 
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------
-
 ## Introduction
 
 Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to the first article in **[Networked Physics](/categories/networked-physics/)**.
@@ -74,11 +66,3 @@ Cubes within a certain distance of the player have a force applied towards the c
 This is a very difficult situation for networked physics!
 
 __NEXT ARTICLE:__ [Deterministic Lockstep](/post/deterministic_lockstep/)
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------
