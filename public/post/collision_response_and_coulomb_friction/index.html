@@ -354,7 +354,7 @@ A go stone bouncing and coming to rest on the go board."><meta property="og:imag
 <img src="/img/virtualgo/linear-collision-response-coefficient-of-restitution.png" alt="linear collision response coefficient of restitution" width="100%"/>
 <p>To support this we introduce a new concept called the &lsquo;coefficient of restitution&rsquo;. When this value is 1 the collision is perfectly elastic, when it is 0 the collision is inelastic. At 0.5, it&rsquo;s halfway between.</p>
 <p>This gives the following formula:</p>
-<p>[latex]j = -( 1 + e ) \boldsymbol{p} \cdot \boldsymbol{n}[/latex]</p>
+\[j = -( 1 + e ) \boldsymbol{p} \cdot \boldsymbol{n}\]
 <p>Where:</p>
 <ul>
 <li>j is the magnitude of the collision impulse</li>
@@ -389,7 +389,7 @@ frameborder="0" allowfullscreen class="video"></iframe>
 <p>You can find a derivation of this result on <a href="https://en.wikipedia.org/wiki/Collision_response#Impulse-Based_Reaction_Model">wikipedia</a>.</p>
 <p>Understandably this is quite complex, but in our case the go board never moves, so we can simplify the equation by assigning zero velocity and infinite mass to the second body. This leads to the following, simpler equation:</p>
 <p><em>todo: need a solution to convert across all the latex equations&hellip;</em></p>
-<p>[latex]j = \dfrac{ -( 1 + e ) \boldsymbol{v} \cdot \boldsymbol{n} } { m^{-1} + ( \boldsymbol{I^{-1}} ( \boldsymbol{r} \times \boldsymbol{n} ) \times \boldsymbol{r} ) \cdot \boldsymbol{n} }[/latex]</p>
+\[j = \dfrac{ -( 1 + e ) \boldsymbol{v} \cdot \boldsymbol{n} } { m^{-1} + ( \boldsymbol{I^{-1}} ( \boldsymbol{r} \times \boldsymbol{n} ) \times \boldsymbol{r} ) \cdot \boldsymbol{n} }\]
 <p>Where:</p>
 <ul>
 <li>j is the magnitude of the collision impulse</li>
@@ -414,7 +414,7 @@ frameborder="0" allowfullscreen class="video"></iframe>
 <p>Lower friction coefficient values mean less friction, higher values mean more friction. Typical values for the coefficient of friction are in the range [0,1].</p>
 <p>Calculation of the Coulomb friction impulse is performed much like the calculation of the normal impulse except this time the impulse is in the tangent direction against the direction of sliding.</p>
 <p>Here is the formula for calculating the magnitude of the friction impulse:</p>
-<p>[latex]j_t = \dfrac{ - \boldsymbol{v} \cdot \boldsymbol{t} } { m^{-1} + ( \boldsymbol{I^{-1}} ( \boldsymbol{r} \times \boldsymbol{t} ) \times \boldsymbol{r} ) \cdot \boldsymbol{t} }[/latex]</p>
+\[j_t = \dfrac{ - \boldsymbol{v} \cdot \boldsymbol{t} } { m^{-1} + ( \boldsymbol{I^{-1}} ( \boldsymbol{r} \times \boldsymbol{t} ) \times \boldsymbol{r} ) \cdot \boldsymbol{t} }\]
 <p>Where:</p>
 <ul>
 <li>j<sub>t</sub> is the magnitude of the friction impulse (pre-cone limit)</li>
@@ -453,7 +453,7 @@ frameborder="0" allowfullscreen class="video"></iframe>
     </div>
 
     
-<div class="mb-patreon-cta" style="max-width:640px;margin:3rem auto 2.5rem;padding:2rem 1.25rem 0;border-top:1px solid rgba(0,0,0,.12);text-align:center;font-size:1.4rem;line-height:1.5;font-weight:600">
+<div class="mb-patreon-cta" style="max-width:720px;margin:3rem auto 2.5rem;padding:2rem 1.25rem 0;border-top:1px solid rgba(0,0,0,.12);text-align:center;font-size:1.15rem;line-height:1.5;font-weight:600">
 Enjoying my articles and open source code?<br>
 <a href="https://www.patreon.com/MasBandwidth/membership" style="display:inline-block;margin-top:1.25rem;padding:1.6rem 4rem;border-radius:12px;background:#ff8800;color:#fff;font-size:2.3rem;font-weight:800;text-decoration:none">Support my work!</a>
 </div>

@@ -40,7 +40,7 @@
 &lt;img src=&#34;https://gafferongames.com/img/virtualgo/linear-collision-response-coefficient-of-restitution.png&#34; alt=&#34;linear collision response coefficient of restitution&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;To support this we introduce a new concept called the &amp;lsquo;coefficient of restitution&amp;rsquo;. When this value is 1 the collision is perfectly elastic, when it is 0 the collision is inelastic. At 0.5, it&amp;rsquo;s halfway between.&lt;/p&gt;
 &lt;p&gt;This gives the following formula:&lt;/p&gt;
-&lt;p&gt;[latex]j = -( 1 + e ) \boldsymbol{p} \cdot \boldsymbol{n}[/latex]&lt;/p&gt;
+\[j = -( 1 + e ) \boldsymbol{p} \cdot \boldsymbol{n}\]
 &lt;p&gt;Where:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;j is the magnitude of the collision impulse&lt;/li&gt;
@@ -75,7 +75,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;You can find a derivation of this result on &lt;a href=&#34;https://en.wikipedia.org/wiki/Collision_response#Impulse-Based_Reaction_Model&#34;&gt;wikipedia&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;Understandably this is quite complex, but in our case the go board never moves, so we can simplify the equation by assigning zero velocity and infinite mass to the second body. This leads to the following, simpler equation:&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;todo: need a solution to convert across all the latex equations&amp;hellip;&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;[latex]j = \dfrac{ -( 1 + e ) \boldsymbol{v} \cdot \boldsymbol{n} } { m^{-1} + ( \boldsymbol{I^{-1}} ( \boldsymbol{r} \times \boldsymbol{n} ) \times \boldsymbol{r} ) \cdot \boldsymbol{n} }[/latex]&lt;/p&gt;
+\[j = \dfrac{ -( 1 + e ) \boldsymbol{v} \cdot \boldsymbol{n} } { m^{-1} + ( \boldsymbol{I^{-1}} ( \boldsymbol{r} \times \boldsymbol{n} ) \times \boldsymbol{r} ) \cdot \boldsymbol{n} }\]
 &lt;p&gt;Where:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;j is the magnitude of the collision impulse&lt;/li&gt;
@@ -100,7 +100,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Lower friction coefficient values mean less friction, higher values mean more friction. Typical values for the coefficient of friction are in the range [0,1].&lt;/p&gt;
 &lt;p&gt;Calculation of the Coulomb friction impulse is performed much like the calculation of the normal impulse except this time the impulse is in the tangent direction against the direction of sliding.&lt;/p&gt;
 &lt;p&gt;Here is the formula for calculating the magnitude of the friction impulse:&lt;/p&gt;
-&lt;p&gt;[latex]j_t = \dfrac{ - \boldsymbol{v} \cdot \boldsymbol{t} } { m^{-1} + ( \boldsymbol{I^{-1}} ( \boldsymbol{r} \times \boldsymbol{t} ) \times \boldsymbol{r} ) \cdot \boldsymbol{t} }[/latex]&lt;/p&gt;
+\[j_t = \dfrac{ - \boldsymbol{v} \cdot \boldsymbol{t} } { m^{-1} + ( \boldsymbol{I^{-1}} ( \boldsymbol{r} \times \boldsymbol{t} ) \times \boldsymbol{r} ) \cdot \boldsymbol{t} }\]
 &lt;p&gt;Where:&lt;/p&gt;
 &lt;ul&gt;
 &lt;li&gt;j&lt;sub&gt;t&lt;/sub&gt; is the magnitude of the friction impulse (pre-cone limit)&lt;/li&gt;
@@ -168,10 +168,9 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;h2 id=&#34;calculating-the-inertia-tensor&#34;&gt;Calculating The Inertia Tensor&lt;/h2&gt;
 &lt;p&gt;Now we need a way to calculate the inertia tensor of our go stone.&lt;/p&gt;
 &lt;p&gt;The general case is quite complicated because inertia tensors are capable of representing shapes that are non-symmetrical about the axis of rotation.&lt;/p&gt;
-&lt;p&gt;&lt;em&gt;todo: yes, need to sort out the latex equations&amp;hellip;&lt;/em&gt;&lt;/p&gt;
-&lt;p&gt;[latex]I = \begin{bmatrix} I_{xx} &amp;amp; I_{xy} &amp;amp; I_{xz} \ I_{yx} &amp;amp; I_{yy} &amp;amp; I_{yz} \ I_{zx} &amp;amp; I_{zy} &amp;amp; I_{zz} \end{bmatrix}[/latex]&lt;/p&gt;
+\[I = \begin{bmatrix} I_{xx} &amp; I_{xy} &amp; I_{xz} \\ I_{yx} &amp; I_{yy} &amp; I_{yz} \\ I_{zx} &amp; I_{zy} &amp; I_{zz} \end{bmatrix}\]
 &lt;p&gt;For example, think of an oddly shaped object attached to a drill bit off-center and wobbling about crazily as the drill spins. Fantastic. But the good news is that we get to dodge this bullet because we are always rotating about the center of mass of the go stone, our inertia tensor is much simpler:&lt;/p&gt;
-&lt;p&gt;[latex]I = \begin{bmatrix} I_{x} &amp;amp; 0 &amp;amp; 0 \ 0 &amp;amp; I_{y} &amp;amp; 0 \ 0 &amp;amp; 0 &amp;amp; I_{z} \end{bmatrix}[/latex]&lt;/p&gt;
+\[I = \begin{bmatrix} I_{x} &amp; 0 &amp; 0 \\ 0 &amp; I_{y} &amp; 0 \\ 0 &amp; 0 &amp; I_{z} \end{bmatrix}\]
 &lt;p&gt;All we need to do in our case is to determine the I&lt;sub&gt;x&lt;/sub&gt;, I&lt;sub&gt;y&lt;/sub&gt; and I&lt;sub&gt;z&lt;/sub&gt; values.&lt;/p&gt;
 &lt;p&gt;They represent how difficult it is to rotate the go stone about the x,y and z axes.&lt;/p&gt;
 &lt;img src=&#34;https://gafferongames.com/img/virtualgo/inertia-tensor-ix.png&#34; alt=&#34;inertia tensor x&#34; width=&#34;100%&#34;/&gt;
@@ -182,7 +181,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Let&amp;rsquo;s first calculate the inertia tensor via numerical integration.&lt;/p&gt;
 &lt;p&gt;To do this we just need to know is how difficult it is rotate a point about an axis.&lt;/p&gt;
 &lt;p&gt;Once we know this we can approximate the moment of inertia of a go stone by breaking it up into a discrete number of points and summing up the moments of inertia of all these points.&lt;/p&gt;
-&lt;p&gt;It turns out that the difficulty of rotating a point mass about an axis is proportional to the &lt;em&gt;square&lt;/em&gt; of the distance of that point from the axis and the mass of the point. [latex]I = mr^2[/latex]. This is quite interesting because it indicates that the distribution of mass has a significant effect on how difficult it is to rotate an object about an axis.&lt;/p&gt;
+&lt;p&gt;It turns out that the difficulty of rotating a point mass about an axis is proportional to the &lt;em&gt;square&lt;/em&gt; of the distance of that point from the axis and the mass of the point. \(I = mr^2\). This is quite interesting because it indicates that the distribution of mass has a significant effect on how difficult it is to rotate an object about an axis.&lt;/p&gt;
 &lt;p&gt;One consequence of this is that a hollow pipe is actually more difficult to rotate than a solid pipe of the same mass. Of course, this is not something we deal with in real life often, because a solid pipe of the same material would be much heavier, and therefore harder to rotate due to increased mass, but if you could find a second material of lower density such that the solid pipe was exactly the same mass as the hollow pipe, you would be able to observe this effect. Obscure.&lt;/p&gt;
 &lt;p&gt;In our case we know the go stone is solid not hollow, and we can go one step further and assume that the go stone has completely uniform density throughout. This means if we know the mass of the go stone we can divide it by the volume of the go stone to find its density. Then we can divide space around the go stone into a grid, and using this density we can assign a mass to each point in the grid proportional to the density of the go stone.&lt;/p&gt;
 &lt;p&gt;Now integration is just a triple for loop summing up the moments of inertia for points that are inside the go stone. This gives us an approximation of the inertia tensor for the go stone that becomes more accurate the more points we use.&lt;/p&gt;
@@ -190,7 +189,7 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;A size 33 japanese go stone has width 22mm and height 9.2mm:&lt;/p&gt;
 &lt;img src=&#34;https://gafferongames.com/img/virtualgo/clam-shell-stone-size-33.jpg&#34; alt=&#34;size 33 go stone&#34; width=&#34;100%&#34;/&gt;
 &lt;p&gt;Using our point-based approximation to calculate its inertia tensor gives the following result:&lt;/p&gt;
-&lt;p&gt;[latex]I = \begin{bmatrix} 0.177721 &amp;amp; 0 &amp;amp; 0 \ 0 &amp;amp; 0.304776 &amp;amp; 0 \ 0 &amp;amp; 0 &amp;amp; 0.177721 \end{bmatrix}[/latex]&lt;/p&gt;
+\[I = \begin{bmatrix} 0.177721 &amp; 0 &amp; 0 \\ 0 &amp; 0.304776 &amp; 0 \\ 0 &amp; 0 &amp; 0.177721 \end{bmatrix}\]
 &lt;p&gt;As expected, I&lt;sub&gt;x&lt;/sub&gt; = I&lt;sub&gt;z&lt;/sub&gt; due to the symmetry of the go stone.&lt;/p&gt;
 &lt;p&gt;The inertia tensor indicates that its much harder to rotate the go stone about the y axis than axes on the xz plane.&lt;/p&gt;
 &lt;p&gt;Why is this?&lt;/p&gt;
@@ -203,10 +202,10 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Exact equations are known for the moments of inertia of many &lt;a href=&#34;http://www.livephysics.com/physical-constants/mechanics-pc/moment-inertia-uniform-objects/&#34;&gt;common objects&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;With a bit of math we can calculate closed form solutions for the moments of inertia of a go stone.&lt;/p&gt;
 &lt;p&gt;To determine the exact equation for I&lt;sub&gt;y&lt;/sub&gt; we start with the moment of inertia for a solid disc:&lt;/p&gt;
-&lt;p&gt;[latex]I = 1/2mr^2[/latex]&lt;/p&gt;
+\[I = 1/2mr^2\]
 &lt;p&gt;Then we integrate again, effectively summing up the moments of inertia of an infinite number of thin discs making up the top half of the go stone.&lt;/p&gt;
 &lt;p&gt;This leads to the following integral:&lt;/p&gt;
-&lt;p&gt;[latex]\int_0^{h/2} (r^2-(y+r-h/2)^2)^2,dy[/latex]&lt;/p&gt;
+\[\int_0^{h/2} (r^2-(y+r-h/2)^2)^2\,dy\]
 &lt;p&gt;With a little help from &lt;a href=&#34;http://wolframalpha.com&#34;&gt;Wolfram Alpha&lt;/a&gt; we get the following result:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;    float CalculateIy( const Biconvex &amp;amp; biconvex )
     {

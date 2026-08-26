@@ -368,7 +368,9 @@ The problem with a low snapshot rate like 10HZ is that interpolation between sna
 <p>We&rsquo;ll start by optimizing orientation because it&rsquo;s the largest field. (When optimizing bandwidth it&rsquo;s good to work in the order of greatest to least potential gain where possible&hellip;)</p>
 <p>Many people when compressing a quaternion think: &ldquo;I know. I&rsquo;ll just pack it into 8.8.8.8 with one 8 bit signed integer per-component!&rdquo;. Sure, that works, but with a bit of math you can get much better accuracy with fewer bits using a trick called the &ldquo;smallest three&rdquo;.</p>
 <p>How does the smallest three work? Since we know the quaternion represents a rotation its length must be 1, so x^2+y^2+z^2+w^2 = 1. We can use this identity to drop one component and reconstruct it on the other side. For example, if you send x,y,z you can reconstruct w = sqrt( 1 - x^2 - y^2 - z^2 ). You might think you need to send a sign bit for w in case it is negative, but you don&rsquo;t, because you can make w always positive by negating the entire quaternion if w is negative (in quaternion space (x,y,z,w) and (-x,-y,-z,-w) represent the same rotation.)</p>
-<p>Don&rsquo;t always drop the same component due to numerical precision issues. Instead, find the component with the largest absolute value and encode its index using two bits [0,3] (0=x, 1=y, 2=z, 3=w), then send the index of the largest component and the smallest three components over the network (hence the name). On the other side use the index of the largest bit to know which component you have to reconstruct from the other three.</p>
+<p>Don&rsquo;t always drop the same component due to numerical precision issues. Instead, find the component with the largest absolute value and encode its index using two bits </p>
+\[0,3\]
+<p> (0=x, 1=y, 2=z, 3=w), then send the index of the largest component and the smallest three components over the network (hence the name). On the other side use the index of the largest bit to know which component you have to reconstruct from the other three.</p>
 <p>One final improvement. If v is the absolute value of the largest quaternion component, the next largest possible component value occurs when two components have the same absolute value and the other two components are zero. The length of that quaternion (v,v,0,0) is 1, therefore v^2 + v^2 = 1, 2v^2 = 1, v = 1/sqrt(2). This means you can encode the smallest three components in [-0.707107,+0.707107] instead of [-1,+1] giving you more precision with the same number of bits.</p>
 <p>With this technique I&rsquo;ve found that minimum sufficient precision for my simulation is 9 bits per-smallest component. This gives a result of 2 + 9 + 9 + 9 = 29 bits per-orientation (down from 128 bits).</p>
 <video controls="controls" width="100%">
@@ -380,7 +382,9 @@ Your browser does not support the video tag.
 <h2 id="optimizing-linear-velocity">Optimizing Linear Velocity</h2>
 <p>What should we optimize next? It&rsquo;s a tie between linear velocity and position. Both are 96 bits. In my experience position is the harder quantity to compress so let&rsquo;s start here.</p>
 <p>To compress linear velocity we need to bound its x,y,z components in some range so we don&rsquo;t need to send full float values. I found that a maximum speed of 32 meters per-second is a nice power of two and doesn&rsquo;t negatively affect the player experience in the cube simulation. Since we&rsquo;re really only using the linear velocity as a <em>hint</em> to improve interpolation between position sample points we can be pretty rough with compression. 32 distinct values per-meter per-second provides acceptable precision.</p>
-<p>Linear velocity has been bounded and quantized and is now three integers in the range [-1024,1023]. That breaks down as follows: [-32,+31] (6 bits) for integer component and multiply 5 bits fraction precision. I hate messing around with sign bits so I just add 1024 to get the value in range [0,2047] and send that instead. To decode on receive just subtract 1024 to get back to signed integer range before converting to float.</p>
+<p>Linear velocity has been bounded and quantized and is now three integers in the range [-1024,1023]. That breaks down as follows: </p>
+\[-32,+31\]
+<p> (6 bits) for integer component and multiply 5 bits fraction precision. I hate messing around with sign bits so I just add 1024 to get the value in range [0,2047] and send that instead. To decode on receive just subtract 1024 to get back to signed integer range before converting to float.</p>
 <p>11 bits per-component gives 33 bits total per-linear velocity. Just over 1/3 the original uncompressed size!</p>
 <p>We can do even better than this because most cubes are stationary. To take advantage of this we just write a single bit &ldquo;at rest&rdquo;. If this bit is 1, then velocity is implicitly zero and is not sent. Otherwise, the compressed velocity follows after the bit (33 bits). Cubes at rest now cost just 127 bits, while cubes that are moving cost one bit more than they previously did: 159 + 1 = 160 bits.</p>
 <video controls="controls" width="100%">
@@ -464,7 +468,7 @@ Your browser does not support the video tag.
     </div>
 
     
-<div class="mb-patreon-cta" style="max-width:640px;margin:3rem auto 2.5rem;padding:2rem 1.25rem 0;border-top:1px solid rgba(0,0,0,.12);text-align:center;font-size:1.4rem;line-height:1.5;font-weight:600">
+<div class="mb-patreon-cta" style="max-width:720px;margin:3rem auto 2.5rem;padding:2rem 1.25rem 0;border-top:1px solid rgba(0,0,0,.12);text-align:center;font-size:1.15rem;line-height:1.5;font-weight:600">
 Enjoying my articles and open source code?<br>
 <a href="https://www.patreon.com/MasBandwidth/membership" style="display:inline-block;margin-top:1.25rem;padding:1.6rem 4rem;border-radius:12px;background:#ff8800;color:#fff;font-size:2.3rem;font-weight:800;text-decoration:none">Support my work!</a>
 </div>

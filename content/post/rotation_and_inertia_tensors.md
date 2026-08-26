@@ -55,13 +55,12 @@ Now we need a way to calculate the inertia tensor of our go stone.
 
 The general case is quite complicated because inertia tensors are capable of representing shapes that are non-symmetrical about the axis of rotation.
 
-_todo: yes, need to sort out the latex equations..._
 
-[latex]I = \begin{bmatrix} I_{xx} & I_{xy} & I_{xz} \\ I_{yx} & I_{yy} & I_{yz} \\ I_{zx} & I_{zy} & I_{zz} \end{bmatrix}[/latex]
+\[I = \begin{bmatrix} I_{xx} & I_{xy} & I_{xz} \\ I_{yx} & I_{yy} & I_{yz} \\ I_{zx} & I_{zy} & I_{zz} \end{bmatrix}\]
 
 For example, think of an oddly shaped object attached to a drill bit off-center and wobbling about crazily as the drill spins. Fantastic. But the good news is that we get to dodge this bullet because we are always rotating about the center of mass of the go stone, our inertia tensor is much simpler:
 
-[latex]I = \begin{bmatrix} I_{x} & 0 & 0 \\ 0 & I_{y} & 0 \\ 0 & 0 & I_{z} \end{bmatrix}[/latex]
+\[I = \begin{bmatrix} I_{x} & 0 & 0 \\ 0 & I_{y} & 0 \\ 0 & 0 & I_{z} \end{bmatrix}\]
 
 All we need to do in our case is to determine the I<sub>x</sub>, I<sub>y</sub> and I<sub>z</sub> values.
 
@@ -83,7 +82,7 @@ To do this we just need to know is how difficult it is rotate a point about an a
 
 Once we know this we can approximate the moment of inertia of a go stone by breaking it up into a discrete number of points and summing up the moments of inertia of all these points.
 
-It turns out that the difficulty of rotating a point mass about an axis is proportional to the *square* of the distance of that point from the axis and the mass of the point. [latex]I = mr^2[/latex]. This is quite interesting because it indicates that the distribution of mass has a significant effect on how difficult it is to rotate an object about an axis.
+It turns out that the difficulty of rotating a point mass about an axis is proportional to the *square* of the distance of that point from the axis and the mass of the point. \(I = mr^2\). This is quite interesting because it indicates that the distribution of mass has a significant effect on how difficult it is to rotate an object about an axis.
 
 One consequence of this is that a hollow pipe is actually more difficult to rotate than a solid pipe of the same mass. Of course, this is not something we deal with in real life often, because a solid pipe of the same material would be much heavier, and therefore harder to rotate due to increased mass, but if you could find a second material of lower density such that the solid pipe was exactly the same mass as the hollow pipe, you would be able to observe this effect. Obscure.
 
@@ -99,7 +98,7 @@ A size 33 japanese go stone has width 22mm and height 9.2mm:
 
 Using our point-based approximation to calculate its inertia tensor gives the following result:
 
-[latex]I = \begin{bmatrix} 0.177721 & 0 & 0 \\ 0 & 0.304776 & 0 \\ 0 & 0 & 0.177721 \end{bmatrix}[/latex]
+\[I = \begin{bmatrix} 0.177721 & 0 & 0 \\ 0 & 0.304776 & 0 \\ 0 & 0 & 0.177721 \end{bmatrix}\]
 
 As expected, I<sub>x</sub> = I<sub>z</sub> due to the symmetry of the go stone.
 
@@ -125,13 +124,13 @@ With a bit of math we can calculate closed form solutions for the moments of ine
 
 To determine the exact equation for I<sub>y</sub> we start with the moment of inertia for a solid disc: 
 
-[latex]I = 1/2mr^2[/latex]
+\[I = 1/2mr^2\]
 
 Then we integrate again, effectively summing up the moments of inertia of an infinite number of thin discs making up the top half of the go stone.
 
 This leads to the following integral: 
 
-[latex]\int_0^{h/2} (r^2-(y+r-h/2)^2)^2\,dy[/latex]
+\[\int_0^{h/2} (r^2-(y+r-h/2)^2)^2\,dy\]
 
 With a little help from <a href="http://wolframalpha.com">Wolfram Alpha</a> we get the following result:
 

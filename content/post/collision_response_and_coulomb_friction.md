@@ -51,7 +51,7 @@ To support this we introduce a new concept called the 'coefficient of restitutio
 
 This gives the following formula: 
 
-[latex]j = -( 1 + e ) \boldsymbol{p} \cdot \boldsymbol{n}[/latex]
+\[j = -( 1 + e ) \boldsymbol{p} \cdot \boldsymbol{n}\]
 
 Where:
 
@@ -103,7 +103,7 @@ Understandably this is quite complex, but in our case the go board never moves, 
 
 _todo: need a solution to convert across all the latex equations..._
 
-[latex]j = \dfrac{ -( 1 + e ) \boldsymbol{v} \cdot \boldsymbol{n} } { m^{-1} + ( \boldsymbol{I^{-1}} ( \boldsymbol{r} \times \boldsymbol{n} ) \times \boldsymbol{r} ) \cdot \boldsymbol{n} }[/latex]
+\[j = \dfrac{ -( 1 + e ) \boldsymbol{v} \cdot \boldsymbol{n} } { m^{-1} + ( \boldsymbol{I^{-1}} ( \boldsymbol{r} \times \boldsymbol{n} ) \times \boldsymbol{r} ) \cdot \boldsymbol{n} }\]
 
 Where:
 
@@ -140,7 +140,7 @@ Calculation of the Coulomb friction impulse is performed much like the calculati
 
 Here is the formula for calculating the magnitude of the friction impulse:
 
-[latex]j_t = \dfrac{ - \boldsymbol{v} \cdot \boldsymbol{t} } { m^{-1} + ( \boldsymbol{I^{-1}} ( \boldsymbol{r} \times \boldsymbol{t} ) \times \boldsymbol{r} ) \cdot \boldsymbol{t} }[/latex]
+\[j_t = \dfrac{ - \boldsymbol{v} \cdot \boldsymbol{t} } { m^{-1} + ( \boldsymbol{I^{-1}} ( \boldsymbol{r} \times \boldsymbol{t} ) \times \boldsymbol{r} ) \cdot \boldsymbol{t} }\]
 
 Where:
 
