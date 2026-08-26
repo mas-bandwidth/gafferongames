@@ -7,14 +7,6 @@ description = "A solution for enabling UDP in the web"
 draft = false
 +++
 
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------
-
 # Premise
 
 In 2017 the most popular web games like [agar.io](http://agar.io) are networked via WebSockets over TCP. If a UDP equivalent of WebSockets could be incorporated into browsers, it would greatly improve the networking of these games.

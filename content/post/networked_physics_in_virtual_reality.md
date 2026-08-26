@@ -6,14 +6,6 @@ title = "Networked Physics in Virtual Reality"
 description = "Networking a stack of cubes in VR with Unity and PhysX"
 +++
 
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------
-
 # Introduction
 
 About a year ago, Oculus approached me and offered to sponsor my research. They asked me, effectively: "Hey Glenn, there's a lot of interest in networked physics in VR. You did a cool talk at GDC. Do you think could come up with a networked physics sample in VR that we could share with devs? Maybe you could use the touch controllers?" 

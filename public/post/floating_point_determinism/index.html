@@ -25,10 +25,10 @@
   
     
   
-  <meta name="description" content="Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
-Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+  <meta name="description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 Lately I&rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.
-The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation implicitly by sending just the player inputs.">
+The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation implicitly by sending just the player inputs.
+This is a very attractive synchronization strategy because the amount of network traffic depends on the size of the player inputs instead of the amount of physics state in the world.">
 
   
   <link rel="alternate" hreflang="en-us" href="https://gafferongames.com/post/floating_point_determinism/">
@@ -110,10 +110,10 @@ The basic idea is that instead of synchronizing the state of physics objects dir
   <meta property="og:site_name" content="Gaffer On Games">
   <meta property="og:url" content="https://gafferongames.com/post/floating_point_determinism/">
   <meta property="og:title" content="Floating Point Determinism | Gaffer On Games">
-  <meta property="og:description" content="Hello readers, I&rsquo;m no longer posting new content on gafferongames.com
-Please check out my new blog at mas-bandwidth.com! Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
+  <meta property="og:description" content="Introduction Hi, I&rsquo;m Glenn Fiedler and welcome to Networking for Game Programmers.
 Lately I&rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.
-The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation implicitly by sending just the player inputs."><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
+The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation implicitly by sending just the player inputs.
+This is a very attractive synchronization strategy because the amount of network traffic depends on the size of the player inputs instead of the amount of physics state in the world."><meta property="og:image" content="https://gafferongames.com/img/icon-192.png">
   <meta property="twitter:image" content="https://gafferongames.com/img/icon-192.png"><meta property="og:locale" content="en-us">
   
   <meta property="article:published_time" content="2010-02-24T00:00:00&#43;00:00">
@@ -332,11 +332,7 @@ The basic idea is that instead of synchronizing the state of physics objects dir
   <div class="article-container">
 
     <div class="article-style" itemprop="articleBody">
-      <hr>
-<p>Hello readers, I&rsquo;m no longer posting new content on gafferongames.com</p>
-<h3 id="please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers">Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</h3>
-<hr>
-<h2 id="introduction">Introduction</h2>
+      <h2 id="introduction">Introduction</h2>
 <p>Hi, I&rsquo;m <a href="https://gafferongames.com">Glenn Fiedler</a> and welcome to <a href="/categories/game-networking/"><strong>Networking for Game Programmers</strong></a>.</p>
 <p>Lately I&rsquo;ve been doing some research into networking game physics simulations via deterministic lockstep methods.</p>
 <p>The basic idea is that instead of synchronizing the state of physics objects directly by sending the positions, orientations, velocities etc. over the network, one could synchronize the simulation <em>implicitly</em> by sending just the player inputs.</p>
@@ -510,10 +506,17 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 <img style="border:0 initial initial;" title="half-spacer" src="/img/half-spacer.png" width="34" height="12" />
 <hr>
 <p>Hello readers, I&rsquo;m no longer posting new content on gafferongames.com</p>
-<h3 id="please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers-1">Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</h3>
+<h3 id="please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers">Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</h3>
 <hr>
 
     </div>
+
+    
+<div class="mb-patreon-cta" style="max-width:640px;margin:3rem auto 2.5rem;padding:2rem 1.25rem 0;border-top:1px solid rgba(0,0,0,.12);text-align:center;font-size:1.4rem;line-height:1.5;font-weight:600">
+Enjoying my articles and open source code?<br>
+<a href="https://www.patreon.com/MasBandwidth/membership" style="display:inline-block;margin-top:1.25rem;padding:1.6rem 4rem;border-radius:12px;background:#ff8800;color:#fff;font-size:2.3rem;font-weight:800;text-decoration:none">Support my work!</a>
+</div>
+    
 
     
 

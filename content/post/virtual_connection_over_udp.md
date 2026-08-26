@@ -7,14 +7,6 @@ description = "How to create a virtual connection over connectionless UDP"
 draft = false
 +++
 
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------
-
 ## Introduction
 
 Hi, I'm [Glenn Fiedler](https://gafferongames.com) and welcome to [**Networking for Game Programmers**](/categories/game-networking/).
