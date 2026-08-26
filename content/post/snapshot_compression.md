@@ -218,11 +218,3 @@ It's possible to get even better compression using a different approach. Bit-pac
 It's also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly. 
 
 __NEXT ARTICLE:__ [State Synchronization](/post/state_synchronization/)
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

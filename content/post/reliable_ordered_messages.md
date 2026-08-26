@@ -343,11 +343,3 @@ while ( true )
 Which is flexible enough to implement whatever you like on top of it.
 
 __NEXT ARTICLE__: [Client Server Connection](/post/client_server_connection/)
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

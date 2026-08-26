@@ -190,11 +190,3 @@ With a bit of tuning, it seems to work reasonably well:
 <iframe src="//www.youtube.com/embed/1eG2xTubRJY" 
 frameborder="0" allowfullscreen class="video"></iframe>
 </div>
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

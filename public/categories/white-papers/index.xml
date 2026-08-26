@@ -146,10 +146,6 @@ Matheus Valadares, creator of agar.io&lt;/p&gt;
 &lt;p&gt;One solution would be for Google to make it &lt;em&gt;significantly&lt;/em&gt; easier for game developers to integrate WebRTC data channel support in their dedicated servers.&lt;/p&gt;
 &lt;p&gt;Alternatively, &lt;a href=&#34;http://netcode.io&#34;&gt;netcode.io&lt;/a&gt; provides a much simpler &amp;lsquo;WebSockets for UDP&amp;rsquo;-like approach, which would also solve the problem, if it were standardized and incorporated into browsers.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;UPDATE:&lt;/strong&gt; netcode.io is now &lt;a href=&#34;https://github.com/RedpointGames/netcode.io-browser&#34;&gt;available in browsers&lt;/a&gt;!&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     

@@ -377,10 +377,6 @@ But as programmers we know the truth of what is actually going on underneath is 
 <p>This way the player appears to control their own character without any latency, and provided that the client and server character simulation code is reasonable, giving roughly exactly the same result for the same inputs on the client and server, it is rarely corrected. It is as Tim Sweeney describes:</p>
 <blockquote>... the best of both worlds: In all cases, the server remains completely authoritative. Nearly all the time, the client movement simulation exactly mirrors the client movement carried out by the server, so the client's position is seldom corrected. Only in the rare case, such as a player getting hit by a rocket, or bumping into an enemy, will the client's location need to be corrected.</blockquote>
 <p>In other words, only when the player&rsquo;s character is affected by something external to the local player&rsquo;s input, which cannot possibly be predicted on the client, will the player&rsquo;s position need to be corrected. That and of course, if the player is attempting to cheat :)</p>
-<hr>
-<p>Hello readers, I&rsquo;m no longer posting new content on gafferongames.com</p>
-<h3 id="please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers">Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</h3>
-<hr>
 
     </div>
 

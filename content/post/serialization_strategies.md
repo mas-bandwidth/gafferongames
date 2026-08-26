@@ -789,11 +789,3 @@ This is great packet structure to use during development.
 <hr>
 
 __NEXT ARTICLE__: [Packet Fragmentation and Reassembly](/post/packet_fragmentation_and_reassembly)
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

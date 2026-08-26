@@ -214,10 +214,6 @@
 &lt;p&gt;This approach is best used for &lt;em&gt;cooperative experiences only&lt;/em&gt;, as it does not provide the security of a server-authoritative network model with dedicated servers and client-side prediction.&lt;/p&gt;
 &lt;p&gt;Thanks to Oculus for sponsoring my work and making this research possible!&lt;/p&gt;
 &lt;p&gt;The source code for the networked physics sample can be downloaded &lt;a href=&#34;https://github.com/OculusVR/oculus-networked-physics-sample&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -357,10 +353,6 @@ Your browser does not support the video tag.
 &lt;p&gt;We can fix this by tracking objects which have recently come to rest and bumping their priority until an ack comes back for a packet they were sent in. Thus they are sent at an elevated priority compared with normal grey cubes (which are at rest and have not moved) and keep resending at that elevated rate until we know that update has been received, thus &amp;ldquo;committing&amp;rdquo; that grey cube to be at rest at the correct position.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;And that&amp;rsquo;s really about it for this technique. Without anything fancy it&amp;rsquo;s already pretty good, and on top of that another order of magnitude improvement is available with delta compression, at the cost of significant complexity!&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -500,10 +492,6 @@ Your browser does not support the video tag.
 &lt;p&gt;It&amp;rsquo;s possible to get even better compression using a different approach. Bit-packing is inefficient because not all bit values have equal probability of 0 vs 1. No matter how hard you tune your bit-packer a context aware arithmetic encoding can beat your result by more accurately modeling the probability of values that occur in your data set. This &lt;a href=&#34;https://github.com/rygorous/gaffer_net/blob/master/main.cpp&#34;&gt;implementation&lt;/a&gt; by Fabian Giesen beat my best bit-packed result by 25%.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/state_synchronization/&#34;&gt;State Synchronization&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -583,10 +571,6 @@ Your browser does not support the video tag.
 &lt;p&gt;How can we reduce the amount of delay added for interpolation? 350ms still seems unacceptable and we can&amp;rsquo;t use extrapolation to reduce this delay without adding a lot of inaccuracy. The solution is simple: &lt;em&gt;increase the send rate!&lt;/em&gt; If we send 30 snapshots per-second we can get the same amount of packet loss protection with a delay of 150ms. 60 packets per-second needs only 85ms.&lt;/p&gt;
 &lt;p&gt;In order to increase the send rate we&amp;rsquo;re going to need some pretty good bandwidth optimizations. But don&amp;rsquo;t worry, there&amp;rsquo;s a &lt;em&gt;lot&lt;/em&gt; we can do to optimize bandwidth. So much so that there was too much stuff to fit in this article and I had to insert an extra unplanned article just to cover all of it!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;Snapshot Compression&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -689,10 +673,6 @@ Your browser does not support the video tag.
 &lt;p&gt;The video above shows deterministic lockstep synchronized over UDP using this technique with &lt;strong&gt;2 seconds&lt;/strong&gt; of latency and &lt;strong&gt;25% packet loss&lt;/strong&gt;. Imagine how awful TCP would look under these conditions.&lt;/p&gt;
 &lt;p&gt;So in conclusion, even where TCP should have the most advantage, in the only networking model that relies on reliable-ordered data, we can still easily whip its ass with a simple protocol built on top of UDP.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;Snapshot Interpolation&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -740,10 +720,6 @@ Your browser does not support the video tag.
 &lt;p&gt;Cubes within a certain distance of the player have a force applied towards the center of the cube. These cubes remain physically simulated while in the katamari ball, they are not just “stuck” to the player like in the original game.&lt;/p&gt;
 &lt;p&gt;This is a very difficult situation for networked physics!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;Deterministic Lockstep&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -870,10 +846,6 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;iframe src=&#34;//www.youtube.com/embed/1eG2xTubRJY&#34; 
 frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;/div&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -967,10 +939,6 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Verifying exact solutions against numeric ones is a fantastic way to check your calculations.&lt;/p&gt;
 &lt;p&gt;Can &lt;u&gt;you&lt;/u&gt; derive the equation for I&lt;sub&gt;x&lt;/sub&gt;?&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/collision_response_and_coulomb_friction/&#34;&gt;Collision Response and Coulomb Friction&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -1080,10 +1048,6 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;This seems counter-intuitive at first, but it has some nice parallels with other physical laws. Nature is lazy and always takes the shortest path. Nature does the &lt;em&gt;least amount of work&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;We should probably do the same :)&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/rotation_and_inertia_tensors/&#34;&gt;Rotation and Inertia Tensors&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -1283,10 +1247,6 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;/div&gt;
 &lt;p&gt;I think this is fairly convincing. The go stone is moving quite realistically!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/go_stone_vs_go_board/&#34;&gt;Go Stone vs. Go Board&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -1323,10 +1283,6 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;With vertex welding the reduction in vertices is dramatic: 53000 to just 6500.&lt;/p&gt;
 &lt;p&gt;For more information on vertex welding please refer to the discussion in &lt;a href=&#34;http://www.amazon.com/Real-Time-Collision-Detection-Interactive-Technology/dp/1558607323/ref=sr_1_1?ie=UTF8&amp;qid=1363029675&amp;sr=8-1&amp;keywords=real+time+collision+detection&#34;&gt;Real-Time Collision Detection&lt;/a&gt; by &lt;a href=&#34;http://realtimecollisiondetection.net/blog/&#34;&gt;Christer Ericson&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/how_the_go_stone_moves/&#34;&gt;How The Go Stone Moves&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -1418,10 +1374,6 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Now we can calculate the bevel torus to round off any go stone we create as the intersection of two spheres.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/tessellating_the_go_stone/&#34;&gt;Tessellating The Go Stone&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -1462,10 +1414,6 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;So many beautiful properties from such simple rules. Truly an amazing game!&lt;/p&gt;
 &lt;p&gt;Please visit &lt;a href=&#34;http://playgo.to/iwtg/en/&#34;&gt;The Interactive Way To Go&lt;/a&gt; if you would like to learn more.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/shape_of_the_go_stone/&#34;&gt;Shape of The Go Stone&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -1591,10 +1539,6 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;Sometimes packet loss or out of order delivery occurs and the server input differs from that stored on the client. In this case the server snaps the client to the correct position automatically via rewind and replay. This snapping is quite noticeable to the player, so we reduce it with the same smoothing technique we used above for the other player characters. This smoothing is done &lt;i&gt;after&lt;/i&gt; recalculating the corrected position via rewind and replay.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;We can easily apply the client side prediction techniques used in first person shooters to network a physics simulation, but only if there is a clear ownership of objects by clients and these object interact mostly with a static world.&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -1656,10 +1600,6 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;The next problem is that tighter the spring k you use, the more difficult it becomes to solve the differential equation. Using an RK4 integrator sure help with this, but even with RK4 there is a fundamental limit to how large you can make your spring k before your simulation will explode. At this point you need to either decrease your timestep or reduce your spring k.&lt;/p&gt;
 &lt;p&gt;The final, and major weakness is that springs are reactive not predictive. This is a subtle point but a very important one. A joint or constraint implemented using springs only works by correcting errors after they occur, and collision response using springs requires allowing some amount of penetration before it acts to correct it and so forth. More advanced techniques exist which can solve for the forces required to constrain the physics simulation without inducing error, such as LCP solvers or iterative methods, but they are out of scope of this simple article.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/networked_physics_2004/&#34;&gt;Networked Physics (2004)&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -1881,10 +1821,6 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;We have covered the techniques required to simulate linear and rotational movement of a rigid body in three dimensions. By combining the linear and rotational physics into a single physics state and integrating, we can simulate the motion of a rigid body in three dimensions.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/spring_physics/&#34;&gt;Spring Physics&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -2038,10 +1974,6 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;p&gt;This &lt;em&gt;looks&lt;/em&gt; complicated but here is a simple way to think about it. Any remainder in the accumulator is effectively a measure of just how much more time is required before another whole physics step can be taken. For example, a remainder of dt/2 means that we are currently halfway between the current physics step and the next. A remainder of dt*0.1 means that the update is 1/10th of the way between the current and the next state.&lt;/p&gt;
 &lt;p&gt;We can use this remainder value to get a blending factor between the previous and current physics state simply by dividing by dt. This gives an alpha value in the range [0,1] which is used to perform a linear interpolation between the two physics states to get the current state to render. This interpolation is easy to do for single values and for vector state values. You can even use it with full 3D rigid body dynamics if you store your orientation as a quaternion and use a spherical linear interpolation (slerp) to blend between the previous and current orientations.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/physics_in_3d/&#34;&gt;Physics in 3D&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -2284,10 +2216,6 @@ frameborder=&#34;0&#34; allowfullscreen class=&#34;video&#34;&gt;&lt;/iframe&gt;
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;You&amp;rsquo;ll be glad you did :)&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/fix_your_timestep/&#34;&gt;Fix Your Timestep!&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     

@@ -158,11 +158,3 @@ Verifying exact solutions against numeric ones is a fantastic way to check your 
 Can <u>you</u> derive the equation for I<sub>x</sub>?
 
 __NEXT ARTICLE:__ [Collision Response and Coulomb Friction](/post/collision_response_and_coulomb_friction/)
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

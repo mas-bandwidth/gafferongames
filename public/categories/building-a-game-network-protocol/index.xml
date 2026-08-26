@@ -197,10 +197,6 @@ class Server
 &lt;/ul&gt;
 &lt;p&gt;To solve this, we need to get serious with cryptography to encrypt and sign packets so they can&amp;rsquo;t be read or modified by a third party.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://patreon.com/gafferongames&#34;&gt;Securing Dedicated Servers&lt;/a&gt;.&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -520,10 +516,6 @@ while ( true )
 &lt;/pre&gt;
 &lt;p&gt;Which is flexible enough to implement whatever you like on top of it.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/client_server_connection/&#34;&gt;Client Server Connection&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -684,10 +676,6 @@ struct SlicePacket : public protocol2::Packet
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;The chunk system is simple in concept, but the implementation is certainly not. I encourage you to take a close look at the &lt;a href=&#34;http://www.patreon.com/gafferongames&#34;&gt;source code&lt;/a&gt; for this article for further details.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/reliable_ordered_messages/&#34;&gt;Reliable Ordered Messages&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -915,10 +903,6 @@ const int index = sequence % MaxEntries;
 &lt;p&gt;This is my process and it seems to work pretty well. If you are writing a low-level network protocol, the rest of your game depends on this code working correctly. You need to be absolutely sure it works before you build on it, otherwise it&amp;rsquo;s basically a stack of cards.&lt;/p&gt;
 &lt;p&gt;In my experience, game neworking is hard enough without having suspicions that that your low-level network protocol has bugs that only show up under extreme network conditions. That&amp;rsquo;s exactly where you need to be able to trust your code works correctly. &lt;strong&gt;So test it!&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/sending_large_blocks_of_data/&#34;&gt;Sending Large Blocks of Data&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -1617,10 +1601,6 @@ bool serialize_scene_d( Stream &amp;amp; stream, Scene &amp;amp; scene )
 &lt;p&gt;This is great packet structure to use during development.&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/packet_fragmentation_and_reassembly/&#34;&gt;Packet Fragmentation and Reassembly&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -2138,10 +2118,6 @@ struct PacketB
 &lt;/pre&gt;
 &lt;p&gt;If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. &lt;em&gt;You want it to be automatic&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;Serialization Strategies&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     

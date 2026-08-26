@@ -148,11 +148,3 @@ Our connection is as real as any TCP connection, and the steady stream of UDP pa
 Now that you have your virtual connection over UDP, you can easily setup a client/server relationship for a two player multiplayer game without TCP.
 
 __NEXT ARTICLE:__ [Reliability and Congestion Avoidance over UDP](/post/reliability_ordering_and_congestion_avoidance_over_udp/)
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

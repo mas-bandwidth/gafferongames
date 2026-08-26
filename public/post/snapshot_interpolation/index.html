@@ -402,10 +402,6 @@ Also, as the player counts increase, deterministic lockstep becomes problematic:
 <p>How can we reduce the amount of delay added for interpolation? 350ms still seems unacceptable and we can&rsquo;t use extrapolation to reduce this delay without adding a lot of inaccuracy. The solution is simple: <em>increase the send rate!</em> If we send 30 snapshots per-second we can get the same amount of packet loss protection with a delay of 150ms. 60 packets per-second needs only 85ms.</p>
 <p>In order to increase the send rate we&rsquo;re going to need some pretty good bandwidth optimizations. But don&rsquo;t worry, there&rsquo;s a <em>lot</em> we can do to optimize bandwidth. So much so that there was too much stuff to fit in this article and I had to insert an extra unplanned article just to cover all of it!</p>
 <p><strong>NEXT ARTICLE</strong>: <a href="/post/snapshot_compression/">Snapshot Compression</a></p>
-<hr>
-<p>Hello readers, I&rsquo;m no longer posting new content on gafferongames.com</p>
-<h3 id="please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers">Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</h3>
-<hr>
 
     </div>
 

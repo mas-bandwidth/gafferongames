@@ -56,10 +56,6 @@
 &lt;p&gt;I hope you agree with me, but if even if you don&amp;rsquo;t, we&amp;rsquo;ve created this marketplace over the past three years and it&amp;rsquo;s now live. Chances are pretty good over the next 3 months when you play a game, you&amp;rsquo;re playing it over Network Next and I look forward to improving the quality of your connection.&lt;/p&gt;
 &lt;p&gt;Best wishes,&lt;/p&gt;
 &lt;p&gt;Glenn Fiedler, CEO, Network Next &lt;a href=&#34;https://networknext.com&#34;&gt;networknext.com&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -221,10 +217,6 @@
 &lt;p&gt;We are able to fix this fluctuation due to internet weather and get the best result at all times.&lt;/p&gt;
 &lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/040.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;If you&amp;rsquo;d like to learn more, please visit us at &lt;a href=&#34;https://networknext.com&#34;&gt;networknext.com&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -406,10 +398,6 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;a href=&#34;http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098&#34;&gt;&lt;a href=&#34;http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098&#34;&gt;http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -464,10 +452,6 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;This way the player appears to control their own character without any latency, and provided that the client and server character simulation code is reasonable, giving roughly exactly the same result for the same inputs on the client and server, it is rarely corrected. It is as Tim Sweeney describes:&lt;/p&gt;
 &lt;blockquote&gt;... the best of both worlds: In all cases, the server remains completely authoritative. Nearly all the time, the client movement simulation exactly mirrors the client movement carried out by the server, so the client&#39;s position is seldom corrected. Only in the rare case, such as a player getting hit by a rocket, or bumping into an enemy, will the client&#39;s location need to be corrected.&lt;/blockquote&gt;
 &lt;p&gt;In other words, only when the player&amp;rsquo;s character is affected by something external to the local player&amp;rsquo;s input, which cannot possibly be predicted on the client, will the player&amp;rsquo;s position need to be corrected. That and of course, if the player is attempting to cheat :)&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -635,10 +619,6 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;Our new reliability system let&amp;rsquo;s us send a steady stream of packets and notifies us which packets are received. From this we can infer lost packets, and resend data that didn&amp;rsquo;t get through if necessary. We also have a simple congestion avoidance system that drops from 30 packets per-second to 10 times a second so we don&amp;rsquo;t flood the connection.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/&#34;&gt;What Every Programmer Needs to Know About Game Networking&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -725,10 +705,6 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;Our connection is as real as any TCP connection, and the steady stream of UDP packets it provides is a suitable starting point for a multiplayer action game.&lt;/p&gt;
 &lt;p&gt;Now that you have your virtual connection over UDP, you can easily setup a client/server relationship for a two player multiplayer game without TCP.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/&#34;&gt;Reliability and Congestion Avoidance over UDP&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -1061,10 +1037,6 @@ closesocket( socket );
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;You now have a platform independent way to send and receive packets. &lt;em&gt;Enjoy&lt;/em&gt; :)&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/virtual_connection_over_udp/&#34;&gt;Virtual Connection over UDP&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -1159,10 +1131,6 @@ closesocket( socket );
 &lt;p&gt;Of course, it is no problem to use HTTP to talk to some RESTful services while your game is running. I&amp;rsquo;m not saying you can&amp;rsquo;t do that. A few TCP connections running while your game is running isn&amp;rsquo;t going to bring everything down. The point is, don&amp;rsquo;t split your &lt;em&gt;game protocol&lt;/em&gt; across UDP and TCP. Keep your game protocol running over UDP so you are fully in control of the data you send and receive and how reliability, ordering and congestion avoidance are implemented.&lt;/p&gt;
 &lt;p&gt;The rest of this article series show you how to do this, from creating your own virtual connection on top of UDP, to creating your own reliability, flow control and congestion avoidance.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/sending_and_receiving_packets/&#34;&gt;Sending and Receiving Packets&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     

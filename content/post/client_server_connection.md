@@ -250,11 +250,3 @@ But it's still vulnerable to a sophisticated actors who can sniff packets:
 To solve this, we need to get serious with cryptography to encrypt and sign packets so they can't be read or modified by a third party.
 
 __NEXT ARTICLE__: [Securing Dedicated Servers](http://patreon.com/gafferongames).
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

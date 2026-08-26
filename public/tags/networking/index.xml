@@ -56,10 +56,6 @@
 &lt;p&gt;I hope you agree with me, but if even if you don&amp;rsquo;t, we&amp;rsquo;ve created this marketplace over the past three years and it&amp;rsquo;s now live. Chances are pretty good over the next 3 months when you play a game, you&amp;rsquo;re playing it over Network Next and I look forward to improving the quality of your connection.&lt;/p&gt;
 &lt;p&gt;Best wishes,&lt;/p&gt;
 &lt;p&gt;Glenn Fiedler, CEO, Network Next &lt;a href=&#34;https://networknext.com&#34;&gt;networknext.com&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -221,10 +217,6 @@
 &lt;p&gt;We are able to fix this fluctuation due to internet weather and get the best result at all times.&lt;/p&gt;
 &lt;img src=&#34;https://gafferongames.com/img/fixing-the-internet/040.png&#34; width=&#34;100%&#34; class=&#34;image_border&#34;/&gt;
 &lt;p&gt;If you&amp;rsquo;d like to learn more, please visit us at &lt;a href=&#34;https://networknext.com&#34;&gt;networknext.com&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -430,10 +422,6 @@
 &lt;p&gt;This approach is best used for &lt;em&gt;cooperative experiences only&lt;/em&gt;, as it does not provide the security of a server-authoritative network model with dedicated servers and client-side prediction.&lt;/p&gt;
 &lt;p&gt;Thanks to Oculus for sponsoring my work and making this research possible!&lt;/p&gt;
 &lt;p&gt;The source code for the networked physics sample can be downloaded &lt;a href=&#34;https://github.com/OculusVR/oculus-networked-physics-sample&#34;&gt;here&lt;/a&gt;.&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -571,10 +559,6 @@ Matheus Valadares, creator of agar.io&lt;/p&gt;
 &lt;p&gt;One solution would be for Google to make it &lt;em&gt;significantly&lt;/em&gt; easier for game developers to integrate WebRTC data channel support in their dedicated servers.&lt;/p&gt;
 &lt;p&gt;Alternatively, &lt;a href=&#34;http://netcode.io&#34;&gt;netcode.io&lt;/a&gt; provides a much simpler &amp;lsquo;WebSockets for UDP&amp;rsquo;-like approach, which would also solve the problem, if it were standardized and incorporated into browsers.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;UPDATE:&lt;/strong&gt; netcode.io is now &lt;a href=&#34;https://github.com/RedpointGames/netcode.io-browser&#34;&gt;available in browsers&lt;/a&gt;!&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -763,10 +747,6 @@ class Server
 &lt;/ul&gt;
 &lt;p&gt;To solve this, we need to get serious with cryptography to encrypt and sign packets so they can&amp;rsquo;t be read or modified by a third party.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;http://patreon.com/gafferongames&#34;&gt;Securing Dedicated Servers&lt;/a&gt;.&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -1086,10 +1066,6 @@ while ( true )
 &lt;/pre&gt;
 &lt;p&gt;Which is flexible enough to implement whatever you like on top of it.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/client_server_connection/&#34;&gt;Client Server Connection&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -1250,10 +1226,6 @@ struct SlicePacket : public protocol2::Packet
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;The chunk system is simple in concept, but the implementation is certainly not. I encourage you to take a close look at the &lt;a href=&#34;http://www.patreon.com/gafferongames&#34;&gt;source code&lt;/a&gt; for this article for further details.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/reliable_ordered_messages/&#34;&gt;Reliable Ordered Messages&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -1481,10 +1453,6 @@ const int index = sequence % MaxEntries;
 &lt;p&gt;This is my process and it seems to work pretty well. If you are writing a low-level network protocol, the rest of your game depends on this code working correctly. You need to be absolutely sure it works before you build on it, otherwise it&amp;rsquo;s basically a stack of cards.&lt;/p&gt;
 &lt;p&gt;In my experience, game neworking is hard enough without having suspicions that that your low-level network protocol has bugs that only show up under extreme network conditions. That&amp;rsquo;s exactly where you need to be able to trust your code works correctly. &lt;strong&gt;So test it!&lt;/strong&gt;&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/sending_large_blocks_of_data/&#34;&gt;Sending Large Blocks of Data&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -2183,10 +2151,6 @@ bool serialize_scene_d( Stream &amp;amp; stream, Scene &amp;amp; scene )
 &lt;p&gt;This is great packet structure to use during development.&lt;/p&gt;
 &lt;hr&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/packet_fragmentation_and_reassembly/&#34;&gt;Packet Fragmentation and Reassembly&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -2704,10 +2668,6 @@ struct PacketB
 &lt;/pre&gt;
 &lt;p&gt;If you miss any of these checks, you expose yourself to buffer overflows and infinite loops when reading packets. Clearly you don’t want this to be a manual step when writing a packet read function. &lt;em&gt;You want it to be automatic&lt;/em&gt;.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/serialization_strategies/&#34;&gt;Serialization Strategies&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -2847,10 +2807,6 @@ Your browser does not support the video tag.
 &lt;p&gt;We can fix this by tracking objects which have recently come to rest and bumping their priority until an ack comes back for a packet they were sent in. Thus they are sent at an elevated priority compared with normal grey cubes (which are at rest and have not moved) and keep resending at that elevated rate until we know that update has been received, thus &amp;ldquo;committing&amp;rdquo; that grey cube to be at rest at the correct position.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;And that&amp;rsquo;s really about it for this technique. Without anything fancy it&amp;rsquo;s already pretty good, and on top of that another order of magnitude improvement is available with delta compression, at the cost of significant complexity!&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -2990,10 +2946,6 @@ Your browser does not support the video tag.
 &lt;p&gt;It&amp;rsquo;s possible to get even better compression using a different approach. Bit-packing is inefficient because not all bit values have equal probability of 0 vs 1. No matter how hard you tune your bit-packer a context aware arithmetic encoding can beat your result by more accurately modeling the probability of values that occur in your data set. This &lt;a href=&#34;https://github.com/rygorous/gaffer_net/blob/master/main.cpp&#34;&gt;implementation&lt;/a&gt; by Fabian Giesen beat my best bit-packed result by 25%.&lt;/p&gt;
 &lt;p&gt;It&amp;rsquo;s also possible to get a much better result for delta encoded orientations using the previous baseline orientation values to estimate angular velocity and predict future orientations rather than delta encoding the smallest three representation directly.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/state_synchronization/&#34;&gt;State Synchronization&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -3073,10 +3025,6 @@ Your browser does not support the video tag.
 &lt;p&gt;How can we reduce the amount of delay added for interpolation? 350ms still seems unacceptable and we can&amp;rsquo;t use extrapolation to reduce this delay without adding a lot of inaccuracy. The solution is simple: &lt;em&gt;increase the send rate!&lt;/em&gt; If we send 30 snapshots per-second we can get the same amount of packet loss protection with a delay of 150ms. 60 packets per-second needs only 85ms.&lt;/p&gt;
 &lt;p&gt;In order to increase the send rate we&amp;rsquo;re going to need some pretty good bandwidth optimizations. But don&amp;rsquo;t worry, there&amp;rsquo;s a &lt;em&gt;lot&lt;/em&gt; we can do to optimize bandwidth. So much so that there was too much stuff to fit in this article and I had to insert an extra unplanned article just to cover all of it!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE&lt;/strong&gt;: &lt;a href=&#34;https://gafferongames.com/post/snapshot_compression/&#34;&gt;Snapshot Compression&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -3179,10 +3127,6 @@ Your browser does not support the video tag.
 &lt;p&gt;The video above shows deterministic lockstep synchronized over UDP using this technique with &lt;strong&gt;2 seconds&lt;/strong&gt; of latency and &lt;strong&gt;25% packet loss&lt;/strong&gt;. Imagine how awful TCP would look under these conditions.&lt;/p&gt;
 &lt;p&gt;So in conclusion, even where TCP should have the most advantage, in the only networking model that relies on reliable-ordered data, we can still easily whip its ass with a simple protocol built on top of UDP.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/snapshot_interpolation/&#34;&gt;Snapshot Interpolation&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -3230,10 +3174,6 @@ Your browser does not support the video tag.
 &lt;p&gt;Cubes within a certain distance of the player have a force applied towards the center of the cube. These cubes remain physically simulated while in the katamari ball, they are not just “stuck” to the player like in the original game.&lt;/p&gt;
 &lt;p&gt;This is a very difficult situation for networked physics!&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/deterministic_lockstep/&#34;&gt;Deterministic Lockstep&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -3415,10 +3355,6 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;a href=&#34;http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098&#34;&gt;&lt;a href=&#34;http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098&#34;&gt;http://docs.sun.com/source/806-3568/ncg_goldberg.html#3098&lt;/a&gt;&lt;/a&gt;&lt;/p&gt;
 &lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
 &lt;img style=&#34;border:0 initial initial;&#34; title=&#34;half-spacer&#34; src=&#34;https://gafferongames.com/img/half-spacer.png&#34; width=&#34;34&#34; height=&#34;12&#34; /&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -3473,10 +3409,6 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;This way the player appears to control their own character without any latency, and provided that the client and server character simulation code is reasonable, giving roughly exactly the same result for the same inputs on the client and server, it is rarely corrected. It is as Tim Sweeney describes:&lt;/p&gt;
 &lt;blockquote&gt;... the best of both worlds: In all cases, the server remains completely authoritative. Nearly all the time, the client movement simulation exactly mirrors the client movement carried out by the server, so the client&#39;s position is seldom corrected. Only in the rare case, such as a player getting hit by a rocket, or bumping into an enemy, will the client&#39;s location need to be corrected.&lt;/blockquote&gt;
 &lt;p&gt;In other words, only when the player&amp;rsquo;s character is affected by something external to the local player&amp;rsquo;s input, which cannot possibly be predicted on the client, will the player&amp;rsquo;s position need to be corrected. That and of course, if the player is attempting to cheat :)&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -3644,10 +3576,6 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;Our new reliability system let&amp;rsquo;s us send a steady stream of packets and notifies us which packets are received. From this we can infer lost packets, and resend data that didn&amp;rsquo;t get through if necessary. We also have a simple congestion avoidance system that drops from 30 packets per-second to 10 times a second so we don&amp;rsquo;t flood the connection.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/what_every_programmer_needs_to_know_about_game_networking/&#34;&gt;What Every Programmer Needs to Know About Game Networking&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -3734,10 +3662,6 @@ x86-specific pain not available on any other platform; not that ~100% of non-emb
 &lt;p&gt;Our connection is as real as any TCP connection, and the steady stream of UDP packets it provides is a suitable starting point for a multiplayer action game.&lt;/p&gt;
 &lt;p&gt;Now that you have your virtual connection over UDP, you can easily setup a client/server relationship for a two player multiplayer game without TCP.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/reliability_ordering_and_congestion_avoidance_over_udp/&#34;&gt;Reliability and Congestion Avoidance over UDP&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -4070,10 +3994,6 @@ closesocket( socket );
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;You now have a platform independent way to send and receive packets. &lt;em&gt;Enjoy&lt;/em&gt; :)&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/virtual_connection_over_udp/&#34;&gt;Virtual Connection over UDP&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -4168,10 +4088,6 @@ closesocket( socket );
 &lt;p&gt;Of course, it is no problem to use HTTP to talk to some RESTful services while your game is running. I&amp;rsquo;m not saying you can&amp;rsquo;t do that. A few TCP connections running while your game is running isn&amp;rsquo;t going to bring everything down. The point is, don&amp;rsquo;t split your &lt;em&gt;game protocol&lt;/em&gt; across UDP and TCP. Keep your game protocol running over UDP so you are fully in control of the data you send and receive and how reliability, ordering and congestion avoidance are implemented.&lt;/p&gt;
 &lt;p&gt;The rest of this article series show you how to do this, from creating your own virtual connection on top of UDP, to creating your own reliability, flow control and congestion avoidance.&lt;/p&gt;
 &lt;p&gt;&lt;strong&gt;NEXT ARTICLE:&lt;/strong&gt; &lt;a href=&#34;https://gafferongames.com/post/sending_and_receiving_packets/&#34;&gt;Sending and Receiving Packets&lt;/a&gt;&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     
@@ -4297,10 +4213,6 @@ closesocket( socket );
 &lt;p&gt;Sometimes packet loss or out of order delivery occurs and the server input differs from that stored on the client. In this case the server snaps the client to the correct position automatically via rewind and replay. This snapping is quite noticeable to the player, so we reduce it with the same smoothing technique we used above for the other player characters. This smoothing is done &lt;i&gt;after&lt;/i&gt; recalculating the corrected position via rewind and replay.&lt;/p&gt;
 &lt;h2 id=&#34;conclusion&#34;&gt;Conclusion&lt;/h2&gt;
 &lt;p&gt;We can easily apply the client side prediction techniques used in first person shooters to network a physics simulation, but only if there is a clear ownership of objects by clients and these object interact mostly with a static world.&lt;/p&gt;
-&lt;hr&gt;
-&lt;p&gt;Hello readers, I&amp;rsquo;m no longer posting new content on gafferongames.com&lt;/p&gt;
-&lt;h3 id=&#34;please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers&#34;&gt;Please check out my new blog at &lt;a href=&#34;https://mas-bandwidth.com/xdp-for-game-programmers&#34;&gt;mas-bandwidth.com&lt;/a&gt;!&lt;/h3&gt;
-&lt;hr&gt;
 </description>
     </item>
     

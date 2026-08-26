@@ -382,10 +382,6 @@ The physics behind springs is simple but extremely versatile and useful. You can
 <p>The next problem is that tighter the spring k you use, the more difficult it becomes to solve the differential equation. Using an RK4 integrator sure help with this, but even with RK4 there is a fundamental limit to how large you can make your spring k before your simulation will explode. At this point you need to either decrease your timestep or reduce your spring k.</p>
 <p>The final, and major weakness is that springs are reactive not predictive. This is a subtle point but a very important one. A joint or constraint implemented using springs only works by correcting errors after they occur, and collision response using springs requires allowing some amount of penetration before it acts to correct it and so forth. More advanced techniques exist which can solve for the forces required to constrain the physics simulation without inducing error, such as LCP solvers or iterative methods, but they are out of scope of this simple article.</p>
 <p><strong>NEXT ARTICLE:</strong> <a href="/post/networked_physics_2004/">Networked Physics (2004)</a></p>
-<hr>
-<p>Hello readers, I&rsquo;m no longer posting new content on gafferongames.com</p>
-<h3 id="please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers">Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</h3>
-<hr>
 
     </div>
 

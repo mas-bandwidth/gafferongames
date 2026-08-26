@@ -282,11 +282,3 @@ This is my process and it seems to work pretty well. If you are writing a low-le
 In my experience, game neworking is hard enough without having suspicions that that your low-level network protocol has bugs that only show up under extreme network conditions. That's exactly where you need to be able to trust your code works correctly. __So test it!__
 
 __NEXT ARTICLE__: [Sending Large Blocks of Data](/post/sending_large_blocks_of_data/)
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

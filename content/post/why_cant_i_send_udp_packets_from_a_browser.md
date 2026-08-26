@@ -197,11 +197,3 @@ One solution would be for Google to make it _significantly_ easier for game deve
 Alternatively, [netcode.io](http://netcode.io) provides a much simpler 'WebSockets for UDP'-like approach, which would also solve the problem, if it were standardized and incorporated into browsers.
 
 **UPDATE:** netcode.io is now [available in browsers](https://github.com/RedpointGames/netcode.io-browser)!
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

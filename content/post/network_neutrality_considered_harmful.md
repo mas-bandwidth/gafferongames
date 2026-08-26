@@ -78,11 +78,3 @@ I hope you agree with me, but if even if you don't, we've created this marketpla
 Best wishes,
 
 Glenn Fiedler, CEO, Network Next [networknext.com](https://networknext.com)
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

@@ -278,11 +278,3 @@ This approach is best used for _cooperative experiences only_, as it does not pr
 Thanks to Oculus for sponsoring my work and making this research possible!
 
 The source code for the networked physics sample can be downloaded [here](https://github.com/OculusVR/oculus-networked-physics-sample).
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

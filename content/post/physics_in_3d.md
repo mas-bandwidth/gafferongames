@@ -310,11 +310,3 @@ Where <b>p</b> is the point on the rigid body and <b>x</b> is the center of mass
 We have covered the techniques required to simulate linear and rotational movement of a rigid body in three dimensions. By combining the linear and rotational physics into a single physics state and integrating, we can simulate the motion of a rigid body in three dimensions.
 
 __NEXT ARTICLE:__ [Spring Physics](/post/spring_physics/)
-
------ 
-
-Hello readers, I'm no longer posting new content on gafferongames.com
-
-### Please check out my new blog at [mas-bandwidth.com](https://mas-bandwidth.com/xdp-for-game-programmers)!
-
------

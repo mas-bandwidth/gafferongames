@@ -474,10 +474,6 @@ But how to choose this delta time value? This may seem like a trivial subject bu
 <p>This <em>looks</em> complicated but here is a simple way to think about it. Any remainder in the accumulator is effectively a measure of just how much more time is required before another whole physics step can be taken. For example, a remainder of dt/2 means that we are currently halfway between the current physics step and the next. A remainder of dt*0.1 means that the update is 1/10th of the way between the current and the next state.</p>
 <p>We can use this remainder value to get a blending factor between the previous and current physics state simply by dividing by dt. This gives an alpha value in the range [0,1] which is used to perform a linear interpolation between the two physics states to get the current state to render. This interpolation is easy to do for single values and for vector state values. You can even use it with full 3D rigid body dynamics if you store your orientation as a quaternion and use a spherical linear interpolation (slerp) to blend between the previous and current orientations.</p>
 <p><strong>NEXT ARTICLE:</strong> <a href="/post/physics_in_3d/">Physics in 3D</a></p>
-<hr>
-<p>Hello readers, I&rsquo;m no longer posting new content on gafferongames.com</p>
-<h3 id="please-check-out-my-new-blog-at-mas-bandwidthcomhttpsmas-bandwidthcomxdp-for-game-programmers">Please check out my new blog at <a href="https://mas-bandwidth.com/xdp-for-game-programmers">mas-bandwidth.com</a>!</h3>
-<hr>
 
     </div>
 
