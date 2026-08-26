@@ -1,5 +1,7 @@
 Source code for https://gafferongames.com
 
+If these articles help you, please support them: **[Become a supporter](https://www.patreon.com/MasBandwidth/membership)**
+
 ## Building
 
 The site builds with pinned Hugo 0.124.1 extended, the exact version that
